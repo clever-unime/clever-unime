@@ -596,7 +596,7 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
       
     StorageSettings hd = ( StorageSettings ) vmD.getStorage().get( 0 );
     Element root = new Element( "domain" );
-    root.setAttribute( "type", "qemu" );
+    root.setAttribute( "type", "kvm" );
     Document doc = new Document( root );
     Element name_vm = new Element( "name" );
     name_vm.addContent( vmD.getName() );
@@ -643,7 +643,7 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
         extension=st.nextToken();
     if(!(extension.equals("img"))){
     Element driver=new Element("driver");
-    driver.setAttribute("name","kvm");
+    driver.setAttribute("name","qemu");
     driver.setAttribute("type",extension);
     disk.addContent(driver);
     }
