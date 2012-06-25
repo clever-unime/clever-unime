@@ -1,0 +1,17 @@
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/svn/!svn/ver/76/trunk/cleverAdministration/src/org/clever/administration/config
+END
+config_template.xml
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/!svn/ver/56/trunk/cleverAdministration/src/org/clever/administration/config/config_template.xml
+END
+logger.properties
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/76/trunk/cleverAdministration/src/org/clever/administration/config/logger.properties
+END

@@ -1,0 +1,101 @@
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/!svn/ver/151/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator
+END
+RoomListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/151/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/RoomListener.java
+END
+CleverMessageHandler.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/50/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/CleverMessageHandler.java
+END
+MessageBody.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/50/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/MessageBody.java
+END
+SecurityCallback.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/93/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/SecurityCallback.java
+END
+ErrorResult.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/50/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/ErrorResult.java
+END
+OperationResult.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/50/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/OperationResult.java
+END
+CleverChatManagerListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/120/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/CleverChatManagerListener.java
+END
+CleverMessage.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/!svn/ver/139/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/CleverMessage.java
+END
+Result.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/!svn/ver/50/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/Result.java
+END
+RequestInformation.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/50/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/RequestInformation.java
+END
+NotificationOperation.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/139/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/NotificationOperation.java
+END
+ExecOperation.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/!svn/ver/136/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/ExecOperation.java
+END
+MethodConfiguration.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/!svn/ver/50/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/MethodConfiguration.java
+END
+ScepRequest.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/!svn/ver/93/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/ScepRequest.java
+END
+ConnectionXMPP.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svn/!svn/ver/143/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/ConnectionXMPP.java
+END
+CleverChatListener.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/!svn/ver/120/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/CleverChatListener.java
+END

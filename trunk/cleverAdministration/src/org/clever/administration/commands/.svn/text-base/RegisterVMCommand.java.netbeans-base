@@ -1,0 +1,76 @@
+package org.clever.administration.commands;
+
+import java.util.ArrayList;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Options;
+import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
+import org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.ImageManager;
+import org.clever.administration.ClusterManagerAdministrationTools;
+
+/**
+ *
+ * @author Luca Ciarniello
+ */
+public class RegisterVMCommand extends CleverCommand {
+  @Override
+  public Options getOptions()
+  {
+    Options options = new Options();
+
+    options.addOption("n", true, "The name of the Virtual Environment.");
+    options.addOption("h", true, "The host storing the Virtual Machine Image file");
+    options.addOption("p", true, "The absolute path of the Virtual Machine Image file");
+    options.addOption("d", true, "The host target for the Virtual Machine Image file transfer");
+    options.addOption("f", false, "The file transfer technology used (TCP Socket, XMPP, ...)");
+    options.addOption("xml", false, "Displays the XML request/response Messages.");
+    options.addOption("debug", false, "Displays debug information.");
+    return options;
+  }
+
+
+
+  @Override
+  public void exec(final CommandLine commandLine)
+  {
+    try
+    {
+      ArrayList params = new ArrayList();
+      params.add(commandLine.getOptionValue("n"));
+      params.add(commandLine.getOptionValue("h"));
+      if(commandLine.hasOption("d"))
+      {
+          //force the destination host
+          params.add(commandLine.getOptionValue("d"));
+      }
+      params.add(commandLine.getOptionValue("p"));
+      //This last parameter could later be chosen in the command line
+      params.add(new Integer(ImageManager.SOCK));
+      String target = ClusterManagerAdministrationTools.instance().getConnectionXMPP().getActiveCC(ConnectionXMPP.ROOM.SHELL);
+
+      ClusterManagerAdministrationTools.instance().execAdminCommand(
+              this, target, "StorageManagerAgent", "registerVe", params, commandLine.hasOption("xml"));
+      
+    } catch (CleverException ex) {
+       if(commandLine.hasOption("debug"))
+                 ex.printStackTrace();
+       else
+                System.err.println(ex);
+      logger.error(ex);
+    }
+  }
+
+
+
+  @Override
+  public void handleMessage(Object response)
+  {
+      boolean res=false;
+      res=(Boolean)response;
+    if (res)
+        System.out.println("VM registration done");
+      else
+        System.out.println("VM registration failed");
+
+  }
+}

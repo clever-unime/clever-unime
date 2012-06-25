@@ -1,0 +1,197 @@
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/!svn/ver/148/trunk/cleverAdministration/src/org/clever/administration/commands
+END
+ShutCleverCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/111/trunk/cleverAdministration/src/org/clever/administration/commands/ShutCleverCommand.java
+END
+ListVMsDbCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/138/trunk/cleverAdministration/src/org/clever/administration/commands/ListVMsDbCommand.java
+END
+ChangeDirectoryCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/83/trunk/cleverAdministration/src/org/clever/administration/commands/ChangeDirectoryCommand.java
+END
+StopCleverVMCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/138/trunk/cleverAdministration/src/org/clever/administration/commands/StopCleverVMCommand.java
+END
+RemoveCleverVMCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/134/trunk/cleverAdministration/src/org/clever/administration/commands/RemoveCleverVMCommand.java
+END
+SendFileCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 104
+/svn/!svn/ver/144/trunk/cleverAdministration/src/org/clever/administration/commands/SendFileCommand.java
+END
+QueryDbCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/148/trunk/cleverAdministration/src/org/clever/administration/commands/QueryDbCommand.java
+END
+ListHostManagerCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 111
+/svn/!svn/ver/111/trunk/cleverAdministration/src/org/clever/administration/commands/ListHostManagerCommand.java
+END
+CreateAgentCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/138/trunk/cleverAdministration/src/org/clever/administration/commands/CreateAgentCommand.java
+END
+NetworkCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/138/trunk/cleverAdministration/src/org/clever/administration/commands/NetworkCommand.java
+END
+TestDbCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/97/trunk/cleverAdministration/src/org/clever/administration/commands/TestDbCommand.java
+END
+QueryCmDbCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/138/trunk/cleverAdministration/src/org/clever/administration/commands/QueryCmDbCommand.java
+END
+GetNotifyPresence.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/111/trunk/cleverAdministration/src/org/clever/administration/commands/GetNotifyPresence.java
+END
+ListActiveAgentsCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 112
+/svn/!svn/ver/138/trunk/cleverAdministration/src/org/clever/administration/commands/ListActiveAgentsCommand.java
+END
+ListCleverVMsCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/134/trunk/cleverAdministration/src/org/clever/administration/commands/ListCleverVMsCommand.java
+END
+CloneVM.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/138/trunk/cleverAdministration/src/org/clever/administration/commands/CloneVM.java
+END
+ManageRemoteControl.java
+K 25
+svn:wc:ra_dav:version-url
+V 108
+/svn/!svn/ver/111/trunk/cleverAdministration/src/org/clever/administration/commands/ManageRemoteControl.java
+END
+StopVMCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/!svn/ver/138/trunk/cleverAdministration/src/org/clever/administration/commands/StopVMCommand.java
+END
+ListVMsCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/138/trunk/cleverAdministration/src/org/clever/administration/commands/ListVMsCommand.java
+END
+ReceiveFileCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/144/trunk/cleverAdministration/src/org/clever/administration/commands/ReceiveFileCommand.java
+END
+StartCleverVMCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 109
+/svn/!svn/ver/133/trunk/cleverAdministration/src/org/clever/administration/commands/StartCleverVMCommand.java
+END
+TestMethodsCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/svn/!svn/ver/132/trunk/cleverAdministration/src/org/clever/administration/commands/TestMethodsCommand.java
+END
+TakeSnapshot.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/138/trunk/cleverAdministration/src/org/clever/administration/commands/TakeSnapshot.java
+END
+HelpCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/svn/!svn/ver/83/trunk/cleverAdministration/src/org/clever/administration/commands/HelpCommand.java
+END
+CleverCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/!svn/ver/83/trunk/cleverAdministration/src/org/clever/administration/commands/CleverCommand.java
+END
+QueryHmDbCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/138/trunk/cleverAdministration/src/org/clever/administration/commands/QueryHmDbCommand.java
+END
+commands.xml
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/!svn/ver/143/trunk/cleverAdministration/src/org/clever/administration/commands/commands.xml
+END
+StartTestAgentCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 110
+/svn/!svn/ver/132/trunk/cleverAdministration/src/org/clever/administration/commands/StartTestAgentCommand.java
+END
+ListClusterManagerCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 114
+/svn/!svn/ver/105/trunk/cleverAdministration/src/org/clever/administration/commands/ListClusterManagerCommand.java
+END
+GetDefaultFolder.java
+K 25
+svn:wc:ra_dav:version-url
+V 105
+/svn/!svn/ver/111/trunk/cleverAdministration/src/org/clever/administration/commands/GetDefaultFolder.java
+END
+StartVMCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/!svn/ver/133/trunk/cleverAdministration/src/org/clever/administration/commands/StartVMCommand.java
+END
+RegisterVMCommand.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/svn/!svn/ver/138/trunk/cleverAdministration/src/org/clever/administration/commands/RegisterVMCommand.java
+END

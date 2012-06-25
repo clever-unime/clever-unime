@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commands>
+  <command>
+    <string>cd</string>
+    <class>org.clever.administration.commands.ChangeDirectoryCommand</class>
+  </command>
+
+  <command>
+    <string>network</string>
+    <class>org.clever.administration.commands.NetworkCommand</class>
+  </command>
+  
+  <command>
+    <string>listvms</string>
+    <class>org.clever.administration.commands.ListVMsCommand</class>
+  </command>
+
+  <command>
+    <string>listGlobalvms</string>
+    <class>org.clever.administration.commands.ListCleverVMsCommand</class>
+  </command>
+
+  <command>
+    <string>startGlobalvm</string>
+    <class>org.clever.administration.commands.StartCleverVMCommand</class>
+  </command>
+
+  <command>
+    <string>stopGlobalvm</string>
+    <class>org.clever.administration.commands.StopCleverVMCommand</class>
+  </command>
+
+  <command>
+    <string>removeGlobalvm</string>
+    <class>org.clever.administration.commands.RemoveCleverVMCommand</class>
+  </command>
+
+  <command>
+    <string>startvm</string>
+    <class>org.clever.administration.commands.StartVMCommand</class>
+  </command>
+
+  <command>
+    <string>help</string>
+    <class>org.clever.administration.commands.HelpCommand</class>
+  </command>
+
+  <!--<command>
+    <string>profile</string>
+    <class>org.clever.administration.commands.ProfileCommand</class>
+  </command>-->
+
+  <command>
+    <string>testmethods</string>
+    <class>org.clever.administration.commands.TestMethodsCommand</class>
+  </command>
+
+  <command>
+    <string>starttestagent</string>
+    <class>org.clever.administration.commands.StartTestAgentCommand</class>
+  </command>
+
+  <command>
+    <string>starttestagent</string>
+    <class>org.clever.administration.commands.StartTestAgentCommand</class>
+  </command>
+
+  <command>
+    <string>getnotifypresence</string>
+    <class>org.clever.administration.commands.GetNotifyPresence</class>
+  </command>
+
+  <command>
+    <string>testdb</string>
+    <class>org.clever.administration.commands.TestDbCommand</class>
+  </command>
+
+  <command>
+    <string>getdefaultfolder</string>
+    <class>org.clever.administration.commands.GetDefaultFolder</class>
+  </command>
+
+  <command>
+    <string>listhostmanager</string>
+    <class>org.clever.administration.commands.ListHostManagerCommand</class>
+  </command>
+
+  <command>
+    <string>listclustermanager</string>
+    <class>org.clever.administration.commands.ListClusterManagerCommand</class>
+  </command>
+
+  <command>
+    <string>shutclever</string>
+    <class>org.clever.administration.commands.ShutCleverCommand</class>
+  </command>
+
+  <command>
+    <string>managecontrolremote</string>
+    <class>org.clever.administration.commands.ManageRemoteControl</class>
+  </command>
+  
+  <command>
+    <string>createagent</string>
+    <class>org.clever.administration.commands.CreateAgentCommand</class>
+  </command>
+  
+  <command>
+    <string>listactiveagents</string>
+    <class>org.clever.administration.commands.ListActiveAgentsCommand</class>
+  </command>
+  
+  <command>
+    <string>querydb</string>
+    <class>org.clever.administration.commands.QueryDbCommand</class>
+  </command>
+  
+  <command>
+    <string>queryhmdb</string>
+    <class>org.clever.administration.commands.QueryHmDbCommand</class>
+  </command>
+  
+  <command>
+    <string>querycmdb</string>
+    <class>org.clever.administration.commands.QueryCmDbCommand</class>
+  </command>
+  
+  <command>
+    <string>receivefile</string>
+    <class>org.clever.administration.commands.ReceiveFileCommand</class>
+  </command>
+
+  <command>
+    <string>sendfile</string>
+    <class>org.clever.administration.commands.SendFileCommand</class>
+  </command>
+  <!-- START STORAGE COMMANDS -->
+  <command>
+    <string>mkdir</string>
+    <class>org.clever.administration.commands.CreateNodeCommand</class>
+  </command>
+  <command>
+    <string>link</string>
+    <class>org.clever.administration.commands.CreateLinkCommand</class>
+  </command>
+  <command>
+    <string>mount</string>
+    <class>org.clever.administration.commands.CreateMountCommand</class>
+  </command>
+  <command>
+    <string>ls</string>
+    <class>org.clever.administration.commands.LsCommand</class>
+  </command>
+  <command>
+    <string>cp</string>
+    <class>org.clever.administration.commands.CpCommand</class>
+  </command>
+  <command>
+    <string>upload</string>
+    <class>org.clever.administration.commands.UploadCommand</class>
+  </command>
+   <command>
+    <string>download</string>
+    <class>org.clever.administration.commands.DownloadCommand</class>
+  </command>
+  <command>
+    <string>tree</string>
+    <class>org.clever.administration.commands.TreeCommand</class>
+  </command>
+    <command>
+    <string>registervm</string>
+    <class>org.clever.administration.commands.RegisterVMCommand</class>
+  </command>
+  <command>
+    <string>createvm</string>
+    <class>org.clever.administration.commands.CreateVMCommand</class>
+  </command>
+    <command>
+    <string>startvm</string>
+    <class>org.clever.administration.commands.StartVMCommand</class>
+  </command>
+    <command>
+    <string>stopvm</string>
+    <class>org.clever.administration.commands.StopVMCommand</class>
+  </command>
+  <command>
+     <string>unregistervm</string>
+     <class>org.clever.administration.commands.UnregisterVmcommand</class>
+  </command>
+  <command>
+     <string>deletevm</string>
+     <class>org.clever.administration.commands.DeleteVmCommand</class>
+  </command>
+   <command>
+        <string>resumevm</string>
+        <class>org.clever.administration.commands.ResumeVMcommand</class>
+    </command>
+    <command>
+        <string>suspendvm</string>
+        <class>org.clever.administration.commands.SuspendVMCommand</class>
+    </command>
+     <command>
+        <string>takeEasysnapshot</string>
+        <class>org.clever.administration.commands.TakeEasySnapshotCommand</class>
+    </command>
+    <command>
+    	<string>listmacaddress</string>
+    	<class>org.clever.administration.commands.ListMacAddress</class>
+    </command>
+    <command>
+    	<string>attackinterface</string>
+    	<class>org.clever.administration.commands.AttackInterfaceCommand</class>
+    </command>
+     <!-- <command>
+    <string>storage1</string>
+    <class>org.clever.administration.commands.StorageCommand</class>
+  </command>-->
+
+</commands>

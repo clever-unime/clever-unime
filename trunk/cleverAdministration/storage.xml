@@ -1,0 +1,194 @@
+<agent name="StorageManagerAgent">
+  <file cleverpath="/nodo/home/roberto/Scrivania/ubuntu.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/704a6938-3f2e-47b6-aab1-6e5e5a19a622.qcow2">
+        <date>8-giu-2012 15.31.00</date>
+        <size>2805465088</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/salvo/home/s89/Desktop/ubuntu.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/d811fe60-1143-4e37-8edd-c33d77305ec6.qcow2">
+        <date>12-giu-2012 15.00.00</date>
+        <size>0</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/salvo/home/s89/Desktop/ubuntu.qcow2">
+    <hm name="salvo1">
+      <replica localpath="/home/s89/Desktop/openLupa/repository/621238ee-6435-44e3-a2b1-d9bbf65e91f3.qcow2">
+        <date>Jun 12, 2012 3:00:00 PM</date>
+        <size>0</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/prova.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/a780b1af-9793-4e26-a26b-f61ce5739d9e.qcow2">
+        <date>14-giu-2012 11.39.00</date>
+        <size>197120</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/prov.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/f47bfe49-0e8e-4bb3-8ae8-74c8d57339c1.qcow2">
+        <date>18-giu-2012 14.02.00</date>
+        <size>0</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/prov.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/a090e646-0c06-454e-8163-1bfbde50566f.qcow2">
+        <date>18-giu-2012 14.02.00</date>
+        <size>0</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/prov.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/fdc963ed-d418-4e2a-a0dc-b4a05bc5409e.qcow2">
+        <date>18-giu-2012 14.02.00</date>
+        <size>0</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/prov.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/4fab2490-5201-406e-b508-27215f110ee0.qcow2">
+        <date>18-giu-2012 14.02.00</date>
+        <size>0</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/prov.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/4dcb3ed8-b852-415e-a384-98fc6a3796a6.qcow2">
+        <date>18-giu-2012 14.02.00</date>
+        <size>0</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/prov.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/6787bd5e-faeb-471b-955b-d3318de7c30a.qcow2">
+        <date>18-giu-2012 14.02.00</date>
+        <size>0</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/prov.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/snapshot/2cd8d725-335a-4c23-aac7-3bd032503e0d.qcow2">
+        <date/>
+        <size/>
+        <lock>5</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/prov.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/snapshot/bf2f3198-6a73-4ecf-916f-8d1b4b5484ca.qcow2">
+        <date/>
+        <size/>
+        <lock>5</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/prov.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/e1305edd-60c0-4d39-bc5d-953dd451b77a.qcow2">
+        <date>18-giu-2012 14.02.00</date>
+        <size>0</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/prov.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/199f2f98-7b56-43ab-976e-93766b787bd9.qcow2">
+        <date>18-giu-2012 14.02.00</date>
+        <size>0</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/prov.qcow2">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/b1c8c87a-27ff-4fcf-a756-dea5e55224ae.qcow2">
+        <date>18-giu-2012 14.02.00</date>
+        <size>0</size>
+        <lock>0</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/example.vdi">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/e6e103bf-346b-470d-89c1-38328a5c254c.vdi">
+        <date>20-giu-2012 17.29.00</date>
+        <size>0</size>
+        <lock>5</lock>
+      </replica>
+    </hm>
+  </file>
+  <file cleverpath="/nodo/home/roberto/Scrivania/example.vdi">
+    <hm name="roberto-1001PX">
+      <replica localpath="/home/roberto/NetBeansProjects/openLupa/repository/2ed7204d-e79c-4db3-95e6-97bbd5c21f87.vdi">
+        <date>20-giu-2012 17.29.00</date>
+        <size>0</size>
+        <lock>5</lock>
+      </replica>
+    </hm>
+  </file>
+  <node name="prova2" type="mount">
+    <org.clever.Common.Storage.VFSDescription>
+      <auth>
+        <username>roberto</username>
+        <password>16088900</password>
+      </auth>
+      <typevfs>ftp</typevfs>
+      <hostname>localhost</hostname>
+      <port>21</port>
+      <path>/</path>
+      <path1/>
+    </org.clever.Common.Storage.VFSDescription>
+  </node>
+  <node name="salvo" type="mount">
+    <org.clever.Common.Storage.VFSDescription>
+      <auth>
+        <username>s89</username>
+        <password>s89</password>
+      </auth>
+      <typevfs>ftp</typevfs>
+      <hostname>172.17.126.241</hostname>
+      <port>21</port>
+      <path>/</path>
+      <path1/>
+    </org.clever.Common.Storage.VFSDescription>
+  </node>
+  <node name="nodo" type="mount">
+    <org.clever.Common.Storage.VFSDescription>
+      <auth>
+        <username>roberto</username>
+        <password>16088900</password>
+      </auth>
+      <typevfs>ftp</typevfs>
+      <hostname>localhost</hostname>
+      <port>21</port>
+      <path>/</path>
+      <path1/>
+    </org.clever.Common.Storage.VFSDescription>
+  </node>
+</agent>

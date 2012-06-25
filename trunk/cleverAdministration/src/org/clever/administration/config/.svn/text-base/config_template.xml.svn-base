@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <server></server>
+  <port></port>
+
+  <username></username>
+  <password></password>
+  <nickname></nickname>
+
+  <room></room>
+  <roomclients></roomclients>
+</configuration>

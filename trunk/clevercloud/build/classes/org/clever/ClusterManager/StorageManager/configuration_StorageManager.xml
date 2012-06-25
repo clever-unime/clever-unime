@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<StorageManagerPlugin>org.clever.ClusterManager.StorageManagerPlugins.StorageManagerClever.StorageManager</StorageManagerPlugin>
+<moduleName>StorageManagerAgent</moduleName>
+</root>

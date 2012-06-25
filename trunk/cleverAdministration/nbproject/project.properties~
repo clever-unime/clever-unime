@@ -1,0 +1,158 @@
+annotation.processing.enabled=true
+annotation.processing.enabled.in.editor=false
+annotation.processing.run.all.processors=true
+application.title=cleverAdministration
+application.vendor=Antonio
+build.classes.dir=${build.dir}/classes
+build.classes.excludes=**/*.java,**/*.form
+# This directory is removed when the project is cleaned:
+build.dir=build
+build.generated.dir=${build.dir}/generated
+build.generated.sources.dir=${build.dir}/generated-sources
+# Only compile against the classpath explicitly listed here:
+build.sysclasspath=ignore
+build.test.classes.dir=${build.dir}/test/classes
+build.test.results.dir=${build.dir}/test/results
+# Uncomment to specify the preferred debugger connection transport:
+#debug.transport=dt_socket
+debug.classpath=\
+    ${run.classpath}
+debug.test.classpath=\
+    ${run.test.classpath}
+# This directory is removed when the project is cleaned:
+dist.dir=dist
+dist.jar=${dist.dir}/cleveradministration.jar
+dist.javadoc.dir=${dist.dir}/javadoc
+endorsed.classpath=
+excludes=
+file.reference.clever.jar=../clevercloud/dist/clever.jar
+file.reference.clever.jar-1=libraries/clever.jar
+file.reference.commons-cli-1.2.jar=libraries/commons-cli-1.2.jar
+file.reference.commons-codec-1.4.jar=libraries/commons-codec-1.4.jar
+file.reference.commons-httpclient-3.0.1.jar=libraries/commons-httpclient-3.0.1.jar
+file.reference.commons-logging-1.1.1-javadoc.jar=libraries/commons-logging-1.1.1-javadoc.jar
+file.reference.commons-logging-1.1.1-sources.jar=libraries/commons-logging-1.1.1-sources.jar
+file.reference.commons-logging-1.1.1.jar=libraries/commons-logging-1.1.1.jar
+file.reference.commons-logging-adapters-1.1.1.jar=libraries/commons-logging-adapters-1.1.1.jar
+file.reference.commons-logging-api-1.1.1.jar=libraries/commons-logging-api-1.1.1.jar
+file.reference.commons-logging-tests.jar=libraries/commons-logging-tests.jar
+file.reference.commons-net-3.0.1-sources.jar=libraries/commons-net-3.0.1-sources.jar
+file.reference.commons-net-3.0.1.jar=libraries/commons-net-3.0.1.jar
+file.reference.commons-net-examples-3.0.1.jar=libraries/commons-net-examples-3.0.1.jar
+file.reference.commons-vfs2-2.0-javadoc.jar=libraries/commons-vfs2-2.0-javadoc.jar
+file.reference.commons-vfs2-2.0-sources.jar=libraries/commons-vfs2-2.0-sources.jar
+file.reference.commons-vfs2-2.0-test-sources.jar=libraries/commons-vfs2-2.0-test-sources.jar
+file.reference.commons-vfs2-2.0-tests.jar=libraries/commons-vfs2-2.0-tests.jar
+file.reference.commons-vfs2-2.0.jar-2=libraries/commons-vfs2-2.0.jar
+file.reference.commons-vfs2-examples-2.0-javadoc.jar=libraries/commons-vfs2-examples-2.0-javadoc.jar
+file.reference.commons-vfs2-examples-2.0-sources.jar=libraries/commons-vfs2-examples-2.0-sources.jar
+file.reference.commons-vfs2-examples-2.0.jar=libraries/commons-vfs2-examples-2.0.jar
+file.reference.httpclient-4.1.2.jar=libraries/httpclient-4.1.2.jar
+file.reference.httpclient-cache-4.1.2.jar=libraries/httpclient-cache-4.1.2.jar
+file.reference.httpcore-4.1.2.jar=libraries/httpcore-4.1.2.jar
+file.reference.httpmime-4.1.2.jar=libraries/httpmime-4.1.2.jar
+file.reference.jdom.jar-1=libraries/jdom.jar
+file.reference.jline-0_9_5.jar=libraries/jline-0_9_5.jar
+file.reference.jsch-0.1.45.jar=libraries/jsch-0.1.45.jar
+file.reference.jug-lgpl-2.0.0.jar-1=libraries/jug-lgpl-2.0.0.jar
+file.reference.libvirt-0.4.0.jar=../clevercloud/libraries/libvirt-0.4.0.jar
+file.reference.log4j.jar-1=libraries/log4j.jar
+file.reference.smack.jar-1=libraries/smack.jar
+file.reference.smackx-debug.jar-1=libraries/smackx-debug.jar
+file.reference.smackx.jar-1=libraries/smackx.jar
+file.reference.xerces-2.2.1.jar-2=libraries/xerces-2.2.1.jar
+file.reference.xstream-1.4.2-20110928.170215-1.jar-1=libraries/xstream-1.4.2-20110928.170215-1.jar
+includes=**
+jar.archive.disabled=${jnlp.enabled}
+jar.compress=false
+jar.index=${jnlp.enabled}
+javac.classpath=\
+    ${file.reference.jline-0_9_5.jar}:\
+    ${file.reference.jdom.jar}:\
+    ${file.reference.jug-lgpl-2.0.0.jar}:\
+    ${file.reference.log4j.jar}:\
+    ${file.reference.commons-cli-1.2.jar}:\
+    ${file.reference.clever.jar}:\
+    ${file.reference.log4j.jar}:\
+    ${file.reference.xstream-1.4.2-20110928.170215-1.jar}:\
+    ${file.reference.xerces-2.2.1.jar-2}:\
+    ${file.reference.commons-vfs2-2.0.jar-2}:\
+    ${file.reference.clever.jar-1}:\
+    ${file.reference.commons-codec-1.4.jar}:\
+    ${file.reference.commons-httpclient-3.0.1.jar}:\
+    ${file.reference.commons-logging-1.1.1-javadoc.jar}:\
+    ${file.reference.commons-logging-1.1.1-sources.jar}:\
+    ${file.reference.commons-logging-1.1.1.jar}:\
+    ${file.reference.commons-logging-adapters-1.1.1.jar}:\
+    ${file.reference.commons-logging-api-1.1.1.jar}:\
+    ${file.reference.commons-logging-tests.jar}:\
+    ${file.reference.commons-net-3.0.1-sources.jar}:\
+    ${file.reference.commons-net-3.0.1.jar}:\
+    ${file.reference.commons-net-examples-3.0.1.jar}:\
+    ${file.reference.commons-vfs2-2.0-javadoc.jar}:\
+    ${file.reference.commons-vfs2-2.0-sources.jar}:\
+    ${file.reference.commons-vfs2-2.0-test-sources.jar}:\
+    ${file.reference.commons-vfs2-2.0-tests.jar}:\
+    ${file.reference.commons-vfs2-examples-2.0-javadoc.jar}:\
+    ${file.reference.commons-vfs2-examples-2.0-sources.jar}:\
+    ${file.reference.commons-vfs2-examples-2.0.jar}:\
+    ${file.reference.httpclient-4.1.2.jar}:\
+    ${file.reference.httpclient-cache-4.1.2.jar}:\
+    ${file.reference.httpcore-4.1.2.jar}:\
+    ${file.reference.httpmime-4.1.2.jar}:\
+    ${file.reference.jdom.jar-1}:\
+    ${file.reference.jsch-0.1.45.jar}:\
+    ${file.reference.jug-lgpl-2.0.0.jar-1}:\
+    ${file.reference.log4j.jar-1}:\
+    ${file.reference.smack.jar-1}:\
+    ${file.reference.smackx-debug.jar-1}:\
+    ${file.reference.smackx.jar-1}:\
+    ${file.reference.xstream-1.4.2-20110928.170215-1.jar-1}
+# Space-separated list of extra javac options
+javac.compilerargs=
+javac.deprecation=false
+javac.processorpath=\
+    ${javac.classpath}
+javac.source=1.6
+javac.target=1.6
+javac.test.classpath=\
+    ${javac.classpath}:\
+    ${build.classes.dir}:\
+    ${libs.junit.classpath}:\
+    ${libs.junit_4.classpath}
+javadoc.additionalparam=
+javadoc.author=false
+javadoc.encoding=${source.encoding}
+javadoc.noindex=false
+javadoc.nonavbar=false
+javadoc.notree=false
+javadoc.private=false
+javadoc.splitindex=true
+javadoc.use=true
+javadoc.version=false
+javadoc.windowtitle=
+jaxbwiz.endorsed.dirs="${netbeans.home}/../ide12/modules/ext/jaxb/api"
+jnlp.codebase.type=no.codebase
+jnlp.descriptor=application
+jnlp.enabled=false
+jnlp.mixed.code=defaut
+jnlp.offline-allowed=false
+jnlp.signed=false
+main.class=org.clever.administration.CLI
+manifest.file=manifest.mf
+meta.inf.dir=${src.dir}/META-INF
+platform.active=default_platform
+run.classpath=\
+    ${javac.classpath}:\
+    ${build.classes.dir}
+# Space-separated list of JVM arguments used when running the project
+# (you may also define separate properties like run-sys-prop.name=value instead of -Dname=value
+# or test-sys-prop.name=value to set system properties for unit tests):
+run.jvmargs=
+run.test.classpath=\
+    ${javac.test.classpath}:\
+    ${build.test.classes.dir}
+source.encoding=UTF-8
+src.dir=src
+src.src.dir=src
+test.src.dir=test

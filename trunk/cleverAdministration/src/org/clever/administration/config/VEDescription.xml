@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.clever.Common.VEInfo.VEDescription>
+    <os_guest_id>ubuntuGuest</os_guest_id>
+    <name>libvirt35</name> 
+    <storage>
+        <org.clever.Common.VEInfo.StorageSettings>
+            <diskPath>/nodo/home/roberto/Scrivania/prova.qcow2</diskPath>
+        </org.clever.Common.VEInfo.StorageSettings>
+    </storage>
+    <cpu>
+        <numCpu>2</numCpu>
+        <coresXCpu>2</coresXCpu>
+        <frequency>0.0</frequency>
+        <architecture>X86_64</architecture>
+    </cpu>
+    <mem>
+        <size>1024288</size>
+    </mem>
+    <network>
+        <org.clever.Common.VEInfo.NetworkSettings></org.clever.Common.VEInfo.NetworkSettings>
+    </network>
+    <desktop>
+        <username></username>   
+        <password_user></password_user>
+        <password_vnc_vm></password_vnc_vm>
+        <ip_vnc></ip_vnc>
+        <port></port>
+    </desktop>
+</org.clever.Common.VEInfo.VEDescription>

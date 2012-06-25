@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : configuration_ServiceManager.xml
+    Created on : 14 novembre 2011, 18.05
+    Author     : giovalenti
+    Description:
+        Purpose of the document follows.
+-->
+
+<configuration>
+        <ServiceManager>org.clever.HostManager.ServiceManagerPlugins.Linux.ServiceManagerLinux</ServiceManager>
+	<moduleName>ServiceManagerAgent</moduleName>
+</configuration>
