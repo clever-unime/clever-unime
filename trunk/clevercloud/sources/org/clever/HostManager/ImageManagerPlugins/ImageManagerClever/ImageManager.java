@@ -849,6 +849,9 @@ public List SnapshotImageCreate(String localpath,VFSDescription vfsD,Integer loc
             List params=new ArrayList();
             UUID uuid=UUID.randomUUID();
             String localrepository=System.getProperty("user.dir")+"/repository/snapshot/";
+            File fl=new File(localrepository);
+            if(!fl.exists())
+                fl.mkdir();
             FileObject file_s=null;
             VirtualFileSystem vfs=new VirtualFileSystem();
             vfs.setURI(vfsD);

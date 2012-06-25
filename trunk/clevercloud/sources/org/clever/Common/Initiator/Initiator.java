@@ -120,9 +120,12 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
      }
   
      public void init() //funzione di inizializzazione
-     {     
-         cfgFile = new File( cfgPath ); //apro il riferimento al file             
-            
+     {   String cfgpath= System.getProperty("user.dir")+"/cfg";
+         File fl=new File(cfgpath);
+         if(!fl.exists())
+             fl.mkdir();
+         cfgFile = new File( cfgPath ); //apro il riferimento al file
+         
          if( !cfgFile.exists() ) //se il file di configurazione non esiste: siamo alla prima esecuzione dell'initiator!                          
          {                
              //devo quindi copiare il file configuration_template_initiator nella cartella della classe initiato.java, nella cartella al path cfg            		inxml = getClass().getResourceAsStream( "/org/clever/Common/Initiator/configuration_template_initiator.xml" ); //apro lo stream con il file configuration_template_initiator           	

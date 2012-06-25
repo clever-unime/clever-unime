@@ -670,6 +670,7 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
         params.add("VirtualizationManagerAgent");
         params.add("/Matching_VM_HM/VM[@name='"+id+"']/host/text()");
         String HMTarget=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+        
         params.clear(); 
         if(HMTarget.isEmpty())
             throw new LogicalCatalogException("VM name not exist");
@@ -698,8 +699,13 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
                 params.add(location);
          }
          
+         
          String pathxml=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, params); 
          VEDescription veD =(VEDescription) MessageFormatter.objectFromMessage(pathxml);
+         params.clear();
+        params.add("VirtualizationManagerAgent");
+        params.add(("/Matching_VM_HM/VM[@name='"+id+"']"));
+        this.owner.invoke("DatabaseManagerAgent", "deleteNode", true, params);
          params.clear();
          params.add(((StorageSettings)veD.getStorage().get(0)).getDiskPath());
          params.add(id);
@@ -708,13 +714,7 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
          params.clear();
          params.add(id);
          ((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent", "unregisterVm", true, params);
-         params.clear();
-        
-        
-       
-        params.add("VirtualizationManagerAgent");
-        params.add(("/Matching_VM_HM/VM[@name='"+id+"']"));
-        this.owner.invoke("DatabaseManagerAgent", "deleteNode", true, params);
+         
         return true;
         
         
