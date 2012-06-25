@@ -28,7 +28,7 @@
       <name>HyperVisorAgent</name>
     </agent>
  
-    <!--
+    
         <agent>
             <class>org.clever.HostManager.ImageManager.ImageManagerAgent</class>
             <name/>
@@ -41,7 +41,7 @@
             <class>org.clever.HostManager.NetworkManager.NetworkManagerAgent</class>
             <name/>
         </agent>
-        -->
+       
   </agents>
 </configuration>
 

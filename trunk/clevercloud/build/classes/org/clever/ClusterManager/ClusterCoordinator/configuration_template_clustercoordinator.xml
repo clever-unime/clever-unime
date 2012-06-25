@@ -22,22 +22,22 @@
     <!-- PROVA CAMPO: -->
     <librariespath>./libraries</librariespath>
   <agents>
-    <!--
     <agent>
           <class>org.clever.ClusterManager.StorageManager.StorageManagerAgent</class>
           <name></name> 
-      </agent>
-      -->
+    </agent>
     <agent>
       <class>org.clever.ClusterManager.Test.TestAgent</class>
       <name>TestAgent</name>
     </agent>
-    <!--
-      <agent>
+    <agent>
           <class>org.clever.ClusterManager.DatabaseManager.DatabaseManagerAgent</class>
           <name></name>
-      </agent>
-      -->
+    </agent>
+    <agent>
+	  <class>org.clever.ClusterManager.VirtualizationManager.VirtualizationManagerAgent</class>
+          <name></name>
+    </agent>
   </agents>
   <brain>
     <class>org.clever.ClusterManager.Brain.SensorBrain</class>
