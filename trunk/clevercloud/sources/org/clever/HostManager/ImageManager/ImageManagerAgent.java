@@ -115,17 +115,14 @@ public class ImageManagerAgent extends Agent {
       //Setto ImageManager come ascoltatore
      //rob this.imgManager = new ImageManager();
        this.imgManager = new ImageManager(pp);
-       logger.debug("Funziona1");
        this.imgManager.setMC(mc);
        this.imgManager.setOwner(this);
-       logger.debug("funziona2");
-       this.imgManager.registerHost();
-       logger.debug("funziona3");
+       //this.imgManager.registerHost();
+       
      
 
       cl = Class.forName(pars.getElementContent("ImageManagerPlugin"));
-      logger.debug("funziona4");
-      logger.info("ImageManager created!");
+       logger.info("ImageManager created!");
 
     } catch (IOException io_ex) {
       logger.error("ImageManager Error: " + io_ex);
@@ -196,15 +193,10 @@ public class ImageManagerAgent extends Agent {
       //Setto ImageManager come ascoltatore
      //rob this.imgManager = new ImageManager();
        this.imgManager = new ImageManager(pp);
-       logger.debug("Funziona1");
        this.imgManager.setMC(mc);
-       logger.debug("funziona2");
-       this.imgManager.registerHost();
-       logger.debug("funziona3");
-     
-
-      cl = Class.forName(pars.getElementContent("ImageManagerPlugin"));
-      logger.debug("funziona4");
+       //this.imgManager.registerHost();
+       cl = Class.forName(pars.getElementContent("ImageManagerPlugin"));
+      
       logger.info("ImageManager created!");
 
     } catch (IOException io_ex) {
