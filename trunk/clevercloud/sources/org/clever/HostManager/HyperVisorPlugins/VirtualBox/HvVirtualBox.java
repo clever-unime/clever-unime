@@ -925,7 +925,6 @@ public class HvVirtualBox implements HyperVisorPlugin {
     public String getLocalPath(String id) throws HyperVisorException {
         IMedium med=vbox.findMedium(id, DeviceType.HardDisk);
         String location=med.getLocation();
-        logger.info("salvo89 percorso virtualbox"+location);
         return location;
     }
 
