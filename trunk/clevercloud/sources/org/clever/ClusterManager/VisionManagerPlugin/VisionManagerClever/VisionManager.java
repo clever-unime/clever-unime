@@ -105,10 +105,8 @@ class ClusterBuildThread extends VisionManager implements Runnable
                  params.add("bridge");
                  this.owner.invoke("VirtualizationManagerAgent","attachInterface", true, params);
                  params.clear();
-                 logger.info("salvo89 dopo attach interface ");
                  String cfgIp=macFileConfigurator(net_info,ip,mac,j,ipstatic);
-                 logger.info("salvo89 cfgip "+ cfgIp);
-                 if(ipstatic)
+                  if(ipstatic)
                  nameserver=net_info.getChildText("dns");
                  params.add(name_vm);
                  params.add(cfgIp);
