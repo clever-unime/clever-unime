@@ -76,5 +76,5 @@ public interface HyperVisorPlugin extends RunnerPlugin {
     public boolean ImportLocalOvf(String id, String OVF_physicalPath) throws Exception;
     public void setOwner(Agent owner);
     public String getLocalPath(String id)throws HyperVisorException;
-    public boolean attackInterface(String id, String inf,String mac,String type) ;
+    public boolean attachInterface(String id, String inf,String mac,String type) ;
 }

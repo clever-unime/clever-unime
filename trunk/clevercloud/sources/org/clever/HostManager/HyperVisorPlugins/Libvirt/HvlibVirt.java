@@ -135,7 +135,7 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
                 if (system.equals("true"))
                     con="qemu:///system";
                 else
-                    con="qemu:///session";
+                    con="qemu:///system";
             }    
         else
             con="qemu:///system";
@@ -962,19 +962,19 @@ public long snapshotCount(String id) throws CleverException{
             doc = builder.build( new StringReader(dom.getXMLDesc(0)));
             return doc;
         } catch (LibvirtException ex) {
-            java.util.logging.Logger.getLogger(HvlibVirt.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error: "+ex);
         } catch (CleverException ex) {
-            java.util.logging.Logger.getLogger(HvlibVirt.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error: "+ex);
         } catch (JDOMException ex) {
-            java.util.logging.Logger.getLogger(HvlibVirt.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error: "+ex);
         } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(HvlibVirt.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("Error: "+ex);
        }
         return doc;
     }
     
     
-    public boolean attackInterface(String id, String inf,String mac,String type) {
+    public boolean attachInterface(String id, String inf,String mac,String type) {
             Document doc = dumpXml(id);
             Element interf=new Element("interface");
             interf.setAttribute("type", type);

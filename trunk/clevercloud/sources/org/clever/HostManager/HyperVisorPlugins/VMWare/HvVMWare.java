@@ -2676,7 +2676,7 @@ public class HvVMWare implements HyperVisorPlugin{
     }
 
     @Override
-    public boolean attackInterface(String id, String inf, String mac, String type) {
+    public boolean attachInterface(String id, String inf, String mac, String type) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

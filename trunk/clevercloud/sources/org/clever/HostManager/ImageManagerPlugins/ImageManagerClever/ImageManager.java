@@ -1,14 +1,10 @@
 
 package org.clever.HostManager.ImageManagerPlugins.ImageManagerClever;
 
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
+import com.redhat.et.libguestfs.GuestFS;
+import com.redhat.et.libguestfs.LibGuestFSException;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -101,7 +97,8 @@ public class ImageManager implements ImageManagerPlugin {
     //this.params=new ArrayList();
     //this.vfs=new VirtualFileSystem();
     
-    this.localRepository=System.getProperty("user.dir")+"/repository/";
+    //this.localRepository=System.getProperty("user.dir")+"/repository/";
+    this.localRepository="/tmp/repository/";
     this.paths = new ConcurrentHashMap<String, String>();
     this.sharedPath = new HashMap<String, String>();
     // We could maybe create a specific user for Clever operations
@@ -845,11 +842,12 @@ public class ImageManager implements ImageManagerPlugin {
           logger.debug("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"+((String)array1[i]));
       }
   }*/
-public List SnapshotImageCreate(String localpath,VFSDescription vfsD,Integer lock) throws IOException, InterruptedException{
+public List snapshotImageCreate(String localpath,VFSDescription vfsD,Integer lock) throws IOException, InterruptedException{
             List params=new ArrayList();
             UUID uuid=UUID.randomUUID();
             String localrepository=System.getProperty("user.dir")+"/repository/snapshot/";
-            File fl=new File(localrepository);
+            //File fl=new File(localrepository);
+            File fl=new File("/tmp/snapshot");
             if(!fl.exists())
                 fl.mkdir();
             FileObject file_s=null;
@@ -860,9 +858,11 @@ public List SnapshotImageCreate(String localpath,VFSDescription vfsD,Integer loc
             StringTokenizer st=new StringTokenizer(localpath,".");
             while(st.hasMoreTokens())
              extension=st.nextToken();
-            Process p=Runtime.getRuntime().exec("qemu-img create -f "+extension+" -b "+localpath+" "+localrepository+uuid+"."+extension);
+            //Process p=Runtime.getRuntime().exec("qemu-img create -f "+extension+" -b "+localpath+" "+localrepository+uuid+"."+extension);
+            Process p=Runtime.getRuntime().exec("qemu-img create -f "+extension+" -b "+localpath+" /tmp/snapshot/"+uuid+"."+extension);
             p.waitFor();
-            String response=localrepository+uuid+"."+extension;
+            //String response=localrepository+uuid+"."+extension;
+            String response="/tmp/snapshot/"+uuid+"."+extension;
             map.put(file_s.getName(),response);
             map1.put(response,"");
             map1.put(response, "");
@@ -875,5 +875,57 @@ public List SnapshotImageCreate(String localpath,VFSDescription vfsD,Integer loc
             return params;
              
         
+}
+
+public boolean imageFileEditor(String imgpath,String pathfile,String text){
+     logger.debug("salvo89 prima del try");   
+    try {logger.debug("salvo89 entro nel try");
+            GuestFS g=new GuestFS();
+            //g.add_drive("/home/s89/Desktop/ppp.qcow2");
+            logger.debug("prima di add-drive");
+            g.add_drive(imgpath);
+            logger.debug("prima di run");
+            g.launch();
+            logger.debug("prima di mount");
+            g.mount("/dev/vg_goldenimagevision/lv_root","/");
+            
+            //g.write_append(pathfile,text.getBytes());
+            /*String text= "auto lo\n"
+                         +"iface lo inet loopback\n"
+                         +"auto eth0\n"
+                         +"iface eth0 inet static\n"
+                         +"address 192.168.1.24\n"
+                         +"netmask 255.255.255.0\n"
+                         +"network 192.168.1.0\n"
+                         +"broadcast 192.168.1.255\n"
+                         +"gateway 192.168.1.1\n"
+                          +"auto eth1"
+                         +"iface eth1 inet static\n"
+                         +"address 192.168.1.25\n"
+                         +"netmask 255.255.255.0\n"
+                         +"network 192.168.1.0\n"
+                         +"broadcast 192.168.1.255\n"
+                         +"gateway 192.168.1.1\n";*/
+             logger.debug("prima di write");            
+            g.write(pathfile, text.getBytes());
+            g.umount_all();
+            g.sync();
+            g.close();
+            return true;
+           
+        } catch (LibGuestFSException ex) {
+            logger.error("error"+ex);
+        }
+        return true;
+     
+        /*FileWriter fw=new FileWriter(System.getProperty("user.dir")+"/tmp");
+        fw.write(text);
+        fw.close();
+        Process p=Runtime.getRuntime().exec("bash "+System.getProperty("user.dir")+"/script.sh "+imgpath+" "+pathfile+" "+System.getProperty("user.dir")+"/tmp");
+        p.waitFor();
+        File fl =new File(System.getProperty("user.dir")+"/tmp");
+        fl.delete();
+        
+        return true;*/
 }
 }

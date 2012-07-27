@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<clusters>
+   <cluster>
+       <name_cluster>prova</name_cluster>
+       <golden_image>redhatsalvo</golden_image>
+       <host>
+           <n_host>1</n_host>
+           <name>salvo1</name>
+           <n_vms>3</n_vms>
+           <n_interfaces>2</n_interfaces>
+           <name_bridge>br0</name_bridge>
+       </host>
+    </cluster>
+    <cluster>
+       <name_cluster>prova1</name_cluster>
+       <golden_image>redhatsalvo</golden_image>
+       <host>
+           <n_host>2</n_host>
+           <name>salvo1</name>
+           <n_vms>3</n_vms>
+           <n_interfaces>2</n_interfaces>
+           <name_bridge>br0</name_bridge>
+       </host>
+    </cluster>
+</clusters>

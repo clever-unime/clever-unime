@@ -488,7 +488,6 @@ public class StorageManager implements StorageManagerPlugin {
             return resolverNode((String) res.get(0),contenuto);
         }     
         if("mount".equals(type)){    
-
         VFSDescription vfsD=getCredentials(namefolder,contenuto);
         String node="";
         VirtualFileSystem a=new VirtualFileSystem();
@@ -687,7 +686,7 @@ public class StorageManager implements StorageManagerPlugin {
         }
     }
  
-public String SnapshotImageCreate(String localpath,String logicalpath,String HMTarget,Integer lock) throws CleverException{
+public String snapshotImageCreate(String localpath,String logicalpath,String HMTarget,Integer lock) throws CleverException{
             List params=new ArrayList();
             VFSDescription vfsD=null;
             try {
@@ -699,7 +698,7 @@ public String SnapshotImageCreate(String localpath,String logicalpath,String HMT
             params.add(localpath);
             params.add(vfsD);
             params.add(lock);
-            List result=(List)((CmAgent)this.owner).remoteInvocation(HMTarget,"ImageManagerAgent","SnapshotImageCreate", true, params);
+            List result=(List)((CmAgent)this.owner).remoteInvocation(HMTarget,"ImageManagerAgent","snapshotImageCreate", true, params);
             String entry= "<file cleverpath='"+logicalpath+"'>"
                             + "<hm name='"+HMTarget+"'>"
                                 + "<replica localpath='"+result.get(1) +"'>"

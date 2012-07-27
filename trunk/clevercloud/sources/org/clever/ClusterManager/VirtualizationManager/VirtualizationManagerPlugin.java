@@ -100,9 +100,9 @@ public interface VirtualizationManagerPlugin extends RunnerPlugin{
   
   public boolean resumeVm(String id )throws CleverException;
   
-  public boolean TakeEasySnapshot(String id,String nameS,String description,String targetHM) throws CleverException;
+  public boolean takeEasySnapshot(String id,String nameS,String description,String targetHM) throws CleverException;
   
   public boolean deleteVm(String id) throws CleverException;
   
-  public boolean attackInterface(String id,String inf,String mac,String type) throws CleverException;
+  public boolean attachInterface(String id,String inf,String mac,String type) throws CleverException;
 }

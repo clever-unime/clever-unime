@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<networkinfo>
+     <min_address>10.0.3.250</min_address>
+     <max_address>10.0.3.251</max_address>
+     <netmask>255.255.255.0</netmask>
+     <network>255.255.255.0</network>
+     <broadcast>192.168.1.255</broadcast>
+     <gateway>10.0.3.1</gateway>
+     <dns>10.0.3.1</dns>
+</networkinfo>

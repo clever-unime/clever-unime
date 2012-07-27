@@ -1,0 +1,107 @@
+listvms 
+listhostmanager 
+listclustermanager 
+tree
+ls /
+ls -p /
+listclustermanager 
+tree
+listclustermanager 
+tree
+ls -p /nodo1
+registervm 
+takeEasysnapshot -n libvirt40 -s snapprova1 -h salvo1
+ls -p /nodo1
+takeEasysnapshot -n libvirt40 -s snapprova1 -h salvo1
+takeEasysnapshot -n libvirt40 -s snapprova2 -h salvo1
+takeEasysnapshot -n libvirt40 -s snapprova3 -h salvo1
+takeEasysnapshot -n libvirt40 -s snapprova4 -h salvo1
+startvm -n snapprova2
+startvm -n snapprova3
+startvm -n snapprova4
+stopvm -n snapprova2 -poweroff
+stopvm -n snapprova3 -poweroff
+stopvm -n snapprova4 -poweroff
+deletevm -n snapprova2 
+deletevm -n snapprova3
+deletevm -n snapprova4
+deletevm -n snapprova1
+listclustermanager 
+listactiveagents -h salvo1
+registervm 
+takeEasysnapshot -n virt40 -s snapprova2 -h salvo1
+takeEasysnapshot -n virt40 -s snapprova3 -h salvo1
+listactiveagents -h salvo1
+takeEasysnapshot -n virt40 -s snapprova3 -h salvo1
+takeEasysnapshot -n virt40 -s snapprova4 -h salvo1
+listactiveagents -h salvo1
+takeEasysnapshot -n virt40 -s snapprova5 -h salvo1
+takeEasysnapshot -n virt40 -s snapprova6 -h salvo1
+listactiveagents -h salvo1
+takeEasysnapshot -n virt40 -s snapprova7 -h salvo1
+listvms -h salvo1
+takeEasysnapshot -n virt40 -s snapprova8 -h salvo1
+listvms -h salvo1
+takeEasysnapshot -n virt40 -s snapprova9 -h salvo1
+startvm -n snapprova9
+stopvm -n snapprova9 -poweroff
+listvms -h salvo1
+deletevm -n snapprova9
+unregistervm -n virt40
+deletevm -n snapprova8
+deletevm -n snapprova7
+deletevm -n snapprova6
+deletevm -n snapprova5
+deletevm -n snapprova4
+deletevm -n snapprova3
+deletevm -n snapprova2
+unregistervm -n virt40
+registervm
+takeEasysnapshot -n virt40 -s snapprova2 -h salvo1
+startvm -n snapprova2
+takeEasysnapshot -n virt40 -s snapprova3 -h salvo1
+startvm -n snapprova3
+stopvm -n snapprova3 -poweroff
+stopvm -n snapprova3 
+stopvm -n snapprova2 
+stopvm -n snapprova2 -poweroff
+startvm -n snapprova3
+stopvm -n snapprova2 -poweroff
+startvm -n snapprova3
+stopvm -n snapprova2 -poweroff
+stopvm -n snapprova3 -poweroff
+stopvm -n snapprova3
+startvm -n snapprova2
+stopvm -n snapprova3
+createvm -n virt40 -h salvo1
+startvm -n virt40
+startvm -n snapprova3
+stopvm -n snapprova3
+stopvm -n snapprova3 -poweroff
+listvisionvm
+listvm
+listvms -h salvo1
+listvms 
+tree
+mount -p /nodo1 -wizard
+ls -p /
+ls -p /nodo1
+registervm
+visionbuilder -p vision_cfg
+listvisionvm 
+listvms 
+deletevision 
+visionbuilder -p vision_cfg
+listvms 
+listvisionvm 
+deletevision 
+visionbuilder -p vision_cfg
+listvisionvm 
+startvm -n salvo11.1
+listvms -onlyrunning
+deletevision 
+visionbuilder -p vision_cfg
+deletevision 
+visionbuilder -p vision_cfg
+deletevision 
+visionbuilder -p vision_cfg

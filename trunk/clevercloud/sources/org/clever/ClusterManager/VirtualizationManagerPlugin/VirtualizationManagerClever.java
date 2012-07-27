@@ -24,7 +24,6 @@
  */     
 package org.clever.ClusterManager.VirtualizationManagerPlugin;
 
-import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -324,7 +323,7 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
                 }
          params.clear();
          //Insert into DB: mapping VM - HM
-         this.InsertItemIntoMatchingVmHM(id, targetHM);
+       
 
          List params1 = new ArrayList();
          params1.add("VirtualizationManagerAgent");
@@ -365,6 +364,7 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
          if(!result){
              return "creating VM "+id+" failed!";
          }
+         this.InsertItemIntoMatchingVmHM(id, targetHM);
          return "VM " +id+ " created!";
      }
 
@@ -387,6 +387,13 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         if(HMTarget.isEmpty())
             throw new LogicalCatalogException("VM name not exist");
         
+        
+        
+        params = new ArrayList();
+        params.add(id);
+        this.vm_tmp=id;
+        boolean result = (Boolean) ((CmAgent) this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","startVm", true, params);
+        
         // insert intoDB
         String node="<VM name=\""+id+"\" request=\""+new Date().toString()+"\" started=\"\">"+HMTarget+"</VM>";
         params = new ArrayList();
@@ -396,12 +403,8 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         params.add("/"+this.nodoVmRunning);
        
         this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
-        
-        params = new ArrayList();
-        params.add(id);
-        this.vm_tmp=id;
-        boolean result = (Boolean) ((CmAgent) this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","startVm", true, params);
         return result;
+        
     }
 
     /**
@@ -537,6 +540,12 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
             throw new CleverException("Vm is already running");
         }
         
+       
+        params = new ArrayList();
+        params.add(id);
+        this.vm_tmp=id;
+        boolean result=(Boolean)((CmAgent) this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","resume", true, params);
+       
         String node="<VM name=\""+id+"\" request=\""+new Date().toString()+"\" started=\"\">"+HMTarget+"</VM>";
         params = new ArrayList();
         params.add("VirtualizationManagerAgent");
@@ -546,11 +555,6 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
  
         this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
         
-        params = new ArrayList();
-        params.add(id);
-        this.vm_tmp=id;
-        boolean result=(Boolean)((CmAgent) this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","resume", true, params);
-      
         return result;
     }
 
@@ -606,7 +610,7 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         return result;
     }
     @Override
-public boolean TakeEasySnapshot(String id,String nameS,String description,String targetHM) throws CleverException{
+public boolean takeEasySnapshot(String id,String nameS,String description,String targetHM) throws CleverException{
          boolean result=false;
          MethodInvoker mi=null;
          // check if into db Sedna exist name of the VM
@@ -626,7 +630,7 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
          if(r==true){  
                 throw new LogicalCatalogException("SN already exist");
                 }
-         this.InsertItemIntoMatchingSnHM(id,nameS,targetHM);
+         
          int lock=1;
          List params1 = new ArrayList();
          params1.add("VirtualizationManagerAgent");
@@ -645,7 +649,7 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
          params.add(((StorageSettings)veD.getStorage().get(0)).getDiskPath());
          params.add(targetHM);
          params.add(lock);
-         String snapshotLocalPath=(String)this.owner.invoke("StorageManagerAgent","SnapshotImageCreate", true, params);
+         String snapshotLocalPath=(String)this.owner.invoke("StorageManagerAgent","snapshotImageCreate", true, params);
    
         
         
@@ -662,6 +666,7 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
          if(!result){
              throw new CleverException("creating SN "+nameS+" failed!");
          }
+         this.InsertItemIntoMatchingSnHM(id,nameS,targetHM);
          return true;
      }
     @Override
@@ -674,10 +679,17 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
         params.clear(); 
         if(HMTarget.isEmpty())
             throw new LogicalCatalogException("VM name not exist");
+        params.clear();
+        params.add("VirtualizationManagerAgent");
+        params.add("/VMs_Running/VM[@name='"+id+"']");
+        Boolean r=(Boolean)this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);
+        if(r){
+            throw new CleverException("Vm is running");
+        }
          params.clear();
          params.add("VirtualizationManagerAgent");
          params.add("/Matching_VM_HM/VM[@name='"+id+"'][@snapshot='"+true+"']");
-         Boolean r=(Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);
+         r=(Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);
          params.clear();
         
          if(r){
@@ -719,7 +731,7 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
         
         
  }
-public boolean attackInterface(String id,String inf,String mac,String type) throws CleverException{
+public boolean attachInterface(String id,String inf,String mac,String type) throws CleverException{
   List params = new ArrayList();
         params.add("VirtualizationManagerAgent");
         String location="/Matching_VM_HM/VM[@name='"+id+"']/host/text()";
@@ -732,7 +744,7 @@ public boolean attackInterface(String id,String inf,String mac,String type) thro
         params.add(inf);
         params.add(mac);
         params.add(type);
-        ((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","attackInterface", true, params); 
+        ((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","attachInterface", true, params); 
         boolean result=insertNetInterfaceIntoDb(id,inf,mac,type);
         return result;
  }
@@ -763,9 +775,105 @@ public String listMac_address(String id) throws CleverException{
         
     } 
 
+public boolean staticIpConfigurator(String id,String ip,String gateway,String network,String nameserver,String netmask,String broadcast) throws CleverException{
+String text="auto lo"
+           +"\niface lo inet loopback"
+           +"\nauto eth0"
+           +"\niface eth0 inet static"
+           +"\naddress "+ip
+           +"\nnetmask "+netmask
+           +"\nnetwork "+network
+           +"\nbroadcast "+broadcast
+           +"\ngateway "+gateway;
+List params= new ArrayList();
+params.add("VirtualizationManagerAgent");
+params.add("/Matching_VM_HM/VM[@name='"+id+"']/host/text()");
+String HMTarget=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+         if(HMTarget.isEmpty())
+            throw new LogicalCatalogException("VM name not exist");
+params.clear();
+params.add(id);
+String path=(String)((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","getLocalPath", true, params);
+params.clear();
+params.add(path);
+params.add("/etc/network/interfaces");
+params.add(text);
+((CmAgent)this.owner).remoteInvocation(HMTarget,"ImageManagerAgent","imageFileEditor", true, params);
+params.clear();
+params.add(path);
+params.add("/etc/resolv.conf");
+params.add("nameserver "+nameserver);
+boolean result=(Boolean)((CmAgent)this.owner).remoteInvocation(HMTarget,"ImageManagerAgent","imageFileEditor", true, params);
+return result;
+}
+
+public boolean staticIpConfigurator(String id,String cfg,String nameserver,Integer j, Boolean ipstatic) throws CleverException{
+logger.debug("salvo89 dentro staticIpConfigurator");
+List params= new ArrayList();
+params.add("VirtualizationManagerAgent");
+params.add("/Matching_VM_HM/VM[@name='"+id+"']/host/text()");
+String HMTarget=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+         if(HMTarget.isEmpty())
+            throw new LogicalCatalogException("VM name not exist");
+params.clear();
+params.add(id);
+String path=(String)((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","getLocalPath", true, params);
+params.clear();
+params.add(path);
+params.add("/etc/sysconfig/network-scripts/ifcfg-eth"+j);
+params.add(cfg);
+((CmAgent)this.owner).remoteInvocation(HMTarget,"ImageManagerAgent","imageFileEditor", true, params);
+params.clear();
+if(ipstatic){
+params.add(path);
+params.add("/etc/resolv.conf");
+params.add("nameserver "+nameserver);
+boolean result=(Boolean)((CmAgent)this.owner).remoteInvocation(HMTarget,"ImageManagerAgent","imageFileEditor", true, params);
+}
+return true;
+}
+
+ public List listVms() throws CleverException{
+   List l=new ArrayList();
+   List params=new ArrayList();
+   params.add("VirtualizationManagerAgent");
+   params.add("/Matching_VM_HM/VM/attribute(name)");
+   String result=(String)this.owner.invoke("DatabaseManagerAgent", "querytab", true, params);
+   params.clear();
+   String s;
+   StringTokenizer st=new StringTokenizer(result,"\n");
+        while(st.hasMoreTokens()){
+          params.add("VirtualizationManagerAgent"); 
+          s=st.nextToken();
+          params.add("/Matching_VM_HM/VM[@"+s+"]/host/text()");
+          l.add(s); 
+          l.add("host:"+(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params));
+          params.clear();
+        }
+   return l;
+}
+ public List listRunningVms() throws CleverException{
+   List l=new ArrayList();
+   List params=new ArrayList();
+   params.add("VirtualizationManagerAgent");
+   params.add("/VMs_Running/VM/attribute(name)");
+   String result=(String)this.owner.invoke("DatabaseManagerAgent", "querytab", true, params);
+   params.clear();
+   String s;
+   StringTokenizer st=new StringTokenizer(result,"\n");
+        while(st.hasMoreTokens()){
+          params.add("VirtualizationManagerAgent"); 
+          s=st.nextToken();
+          params.add("/Matching_VM_HM/VM[@"+s+"]/host/text()");
+          l.add(s); 
+          l.add("host:"+(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params));
+          params.clear();
+        }
+   return l;
+}
 
 }
 
  
-  
+
 

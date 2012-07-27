@@ -25,6 +25,7 @@ package org.clever.Common.Storage;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.logging.Logger;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
@@ -60,9 +61,11 @@ public class VirtualFileSystem {
      * @throws FileSystemException 
      */
     public String ls(FileObject file) throws FileSystemException{
+        
         String str="Contents of " + file.getName() +"\n";
         if (file.exists()){
             if (file.getType().equals(FileType.FILE)){
+                
                 str=str+"Size: " + file.getContent().getSize() + " bytes\n"
                         +"Last modified: " +DateFormat.getInstance().format(new Date(file.getContent().getLastModifiedTime()))+"\n"
                         +"Readable: " + file.isReadable()+"\n"
