@@ -105,3 +105,6 @@ deletevision
 visionbuilder -p vision_cfg
 deletevision 
 visionbuilder -p vision_cfg
+listvisionvm 
+listvisionvms
+listvms -onlyrunning
