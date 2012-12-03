@@ -1,12 +1,32 @@
-package org.clever.HostManager.HyperVisorPlugins.VirtualBox;
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright Elena Sentimentale.
+ * Copyright 2012 Giuseppe Tricomi
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
+package org.clever.HostManager.HyperVisorPlugins.VirtualBox;
 
 /**
- *
  * @author elena
+ * @author Giuseppe Tricomi 
  */
 
 
@@ -181,7 +201,9 @@ public class HvVirtualBox implements HyperVisorPlugin {
              StorageSettings stor = (StorageSettings)vmD.getStorage().get(0);
  // In openMedium I used AccessMode.Readonly because other accessmode does not work. Verify.
  // for virtualbox 4.0 : vbox.openMedium(stor.getDiskPath(), DeviceType.HardDisk, AccessMode.ReadOnly);
-             IMedium med = vbox.openMedium(stor.getDiskPath(), DeviceType.HardDisk, AccessMode.ReadOnly,false);
+ // Revision make 03/12/2012 openMedium work whit AccessMode.Readonly then we use this AccessMode and 
+ // parameter boolean true to create a clone of the HDD image pointed by VEDescriptor.            
+             IMedium med = vbox.openMedium(stor.getDiskPath(), DeviceType.HardDisk, AccessMode.ReadWrite,true);
              IMedium medium = vbox.findMedium(stor.getDiskPath(), DeviceType.HardDisk);
  //StorageController data should be already in VEDescription object.
              IStorageController controller= mutable.addStorageController("IDE", StorageBus.IDE);
