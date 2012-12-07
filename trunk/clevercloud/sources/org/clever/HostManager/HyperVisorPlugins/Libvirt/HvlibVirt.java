@@ -849,10 +849,14 @@ public long snapshotCount(String id) throws CleverException{
     public boolean destroyVm(String id) throws CleverException {
         try {
             Domain domain= (Domain) resolveUUID(id).getReference();
-            domain.destroy();
+            if((domain.getInfo().state.name().compareTo(DomainInfo.DomainState.VIR_DOMAIN_RUNNING.name())==0) || (domain.getInfo().state.name().compareTo(DomainInfo.DomainState.VIR_DOMAIN_PAUSED.name())==0))
+            {
+                domain.destroy();
+            }
+            domain.undefine();
             return (true);
         } catch (LibvirtException ex) {
-            logger.error("Error on destroy:"+ex);
+            logger.error("Error on destroyVM:"+ex);
             throw new HyperVisorException(ex.getMessage());
         }
     }
@@ -915,6 +919,10 @@ public long snapshotCount(String id) throws CleverException{
     public boolean unregisterVm(String id) throws CleverException {
         try {
             Domain domain= (Domain) resolveUUID(id).getReference();
+            if((domain.getInfo().state.name().compareTo(DomainInfo.DomainState.VIR_DOMAIN_RUNNING.name())==0) || (domain.getInfo().state.name().compareTo(DomainInfo.DomainState.VIR_DOMAIN_PAUSED.name())==0))
+            {
+                domain.destroy();
+            }
             domain.undefine();
             return (true);
         } catch (LibvirtException ex) {
