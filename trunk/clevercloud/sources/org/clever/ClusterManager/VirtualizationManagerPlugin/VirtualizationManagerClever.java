@@ -567,8 +567,8 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
             throw new LogicalCatalogException("VM name not exist");
         params = new ArrayList();
         params.add(id);
-        boolean result = (Boolean) ((CmAgent) this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","destroyVm", true, params);
-        
+        params.add(true);
+        boolean result = (Boolean) ((CmAgent) this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","shutDownVm", true, params);
         if(result){
             params = new ArrayList();
         params.add("VirtualizationManagerAgent");
