@@ -52,7 +52,7 @@ public class SensorBrain implements BrainInterface {
 
     Logger logger;
     DispatcherAgent dispatcherAgent;
-    String test="questa è una variabile di prova";
+    
     public SensorBrain(DispatcherAgent dispatcherAgent) {
         logger = Logger.getLogger("SensorBrain");
         this.dispatcherAgent = dispatcherAgent;
