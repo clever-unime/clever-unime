@@ -5,6 +5,7 @@
  *  Copyright (c) 2010 Massimo Villari
  *  Copyright (c) 2010 Antonio Celesti
  *  Copyright (c) 2010 Antonio Nastasi
+ *  Copyright (c) 2012 Giuseppe Tricomi
  *
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
@@ -356,7 +357,25 @@ public class CLI
           logger.error( ex );
           System.out.println( "Command error" );
         }
+        //whit this row we can permits at the user to stop this process in all case kill this process.
+        try{
+            java.util.Scanner sc = new java.util.Scanner(System.in);
+            System.out.println("Premere invio per terminare:");
+            sc.nextLine();
+            System.exit(0);
+        }
+        catch(java.util.NoSuchElementException ex ){
+            logger.error( ex );
+            System.out.println( "No new line has finded. The process will be terminated!" );
+            System.exit(0);
+        }
+        catch(IllegalStateException ex){
+            logger.error( ex );
+            System.out.println( "The scanner for termination of shell process has been terminated. The process will be terminated!" );
+            System.exit(0);
+        }
   }
+  
 
   public void showShell()
   {
@@ -367,12 +386,9 @@ public class CLI
     cleverConsole.addCompletor( new SimpleCompletor( commands.keySet().toArray(a) ) );
     try
     {
-      command = cleverConsole.readLine( prompt );
-      if(command==null)
-          return;
       do
       {
-
+        command = cleverConsole.readLine( prompt );  
         if( command.isEmpty() )
         {
           continue;
@@ -409,8 +425,7 @@ public class CLI
           logger.error( ex );
           System.out.println( "Command error" );
         }
-        command = cleverConsole.readLine( prompt );
-      } while(command!=null);
+      } while(true);
     }
     catch( IOException ex )
     {
