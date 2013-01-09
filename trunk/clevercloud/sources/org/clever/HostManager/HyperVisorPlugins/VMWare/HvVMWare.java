@@ -920,7 +920,8 @@ public class HvVMWare implements HyperVisorPlugin{
         catch(Exception e){
             this.disconnectVMWare(this.si);
             logger.error("Error: "+e);
-            throw e;
+            return null;
+            //throw e;
         }
     }
         
@@ -1102,8 +1103,15 @@ public class HvVMWare implements HyperVisorPlugin{
                     String id = id1.toString();
                     logger.info("VM adding: "+id);  
                     VMWrapper wrap = this.createVMwrapper(id);
-                    this.m.put(id, wrap);
-                    logger.info("VM added: "+id);
+                    if(wrap!= null){
+                        this.m.put(id, wrap);
+                        logger.info("VM added: "+id);
+                    }
+                    else
+                    {
+                        this.m.put(id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)", null);
+                        logger.info("VM added: "+id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)");
+                    }
                }
                return;
             }
@@ -1119,7 +1127,13 @@ public class HvVMWare implements HyperVisorPlugin{
 		     if(a == false){
                         String id = id1.toString();
 			VMWrapper wrap = this.createVMwrapper(id);
-			this.m.put(id, wrap);
+			if(wrap!= null){
+                            this.m.put(id, wrap);
+                        }
+                        else
+                        {
+                            this.m.put(id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)", null);
+                        }
                      }
 		  }
               }

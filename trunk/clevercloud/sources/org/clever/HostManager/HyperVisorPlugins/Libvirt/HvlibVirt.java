@@ -689,8 +689,15 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
                     String id = (String)id1;
                     logger.info("VM adding: "+id);
                     VMWrapper wrap = createVMwrapper(id);
-                    idVMWrapper.put(id, wrap);
-                    logger.info("VM added: "+id);
+                    if(wrap!= null){
+                        idVMWrapper.put(id, wrap);
+                        logger.info("VM added: "+id);
+                    }
+                    else
+                    {
+                        idVMWrapper.put(id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)", null);
+                        logger.info("VM added: "+id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)");
+                    }
                }
                return;
             }
@@ -708,6 +715,13 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
 			  String id = id1.toString();
 			  VMWrapper wrap = createVMwrapper(id);
 			  idVMWrapper.put(id, wrap);
+                          if(wrap!= null){
+                              idVMWrapper.put(id, wrap);
+                          }
+                          else
+                          {
+                              idVMWrapper.put(id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)", null);
+                          }
 		      }
 		  }
               }
@@ -741,7 +755,8 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
             catch(Exception e){
                  logger.error("Error on createVMWrapper: " + e);
                  e.printStackTrace();
-                throw new HyperVisorException(e.getMessage());
+                 return null;
+                 //throw new HyperVisorException(e.getMessage());
             }
         }
 

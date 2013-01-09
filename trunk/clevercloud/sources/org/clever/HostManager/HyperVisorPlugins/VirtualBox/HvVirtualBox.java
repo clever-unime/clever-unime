@@ -301,7 +301,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
      public List listHVms() throws Exception{
          try{
             ArrayList l = new ArrayList(vbox.getMachines());
-            logger.info("List VMs rturned nummero di macchine: "+l.size());
+            logger.info("List VMs returned numero di macchine: "+l.size());
             ArrayList l2 = new ArrayList();
             IMachine vm;
             for(Object obj: l){
@@ -341,12 +341,20 @@ public class HvVirtualBox implements HyperVisorPlugin {
             ArrayList listCl = new ArrayList(m.keySet());
             ArrayList listLib = new ArrayList (listHVms());
             if (listCl.isEmpty()){
-               for(Object id1 : listLib){
+               for(Object id1 : listLib)
+               {
                     String id = id1.toString();
                     logger.info("VM adding: "+id);
                     VMWrapper wrap = createVMwrapper(id);
-                    m.put(id, wrap);
-                    logger.info("VM added: "+id);
+                    if(wrap!= null){
+                        m.put(id, wrap);
+                        logger.info("VM added: "+id);
+                    }
+                    else
+                    {
+                        m.put(id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)", null);
+                        logger.info("VM added: "+id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)");
+                    }
                }
                return;
             }
@@ -363,7 +371,13 @@ public class HvVirtualBox implements HyperVisorPlugin {
 		      if(a == false){
 			  String id = id1.toString();
 			  VMWrapper wrap = createVMwrapper(id);
-			  m.put(id, wrap);
+			  if(wrap!= null){
+                                m.put(id, wrap);
+                          }
+                          else
+                          {
+                                m.put(id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)", null);
+                          }
 		      }
 		  }
               }
@@ -398,11 +412,11 @@ public class HvVirtualBox implements HyperVisorPlugin {
             }
              catch(VBoxException e){
                  logger.error("Error :"+e);
-                 throw e; //TODO add a efficent exception managing
+                 return null;
             }
             catch(Exception e){
                  logger.error("Error: "+e);
-                throw e;
+                 return null;
             }
         }
 
