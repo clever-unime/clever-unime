@@ -63,7 +63,6 @@ public class SensorBrain implements BrainInterface {
         logger.debug("Received notification " + notification.getId());
         try {
 
-            //kdjsffgyhffyhfhhfh
             
             //insert notification into tags <notification id= timestamp=> </notification>
             Element xmlNotification = new Element("notification");
