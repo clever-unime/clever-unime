@@ -78,7 +78,7 @@ public class CLI
 
   private void init()
     {
-      File cliConfiguration = new File( cfgCLIPath + "/config_clever_cli.xml" );
+    File cliConfiguration = new File( cfgCLIPath + "/config_clever_cli.xml" );
     InputStream inxml = null;
     FileStreamer fs = null;
     ParserXML pXML = null;
