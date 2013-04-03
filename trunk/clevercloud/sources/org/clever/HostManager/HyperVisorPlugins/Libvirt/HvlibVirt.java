@@ -157,7 +157,9 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
     }
   }
 
-  
+  public String getHYPVRName(){
+      return "LibVirt";
+  }
 
  
  
@@ -273,9 +275,9 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
   }
 
 
-  public boolean createAndStart( String id, VEDescription vmD ) throws CleverException
+  public boolean createAndStart( String id, VEDescription vmD, Boolean notExclusive ) throws CleverException
   {
-    createVm( id, vmD );
+    createVm( id, vmD,notExclusive );
     return ( startVm( id ) );
   }
 
@@ -288,7 +290,7 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
       int res=99;
     if((res = Libvirt.INSTANCE.virEventRegisterDefaultImpl()) == -1)
           logger.error("Error on register event loop");
-      logger.debug("virEventRegisterDefaultImpl restituisce: "+res);
+      logger.debug("virEventRegisterDefaultImpl return: "+res);
         try {
             
             this.conn.domainEventRegisterAny(null, 0, this);
@@ -383,16 +385,26 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
   }
 
 
-
-  public boolean createVm( String id, VEDescription veD ) throws CleverException
+// notExclusive indica alla create quando realizzare un disco da condividere su più
+//   macchine
+  public boolean createVm( String id, VEDescription veD,Boolean notExclusive ) throws CleverException
   {
     Domain d = null;
-    
     try
     {
-      d = conn.domainDefineXML( veDescriptionToXML( veD ) );
+      String goldI=veD.getName();
+      veD.setName(id);
+      d = conn.domainDefineXML( veDescriptionToXML( veD,notExclusive ) );
       VMWrapper vmW = new VMWrapper( d, veD );
       idVMWrapper.put( id, vmW );
+      // future works can substitute the mechanism of creation snapshot realized in Virtualization Manager Clever with this.
+      /*if(notExclusive){
+          String vmname=java.util.UUID.randomUUID().toString();
+          vmname=vmname.replace("-", "");//this replacement is necessary because if we don't eliminate the "-" the VirtuaslBox "findmachine" function don't work finely 
+          this.takeSnapshot(id, vmname, "Snapshot of VM based on "+goldI+" golden image");
+          logger.debug("X?X gold image:"+goldI);
+          logger.info( "VM " + vmname + " created" );
+      }*/
       logger.info( "VM " + id + " created" );
       return true;
     }
@@ -591,18 +603,20 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
   }
 
 
-  private String veDescriptionToXML( VEDescription vmD )
+  private String veDescriptionToXML( VEDescription vmD, Boolean notExclusive )
   {
       
     StorageSettings hd = ( StorageSettings ) vmD.getStorage().get( 0 );
     Element root = new Element( "domain" );
-    root.setAttribute( "type", "kvm" );
+    root.setAttribute( "type", "qemu" );//root.setAttribute( "type", "kvm" );
+    root.setAttribute( "snapshot", "external" );
     Document doc = new Document( root );
     Element name_vm = new Element( "name" );
     name_vm.addContent( vmD.getName() );
     root.addContent( name_vm );
     Element memory = new Element( "memory" );
-    memory.addContent( String.valueOf( vmD.getMemorySettings().getSize() ) );
+    long sizeMem=vmD.getMemorySettings().getSize()*1024;
+    memory.addContent( String.valueOf(sizeMem) );
     root.addContent( memory );
     Element cpu_sett = new Element( "vcpu" );
     cpu_sett.setAttribute("placement","static");
@@ -658,6 +672,10 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
     Element target = new Element( "target" );
     target.setAttribute( "dev", "hda" );
     disk.addContent( target );
+    if(notExclusive){
+        Element sharable=new Element("shareable");
+        disk.addContent(sharable);
+    }
     devices.addContent( disk );
     //Element interf = new Element("interface");
     //interf.setAttribute("type", "network");

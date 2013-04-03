@@ -4,6 +4,7 @@
   <moduleName>DatabaseManagerAgent</moduleName>
   <pluginParams>
     <serverURL>localhost</serverURL>
+   <!-- <serverURL>ing-clever-master.me.trigrid.it</serverURL> -->  
     <dbName>cleverDatabase</dbName>
     <user>SYSTEM</user>
     <password>MANAGER</password>

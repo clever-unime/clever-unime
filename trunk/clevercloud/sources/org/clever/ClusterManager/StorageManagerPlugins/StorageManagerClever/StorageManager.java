@@ -46,7 +46,7 @@ import org.clever.Common.Storage.VirtualFileSystem;
 import org.clever.Common.XMLTools.MessageFormatter;
 import org.clever.Common.XMLTools.ParserXML;
 import org.jdom.Element;
-
+import org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile;
 /**
  *
  * @author giancarloalteri
@@ -536,7 +536,7 @@ public class StorageManager implements StorageManagerPlugin {
     * @throws Exception 
     */
     @Override
-   public String lockManager(String path,String targetHM,Integer lock) throws CleverException,Exception{
+   public String lockManager(String path,String targetHM,LockFile.lockMode lock) throws CleverException,Exception{
 
        VFSDescription vfsD=discoveryNode(path,"");
        List result = new ArrayList();
@@ -564,8 +564,9 @@ public class StorageManager implements StorageManagerPlugin {
        }
        else if("update".equals(result.get(0).toString())){
            //List params4 = new ArrayList();
+           LockFile.lockMode l=(LockFile.lockMode)result.get(4);
            params1.add("StorageManagerAgent");
-           params1.add("<lock>"+result.get(4).toString()+"</lock>");
+           params1.add("<lock>"+new LockFile().getLockType(l) +"</lock>");
            params1.add("with");
            params1.add("/file/hm/replica[@localpath='"+result.get(1).toString()+"']/lock");
            //params4.add("/file/hm/replica/lock");
@@ -578,11 +579,12 @@ public class StorageManager implements StorageManagerPlugin {
        }
        else if("insert".equals(result.get(0).toString())){
             //List params3 = new ArrayList();
+           LockFile.lockMode l=(LockFile.lockMode)result.get(4);
             params1.add("StorageManagerAgent");
             params1.add("<replica localpath='"+result.get(1) +"'>"
                                 + "<date>"+result.get(2) +"</date>"
                                 + "<size>"+result.get(3) +"</size>"
-                                + "<lock>"+result.get(4) +"</lock>"
+                                + "<lock>"+new LockFile().getLockType(l) +"</lock>"
                                 + "</replica>");
             params1.add("into");
             params1.add("/file[@cleverpath='"+path+"']/hm[@name='"+targetHM+"']"); 
@@ -596,12 +598,13 @@ public class StorageManager implements StorageManagerPlugin {
 
        else if("new".equals(result.get(0).toString()))  {
            //List params1 = new ArrayList();
+           LockFile.lockMode l=(LockFile.lockMode)result.get(4);
             String entry= "<file cleverpath='"+path+"'>"
                             + "<hm name='"+targetHM+"'>"
                                 + "<replica localpath='"+result.get(1) +"'>"
                                 + "<date>"+result.get(2) +"</date>"
                                 + "<size>"+result.get(3) +"</size>"
-                                + "<lock>"+result.get(4) +"</lock>"
+                                + "<lock>"+new LockFile().getLockType(l) +"</lock>"
                                 + "</replica>"
                             + "</hm>"
                         + "</file>";   
@@ -663,14 +666,18 @@ public class StorageManager implements StorageManagerPlugin {
     public boolean deleteFile(String path,String id,String HMTarget) {
         try {
             List params=new ArrayList();
-            params.add(id);
-            String localpath=(String) ((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","getLocalPath", true, params);
-            params.clear();
+            //arams.add(path);precedentemente qui c'era il campo id invece di path, verificare che
+            //path e localpath siano diversi in tal caso eliminare l'invocazione remota
+            //String localpath=(String) ((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","getLocalPath", true, params);
+            //params.clear();
+            String localpath=path;
             params.add(localpath); 
             VFSDescription vfsD=null;
             try {
-                vfsD = discoveryNode(path,"");
+                //vfsD = discoveryNode(path,"");
+                vfsD=new VFSDescription(VFSDescription.TypeVfs.file,"path","");
             } catch (Exception ex) {
+                this.logger.error("Error in function discoveryNode:"+ex.getMessage());
                 java.util.logging.Logger.getLogger(StorageManager.class.getName()).log(Level.SEVERE, null, ex);
             }
             params.add(vfsD);
@@ -687,7 +694,7 @@ public class StorageManager implements StorageManagerPlugin {
         }
     }
  
-public String SnapshotImageCreate(String localpath,String logicalpath,String HMTarget,Integer lock) throws CleverException{
+public String SnapshotImageCreate(String localpath,String logicalpath,String HMTarget,LockFile.lockMode lock) throws CleverException{
             List params=new ArrayList();
             VFSDescription vfsD=null;
             try {
@@ -700,12 +707,13 @@ public String SnapshotImageCreate(String localpath,String logicalpath,String HMT
             params.add(vfsD);
             params.add(lock);
             List result=(List)((CmAgent)this.owner).remoteInvocation(HMTarget,"ImageManagerAgent","SnapshotImageCreate", true, params);
+            LockFile.lockMode l=(LockFile.lockMode)result.get(4);
             String entry= "<file cleverpath='"+logicalpath+"'>"
                             + "<hm name='"+HMTarget+"'>"
                                 + "<replica localpath='"+result.get(1) +"'>"
                                 + "<date>"+result.get(2) +"</date>"
                                 + "<size>"+result.get(3) +"</size>"
-                                + "<lock>"+result.get(4) +"</lock>"
+                                + "<lock>"+new LockFile().getLockType(l) +"</lock>"
                                 + "</replica>"
                             + "</hm>"
                         + "</file>";   

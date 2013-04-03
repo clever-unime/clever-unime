@@ -2,6 +2,7 @@
  * The MIT License
  *
  * Copyright 2011 Alessio Di Pietro.
+ * Copyright 2013 Tricomi Giuseppe
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +42,7 @@ import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XQueryService;
 
 /**
- *
+ * @author Giuseppe Tricomi
  * @author alessiodipietro
  */
 public class DbSedna implements DatabaseManagerPlugin {
@@ -799,8 +800,10 @@ public class DbSedna implements DatabaseManagerPlugin {
 
             updateStr = "update delete "
                     + " document(\"" + this.document + "\")/" + xpathAgent + location;
+            
             serviceUpdate.update(updateStr);
             collect.close();
+            
         } catch (XMLDBException ex) {
             logger.error("Delete node failed: " + ex.getMessage());
             throw new CleverException("CM database update failed! " + ex);
@@ -875,5 +878,68 @@ public class DbSedna implements DatabaseManagerPlugin {
     @Override
     public void setOwner(Agent owner) {
         this.owner=owner;
+    }
+    
+    /**
+     * This method returns the attribute "name" of the the children of a node pointed by location where node value is equal to condition
+     * Probabilmente questo metodo è da eliminare.
+     * @param agentId
+     * @param location
+     * @param condition
+     * @return
+     */
+   @Override
+  synchronized public List getNameAttributes(String agentId,String location,String condition) {
+        ArrayList a=new ArrayList();     
+        String xpathAgent ="/agent[@name='" + agentId + "']";
+        try{
+            Collection collect = this.connect();
+            String updateStr = "let $p := document(\"" + this.document + "\")/" + xpathAgent + "" + location + " where $p/" + condition + " return data($p/@name)";
+            
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.queryResource(document, updateStr);
+            ResourceIterator results = resultSet.getIterator();
+            while (results.hasMoreResources()) {
+                Resource res = results.nextResource();
+                a.add(res.getContent());
+            }
+            
+            collect.close();
+
+        } catch (XMLDBException ex) {
+            logger.error("Retrieving attribute \"name\" failed:" + ex.getMessage());
+        }
+        return a;
+    }
+
+/**
+     * This method returns the attribute "name" of the the children of a node pointed by location where node value is equal to condition
+     * Probabilmente questo metodo è da eliminare.
+     * @param agentId
+     * @param location
+     * @param condition
+     * @return
+     */
+  synchronized public List getNameAttributes(String agentId,String location,String condition,String ret) {
+        ArrayList a=new ArrayList();     
+        String xpathAgent ="/agent[@name='" + agentId + "']";
+        try{
+            Collection collect = this.connect();
+            String updateStr = "let $p := document(\"" + this.document + "\")/" + xpathAgent + "" + location + " where $p/" + condition + " return data($p"+ret+")";
+            
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.queryResource(document, updateStr);
+            ResourceIterator results = resultSet.getIterator();
+            while (results.hasMoreResources()) {
+                Resource res = results.nextResource();
+                a.add(res.getContent());
+            }
+            
+            collect.close();
+
+        } catch (XMLDBException ex) {
+            logger.error("Retrieving attribute \"name\" failed:" + ex.getMessage());
+        }
+        return a;
     }
 }

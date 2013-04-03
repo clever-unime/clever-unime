@@ -335,7 +335,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
                             "handleNotification",
                             true,
                             params);
-
+                    //logger.debug("X?X 338 dispatcher clever, agent:"+(String) agent);
                     mc.invoke(mi);
                 } catch (CleverException ex) {
                     logger.error("Error invoking agent handleNotification method " + ex);

@@ -28,7 +28,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
-
+import org.apache.log4j.Logger;
 /**
  *
  * @author sabayonuser
@@ -37,7 +37,8 @@ public class ThreadMessageDispatcher extends Thread {
 
 
     LinkedBlockingQueue <CleverMessage> cleverMessages ;
-
+    Logger logger=null;
+    
     /**
      * Queue of not active thread for the CleverMessage managing
      */
@@ -56,6 +57,7 @@ public class ThreadMessageDispatcher extends Thread {
         this.cleverMessages = new LinkedBlockingQueue(maxMessagesInQueue);
         this.poolMessageHandlers = new LinkedBlockingQueue();
         this.activeMessageHandlers = new ArrayBlockingQueue(maxActiveHandlers,true);
+        this.logger=Logger.getLogger("ThreadDispatcher");
     }
 
     /**
@@ -66,12 +68,14 @@ public class ThreadMessageDispatcher extends Thread {
          
         if(!this.cleverMessages.offer(msg))
         {
+             
              //TODO: manage log message
         }
     }
 
     void threadTerminated(ThreadMessageHandler th)
     {
+        this.logger.debug("£$% thread chiuso");
         this.activeMessageHandlers.remove(th);
         this.poolMessageHandlers.offer(th); //TODO: check result values
     }
@@ -91,6 +95,7 @@ public class ThreadMessageDispatcher extends Thread {
               
                     ThreadMessageHandler mh = new ThreadMessageHandler(this.dispatcher,this,msg);
                     this.activeMessageHandlers.put(mh);
+                    this.logger.debug("£$% thread aperto");
                     mh.start();
 
                 }

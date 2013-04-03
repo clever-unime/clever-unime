@@ -77,5 +77,6 @@ public interface DatabaseManagerPlugin extends RunnerPlugin {
   String getContentNodeObject(String agentId,String location) throws XMLDBException;
   boolean checkAgentNode(String agentId, String location) throws CleverException;
   public void setOwner(Agent owner);
-
+  List getNameAttributes(String agentId,String location,String condition);
+  //String getFatherAttributeNode(String agentId,String location,String sonCondition,String tipo) throws XMLDBException;
 }

@@ -39,6 +39,7 @@ import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
+import java.io.FileInputStream;
 
 public class HyperVisorAgent extends Agent {
 
@@ -63,7 +64,10 @@ public class HyperVisorAgent extends Agent {
         FileStreamer fs = new FileStreamer();
 
         try {
-            InputStream inxml = getClass().getResourceAsStream("/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");
+            //InputStream inxml = getClass().getResourceAsStream("./cfg/configuration_hypervisor.xml");//("/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");
+            FileInputStream inxml = new FileInputStream("./cfg/configuration_hypervisor.xml");
+            if(inxml==null)
+                logger.debug("The variable inxml is null check configursarion file");
             ParserXML pXML = new ParserXML(fs.xmlToString(inxml));
             cl = Class.forName(pXML.getElementContent("HyperVisor"));
             hypervisor = (HyperVisorPlugin) cl.newInstance();

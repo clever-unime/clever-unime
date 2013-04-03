@@ -71,6 +71,7 @@ class NotificationThread extends Thread implements PacketListener
 
     @Override
     public synchronized void run() {
+        logger.debug("Start NotificationThread run!");
         String target = null;
         while (true) {
             //no messages
@@ -86,18 +87,20 @@ class NotificationThread extends Thread implements PacketListener
             }
             target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
             //no active cc
-            if (target == null) {
+            while(target.isEmpty()) {
                 try {
                     CMisPresent = false;
                     while (!CMisPresent) {
                         wait();
                     }
+                    target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
                 } catch (InterruptedException ex) {
                     logger.error("InterruptedException: "+ex);
                 }
             }
             CleverMessage msg = queue.poll();
             msg.setDst(target);
+            logger.debug("X?X target="+target);
             connectionXMPP.sendMessage(target, msg);
 
         }
@@ -141,6 +144,13 @@ public void initialization() throws CleverException
     
     notificationThread = new NotificationThread(connectionXMPP, notificationsThreshold);
     notificationThread.start();    
+    
+    String hostid=this.connectionXMPP.getHostName();
+    Notification notification=new Notification();
+    notification.setId("PRESENCE/HM");
+    logger.debug("?=)** hostId= "+hostid);
+    notification.setHostId(hostid);
+    this.sendNotification(notification);
 }
 
     @Override

@@ -57,6 +57,7 @@ public class VirtualizationManagerAgent extends CmAgent {
     private String notificationStartedVm = "Virtualization/VmStarted";
     private String notificationCreatedVm = "Virtualization/VmCreated";
     private String notificationImportedVm = "Virtualization/VmImported";
+    private String notificatioPresenceHM = "PRESENCE/HM";
  //Modifico il virtualizationManagerAgent 05/24/2012 Rob
   
     
@@ -97,6 +98,13 @@ public class VirtualizationManagerAgent extends CmAgent {
               
                 logger.debug("called init of " + pXML.getElementContent("VirtualizationManager"));
         
+                 
+                params= new ArrayList();
+                params.add(this.agentName);
+                params.add(this.notificatioPresenceHM);
+                this.invoke("DispatcherAgent", "subscribeNotification", true, params);
+                
+                
                 params = new ArrayList();
                 params.add(this.agentName);
                 params.add(this.notificationIdRegisterVirtualDeskHTML5);  
@@ -233,7 +241,21 @@ public class VirtualizationManagerAgent extends CmAgent {
                 this.invoke("DatabaseManagerAgent", "insertNode", true, params1);
                 
             } catch (Exception ex) {
-                throw new CleverException("Timestamp createvm into DB failed!");
+                throw new CleverException("Timestamp importedvm into DB failed!");
+            }
+        }
+        if (notification.getId().equals(this.notificatioPresenceHM)) {
+            String nameHM = "";
+            
+            logger.debug("Received notification type: " + notification.getId());
+            try {
+                nameHM = (String) notification.getHostId();
+                /**/
+                this.VirtualizationManager.manageReUpHost(nameHM);
+                        //vmsClever.lastIndexOf(r))
+            } 
+            catch (Exception ex) {
+                throw new CleverException("Sincornization with host's "+nameHM+" hypervisor is failed!"+ex.getMessage());
             }
         }
     }

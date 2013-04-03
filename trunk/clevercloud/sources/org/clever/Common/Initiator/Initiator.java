@@ -50,7 +50,20 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
      private final String cfgPath = "./cfg/configuration_initiator.xml";
      
      private final String cfgPath_CM = "./cfg/configuration_clustercoordinator.xml";
-
+     
+     //block realized to move all configuration file in cfg folder
+     private final String cfgPath_Storage= "./cfg/configuration_StorageManager.xml";
+     private final String cfgPath_DbManager= "./cfg/configuration_dbManagerPlugin.xml";
+     private final String cfgPath_Dispatcher= "./cfg/configuration_dispatcher.xml";
+     private final String cfgPath_VirtManager= "./cfg/configuration_VirtualizationManager.xml";
+     private final String cfgPath_ModulFactory= "./cfg/configuration_module_factory.xml";
+     private final String cfgPath_Communicator= "./cfg/configuration_communicator.xml";
+     private final String cfgPath_Hypervisor= "./cfg/configuration_hypervisor.xml";
+     private final String cfgPath_ImageManager= "./cfg/configuration_ImageManager.xml";
+     private final String cfgPath_NetworkManager= "./cfg/configuration_networkManager.xml";
+     private final String cfgPath_Monitor= "./cfg/configuration_monitor.xml";
+     private final String cfgPath_ServiceManager= "./cfg/configuration_ServiceManager.xml";
+     
      private ConnectionXMPP conn; 
      
      private ParserXML pXML;
@@ -137,7 +150,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
              }                
              catch( IOException ex ) //se entriamo qui dentro significa che si è verificato un errore con la copia del file!
              {               
-                 this.logger.error( "Copy file failed" + ex );                    
+                 this.logger.error( "The copy of the file 'configuration_template_initiator.xml' is failed; " + ex  );                    
                  System.exit( 1 );            	
              }            
          }
@@ -172,6 +185,177 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
          flag_abilityHM = Boolean.parseBoolean(pXML.getElementContent("activatedHM")); 
          replaceAgents = Boolean.parseBoolean(pXML.getElementContent("replaceAgents"));
          tls = Boolean.parseBoolean( pXML.getElementContent( "tls" ) );        
+         File fl2=new File(cfgpath);
+         if(!fl2.exists())
+             fl2.mkdir();
+         
+         //IF THIS IS THE FIRST START OF CLEVER WE MAKE THE CONFIG FILE IN CFG FOLDER 
+         cfgFile = new File( cfgPath_Hypervisor ); //apro il riferimento al file
+         if( !cfgFile.exists() ) //se il file di configurazione non esiste: siamo alla prima esecuzione dell'initiator!                          
+         {                
+             //devo quindi copiare il file configuration_template_initiator nella cartella della classe initiato.java, nella cartella al path cfg            		inxml = getClass().getResourceAsStream( "/org/clever/Common/Initiator/configuration_template_initiator.xml" ); //apro lo stream con il file configuration_template_initiator           	
+             inxml = getClass().getResourceAsStream("/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");
+                
+             try                
+             {                    
+                 Support.copy( inxml, cfgFile ); //copio il file!!!                
+             }                
+             catch( IOException ex ) //se entriamo qui dentro significa che si è verificato un errore con la copia del file!
+             {               
+                 this.logger.error( "The copy of the file 'configuration_hypervisor.xml' is failed; " + ex );                    
+                 System.exit( 1 );            	
+             }            
+         }
+         cfgFile = new File( this.cfgPath_ImageManager); 
+         if( !cfgFile.exists() ) 
+         {                
+             inxml = getClass().getResourceAsStream("/org/clever/HostManager/ImageManager/configuration_ImageManager.xml");
+                
+             try                
+             {                    
+                 Support.copy( inxml, cfgFile );             
+             }                
+             catch( IOException ex )
+             {               
+                 this.logger.error( "The copy of the file 'configuration_ImageManager.xml' is failed; " + ex );                    
+                 System.exit( 1 );            	
+             }            
+         }
+         cfgFile = new File( this.cfgPath_Dispatcher); 
+         if( !cfgFile.exists() ) 
+         {                
+             inxml = getClass().getResourceAsStream("/org/clever/ClusterManager/Dispatcher/configuration_dispatcher.xml");
+                
+             try                
+             {                    
+                 Support.copy( inxml, cfgFile );             
+             }                
+             catch( IOException ex )
+             {               
+                 this.logger.error( "The copy of the file 'configuration_dispatcher.xml' is failed; " + ex );                    
+                 System.exit( 1 );            	
+             }            
+         }
+         cfgFile = new File( this.cfgPath_DbManager); 
+         if( !cfgFile.exists() ) 
+         {                
+             inxml = getClass().getResourceAsStream("/org/clever/ClusterManager/DatabaseManager/configuration_dbManagerPlugin.xml");
+                
+             try                
+             {                    
+                 Support.copy( inxml, cfgFile );             
+             }                
+             catch( IOException ex )
+             {               
+                 this.logger.error( "The copy of the file 'configuration_dbManagerPlugin.xml' is failed; " + ex );                    
+                 System.exit( 1 );            	
+             }            
+         }
+         cfgFile = new File( this.cfgPath_Communicator); 
+         if( !cfgFile.exists() ) 
+         {                
+             inxml = getClass().getResourceAsStream("/org/clever/Common/Communicator/configuration_communicator.xml");
+                
+             try                
+             {                    
+                 Support.copy( inxml, cfgFile );             
+             }                
+             catch( IOException ex )
+             {               
+                 this.logger.error( "The copy of the file 'configuration_communicator.xml' is failed; " + ex );                    
+                 System.exit( 1 );            	
+             }            
+         }
+         cfgFile = new File( this.cfgPath_ModulFactory); 
+         if( !cfgFile.exists() ) 
+         {                
+             inxml = getClass().getResourceAsStream("/org/clever/Common/Initiator/ModuleFactory/configuration_module_factory.xml");
+                
+             try                
+             {                    
+                 Support.copy( inxml, cfgFile );             
+             }                
+             catch( IOException ex )
+             {               
+                 this.logger.error( "The copy of the file 'configuration_module_factory.xml' is failed; " + ex );                    
+                 System.exit( 1 );            	
+             }            
+         }
+         cfgFile = new File( this.cfgPath_Monitor); 
+         if( !cfgFile.exists() ) 
+         {                
+             inxml = getClass().getResourceAsStream("/org/clever/HostManager/Monitor/configuration_monitor.xml");
+                
+             try                
+             {                    
+                 Support.copy( inxml, cfgFile );             
+             }                
+             catch( IOException ex )
+             {               
+                 this.logger.error( "The copy of the file 'configuration_monitor.xml' is failed; " + ex );                    
+                 System.exit( 1 );            	
+             }            
+         }
+         cfgFile = new File( this.cfgPath_NetworkManager); 
+         if( !cfgFile.exists() ) 
+         {                
+             inxml = getClass().getResourceAsStream("/org/clever/HostManager/NetworkManager/configuration_networkManager.xml");
+                
+             try                
+             {                    
+                 Support.copy( inxml, cfgFile );             
+             }                
+             catch( IOException ex )
+             {               
+                 this.logger.error( "The copy of the file 'configuration_networkManager.xml' is failed; " + ex );                    
+                 System.exit( 1 );            	
+             }            
+         }
+         cfgFile = new File( this.cfgPath_ServiceManager); 
+         if( !cfgFile.exists() ) 
+         {                
+             inxml = getClass().getResourceAsStream("/org/clever/HostManager/ServiceManager/configuration_ServiceManager.xml");
+                
+             try                
+             {                    
+                 Support.copy( inxml, cfgFile );             
+             }                
+             catch( IOException ex )
+             {               
+                 this.logger.error( "The copy of the file 'configuration_ServiceManager.xml' is failed; " + ex );                    
+                 System.exit( 1 );            	
+             }            
+         }
+         cfgFile = new File( this.cfgPath_Storage); 
+         if( !cfgFile.exists() ) 
+         {                
+             inxml = getClass().getResourceAsStream("/org/clever/ClusterManager/StorageManager/configuration_StorageManager.xml");
+                
+             try                
+             {                    
+                 Support.copy( inxml, cfgFile );             
+             }                
+             catch( IOException ex )
+             {               
+                 this.logger.error( "The copy of the file 'configuration_StorageManager.xml' is failed; " + ex );                    
+                 System.exit( 1 );            	
+             }            
+         }
+         cfgFile = new File( this.cfgPath_VirtManager); 
+         if( !cfgFile.exists() ) 
+         {                
+             inxml = getClass().getResourceAsStream("/org/clever/ClusterManager/VirtualizzationManager/configuration_VirtualizationManager.xml");
+                
+             try                
+             {                    
+                 Support.copy( inxml, cfgFile );             
+             }                
+             catch( IOException ex )
+             {               
+                 this.logger.error( "The copy of the file 'configuration_VirtualizzationManager.xml' is failed; " + ex );                    
+                 System.exit( 1 );            	
+             }            
+         }
      }
 	
      public void connectionManagement()//questa funzione gestisce la connessione con il server XMPP	

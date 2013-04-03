@@ -77,6 +77,7 @@ public class ModuleCommunicator implements MessageHandler {
     public String handleMessage(String msg) throws CleverException {
         Object rcvd = MessageFormatter.objectFromMessage(msg);
         Object obj;
+        logger.debug(">:( sono qui");
         if (rcvd instanceof MethodInvoker) {
             try {
                 obj = invokerHandler.handleInvocation((MethodInvoker) rcvd);

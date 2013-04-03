@@ -216,7 +216,10 @@ public class HvVMWare implements HyperVisorPlugin{
         this.notification = new Notification();
         this.owner = owner;
     }
-        
+    
+    public String getHYPVRName(){
+        return "VMWare";
+    }
    
     /**
      * Instance connect service with Hypervisor VMWare
@@ -516,10 +519,11 @@ public class HvVMWare implements HyperVisorPlugin{
      * Create a new Virtual Machine
      * @param id Name of Virtual Machine we want power off
      * @param veD Description of Virtual Machine by its features
+     * @param notExclusive Give information on lock tipe used for VM's Hdd
      * @return The state of operation
      * @throws Exception
      */
-    public boolean createVm(String id, VEDescription veD) throws Exception {
+    public boolean createVm(String id, VEDescription veD,Boolean notExclusive) throws Exception {
         boolean status = false;
         String vmName = id;
         int porta=-1;
@@ -860,8 +864,8 @@ public class HvVMWare implements HyperVisorPlugin{
      * @return State of the operation
      * @throws Exception 
      */
-    public boolean createAndStart(String id, VEDescription veD) throws Exception {
-        this.createVm(id, veD);
+    public boolean createAndStart(String id, VEDescription veD,Boolean notExclusive) throws Exception {
+        this.createVm(id, veD,notExclusive);
         return ( this.startVm(id) );
     }
        
