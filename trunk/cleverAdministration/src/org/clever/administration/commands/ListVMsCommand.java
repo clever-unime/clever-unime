@@ -59,40 +59,18 @@ public class ListVMsCommand extends CleverCommand
     {
           String target = commandLine.getOptionValue( "h" );
           String listing = "listVms";
-          //invoke HvVirtualbox Plugin method for testing exception management
+          //invoke Hypervisor Plugin method for testing exception management
           if(commandLine.hasOption("doexception"))
           {
               boolean ris = (Boolean) ClusterManagerAdministrationTools.instance().execSyncAdminCommand( this, target, "HyperVisorAgent", "testException", new ArrayList(), commandLine.hasOption( "xml" ) );
 
               return;
           }
-//          if(commandLine.hasOption("getOS"))
-//          {
-//                List returnResponse = ( List )ClusterManagerAdministrationTools.instance().execSyncAdminCommand( this, target, "HyperVisorAgent", "getOSTypes", new ArrayList(), commandLine.hasOption( "xml" ) );
-//                System.out.println( "\n---------VMs----------(sync)" );
-//                  for( int i = 0; i < returnResponse.size(); i++ )
-//                   {
-//                    System.out.println( returnResponse.get( i ) );
-//                  }
-//                 System.out.println( "\n----------------------(sync)" );
-//                   return;
-//          }
-
-          if( commandLine.hasOption( "hypvr" ) )
-          {
-            if( commandLine.hasOption( "onlyrunning" ) )
-                listing = "listRunningHVms";
-            else
-                listing = "listHVms";
-          } else
-          {
-              if( commandLine.hasOption( "onlyrunning" ) )
-                listing = "listRunningVms";
-            else
-                listing = "listVms";
-          }
-          //ClusterManagerAdministrationTools.instance().execAdminCommand( this, target, "HyperVisorAgent", listing, new ArrayList(), commandLine.hasOption( "xml" ) );
-          List returnResponse = ( List<String> )ClusterManagerAdministrationTools.instance().execSyncAdminCommand( this, target, "HyperVisorAgent", listing, new ArrayList(), commandLine.hasOption( "xml" ) );
+          ArrayList params = new ArrayList();
+          params.add(commandLine.getOptionValue( "h" ));
+          params.add(commandLine.hasOption( "onlyrunning" ));
+          params.add(commandLine.hasOption( "hypvr" ));
+          List returnResponse = ( List<String> )ClusterManagerAdministrationTools.instance().execSyncAdminCommand( this, target, "VirtualizationManagerAgent", "listVm", params, commandLine.hasOption( "xml" ) );
           if(commandLine.hasOption( "xml" ))
           {
               System.out.println( MessageFormatter.messageFromObject(returnResponse));
