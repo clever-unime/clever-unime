@@ -30,6 +30,8 @@ public class RegisterVMCommand extends CleverCommand {
   {
     Options options = new Options();
    // options.addOption("xml", false, "Displays the XML request/response Messages.");
+    options.addOption("i",true,"input VEDescriptor, insert absolute path");
+    options.addOption("d",false,"default VEDescriptor");
     options.addOption("debug", false, "Displays debug information.");
     return options;
   }
@@ -38,14 +40,26 @@ public class RegisterVMCommand extends CleverCommand {
   public void exec(final CommandLine commandLine)
   {
     try
-    {     
-     String info="owners"; 
+    {
+     
+     String info="owners";
+     if(!(commandLine.hasOption("i"))&&!(commandLine.hasOption("d"))){
+         System.out.println("You must specify a VEDescriptor.xml file to register a Virtual Machine using -i option, or using -d option to select default VEDescriptor file located in config folder");
+         return;
+     }
      ArrayList params = new ArrayList();
      params.add(info);
+     String path="";
+     if(commandLine.hasOption("i")){
+         path=commandLine.getOptionValue("i");
+      }
+
+     else
+         path=localPath+cfgMountPath;
      String target = ClusterManagerAdministrationTools.instance().getConnectionXMPP().getActiveCC(ConnectionXMPP.ROOM.SHELL);
      String VE="";         
      FileInputStream fstream = null;
-                fstream = new FileInputStream(localPath+cfgMountPath);
+                fstream = new FileInputStream(path);
                 DataInputStream in = new DataInputStream(fstream);
                 BufferedReader br = new BufferedReader(new InputStreamReader(in));
                 String strLine;
