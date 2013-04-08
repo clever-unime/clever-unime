@@ -7,9 +7,9 @@
   <caJksPassword />
   <certPkcs12 />
   <certPkcs12Password />
-  <username>cmgiusimone</username>
-  <password>esbkuxi</password>
-  <nickname>cmgiusimone</nickname>
+  <username></username>
+  <password></password>
+  <nickname></nickname>
   <room>vision@conference.localhost</room>
   <roomclients>SHELL-vision@conference.localhost</roomclients>
   <threshold>1</threshold>
