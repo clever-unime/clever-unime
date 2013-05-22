@@ -64,8 +64,8 @@ public class HyperVisorAgent extends Agent {
         FileStreamer fs = new FileStreamer();
 
         try {
-            //InputStream inxml = getClass().getResourceAsStream("./cfg/configuration_hypervisor.xml");//("/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");
-            FileInputStream inxml = new FileInputStream("./cfg/configuration_hypervisor.xml");
+            InputStream inxml = getClass().getResourceAsStream("./cfg/configuration_hypervisor.xml");//("/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");
+            
             if(inxml==null)
                 logger.debug("The variable inxml is null check configursarion file");
             ParserXML pXML = new ParserXML(fs.xmlToString(inxml));
