@@ -7,10 +7,10 @@
   <caJksPassword />
   <certPkcs12 />
   <certPkcs12Password />
-  <username></username>
-  <password></password>
-  <nickname></nickname>
-  <room>vision@conference.localhost</room>
+  <username>thermo</username>
+  <password>kxltdar</password>
+  <nickname>thermo</nickname>
+  <room>thermocloud@conference.localhost</room>
   <threshold>1</threshold>
   <!-- la threshold effettivamnte usata x istanziare i CC è questa!! -->
   <activatedCM>true</activatedCM>
@@ -26,21 +26,21 @@
   <!-- imposto il max tempo x il rilancio di un agente -->
   <agents>
     <agent>
-      <class>org.clever.HostManager.HyperVisor.HyperVisorAgent</class>
-      <name>HyperVisorAgent</name>
+      <class>org.clever.HostManager.Test.TestAgent</class>
+      <name>TestAgent</name>
     </agent>
-    <agent>
-      <class>org.clever.HostManager.ImageManager.ImageManagerAgent</class>
-      <name />
-    </agent>
-    <agent>
-      <class>org.clever.HostManager.Monitor.MonitorAgent</class>
-      <name />
-    </agent>
-    <agent>
-      <class>org.clever.HostManager.NetworkManager.NetworkManagerAgent</class>
-      <name />
-    </agent>
+    <!--        <agent>
+            <class>org.clever.HostManager.ImageManager.ImageManagerAgent</class>
+            <name/>
+        </agent>
+        <agent>
+            <class>org.clever.HostManager.Monitor.MonitorAgent</class>
+            <name/>
+        </agent>
+        <agent>
+            <class>org.clever.HostManager.NetworkManager.NetworkManagerAgent</class>
+            <name/>
+        </agent>-->
   </agents>
 </configuration>
 

@@ -36,6 +36,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Random;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
@@ -44,6 +45,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.ParticipantStatusListener;
 import org.apache.log4j.*;
+import org.clever.Common.Exceptions.CleverException;
 import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -103,6 +105,11 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     SHELL
   };
 
+  /**
+   * Resource name for XMPP login (unique)
+   */
+  private String resource;
+  
   private XMPPConnection connection = null;
   private String servername = "";
   private String username = "";
@@ -119,11 +126,13 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
   public ConnectionXMPP()
   {
     logger = Logger.getLogger( "XMPPCommunicator" );
+    resource = new Integer(new Random().nextInt()).toString();
   }
 
 
 
   public void connect( final String servername, final Integer port )
+          throws CleverException
   {
     this.servername = servername;
     this.port = port;
@@ -138,8 +147,8 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     }
     catch( XMPPException ex )
     {
-      logger.error( "Error during the XMPP connection: " + ex.toString() );
-      System.exit( 1 );
+      logger.error( "Error during XMPP connection: " + ex.toString() );
+      throw new CleverException(ex, "Error during XMPP connection");
     }
   }
 
@@ -287,6 +296,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
   {
     this.username = username;
     this.password = password;
+    //TODO: providing number of retries as parameter
     for( int i = 0; i < 4; i++ )
     {
       try
@@ -301,17 +311,28 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
         }
         else
         {
-          connection.login( username, password );
+          //Append resource name to obtain a unique connection: random number
+            //TODO: choose a better mechanism to specify resource
+          connection.login( username, password , resource);
         }
 
-        logger.debug( "XMPP connection established with username: " + this.username + " password: " + this.password + " server: "
-                      + this.servername + " port: " + this.port );
+        logger.debug( "XMPP connection established with username: " +
+                        this.username 
+                        + " password: " + this.password 
+                        + " server: "   + this.servername 
+                        + " port: " + this.port 
+                        + "resource" + this.resource);
 
       }
       catch( XMPPException e )
       {
-        logger.error( "XMPP login failed with username (try # " + i + ": " + this.username + " password: " + this.password + " server: "
-                      + this.servername + " port: " + this.port + "Exception:" + e );
+        logger.error( "XMPP login failed with username (try # " + i + ": "  
+                        + this.username 
+                        + " password: " + this.password 
+                        + " server: "   + this.servername 
+                        + " port: " + this.port
+                        + "resource" + this.resource
+                        + "Exception:" + e );
       }
 
       if( connection.isAuthenticated() )
@@ -327,11 +348,11 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
         catch( InterruptedException ex )
         {
           logger.error( "Interrupted Thread error: " + ex.toString() );
-          System.exit( 1 );
+          //System.exit( 1 );
         }
       }
     }
-    System.exit( 1 );
+    //System.exit( 1 );
   }
 
 
@@ -396,6 +417,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     logger.debug( "Sending message: " + message.toXML() );
     jid += "@" + this.getServer();
     // See if there is already a chat open
+    //TODO: fix problema con jid con risorsa o senza
     Chat chat = cleverChatManagerListener.getChat( jid.toLowerCase() );
     if( chat == null )
     {

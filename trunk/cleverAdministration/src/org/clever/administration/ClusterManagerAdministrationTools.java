@@ -8,6 +8,7 @@ import java.util.*;
 import org.apache.log4j.Logger;
 import org.clever.ClusterManager.DispatcherPlugins.DispatcherClever.Request;
 import org.clever.Common.Exceptions.CleverException;
+
 import org.clever.Common.XMPPCommunicator.CleverMessage.MessageType;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.CleverMessageHandler;
@@ -68,15 +69,21 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler
   
 
       adminHostName = username;
+      try
+      {
+                conn = new ConnectionXMPP();
+                conn.connect(XMPPServer, port);
+                conn.authenticate(username, passwd);
 
-      conn = new ConnectionXMPP();
-      conn.connect(XMPPServer, port);
-      conn.authenticate(username, passwd);
-
-      conn.joinInRoom( room, ConnectionXMPP.ROOM.SHELL, nickname );
-      conn.addChatManagerListener( this );
-      return true;
-    
+                conn.joinInRoom( room, ConnectionXMPP.ROOM.SHELL, nickname );
+                conn.addChatManagerListener( this );
+                return true;
+      }
+      catch (CleverException e)
+      {
+          logger.debug("Error in connection : " + e.getMessage());
+          return false;
+      }
 
   }
 

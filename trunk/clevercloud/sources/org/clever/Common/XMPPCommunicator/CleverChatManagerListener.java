@@ -86,7 +86,9 @@ public class CleverChatManagerListener implements ChatManagerListener
   @Override
   public void chatCreated( Chat chat, boolean createdLocally )
   {
-      String p = chat.getParticipant().replace("/Smack", "");
+      //TODO: fix questo problema adesso la resource non e' piu' smack
+      //String p = chat.getParticipant().replace("/Smack", "");
+      String p = chat.getParticipant().replaceAll("/.*", "");
     logger.info( "Chat created with: " + p + " createdLocally: " + createdLocally );
     chats.put( p, chat );
 

@@ -4,7 +4,9 @@
  */
 package org.clever.administration.common;
 
-/**Implementazione di SessionFactory. 
+import org.apache.log4j.Logger;
+
+/** Implementazione di SessionFactory. 
  * E' stata progettata come interfaccia - implementazione pensando all'uso di strumenti come spring
  *
  * @author maurizio
@@ -12,8 +14,21 @@ package org.clever.administration.common;
 public class SessionFactoryImpl implements SessionFactory {
 
     private Settings settings;
+    private static final Logger log = Logger.getLogger(Configuration.class);
     
-    
+    private final ThreadLocal<Session> sessionHolder = new ThreadLocal<Session>() {
+
+        /*
+         * initialValue() is called
+         */
+        @Override
+        protected Session initialValue() {
+            log.debug("Creating Session for thread : " + Thread.currentThread().getName()); 
+            return new Session(settings);
+        }
+    };
+
+
     
     
     public SessionFactoryImpl(Settings settings) {
@@ -23,7 +38,8 @@ public class SessionFactoryImpl implements SessionFactory {
 
     @Override
     public Session getSession() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       
+        return this.sessionHolder.get();
     }
     
 }

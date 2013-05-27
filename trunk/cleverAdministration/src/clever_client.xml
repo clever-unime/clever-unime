@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  
+  <CleverClientCommandProviderClass>org.clever.administration.common.PerThreadCleverCommandClientProvider</CleverClientCommandProviderClass>
+    
+  <server>localhost</server>
+  <port>5222</port>
+  <username>thermoshell</username>
+  <password>thermoshell</password>
+  <nickname>thermoshell</nickname>
+  <room>shell@conference.localhost</room>
+  
+</configuration>
+

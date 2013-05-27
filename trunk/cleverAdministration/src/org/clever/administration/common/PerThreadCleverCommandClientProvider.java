@@ -12,7 +12,7 @@ import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
  *
  * @author maurizio
  */
-class SimpleCleverCommandClientProvider implements CleverCommandClientProvider {
+class PerThreadCleverCommandClientProvider implements CleverCommandClientProvider {
     
     private  String username;
     private  String password;
@@ -22,27 +22,37 @@ class SimpleCleverCommandClientProvider implements CleverCommandClientProvider {
     private  String room;
     
     
-     private final CleverCommandClient client;
+     private final ThreadLocal<CleverCommandClient> clientHolder = new ThreadLocal<CleverCommandClient>() {
+
+        /*
+         * initialValue() is called
+         */
+        @Override
+        protected CleverCommandClient initialValue() {
+            log.debug("Creating CleverCommandClient for thread : " + Thread.currentThread().getName()); 
+            return new CleverCommandClient();
+        }
+    };
     
     
     
     //private final CleverCommandClient admintools;
     
-    private static final Logger log = Logger.getLogger(SimpleCleverCommandClientProvider.class);
+    private static final Logger log = Logger.getLogger(PerThreadCleverCommandClientProvider.class);
     
     
     
-    public SimpleCleverCommandClientProvider() {
-        client = new CleverCommandClient();
+    public PerThreadCleverCommandClientProvider() {
+        //admintools = new CleverCommandClient();
     }
     
     //costruttore a cui si passano delle properties con i parametri di configurazione (servername, password,ecc.)
-    public SimpleCleverCommandClientProvider(Properties properties) {
+    public PerThreadCleverCommandClientProvider(Properties properties) {
         this();
         //TODO: validate the properties
        this.configure(properties);
         
-        
+        //admintools = new CleverCommandClient();
         
     }
 
@@ -58,24 +68,26 @@ class SimpleCleverCommandClientProvider implements CleverCommandClientProvider {
     
     @Override
     public synchronized CleverCommandClient getClient() {
+        //cosi' funzionicchia controllare il cleverhandlemessage
+        
+        CleverCommandClient ccc = clientHolder.get();
         
         
-        if(client.isActive())
+        if(ccc.isActive())
         {
-            return client;
+            return ccc;
         }
         
         //mi connetto
         
-        client.connect(servername, username, password, port, room, nickname);
-        //TODO: lanciare eccezione se la connessione non e' andata a buon fine
+        ccc.connect(servername, username, password, port, room, nickname);
         //controllo se la connessione e' andata a buon fine
         //if(admintools.isActive())
         //{
         //    log.error("XMPP connection error on server: " + servername + " with username " + username);
         //    return null;
         //}
-        return client;
+        return ccc;
         
     }
     

@@ -7,11 +7,11 @@
   <caJksPassword />
   <certPkcs12 />
   <certPkcs12Password />
-  <username></username>
-  <password></password>
-  <nickname></nickname>
-  <room>vision@conference.localhost</room>
-  <roomclients>SHELL-vision@conference.localhost</roomclients>
+  <username>cmthermo</username>
+  <password>rwellax</password>
+  <nickname>cmthermo</nickname>
+  <room>thermocloud@conference.localhost</room>
+  <roomclients>shell@conference.localhost</roomclients>
   <threshold>1</threshold>
   <!-- questa threshold non viene più usata, ne uso una dentro configuration_initiator -->
   <activeAgents>true</activeAgents>
@@ -24,22 +24,22 @@
   <!-- PROVA CAMPO: -->
   <librariespath>./libraries</librariespath>
   <agents>
-    <agent>
-      <class>org.clever.ClusterManager.StorageManager.StorageManagerAgent</class>
-      <name />
-    </agent>
+    <!--    <agent>
+          <class>org.clever.ClusterManager.StorageManager.StorageManagerAgent</class>
+          <name></name> 
+    </agent>-->
     <agent>
       <class>org.clever.ClusterManager.Test.TestAgent</class>
       <name>TestAgent</name>
     </agent>
-    <agent>
-      <class>org.clever.ClusterManager.DatabaseManager.DatabaseManagerAgent</class>
-      <name />
+    <!--    <agent>
+          <class>org.clever.ClusterManager.DatabaseManager.DatabaseManagerAgent</class>
+          <name></name>
     </agent>
     <agent>
-      <class>org.clever.ClusterManager.VirtualizationManager.VirtualizationManagerAgent</class>
-      <name />
-    </agent>
+	  <class>org.clever.ClusterManager.VirtualizationManager.VirtualizationManagerAgent</class>
+          <name></name>
+    </agent>-->
   </agents>
   <brain>
     <class>org.clever.ClusterManager.Brain.SensorBrain</class>

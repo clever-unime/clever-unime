@@ -25,7 +25,7 @@ class Environment {
     
     //Le chiavi delle properties: forse final ?
     static String SESSION_FACTORY_NAME = "clever.session_factory_name"; //nome del factory session name
-    static String CONNECTION_PROVIDER = "clever.xmpp_provider_class"; //la classe dell XMPPProvider
+    static String COMMAND_PROVIDER = "clever.client_provider_class"; //la classe dell CleverCommandClientProvider
     static String XMPP_SERVER = "xmpp_server"; //indirizzo o nome del server XMPP
     static String XMPP_USERNAME = "xmpp_username"; //username da utilizzare per la connessione XMPP
     static String XMPP_PASSWORD = "xmpp_password"; //password da utilizzare per la connessione XMPP
@@ -34,8 +34,8 @@ class Environment {
     static String XMPP_NICKNAME = "xmpp_nickname"; //nickname con cui entrera' il client nella room
     
     //VALORI di default
-    static String CONNECTION_PROVIDER_DEFAULT = "org.clever.administration.common.SimpleXMPPProvider"; //provider di connessioni xmpp di default
-    static String CONFIGURATION_FILE_NAME = "clever_client.xml"; //provider di connessioni xmpp di default
+    static String COMMAND_PROVIDER_DEFAULT = "org.clever.administration.common.SimpleCleverCommandClientProvider"; //provider di comandi clever di default
+    static String CONFIGURATION_FILE_NAME = "/clever_client.xml"; //file di configurazione
     
     
     
@@ -71,6 +71,15 @@ class Environment {
         properties.setProperty(XMPP_PORT,pXML.getElementContent( "port" ));
         properties.setProperty(XMPP_ROOM,pXML.getElementContent( "room"));
         properties.setProperty(XMPP_NICKNAME,pXML.getElementContent( "nickname"));
+        
+        String clientProvider = pXML.getElementContent( "CleverClientCommandProviderClass");
+        if(clientProvider!=null)
+        {
+            properties.setProperty(COMMAND_PROVIDER , clientProvider);
+        }
+        
+        
+        
         return properties;
     }
     

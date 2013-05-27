@@ -183,17 +183,18 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
 	
      public void connectionManagement()//questa funzione gestisce la connessione con il server XMPP	
      {               
-         try //provo a creare un oggetto ConnectionXMPP con il quale gestirò la connessione als erver XMPP e l'accesso alla stanza!                
-         {                   
-             conn = new ConnectionXMPP();               
+                         
+         conn = new ConnectionXMPP();               
+                      
+         try
+         {
+            conn.connect(server, port);//effettuo una connessione al serverXMPP               
          }               
          catch(CleverException Cexec)               
          {                   
              Cexec.printStackTrace();               
-         }               
-               
-         conn.connect(server, port);//effettuo una connessione al serverXMPP               
-               
+         }
+         
          if( username.isEmpty() || password.isEmpty() )               
          {   
              username = nickname = conn.getHostName(); //genero il nickname e la username con il quale l'initiator si collega al server XMPP                   

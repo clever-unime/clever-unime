@@ -4,7 +4,7 @@ import java.util.Properties;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 
 /**
- * Interfaccia per un provider di oggetti CCleverCommandClient (ognuno di questi ha un XonnectionXmpp)
+ * Interfaccia per un provider di oggetti CleverCommandClient (ognuno di questi ha un ConnectionXmpp)
  * Per ottenere un riferimento a un CleverCommandClient si usa getClient: a seconda
  * della politica della particolare implementazione viene fornito un client per la gestione dei comandi clever
  * (per es. possibilita' di pooling)

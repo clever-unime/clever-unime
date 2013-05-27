@@ -6,14 +6,25 @@ package org.clever.administration.common;
  * @author maurizio
  *
  */
-public class Session {
+final public class Session {
     //per ora unico modulo
-    AdministrationModule module;
+    final AdministrationModule module;
+    final HostAdministrationModule hostAdministrationModule;
+    
+    
+    
+    final Settings settings;
+
+    public Settings getSettings() {
+        return settings;
+    }
     
     //per ora faccio un meccanismo molto spartano non considerando il modulo passato
-    public Session()
+    public Session(Settings s)
     {
+        settings = s;
         module = new AdministrationModule(this);
+        hostAdministrationModule = new HostAdministrationModule(this);
     }
     
     /**
@@ -22,9 +33,21 @@ public class Session {
      * @param moduleName
      * @return 
      */
-    AdministrationModule getModule(String moduleName)
+    public AdministrationModule getModule(String moduleName)
     {
         return module;
         
     }
+
+    
+    /**
+     * Ritorna un HostAdministrationModule per gestirele entita' clever a livello di host
+     * per es.: getActiveCM, listHostManagers,ecc.
+     * @return 
+     */
+    public HostAdministrationModule getHostAdministrationModule() {
+        return hostAdministrationModule;
+    }
+    
+    
 }

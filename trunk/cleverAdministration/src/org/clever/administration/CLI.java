@@ -37,18 +37,29 @@ import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import jline.ConsoleReader;
 import jline.History;
 import jline.SimpleCompletor;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
+import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.clever.administration.commands.CleverCommand;
+import org.clever.administration.commands.CommandCallback;
+import org.clever.administration.common.Configuration;
+import org.clever.administration.common.Session;
+import org.clever.administration.common.SessionFactory;
+import org.clever.administration.exceptions.CleverClientException;
+import org.clever.administration.test.TestApi;
 import org.jdom.Element;
 
 
@@ -65,7 +76,7 @@ public class CLI
   private Logger logger = null;
   private String args[]=null;
 
-
+  SessionFactory sf; //per API
 
 
   public CLI(String args[])
@@ -78,6 +89,9 @@ public class CLI
 
   private void init()
     {
+        
+     
+          
     File cliConfiguration = new File( cfgCLIPath + "/config_clever_cli.xml" );
     InputStream inxml = null;
     FileStreamer fs = null;
@@ -109,6 +123,9 @@ public class CLI
     }
 
     ClusterManagerAdministrationTools adminTools = ClusterManagerAdministrationTools.instance();
+   
+    
+    
     if( !adminTools.connect( pXML.getElementContent( "server" ),
                              pXML.getElementContent( "username" ),
                              pXML.getElementContent( "password" ),
@@ -123,7 +140,10 @@ public class CLI
     {
       setPrompt( "" );
     }
-
+    
+    
+    
+    
     // Read the configuration from the file in the package
     Properties prop = new Properties();
     InputStream in = getClass().getResourceAsStream( "/org/clever/administration/config/logger.properties" );
@@ -140,6 +160,28 @@ public class CLI
     PropertyConfigurator.configure( prop );
     logger = Logger.getLogger( "CLI" );
 
+    
+    
+     /* PER API */
+          Configuration conf = new Configuration();
+          //File apiConfiguration = new File( "cfg/clever_client.xml" );
+      try {
+          //conf.configure(apiConfiguration);
+          sf = conf.buildSessionFactory();
+          
+        
+      } catch (CleverClientException ex) {
+          logger.error("Error in SessionFactory Instantiation");
+          ex.printStackTrace();
+      }
+      /************/
+    
+    
+    
+    
+    
+    
+    
     try
     {
 
@@ -362,12 +404,12 @@ public class CLI
             java.util.Scanner sc = new java.util.Scanner(System.in);
             System.out.println("Premere invio per terminare:");
             sc.nextLine();
-            System.exit(0);
+            //System.exit(0);
         }
         catch(java.util.NoSuchElementException ex ){
             logger.error( ex );
             System.out.println( "No new line has finded. The process will be terminated!" );
-            System.exit(0);
+            //System.exit(0);
         }
         catch(IllegalStateException ex){
             logger.error( ex );
@@ -401,6 +443,15 @@ public class CLI
         {
           if(command.equals("exit"))
               return;
+           if(command.equals("testapi"))
+           {
+             
+               new TestApi(sf).start();
+               new TestApi(sf).start();
+               continue;
+           }
+              
+          
           cleverCommand = ( CleverCommand ) classFromCommand( command ).newInstance();
           cmd = parser.parse( cleverCommand.getOptions(), command.split( " " ) );
           cleverCommand.exec( cmd );
@@ -424,7 +475,7 @@ public class CLI
         {
           logger.error( ex );
           System.out.println( "Command error" );
-        }
+        } 
       } while(true);
     }
     catch( IOException ex )
@@ -434,12 +485,23 @@ public class CLI
     }
   }
 
-
+    
+  
+  
+  
 
   public static void main( String[] args ) throws IOException
   {
+      
+      
+   
+    
+      
     if (args.length==0 && System.in.available()==0)
+    {
+       
         new CLI();
+    }
     else
     {
         if(System.in.available()!=0)
@@ -448,7 +510,10 @@ public class CLI
             BufferedReader myInput = new BufferedReader (reader);
             args=myInput.readLine().split(" ");
         }
-        new CLI(args);
+        
+        CLI a = new CLI(args);
+       
+        
     }
   }
 }

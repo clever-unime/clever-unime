@@ -1,7 +1,10 @@
 package org.clever.administration.common;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.administration.exceptions.CleverClientException;
 
@@ -69,8 +72,25 @@ public class Configuration {
 	 * Restituisce un oggetto settings
 	 * Usa il file passato come parametro (file XML)
 	 */
-	public Settings configure(File f){
-            throw new UnsupportedOperationException("Not supported yet.");
+	public Settings configure(File f) throws CleverClientException{
+            
+            if(f==null)
+            {
+                final String error = "Configuration file not found " ;
+                log.error(error);
+                throw new CleverClientException(error);
+            }
+            log.debug("Configuration from file : " + f.getPath());
+           
+            try {
+                FileInputStream fis = new FileInputStream(f);
+                settings = settingsFactory.buildSettings(Environment.getPropertiesFromXML(fis));
+                return settings;
+            } catch (FileNotFoundException ex) {
+                 final String error = " Configuration file not found : " + f.getPath();
+                log.error(error);
+                throw new CleverClientException(error);
+            }
         };
 	
 	

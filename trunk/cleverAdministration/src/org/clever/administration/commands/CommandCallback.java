@@ -34,34 +34,14 @@ import org.apache.log4j.Logger;
 import org.clever.Common.Exceptions.CleverException;
 
 
-
-public abstract class CleverCommand implements CommandCallback
+/**
+ * CallBack for async clever command invocation
+ * @author maurizio
+ */
+public interface CommandCallback
 {
 
-  protected Logger logger = Logger.getLogger( "CleverCommand" );
 
-
-
-  /**
-   * Get the options for the current command
-   * @return
-   */
-  public abstract Options getOptions();
-
-
-
-  /**
-   * Execute command
-   * @param commandLine
-   */
-  public abstract void exec( final CommandLine commandLine );
-
-
-
-  /**
-   * 
-   * @param response
-   */
-  public abstract void handleMessage( final Object response );
-  public abstract void handleMessageError(CleverException e); 
+  public void handleMessage( final Object response );
+  public void handleMessageError(CleverException e); 
 }

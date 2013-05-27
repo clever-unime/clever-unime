@@ -30,13 +30,14 @@ public class SettingsFactory {
       		//Configurazione XMPP
       
       		CleverCommandClientProvider clients = createCleverClientCommandProvider(props);
-      		settings.setXMPPProvider(clients);
+      		settings.setCleverCommandClientProvider(clients);
                 
                 
                 //qui andranno altre configurazioni relative, per es. al client vero e proprio, tipo numero di tentativi delle richieste, timeout, ecc.
                 
                 return settings;
         }	
+        
 	/**
 	 * CreateXMPPProvider. Crea un oggetto per ottenere un client per i comandi clever.
 	 * Usato per implementare  diverse strategie di ottenimento delle connessioni (pooling, per es.) 
