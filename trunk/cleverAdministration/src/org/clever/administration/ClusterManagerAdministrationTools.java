@@ -65,8 +65,7 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler
                           String room,
                           String nickname )
   {
-    try
-    {
+  
 
       adminHostName = username;
 
@@ -77,17 +76,7 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler
       conn.joinInRoom( room, ConnectionXMPP.ROOM.SHELL, nickname );
       conn.addChatManagerListener( this );
       return true;
-    }
-    catch( CleverException e )
-    {
-      return false;
-
-    }
-    catch( Exception ex )
-    {
-      System.out.println( ex );
-      return false;
-    }
+    
 
   }
 

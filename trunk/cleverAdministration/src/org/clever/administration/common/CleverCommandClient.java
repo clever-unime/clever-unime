@@ -17,50 +17,64 @@ import org.clever.administration.commands.CleverCommand;
 import org.jivesoftware.smack.XMPPException;
 
 
-
-public class AdministrationTools implements CleverMessageHandler
+/**
+ * Usata per mandare comandi e smistare le risposte ai vari client
+ * Normalmente viene instanziato e gestito da CleverCommandClientProvider
+ * @author maurizio
+ */
+public class CleverCommandClient implements CleverMessageHandler
 {
 
-   private static final Logger log = Logger.getLogger(AdministrationTools.class);
+   private static final Logger log = Logger.getLogger(CleverCommandClient.class);
     
     
   private String adminHostName;
-  private XMPPProvider provider;
+  private ConnectionXMPP conn;
   private Request request;
   private HashMap<Integer, CleverCommand> commandsSent = null;
   
 
 
 
-  public AdministrationTools(XMPPProvider p)
+  public CleverCommandClient()
   {
     commandsSent = new HashMap<Integer, CleverCommand>();
-    provider = p;
+    conn = new ConnectionXMPP();
     
   }
 
+  
+  
+ /**
+  * Il client e' attivo (connessone XMPP e autenticato)
+  * @return 
+  */
+ public boolean isActive()
+ {
+     return conn.getXMPP().isAuthenticated();
+ }
+  
 
-
-  /*public boolean connect( String XMPPServer,
+  public boolean connect( String XMPPServer,
                           String username,
                           String passwd,
                           int port,
                           String room,
                           String nickname )
   {
-    try
-    {
+    //try
+    //{
 
       adminHostName = username;
 
-      conn = new ConnectionXMPP();
+      
       conn.connect(XMPPServer, port);
       conn.authenticate(username, passwd);
 
       conn.joinInRoom( room, ConnectionXMPP.ROOM.SHELL, nickname );
       conn.addChatManagerListener( this );
       return true;
-    }
+    /*}
     catch( CleverException e )
     {
       return false;
@@ -70,21 +84,21 @@ public class AdministrationTools implements CleverMessageHandler
     {
       System.out.println( ex );
       return false;
-    }
+    }*/
 
   }
-*/
+
 
 
   private void sendRequest( final CleverMessage msg )
   {
     try
     {
-      provider.getConnection().getMultiUserChat( ConnectionXMPP.ROOM.SHELL ).sendMessage( msg.toXML() );
+      conn.getMultiUserChat( ConnectionXMPP.ROOM.SHELL ).sendMessage( msg.toXML() );
     }
     catch( XMPPException ex )
     {
-      System.out.println( "Error in sending Clever Message. " + ex );
+      log.error("Error in sending Clever Message. " + ex );
     }
   }
 
@@ -112,10 +126,9 @@ public class AdministrationTools implements CleverMessageHandler
 
     commandsSent.put( Integer.valueOf( requestMsg.getId() ), cleverCommand );
     sendRequest( requestMsg );
-    if( showXML )
-    {
-      System.out.print( "Clever Request Message: \n" + requestMsg.toXML() );
-    }
+    
+    log.debug( "Clever Request Message: \n" + requestMsg.toXML() );
+    
   }
 
 
@@ -141,11 +154,8 @@ public class AdministrationTools implements CleverMessageHandler
     request = new Request(requestMsg.getId(),0); //this set the command as sync command (see handleCleverMessage)
     
     sendRequest( requestMsg );
-    if( showXML )
-    {
-      System.out.print( "Clever Request Message: \n" + requestMsg.toXML() );
-     
-    }
+    log.debug( "Clever Request Message: \n" + requestMsg.toXML() );
+    
     return request.getReturnValue();
     
   }

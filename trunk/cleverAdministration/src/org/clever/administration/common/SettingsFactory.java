@@ -29,8 +29,8 @@ public class SettingsFactory {
       
       		//Configurazione XMPP
       
-      		XMPPProvider xmppconnections = createXMPPProvider(props);
-      		settings.setXMPPProvider(xmppconnections);
+      		CleverCommandClientProvider clients = createCleverClientCommandProvider(props);
+      		settings.setXMPPProvider(clients);
                 
                 
                 //qui andranno altre configurazioni relative, per es. al client vero e proprio, tipo numero di tentativi delle richieste, timeout, ecc.
@@ -38,16 +38,16 @@ public class SettingsFactory {
                 return settings;
         }	
 	/**
-	 * CreateXMPPProvider. Crea un oggetto per ottenere una connessione XMPP.
+	 * CreateXMPPProvider. Crea un oggetto per ottenere un client per i comandi clever.
 	 * Usato per implementare  diverse strategie di ottenimento delle connessioni (pooling, per es.) 
          * Nelle properties passo servername, password,ecc.
          * Per ora implementa SimpleXMPPProvider
 	 */
 	
-	public XMPPProvider createXMPPProvider(Properties properties) throws CleverClientException{
+	public CleverCommandClientProvider createCleverClientCommandProvider(Properties properties) throws CleverClientException{
             //TODO: creare altri XMPPPROvider a seconda dei properties
       
-            return XMPPProviderFactory.newXMPPProvider(properties);
+            return CleverCommandClientProviderFactory.newCleverCommandClientProvider(properties);
         }
         
         

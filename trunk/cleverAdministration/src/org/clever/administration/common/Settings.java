@@ -1,7 +1,7 @@
 package org.clever.administration.common;
 
 public class Settings {
-    private XMPPProvider xmppProvider;
+    private CleverCommandClientProvider xmppProvider;
   /**
     * Restituisce il SessionFactory per avere le varie Session client (con thread separati);
    */
@@ -14,11 +14,20 @@ public class Settings {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    void setXMPPProvider(XMPPProvider xmppconnections) {
+    
+    /**
+     * Imposta l'XMPPProvider
+     * @param xmppconnections 
+     */
+    void setXMPPProvider(CleverCommandClientProvider xmppconnections) {
         xmppProvider = xmppconnections;
     }
     
-    XMPPProvider getXmppProvider()
+    /**
+     * Restituisce l'XMPPProvider
+     * @return 
+     */
+    CleverCommandClientProvider getXmppProvider()
     {
         return this.xmppProvider;
     }

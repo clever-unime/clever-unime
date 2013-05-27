@@ -44,7 +44,6 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.ParticipantStatusListener;
 import org.apache.log4j.*;
-import org.clever.Common.Exceptions.CleverException;
 import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -117,7 +116,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
   private boolean isTLS = false;
 
 
-  public ConnectionXMPP() throws CleverException
+  public ConnectionXMPP()
   {
     logger = Logger.getLogger( "XMPPCommunicator" );
   }
