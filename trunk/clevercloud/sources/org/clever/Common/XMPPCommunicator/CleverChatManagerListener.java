@@ -89,16 +89,16 @@ public class CleverChatManagerListener implements ChatManagerListener
       //TODO: fix questo problema adesso la resource non e' piu' smack
       //String p = chat.getParticipant().replace("/Smack", "");
       String p = chat.getParticipant().replaceAll("/.*", "");
-    logger.info( "Chat created with: " + p + " createdLocally: " + createdLocally );
-    chats.put( p, chat );
+      logger.info( "Chat created with: " + p + " createdLocally: " + createdLocally );
+      chats.put( p, chat );
 
 
-    // Check if the chat was created locally or not
-    // If was created locally, the listener was already created by ConnectionXMPP.sendMessage()
-    // Otherwhise one CleverChatListener is associated to received chat
-    if ( ! createdLocally )
-    {
-      chat.addMessageListener( new CleverChatListener( msgHandler ) );
-    }
+      // Check if the chat was created locally or not
+      // If was created locally, the listener was already created by ConnectionXMPP.sendMessage()
+      // Otherwhise one CleverChatListener is associated to received chat
+      if ( ! createdLocally )
+      {
+        chat.addMessageListener( new CleverChatListener( msgHandler ) );
+      }
   }
 }

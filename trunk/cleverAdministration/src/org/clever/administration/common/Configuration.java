@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.Properties;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.administration.exceptions.CleverClientException;
@@ -123,5 +124,9 @@ public class Configuration {
             this.settings = settings;
         }
         
+        public void setSettings(Properties properties) throws CleverClientException
+        {
+            this.settings = settingsFactory.buildSettings(properties);
+        }
         
 }

@@ -25,7 +25,7 @@ package org.clever.Common.Communicator.Utils;
 
 import org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile;
 /**
- * This class is maded to provide an object used to indicate at VirtualizzationManager
+ * This class is made to provide an object used to indicate at VirtualizationManager
  * the istanziation paramerter
  * 
  * @author Tricomi Giuseppe

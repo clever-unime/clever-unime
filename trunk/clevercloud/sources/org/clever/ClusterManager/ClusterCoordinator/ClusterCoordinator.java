@@ -37,10 +37,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.XMLTools.FileStreamer;
-import org.clever.Common.XMLTools.ParserXML;
-import org.clever.Common.XMPPCommunicator.CleverMessage;
-import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import java.io.IOException;
 import org.apache.log4j.*;
 import java.io.InputStream;
@@ -49,14 +45,11 @@ import java.lang.reflect.Field;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import org.clever.Common.Shared.Support;
 import org.clever.Common.XMPPCommunicator.CleverMessageHandler;
-import org.clever.Common.XMPPCommunicator.RoomListener;
 import org.clever.ClusterManager.Dispatcher.DispatcherAgent;
 import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
 import org.clever.ClusterManager.Info.InfoAgent;
 import org.clever.ClusterManager.Brain.BrainInterface;
-import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Initiator.ElectionThread;
 import org.clever.Common.Initiator.Listener;
 import org.clever.Common.Initiator.ModuleFactory.*;
@@ -219,8 +212,8 @@ public class ClusterCoordinator implements CleverMessageHandler
               System.exit(1);
               
           }
-      logger.info("\n\n&&&&& i nuovi valori caricati sono: " +numReload  +" "+timeReload);     
-      logger.info("\n\nREPLACEAGENTS NEL CC: "+replaceAgents);
+      logger.debug("\n\n&&&&& i nuovi valori caricati sono: " +numReload  +" "+timeReload);     
+      logger.debug("\n\nREPLACEAGENTS NEL CC: "+replaceAgents);
       tls = Boolean.parseBoolean( pXML.getElementContent( "tls" ) );  
       
       /*prova campi librarypath:*/
@@ -525,8 +518,8 @@ public class ClusterCoordinator implements CleverMessageHandler
             logger.error( "Error while inserting message listener: " + ex );
         }
         
-        int tmp = conn.getNum_CCsInRoom(ROOM.CLEVER_MAIN);
-        logger.info("The number of CM in room CLEVER_MAIN is now: "+tmp);
+        //int tmp = conn.getNum_CCsInRoom(ROOM.CLEVER_MAIN);
+        //logger.info("The number of CM in room CLEVER_MAIN is now: "+tmp);
     }
     else //this condition will never occur but for reasons of backward compatibility we let it
     {

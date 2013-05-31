@@ -4,19 +4,10 @@
  */
 package org.clever.administration.test;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.HostEntityInfo;
-import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
-import org.clever.administration.ClusterManagerAdministrationTools;
-import org.clever.administration.commands.CommandCallback;
-import org.clever.administration.common.Configuration;
 import org.clever.administration.common.SessionFactory;
-import org.clever.administration.exceptions.CleverClientException;
 
 /**
  *
@@ -27,11 +18,13 @@ public class TestApi extends Thread{
     private SessionFactory sf;
     private static final org.apache.log4j.Logger log = org.apache.log4j.Logger.getLogger(TestApi.class);
     
+    private String host_target;
     
-    public TestApi(SessionFactory s)
+    public TestApi(SessionFactory s, String test_target)
     {
         super();
         sf = s;
+        host_target = test_target;
     }
     
     
@@ -81,7 +74,10 @@ public class TestApi extends Thread{
           */
           this.printListHost(s.getSession().getHostAdministrationModule().listClusterManagers()); 
             
-         
+         /*for (Object o : s.getSession().getVMAdministrationModule().listVMs_HOST(this.host_target, false))
+         {
+             System.out.println("VM: " + o);
+         }*/
      
   }
     
