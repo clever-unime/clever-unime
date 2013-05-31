@@ -2,14 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clever.administration.common;
+package org.clever.administration.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
-import org.clever.administration.commands.CommandCallback;
+
 
 /**
  * Modulo per gestire le entita' clever a livello di hosts: HostManager e ClusterManager
@@ -58,7 +59,7 @@ public class HostAdministrationModule extends AdministrationModule{
     }
     
     
-    public void asyncListHostManagers(CommandCallback cc) throws CleverException
+    public void asyncListHostManagers(InvocationCallback cc) throws CleverException
     {
         String target = this.getActiveCM();
         List returnResponse;
@@ -92,7 +93,7 @@ public class HostAdministrationModule extends AdministrationModule{
     }
     
     
-    public void asyncListClusterManagers(CommandCallback cc) throws CleverException
+    public void asyncListClusterManagers(InvocationCallback cc) throws CleverException
     {
         String target = this.getActiveCM();
         List returnResponse;
@@ -106,8 +107,28 @@ public class HostAdministrationModule extends AdministrationModule{
 
     }
     
-            
+     /**
+     * List degli host manager
+     * @return List di Hostmanager
+     * @throws CleverException 
+     */
+    public List<String> listActiveAgents(String target) throws CleverException
+    {
         
+        List returnResponse;
+        returnResponse = ( List<String> ) 
+                                this.execSyncCommand(
+                                        target,
+                                        "InfoAgent",
+                                        "listActiveAgents",
+                                        this.emptyParams,
+                                        false);
+        return returnResponse;
+    }       
+        
+    
+    
+
     
     
     

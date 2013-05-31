@@ -406,6 +406,18 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
   }
 
 
+  
+  
+  /*
+  public boolean hostIsConnected( String jid )
+  {
+      return (
+              this.getMultiUserChat(ROOM.CLEVER_MAIN).getOccupantPresence( jid) != null
+              ||
+              this.getMultiUserChat(ROOM.SHELL).getOccupantPresence( jid) != null);
+  }
+  */
+  
 
   /**
    * Send private message to an user
@@ -414,6 +426,11 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
    */
   public void sendMessage( String jid, final CleverMessage message )
   {
+      //TODO: check if host is connected and throw a exception on sending failure 
+      
+    
+      
+      
     logger.debug( "Sending message: " + message.toXML() );
     jid += "@" + this.getServer();
     // See if there is already a chat open
@@ -421,7 +438,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     Chat chat = cleverChatManagerListener.getChat( jid.toLowerCase() );
     if( chat == null )
     {
-        logger.debug("Chat toward "+jid +" not found");
+      logger.debug("Chat toward "+jid +" not found");
       chat = connection.getChatManager().createChat( jid, new CleverChatListener( msgHandler ) );
     }
 

@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clever.administration.common;
+package org.clever.administration.api;
 
 import org.apache.log4j.Logger;
 

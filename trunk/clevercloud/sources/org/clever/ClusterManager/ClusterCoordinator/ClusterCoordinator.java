@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Properties;
 import org.clever.Common.XMPPCommunicator.CleverMessageHandler;
 import org.clever.ClusterManager.Dispatcher.DispatcherAgent;
-import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
+import org.clever.ClusterManager.Dispatcher.CLusterManagerDispatcherPlugin;
 import org.clever.ClusterManager.Info.InfoAgent;
 import org.clever.ClusterManager.Brain.BrainInterface;
 import org.clever.Common.Initiator.ElectionThread;
@@ -74,7 +74,7 @@ public class ClusterCoordinator implements CleverMessageHandler
   private final String cfgPath = "./cfg/configuration_clustercoordinator.xml";
   private String roomclients;
   private DispatcherAgent dispatcherAgent;
-  private DispatcherPlugin dispatcherPlugin;
+  private CLusterManagerDispatcherPlugin dispatcherPlugin;
   private InfoAgent infoAgent;
   private BrainInterface brainInterface;
   

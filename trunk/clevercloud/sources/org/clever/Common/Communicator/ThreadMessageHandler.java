@@ -24,8 +24,8 @@
 
 package org.clever.Common.Communicator;
 
-import java.util.logging.Logger;
-import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
+import org.apache.log4j.Logger;
+import org.clever.ClusterManager.Dispatcher.CLusterManagerDispatcherPlugin;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
 
 /**
@@ -33,11 +33,16 @@ import org.clever.Common.XMPPCommunicator.CleverMessage;
  * @author Maurizio Paone
  */
 class ThreadMessageHandler extends Thread{
-    private DispatcherPlugin dispatcher;
+    
+    private static final Logger log = Logger.getLogger(ThreadMessageHandler.class);
+    
+    
+    private CleverMessagesDispatcher dispatcher;
     private ThreadMessageDispatcher threadDispatcher;
     private CleverMessage message;
+    private boolean running = true;
     
-    ThreadMessageHandler(DispatcherPlugin dispatcher, ThreadMessageDispatcher aThis, CleverMessage msg) {
+    ThreadMessageHandler(CleverMessagesDispatcher dispatcher, ThreadMessageDispatcher aThis, CleverMessage msg) {
         this.dispatcher = dispatcher;
         this.message=msg;
         this.threadDispatcher=aThis;
@@ -65,12 +70,12 @@ class ThreadMessageHandler extends Thread{
     @Override
     public synchronized void run()
     {
-          while(true)
+          while(running)
           {
              switch( this.message.getType() )
 
             {
-
+                        
                       case NOTIFY:
                           Notification notification=this.message.getNotificationFromMessage();
 
@@ -81,10 +86,11 @@ class ThreadMessageHandler extends Thread{
                         break;
                       case ERROR:
                       case REPLY:
+                          log.debug("Reply received");
                         dispatcher.handleMessage( this.message );
                         break;
                       case REQUEST:
-
+                         log.debug("Request received");
                         dispatcher.dispatch( this.message );
                         break;
             }
@@ -92,7 +98,9 @@ class ThreadMessageHandler extends Thread{
             try {
                 this.wait();
             } catch (InterruptedException ex) {
-               //TODO: manage exception
+                //TODO: interrupt threadHandlers
+                log.debug("Interrupt exiting ...");
+               running = false;
             }
         }
     }

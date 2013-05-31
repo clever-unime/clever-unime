@@ -22,10 +22,11 @@
  *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.clever.ClusterManager.DispatcherPlugins.DispatcherClever;
+package org.clever.Common.Communicator;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Exceptions.RequestExpired;
 
@@ -35,20 +36,24 @@ public class Request implements Runnable
 {
 
   private int id = 0;
+  /**
+   * Original Request ID: used by EXTERNAL requests (client -- [CM] -- HM)
+   */
   private String src = "";
   public enum Type
   {
 
-    INTERNAL,
-    EXTERNAL
+    INTERNAL, // (client -- CM)
+    EXTERNAL //  (client -- [CM] -- HM)
   };
 
-  private Type type;
+  private Type type ;
   private Object returnValue = null;
   private boolean expired ;
   private long timeout = 0;
-
-
+  
+  private boolean async = false;
+  private InvocationCallback callback;
 
 
   @Override
@@ -63,13 +68,17 @@ public class Request implements Runnable
       }
       catch( InterruptedException ex )
       {
-        Logger.getLogger( Request.class.getName() ).log( Level.SEVERE, null, ex );
+        //TODO: handle Exception
       }
     }
   }
 
 
-
+/**
+ * External Request: set original requester
+ * @param id
+ * @param src 
+ */
   public Request( final int id, final String src )
   {
     this.id = id;
@@ -77,6 +86,12 @@ public class Request implements Runnable
     this.type = Type.EXTERNAL;
   }
 
+  /**
+   * External Request: set original requester
+   * @param id
+   * @param src
+   * @param t 
+   */
  public Request( final int id, final String src ,long t)
   {
     this.id = id;
@@ -106,7 +121,7 @@ public class Request implements Runnable
     notifyAll();
   }
 
-
+    
 
   public synchronized Object getReturnValue() throws CleverException
   {
@@ -124,7 +139,26 @@ public class Request implements Runnable
     return returnValue;
   }
 
+    public boolean isAsync() {
+        return async;
+    }
 
+    public void setAsync(boolean async) {
+        this.async = async;
+    }
+
+    public InvocationCallback getCallback() {
+        return callback;
+    }
+
+    public void setCallback(InvocationCallback callback) {
+        this.callback = callback;
+    }
+
+
+  
+  
+  
 
   public Type getType()
   {

@@ -5,9 +5,11 @@
 package org.clever.administration.test;
 
 import java.util.List;
+import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.HostEntityInfo;
-import org.clever.administration.common.SessionFactory;
+
+import org.clever.administration.api.SessionFactory;
 
 /**
  *
@@ -55,7 +57,7 @@ public class TestApi extends Thread{
       
       
          this.printListHost(s.getSession().getHostAdministrationModule().listHostManagers()); 
-         /*s.getSession().getHostAdministrationModule().asyncListHostManagers(new CommandCallback() 
+         s.getSession().getHostAdministrationModule().asyncListHostManagers(new InvocationCallback() 
                         {
                      
 
@@ -71,13 +73,16 @@ public class TestApi extends Thread{
                                 }
                          }); 
           
-          */
+          
           this.printListHost(s.getSession().getHostAdministrationModule().listClusterManagers()); 
-            
-         /*for (Object o : s.getSession().getVMAdministrationModule().listVMs_HOST(this.host_target, false))
-         {
-             System.out.println("VM: " + o);
-         }*/
+          
+          
+          List<String> response = s.getSession().getHostAdministrationModule().listActiveAgents(host_target);
+          for (String agent : response)
+          {
+              System.out.println("Agente: " + agent);
+          }
+           
      
   }
     

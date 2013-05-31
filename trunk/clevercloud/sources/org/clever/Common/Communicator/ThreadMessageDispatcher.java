@@ -26,7 +26,7 @@ package org.clever.Common.Communicator;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
+import org.clever.ClusterManager.Dispatcher.CLusterManagerDispatcherPlugin;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.apache.log4j.Logger;
 /**
@@ -35,7 +35,7 @@ import org.apache.log4j.Logger;
  */
 public class ThreadMessageDispatcher extends Thread {
 
-
+    private boolean running = true;
     LinkedBlockingQueue <CleverMessage> cleverMessages ;
     Logger logger=null;
     
@@ -48,9 +48,9 @@ public class ThreadMessageDispatcher extends Thread {
      */
     ArrayBlockingQueue<ThreadMessageHandler> activeMessageHandlers;
 
-    DispatcherPlugin dispatcher;
+    CleverMessagesDispatcher dispatcher;
 
-    public ThreadMessageDispatcher(DispatcherPlugin d,Integer maxMessagesInQueue, Integer maxActiveHandlers)
+    public ThreadMessageDispatcher(CleverMessagesDispatcher d,Integer maxMessagesInQueue, Integer maxActiveHandlers)
     {
         this.setName("messageDispatcher");
         this.dispatcher = d;
@@ -58,6 +58,7 @@ public class ThreadMessageDispatcher extends Thread {
         this.poolMessageHandlers = new LinkedBlockingQueue();
         this.activeMessageHandlers = new ArrayBlockingQueue(maxActiveHandlers,true);
         this.logger=Logger.getLogger("ThreadDispatcher");
+        
     }
 
     /**
@@ -65,6 +66,7 @@ public class ThreadMessageDispatcher extends Thread {
      */
     public  void pushMessage(CleverMessage msg)
     {
+         
          
         if(!this.cleverMessages.offer(msg))
         {
@@ -75,7 +77,7 @@ public class ThreadMessageDispatcher extends Thread {
 
     void threadTerminated(ThreadMessageHandler th)
     {
-        this.logger.debug("£$% thread chiuso");
+        
         this.activeMessageHandlers.remove(th);
         this.poolMessageHandlers.offer(th); //TODO: check result values
     }
@@ -83,7 +85,7 @@ public class ThreadMessageDispatcher extends Thread {
 
     @Override
     public synchronized void run() {
-        while(true) //TODO insert condition to exit
+        while(running) 
         {
             
             try {
@@ -111,7 +113,8 @@ public class ThreadMessageDispatcher extends Thread {
 
             } catch (InterruptedException ex) {
                  
-                //TODO: manage thread death
+                running = false;
+                logger.debug("Interrupt: exiting ...");
             }
         }
     }

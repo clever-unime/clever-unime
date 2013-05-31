@@ -27,7 +27,7 @@
  *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.clever.ClusterManager.DispatcherPlugins.DispatcherClever;
+package org.clever.Common.Communicator;
 
 import java.util.HashMap;
 import org.apache.log4j.Logger;
@@ -47,13 +47,19 @@ public class RequestsManager
 
   public RequestsManager()
   {
-    logger = Logger.getLogger( "ClusterCoordinator" );
+    logger = Logger.getLogger( RequestsManager.class );
     idNAT = new HashMap<Integer, Request>();
     gen = UUIDGenerator.getInstance();
   }
 
- //method with request timeout. TODO: modify the current invokations of this method
-   public int addRequestPending( final CleverMessage msg, Request.Type type ,long timeout)
+   /**
+    * Add a new Sync request invocation
+    * @param msg
+    * @param type
+    * @param timeout
+    * @return request id
+    */ 
+   public int addSyncRequestPending( final CleverMessage msg, Request.Type type ,long timeout)
   {
     Integer tempId = Math.abs( gen.generateTimeBasedUUID().hashCode() );
     Request request = null;
@@ -67,12 +73,23 @@ public class RequestsManager
         break;
     }
 
+    request.setAsync(false);
+    
+    
     idNAT.put( tempId, request );
-    logger.debug( "Request added from: " + msg.getSrc() + " id: " + msg.getId()
-                  + " id toward HostCoordinator: " + tempId );
+    logger.debug( "Sync Request added from: " + msg.getSrc() + " id: " + msg.getId()
+                  + " new id (differ for EXTERNAL): " + tempId );
     return tempId;
   }
 
+   
+  /**
+    * Add a new aSync request invocation
+    * @param msg
+    * @param type
+    * @param timeout
+    * @return request id
+    */ 
   public int addRequestPending( final CleverMessage msg, Request.Type type )
   {
     Integer tempId = Math.abs( gen.generateTimeBasedUUID().hashCode() );
@@ -86,9 +103,9 @@ public class RequestsManager
         request = new Request( msg.getId());
         break;
     }
-
+    request.setAsync(true);
     idNAT.put( tempId, request );
-    logger.debug( "Request added from: " + msg.getSrc() + " id: " + msg.getId()
+    logger.debug( "aSync Request added from: " + msg.getSrc() + " id: " + msg.getId()
                   + " id toward HostCoordinator: " + tempId );
     return tempId;
   }

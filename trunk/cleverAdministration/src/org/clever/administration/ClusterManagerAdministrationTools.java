@@ -6,7 +6,7 @@ package org.clever.administration;
 
 import java.util.*;
 import org.apache.log4j.Logger;
-import org.clever.ClusterManager.DispatcherPlugins.DispatcherClever.Request;
+import org.clever.Common.Communicator.Request;
 import org.clever.Common.Exceptions.CleverException;
 
 import org.clever.Common.XMPPCommunicator.CleverMessage.MessageType;
