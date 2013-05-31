@@ -7,10 +7,10 @@ package org.clever.administration.common;
  *
  */
 final public class Session {
-    //per ora unico modulo
+    
     final AdministrationModule module;
     final HostAdministrationModule hostAdministrationModule;
-    
+    final VMAdministrationModule vMAdministrationModule;
     
     
     final Settings settings;
@@ -25,6 +25,7 @@ final public class Session {
         settings = s;
         module = new AdministrationModule(this);
         hostAdministrationModule = new HostAdministrationModule(this);
+        vMAdministrationModule = new VMAdministrationModule(this);
     }
     
     /**
@@ -47,6 +48,15 @@ final public class Session {
      */
     public HostAdministrationModule getHostAdministrationModule() {
         return hostAdministrationModule;
+    }
+    
+    /**
+     * Ritorna un VMAdministrationModule per gestire le VM
+     * 
+     * @return 
+     */
+    public VMAdministrationModule getVMAdministrationModule() {
+        return vMAdministrationModule;
     }
     
     

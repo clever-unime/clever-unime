@@ -52,7 +52,7 @@ public abstract class CmAgent extends Agent implements NotificationHandler  {
         try {
             logger.info("\nistanzio ModuleCommunicator(agentName), dove agentName: " + this.getAgentName());
             mc = new ModuleCommunicator(this.getAgentName(), "CM"); //N.B. the module communicator was istantiated here!. Group is HM: this class is designed for a HM Agent
-            logger.info("\nnfine istanza ModuleCommunicator");
+            logger.info("\n\nfine istanza ModuleCommunicator");
             mc.setMethodInvokerHandler(this);
             
             r = new ShutdownThread(this);

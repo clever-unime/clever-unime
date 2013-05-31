@@ -446,8 +446,8 @@ public class CLI
            if(command.equals("testapi"))
            {
              
-               new TestApi(sf).start();
-               new TestApi(sf).start();
+               new TestApi(sf,"marvell").start();
+               new TestApi(sf,"marvell").start();
                continue;
            }
               
