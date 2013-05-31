@@ -4,8 +4,10 @@
  */
 package org.clever.administration;
 
-import org.clever.administration.common.Configuration;
-import org.clever.administration.common.SessionFactory;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.clever.administration.api.Configuration;
+import org.clever.administration.api.SessionFactory;
 import org.clever.administration.exceptions.CleverClientException;
 import org.clever.administration.test.TestApi;
 
@@ -23,21 +25,32 @@ public class testAPI {
       
      
       int numt = Integer.parseInt(args[0]);
-      
+      Thread[] threads = new Thread[numt];
       
       Configuration conf = new Configuration();
        
         try {
             SessionFactory sf = conf.buildSessionFactory();
-            for (int i=0;i<numt;i++)
+            int i=0;
+            for (i=0;i<numt;i++)
             {
-                new TestApi(sf,"marvell").start();
+                threads[i] = new TestApi(sf,"marvell");
+                threads[i].start();
             }
+//            for(i = 0; i < threads.length; i++)
+//                threads[i].join();
             
+            
+            
+            
+            Thread.sleep(1000);
+            System.out.println("Provo ad uscire: ");
             
         } catch (CleverClientException ex) {
             System.err.println("errore nella configurazione: controllare log");
             ex.printStackTrace();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(testAPI.class.getName()).log(Level.SEVERE, null, ex);
         }
         
       

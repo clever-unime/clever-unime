@@ -43,7 +43,7 @@ import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 
 public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
 {
-    private DispatcherPlugin dispatcherPlugin = null;
+    private CLusterManagerDispatcherPlugin dispatcherPlugin = null;
     private Class cl = null;
     private BrainInterface brainInterface;
     private ThreadMessageDispatcher threadMessageDispatcher;
@@ -71,7 +71,7 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
             FileStreamer fs = new FileStreamer();
             ParserXML pars = new ParserXML( fs.xmlToString( inxml ) );
             cl = Class.forName( pars.getElementContent( "Dispatcher" ) );
-            dispatcherPlugin = ( DispatcherPlugin ) cl.newInstance();
+            dispatcherPlugin = ( CLusterManagerDispatcherPlugin ) cl.newInstance();
             dispatcherPlugin.setConnectionXMMP( this.connectionXMPP );
             dispatcherPlugin.init( null,this );
             logger.info( "Dispatcher created" );
@@ -114,7 +114,7 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
     return cl;
   }
 
-  public DispatcherPlugin getDispatcherPlugin()
+  public CLusterManagerDispatcherPlugin getDispatcherPlugin()
   {
     return dispatcherPlugin;
   }

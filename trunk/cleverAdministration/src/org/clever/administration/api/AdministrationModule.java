@@ -2,12 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clever.administration.common;
+package org.clever.administration.api;
 
 import java.util.ArrayList;
+import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.administration.commands.CleverCommand;
-import org.clever.administration.commands.CommandCallback;
 
 /**
  * Contenitore di comandi dotato di identificatore di tipo stringa (per es. "Storage")
@@ -55,7 +55,7 @@ public class AdministrationModule {
    * @param showXML:It sets if show the XML request/response messages.
    * @throws CleverException
    */
-  public void execASyncCommand( CommandCallback cleverCommand,
+  public void execASyncCommand( InvocationCallback cleverCommand,
                                 final String target,
                                 final String agent,
                                 final String command,

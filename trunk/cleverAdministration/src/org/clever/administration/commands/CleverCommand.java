@@ -31,11 +31,12 @@ package org.clever.administration.commands;
 
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
+import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
 
 
 
-public abstract class CleverCommand implements CommandCallback
+public abstract class CleverCommand implements InvocationCallback
 {
 
   protected Logger logger = Logger.getLogger( "CleverCommand" );

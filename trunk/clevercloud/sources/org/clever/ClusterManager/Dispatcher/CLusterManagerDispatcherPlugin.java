@@ -26,6 +26,7 @@
 package org.clever.ClusterManager.Dispatcher;
 
 import org.clever.Common.Communicator.Agent;
+import org.clever.Common.Communicator.CleverMessagesDispatcher;
 import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Communicator.Notification;
@@ -35,11 +36,20 @@ import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 
 
-
-public interface DispatcherPlugin extends RunnerPlugin
+/**
+ * Clever Messages dispatcher for Cluster Manager
+ * @author maurizio
+ */
+public interface CLusterManagerDispatcherPlugin extends RunnerPlugin, CleverMessagesDispatcher
 {
-  public void dispatch(final CleverMessage message);
+  
+    
+  /*
+  public void handleNotification(final Notification notification);
   public void handleMessage( final CleverMessage message );
+  public void dispatch(final CleverMessage message);
+  */
+  
   public Object dispatchToExtern(final MethodInvoker method, final String to) throws CleverException;
   public Object dispatchToIntern(final MethodInvoker method) throws CleverException;
   public void setConnectionXMMP( final ConnectionXMPP connectionXMPP );
@@ -47,7 +57,7 @@ public interface DispatcherPlugin extends RunnerPlugin
   public void subscribeNotification(final String agentName, final String notificationId);
   //public void handleNotification(final CleverMessage msg);
 
-  public void handleNotification(final Notification notification);
+ 
 
   //  public void scheduleMsg(CleverMessage msg);
 

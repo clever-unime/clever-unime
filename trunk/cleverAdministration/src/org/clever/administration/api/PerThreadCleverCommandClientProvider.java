@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clever.administration.common;
+package org.clever.administration.api;
 
 import java.util.Properties;
 import org.apache.log4j.Logger;
@@ -12,14 +12,9 @@ import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
  *
  * @author maurizio
  */
-class PerThreadCleverCommandClientProvider implements CleverCommandClientProvider {
+class PerThreadCleverCommandClientProvider extends CleverCommandClientProviderImpl {
     
-    private  String username;
-    private  String password;
-    private  String servername;
-    private  Integer port;
-    private  String nickname;
-    private  String room;
+    
     
     
      private final ThreadLocal<CleverCommandClient> clientHolder = new ThreadLocal<CleverCommandClient>() {
@@ -30,7 +25,8 @@ class PerThreadCleverCommandClientProvider implements CleverCommandClientProvide
         @Override
         protected CleverCommandClient initialValue() {
             log.debug("Creating CleverCommandClient for thread : " + Thread.currentThread().getName()); 
-            return new CleverCommandClient();
+            return new CleverCommandClient(PerThreadCleverCommandClientProvider.this.maxMessages, 
+                                           PerThreadCleverCommandClientProvider.this.maxHandlers);
         }
     };
     
@@ -42,24 +38,11 @@ class PerThreadCleverCommandClientProvider implements CleverCommandClientProvide
     
     
     
-    public PerThreadCleverCommandClientProvider() {
-        //admintools = new CleverCommandClient();
-    }
-    
-    //costruttore a cui si passano delle properties con i parametri di configurazione (servername, password,ecc.)
-    public PerThreadCleverCommandClientProvider(Properties properties) {
-        this();
-        //TODO: validate the properties
-       this.configure(properties);
-        
-        //admintools = new CleverCommandClient();
-        
-    }
+   
 
     
     /**
-     * Semplicissima politica: si connette alla prima invocazione 
-     * e mantiene una sola connessione.
+     * Semplicissima politica: crea una connessione per ogni thread
      * 
      * @return
      * Il client se va a buon fine o null in caso di errore
@@ -101,15 +84,6 @@ class PerThreadCleverCommandClientProvider implements CleverCommandClientProvide
         return;
     }
 
-    @Override
-    final synchronized public void configure(Properties properties) {
-        //TODO: validate the properties
-        username = properties.getProperty(Environment.XMPP_USERNAME);
-        password = properties.getProperty(Environment.XMPP_PASSWORD);
-        servername = properties.getProperty(Environment.XMPP_SERVER);
-        port = Integer.parseInt(properties.getProperty(Environment.XMPP_PORT));
-        room = properties.getProperty(Environment.XMPP_ROOM);
-        nickname = properties.getProperty(Environment.XMPP_NICKNAME);
-    }
+   
     
 }

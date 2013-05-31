@@ -1,4 +1,4 @@
-package org.clever.administration.common;
+package org.clever.administration.api;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -54,10 +54,10 @@ import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.clever.administration.commands.CleverCommand;
-import org.clever.administration.commands.CommandCallback;
-import org.clever.administration.common.Configuration;
-import org.clever.administration.common.Session;
-import org.clever.administration.common.SessionFactory;
+
+import org.clever.administration.api.Configuration;
+import org.clever.administration.api.Session;
+import org.clever.administration.api.SessionFactory;
 import org.clever.administration.exceptions.CleverClientException;
 import org.clever.administration.test.TestApi;
 import org.jdom.Element;

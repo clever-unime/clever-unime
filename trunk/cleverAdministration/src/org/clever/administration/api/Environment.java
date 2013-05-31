@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clever.administration.common;
+package org.clever.administration.api;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +26,11 @@ class Environment {
     //Le chiavi delle properties: forse final ?
     static String SESSION_FACTORY_NAME = "clever.session_factory_name"; //nome del factory session name
     static String COMMAND_PROVIDER = "clever.client_provider_class"; //la classe dell CleverCommandClientProvider
+    static String MAX_LENGHT_MESSAGES_QUEUE = "clever.client.max_message_in_queue"; //il max numer di clevermessage nella coda dei messaggi dei CleverCommandClient
+    static String MAX_NUMBER_MESSAGE_HANDLERS = "clever.client.max_message_handlers"; //il max numer di thread gestori dei messaggi clever
+    
+    
+    
     static String XMPP_SERVER = "xmpp_server"; //indirizzo o nome del server XMPP
     static String XMPP_USERNAME = "xmpp_username"; //username da utilizzare per la connessione XMPP
     static String XMPP_PASSWORD = "xmpp_password"; //password da utilizzare per la connessione XMPP
@@ -34,9 +39,11 @@ class Environment {
     static String XMPP_NICKNAME = "xmpp_nickname"; //nickname con cui entrera' il client nella room
     
     //VALORI di default
-    static String COMMAND_PROVIDER_DEFAULT = "org.clever.administration.common.SimpleCleverCommandClientProvider"; //provider di comandi clever di default
+    static String COMMAND_PROVIDER_DEFAULT = "org.clever.administration.api.SimpleCleverCommandClientProvider"; //provider di comandi clever di default
     static String CONFIGURATION_FILE_NAME = "/clever_client.xml"; //file di configurazione
     
+    static Integer MAX_LENGHT_MESSAGES_QUEUE_DEFAULT = 500;
+    static Integer MAX_NUMBER_MESSAGE_HANDLERS_DEFAULT = 20;
     
     
     

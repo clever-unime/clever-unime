@@ -1,4 +1,4 @@
-package org.clever.administration.common;
+package org.clever.administration.api;
 
 public interface SessionFactory {
 	/**
