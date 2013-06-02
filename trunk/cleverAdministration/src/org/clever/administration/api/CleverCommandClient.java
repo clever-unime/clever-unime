@@ -112,6 +112,7 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
  * Sen messag to MUC . Destination active ClusterManager
  * @param msg 
  */
+
   private synchronized void sendRequest( final CleverMessage msg )
   {
     try
