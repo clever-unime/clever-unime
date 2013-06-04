@@ -30,7 +30,6 @@
 package org.clever.ClusterManager.StorageManagerPlugins.StorageManagerClever;
 
 import org.clever.ClusterManager.StorageManagerPlugins.StorageManagerClever.HostLoad;
-import org.clever.ClusterManager.StorageManagerPlugins.StorageManagerClever.HostInfo;
 import org.clever.Common.VEInfo.VEInfo;
 import java.util.ArrayList;
 import java.util.List;

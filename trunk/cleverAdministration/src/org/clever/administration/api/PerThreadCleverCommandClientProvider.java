@@ -4,9 +4,7 @@
  */
 package org.clever.administration.api;
 
-import java.util.Properties;
 import org.apache.log4j.Logger;
-import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 
 /**
  *
@@ -82,6 +80,11 @@ class PerThreadCleverCommandClientProvider extends CleverCommandClientProviderIm
     public synchronized void releaseClient() {
         //TODO: manage connection
         return;
+    }
+
+    @Override
+    public void closeAllClients() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
    

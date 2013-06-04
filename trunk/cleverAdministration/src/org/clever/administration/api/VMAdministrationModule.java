@@ -16,11 +16,11 @@ import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
  * @author maurizio
  */
 public class VMAdministrationModule extends AdministrationModule{
-    final ArrayList emptyParams;
+    
     public VMAdministrationModule (Session s)
     {
         super(s);
-        emptyParams = new ArrayList();
+       
     }
     
     /**
@@ -43,7 +43,33 @@ public class VMAdministrationModule extends AdministrationModule{
                                         false);
         return returnResponse;
     }
-            
+    
+    /**
+     * Lancia delle VMs direttamente dando il comando ad un HOST
+     * Da evitare: usare i metodi del CM
+     * @return ClusterManager attivo
+     */
+    public boolean startVMs_HOST(String host, String[] VMName) throws CleverException
+    {
+        
+        Boolean returnResponse;
+        ArrayList params = new ArrayList();
+        params.add(VMName);
+        returnResponse = ( Boolean ) 
+                                this.execSyncCommand(
+                                        host,
+                                        "HyperVisorAgent",
+                                        "startVm",
+                                        params,
+                                        false);
+        return returnResponse;
+    }
+    
+     
+    
+    
+    
+    
     /**
      * Ferma una VM direttamente dando il comando ad un HOST
      * Da evitare: usare i metodi del CM
@@ -93,6 +119,7 @@ public class VMAdministrationModule extends AdministrationModule{
                                         false);
         return returnResponse;
     }
+    
     
             
         

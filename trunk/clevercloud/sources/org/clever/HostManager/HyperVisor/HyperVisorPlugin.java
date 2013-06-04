@@ -32,26 +32,33 @@ package org.clever.HostManager.HyperVisor;
 
 import java.util.List;
 import org.clever.Common.Communicator.Agent;
-import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Exceptions.HyperVisorException;
 import org.clever.Common.Plugins.RunnerPlugin;
 import org.clever.Common.VEInfo.NetworkSettings;
 import org.clever.Common.VEInfo.VEDescription;
-import org.libvirt.LibvirtException;
+import org.clever.Common.VEInfo.VEState;
 
 public interface HyperVisorPlugin extends RunnerPlugin {
-        
+
     boolean destroyVm(String id) throws Exception;
     boolean shutDownVm(String id) throws Exception;
     boolean resume(String id) throws Exception;
     boolean startVm(String id) throws Exception;
+    /**
+     * Start n VMs
+     * @param ids: IDs of VMs that have to be started
+     * @return successful
+     * @throws Exception 
+     */
+    boolean startVm(String[] ids) throws Exception;
+    
     boolean saveState(String id, String path) throws Exception;
     boolean createVm(String veId, VEDescription parameters,Boolean notExclusive) throws Exception;
     boolean resumeState(String id, String path) throws Exception;
     boolean createAndStart(String veId, VEDescription parameters,Boolean notExclusive) throws Exception;
     boolean addAdapter(String id, NetworkSettings settings) throws Exception;
     boolean isRunning(String id)throws Exception;
-    public List listVms() throws Exception;
+    public List<VEState> listVms() throws Exception;
     public List getOSTypes();
     public List listRunningVms() throws Exception;
     public boolean suspend (String id) throws Exception;

@@ -15,14 +15,16 @@ import org.clever.administration.commands.CleverCommand;
  */
 public class AdministrationModule {
     protected final Session session;
+    final protected ArrayList emptyParams;
     
     public AdministrationModule(Session s)
     {
         this.session = s;
+        emptyParams = new ArrayList();
     }
     
    /**
-   * Esegue un comando clever generico.
+   * Esegue un comando clever generico.  in modalita' sincrona
    * Un semplice wrapper al metodo di CleverComnmandClient
    * @param agent: the entity which executes the command (e.g. ClusterManager)
    * @param command:  the target command

@@ -86,5 +86,13 @@ class SimpleCleverCommandClientProvider extends CleverCommandClientProviderImpl 
         return;
     }
 
+    @Override
+    public void closeAllClients() {
+        if(client!=null)
+        {
+            client.close();
+        }
+    }
+
     
 }

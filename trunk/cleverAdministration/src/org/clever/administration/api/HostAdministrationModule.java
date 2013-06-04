@@ -17,11 +17,11 @@ import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
  * @author maurizio
  */
 public class HostAdministrationModule extends AdministrationModule{
-    final ArrayList emptyParams;
+    
     public HostAdministrationModule (Session s)
     {
         super(s);
-        emptyParams = new ArrayList();
+       
     }
     
     /**

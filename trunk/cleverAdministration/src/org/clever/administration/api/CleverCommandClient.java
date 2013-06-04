@@ -37,7 +37,7 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
     
   private String adminHostName;
   private ConnectionXMPP connectionXMPP;
-  private Request request;
+ 
   
   private HashMap<Integer, InvocationCallback> commandsSent = null;
   
@@ -109,7 +109,7 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
 
 
 /**
- * Sen messag to MUC . Destination active ClusterManager
+ * Send messag to MUC . Destination active ClusterManager
  * @param msg 
  */
 
@@ -189,8 +189,16 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
     
   }
 
-  
-  
+  /**
+   * Close client command and release all resources
+   */
+  public void close()
+  {
+      //TODO: call ClientCommandProvider to choose the correct action
+      this.connectionXMPP.closeConnection();
+      this.dispatcher.close();
+      
+  }
   
   
   

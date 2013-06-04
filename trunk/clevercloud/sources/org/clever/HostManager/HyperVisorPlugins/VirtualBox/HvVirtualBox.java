@@ -93,8 +93,6 @@ public class HvVirtualBox implements HyperVisorPlugin {
             fieldSysPath.setAccessible(true);
             fieldSysPath.set(null, null);
 
-
-
             logger.debug( System.getProperty( "java.library.path" ) );
 
 
@@ -961,6 +959,11 @@ public class HvVirtualBox implements HyperVisorPlugin {
     @Override
     public boolean attackInterface(String id, String inf, String mac, String type) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean startVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 

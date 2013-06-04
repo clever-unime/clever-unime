@@ -41,5 +41,11 @@ public class SessionFactoryImpl implements SessionFactory {
        
         return this.sessionHolder.get();
     }
+
+    @Override
+    public void closeAllSessions() {
+        //TODO: release session resources
+        this.settings.getCleverCommandClientProvider().closeAllClients();
+    }
     
 }

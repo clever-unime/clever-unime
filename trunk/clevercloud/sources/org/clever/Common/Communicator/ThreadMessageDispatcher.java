@@ -75,6 +75,9 @@ public class ThreadMessageDispatcher extends Thread {
         }
     }
 
+    
+    
+    
     void threadTerminated(ThreadMessageHandler th)
     {
         
@@ -82,7 +85,21 @@ public class ThreadMessageDispatcher extends Thread {
         this.poolMessageHandlers.offer(th); //TODO: check result values
     }
 
-
+    public void close()
+    {
+        
+        for (ThreadMessageHandler tmh : this.activeMessageHandlers)
+        {
+            tmh.interrupt();
+        }
+        for (ThreadMessageHandler tmh : this.poolMessageHandlers)
+        {
+            tmh.interrupt();
+        }
+        this.interrupt();
+    }
+    
+    
     @Override
     public synchronized void run() {
         while(running) 

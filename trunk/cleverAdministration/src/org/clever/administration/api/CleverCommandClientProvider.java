@@ -17,7 +17,7 @@ public interface CleverCommandClientProvider {
     
 	public CleverCommandClient getClient();
 	public void releaseClient();
-	
+	public void closeAllClients();
         
         
         

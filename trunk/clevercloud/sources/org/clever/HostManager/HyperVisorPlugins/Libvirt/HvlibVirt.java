@@ -1023,4 +1023,9 @@ public long snapshotCount(String id) throws CleverException{
         }
             return true;
     }
+
+    @Override
+    public boolean startVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
  }

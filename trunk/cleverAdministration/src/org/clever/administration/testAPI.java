@@ -37,13 +37,14 @@ public class testAPI {
                 threads[i] = new TestApi(sf,args[1]);
                 threads[i].start();
             }
-//            for(i = 0; i < threads.length; i++)
-//                threads[i].join();
+            for(i = 0; i < threads.length; i++)
+                threads[i].join();
+            
+            
+            sf.closeAllSessions();
             
             
             
-            
-            Thread.sleep(1000);
             System.out.println("Provo ad uscire: ");
             
         } catch (CleverClientException ex) {

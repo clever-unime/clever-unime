@@ -2683,4 +2683,9 @@ public class HvVMWare implements HyperVisorPlugin{
     public boolean attackInterface(String id, String inf, String mac, String type) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public boolean startVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

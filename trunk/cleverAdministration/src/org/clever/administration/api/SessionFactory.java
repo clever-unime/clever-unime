@@ -6,5 +6,7 @@ public interface SessionFactory {
 	 * @return
 	 */
 	public Session getSession();
+        
+        public void closeAllSessions();
 
 }
