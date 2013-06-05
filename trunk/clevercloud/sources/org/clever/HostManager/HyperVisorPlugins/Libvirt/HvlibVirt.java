@@ -520,7 +520,7 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
     }
   }
 
-  public List listRunningHVms() throws CleverException{
+  public List<VEState> listRunningHVms() throws CleverException{
       try{
           ArrayList l = new ArrayList();
           Domain dom;
@@ -540,8 +540,8 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
   }
 
 
-
-  public List listVms() throws CleverException
+  //TODO: the method MUST return List of VEState , no List of String
+  public List<VEState> listVms() throws CleverException
   {
     try
     {
@@ -580,7 +580,7 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
     }
   }
 
-
+//TODO: the method MUST return List of VEState , no List of String
   public List listRunningVms() throws CleverException{
       String name = "";
       try{

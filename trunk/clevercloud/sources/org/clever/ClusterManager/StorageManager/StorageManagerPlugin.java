@@ -37,25 +37,9 @@ import org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile;
 
 public interface StorageManagerPlugin extends RunnerPlugin{
 
-  /**
-   * Setter allowing the Agent to pass its ModuleCommunicator to the plugin
-   * @param mc - the Agent's ModuleCommunicator
-   */
-  public void setModuleCommunicator(ModuleCommunicator mc);
-
-  /**
-   * Getter for the ModuleCommunicator
-   * @return the ModuleCommunicator
-   */
-  public ModuleCommunicator getModuleCommunicator();
   
-  /**
-   * This method runs through the hierarchical tree until you reach a mount mode
-   * @param path_dest
-   * @param cont_dest
-   * @return
-   * @throws Exception 
-   */
+
+  
   public VFSDescription discoveryNode(String path_dest,String cont_dest) throws Exception;  
   
   /**

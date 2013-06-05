@@ -89,7 +89,7 @@ public class VirtualizationManagerAgent extends CmAgent {
                 this.cl = Class.forName(pXML.getElementContent("VirtualizationManager"));
                 VirtualizationManager=(VirtualizationManagerPlugin)this.cl.newInstance();
                 this.agentName=pXML.getElementContent( "moduleName" );
-                this.VirtualizationManager.setModuleCommunicator(mc);
+            
              //   this.mc.setMethodInvokerHandler(this);
                 this.VirtualizationManager.setOwner(this);
                 

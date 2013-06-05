@@ -38,7 +38,6 @@ import org.clever.ClusterManager.StorageManager.StorageManagerPlugin;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.MethodInvoker;
-import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Exceptions.LogicalCatalogException;
 import org.clever.Common.Storage.VFSDescription;
@@ -55,7 +54,7 @@ import org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile;
 public class StorageManager implements StorageManagerPlugin {
   private Logger logger;
   private Class cl;
-  private ModuleCommunicator mc;
+//  private ModuleCommunicator mc;
   private String hostName;
   private ParserXML pXML;
   private Agent owner;
@@ -73,15 +72,6 @@ public class StorageManager implements StorageManagerPlugin {
     }
   }
 
-  @Override
-  public void setModuleCommunicator(ModuleCommunicator m) {
-    this.mc = m;
-  }
-
-  @Override
-  public ModuleCommunicator getModuleCommunicator() {
-    return this.mc;
-  }
 
   /**
    * This method checks if a logical node exists in the catalog 
@@ -95,8 +85,8 @@ public class StorageManager implements StorageManagerPlugin {
             params.add("StorageManagerAgent");
             params.add(getLocation(logicname));
             MethodInvoker mi = new MethodInvoker("DatabaseManagerAgent","existNode", true, params);
-            boolean res=(Boolean)this.mc.invoke(mi);
-       //05/24/2012     boolean res = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);            
+            //boolean res=(Boolean)this.mc.invoke(mi);
+            boolean res = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);            
             return res;
             } catch (CleverException e) {
                 logger.error("Error: " + e.getMessage());
@@ -130,8 +120,8 @@ public class StorageManager implements StorageManagerPlugin {
       params.add(getLocation(namefolder));
       params.add(attribute);
       MethodInvoker mi = new MethodInvoker("DatabaseManagerAgent","getAttributeNode", true, params);
-      att=(String)this.mc.invoke(mi);
-   //05/24/2012  att = (String) this.owner.invoke("DatabaseManagerAgent", "getAttributeNode", true, params);
+      //att=(String)this.mc.invoke(mi);
+      att = (String) this.owner.invoke("DatabaseManagerAgent", "getAttributeNode", true, params);
       
       return att;
   }
@@ -148,8 +138,8 @@ public class StorageManager implements StorageManagerPlugin {
       params.add(getLocation(namefolder));
       params.add("name");
       MethodInvoker mi = new MethodInvoker("DatabaseManagerAgent","getChild", true, params);
-      attribute=(String)this.mc.invoke(mi);
-  //05/24/2012    attribute = (String) this.owner.invoke("DatabaseManagerAgent", "getChild", true, params);
+     // attribute=(String)this.mc.invoke(mi);
+      attribute = (String) this.owner.invoke("DatabaseManagerAgent", "getChild", true, params);
       return attribute;
     }
   /**
@@ -164,8 +154,8 @@ public class StorageManager implements StorageManagerPlugin {
       params.add("StorageManagerAgent");
       params.add(getLocation(namefolder));
       MethodInvoker mi = new MethodInvoker("DatabaseManagerAgent","getContentNode", true, params);
-      res=(List)this.mc.invoke(mi);
-    //05/24/2012  res = (List) this.owner.invoke("DatabaseManagerAgent", "getContentNode", true, params);
+      //res=(List)this.mc.invoke(mi);
+      res = (List) this.owner.invoke("DatabaseManagerAgent", "getContentNode", true, params);
       return res;
   }
 
@@ -250,8 +240,8 @@ public class StorageManager implements StorageManagerPlugin {
             params.add("into");
             params.add(location);         
             MethodInvoker mi = new MethodInvoker("DatabaseManagerAgent","insertNode", true, params);
-            this.mc.invoke(mi);
-          // 05/24/2012  this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
+            //this.mc.invoke(mi);
+            this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
             return true;    
   } 
   /**
@@ -310,8 +300,8 @@ public class StorageManager implements StorageManagerPlugin {
       params.add(getLocation(namefolder));
       params.add(property);
       MethodInvoker mi = new MethodInvoker("DatabaseManagerAgent","getContentNodeXML", true, params);
-      res=(String)this.mc.invoke(mi);
-     //05/24/2012 res = (String) this.owner.invoke("DatabaseManagerAgent", "getContentNodeXML", true, params);
+   //   res=(String)this.mc.invoke(mi);
+      res = (String) this.owner.invoke("DatabaseManagerAgent", "getContentNodeXML", true, params);
       //System.out.println(res);
       return res;
   }
@@ -330,8 +320,8 @@ public class StorageManager implements StorageManagerPlugin {
     params.add("StorageManagerAgent");
     params.add(getLocation(str));
     MethodInvoker mi = new MethodInvoker("DatabaseManagerAgent","getContentNodeObject", true, params);
-    pathxml=(String)this.mc.invoke(mi);
-  //05/24/2012  pathxml = (String) this.owner.invoke("DatabaseManagerAgent", "getContentNodeObject", true, params);
+    //pathxml=(String)this.mc.invoke(mi);
+    pathxml = (String) this.owner.invoke("DatabaseManagerAgent", "getContentNodeObject", true, params);
     VFSDescription vfsD =(VFSDescription) MessageFormatter.objectFromMessage(pathxml);
     return vfsD; 
 

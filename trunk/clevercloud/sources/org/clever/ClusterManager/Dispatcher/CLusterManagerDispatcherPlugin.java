@@ -53,7 +53,7 @@ public interface CLusterManagerDispatcherPlugin extends RunnerPlugin, CleverMess
   public Object dispatchToExtern(final MethodInvoker method, final String to) throws CleverException;
   public Object dispatchToIntern(final MethodInvoker method) throws CleverException;
   public void setConnectionXMMP( final ConnectionXMPP connectionXMPP );
-  public void setCommunicator( final ModuleCommunicator connectionXMPP );
+  
   public void subscribeNotification(final String agentName, final String notificationId);
   //public void handleNotification(final CleverMessage msg);
 

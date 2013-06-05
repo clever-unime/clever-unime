@@ -130,6 +130,7 @@ import org.clever.Common.VEInfo.NetworkSettings.NetworkType;
 import org.clever.Common.VEInfo.StorageSettings;
 import org.clever.Common.VEInfo.StorageSettings.DiskMode;
 import org.clever.Common.VEInfo.VEDescription;
+import org.clever.Common.VEInfo.VEState;
 import org.clever.Common.VEInfo.VMWrapper;
 import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
 import org.clever.HostManager.NetworkManager.AdapterInfo;
@@ -1132,14 +1133,14 @@ public class HvVMWare implements HyperVisorPlugin{
             logger.error("Error on updateMap: "+ex);  
         }
     }
-    
+    //TODO: the method MUST return List of VEState , no List of String
     @Override
     /**
      * List listVMs() si avvale dell'HashMap di Clever
      * @return List of Virtual Machines and its port into this HostManager of Clever
      * @throws Exception
      */
-    public List listVms() throws Exception {
+    public List<VEState> listVms() throws Exception {
         VMWrapper wrap = null;
         String s = null;
         ArrayList ret = new ArrayList();
@@ -1189,7 +1190,7 @@ public class HvVMWare implements HyperVisorPlugin{
         this.logger.info("List HVMs returned: " + l.size() + " Virtual Machines");
         return l;
     }
-    
+    //TODO: the method MUST return List of VEState , no List of String
     @Override
     /**
      * List listRunningVms si avvale dell'HashMap di Clever (VM registrate in Clever)
@@ -1197,7 +1198,7 @@ public class HvVMWare implements HyperVisorPlugin{
      * @return List of running Virtual Machines and its port into this Host Manager of Clever
      * @throws Exception
      */
-    public List listRunningVms() throws Exception {
+    public List<VEState> listRunningVms() throws Exception {
         
         VMWrapper wrap = null;
         String s = null;

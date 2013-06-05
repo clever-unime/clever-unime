@@ -62,7 +62,7 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
     private String description = "Clever Dispatcher";
     private String name = "DispatcherClever";
     private ConnectionXMPP connectionXMPP = null;
-    private ModuleCommunicator mc = null;
+    //private ModuleCommunicator mc = null;
     private RequestsManager requestsManager = null;
     private Logger logger = null;
     private Map<String, List<String>> notificationDelivery = new HashMap<String, List<String>>();
@@ -118,7 +118,9 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
                 cleverMsg.setHasReply(false);
                 cleverMsg.setReplyToMsg(message.getId());
                 try {
-                    Object obj = mc.invoke(mi);
+                    //Object obj = mc.invoke(mi);
+                    
+                    Object obj = this.owner.invoke(mi);
                     if (message.needsForReply()) {
                         cleverMsg.setType( CleverMessage.MessageType.REPLY );
                         cleverMsg.setBody( new OperationResult( Result.ResultType.OBJECT,
@@ -211,11 +213,7 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
         this.connectionXMPP = connectionXMPP;
     }
 
-    @Override
-    public void setCommunicator(ModuleCommunicator mc) {
-        this.mc = mc;
-    }
-
+   
     @Override
     public Object dispatchToExtern(MethodInvoker method, String to) throws CleverException{
         CleverMessage cleverMessage = new CleverMessage();
@@ -298,7 +296,8 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
                             true,
                             params);
                     //logger.debug("X?X 338 dispatcher clever, agent:"+(String) agent);
-                    mc.invoke(mi);
+                    //mc.invoke(mi);
+                    this.owner.invoke(mi);
                 } catch (CleverException ex) {
                     logger.error("Error invoking agent handleNotification method " + ex);
                 }
@@ -310,9 +309,12 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
 
 
 
+    //Likely used only by SensorBrain 
     @Override
     public Object dispatchToIntern(MethodInvoker method) throws CleverException {
-        return mc.invoke(method);
+        
+        //return mc.invoke(method);
+        return this.owner.invoke(method);
     }
 
     @Override

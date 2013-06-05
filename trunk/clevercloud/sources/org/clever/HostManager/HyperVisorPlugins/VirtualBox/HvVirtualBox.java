@@ -63,6 +63,7 @@ import org.clever.Common.VEInfo.MemorySettings;
 import org.clever.Common.VEInfo.NetworkSettings;
 import org.clever.Common.VEInfo.StorageSettings;
 import org.clever.Common.VEInfo.VEDescription;
+import org.clever.Common.VEInfo.VEState;
 import org.clever.Common.VEInfo.VMWrapper;
 import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
 
@@ -263,11 +264,12 @@ public class HvVirtualBox implements HyperVisorPlugin {
 
         }
      }
-
-     public List listVms() throws Exception{
+//TODO: the method MUST return List of VEState , no List of String
+     @Override
+     public List<VEState> listVms() throws Exception{
         try {
             ArrayList l = new ArrayList( m.keySet() );
-            logger.info( "List VMS returned numero di macchine: " +l.size() );
+            logger.info( "List VMS returned :" +l.size() + " VMs");
             
             return( l );
         }
@@ -276,8 +278,8 @@ public class HvVirtualBox implements HyperVisorPlugin {
             throw new CleverException(ex.getMessage());
         }
     }
-
-     public List listRunningVms() throws Exception{
+//TODO: the method MUST return List of VEState , no List of String
+     public List<VEState> listRunningVms() throws Exception{
          String name = "";
          try{
              ArrayList l = new ArrayList ( m.keySet() );
@@ -323,7 +325,9 @@ public class HvVirtualBox implements HyperVisorPlugin {
          }
      }
 
-      public List listRunningHVms()throws Exception{
+     
+     //TODO: the method MUST return List of VEState , no List of String
+      public List<VEState> listRunningHVms()throws Exception{
          try{
              ArrayList l = new ArrayList( vbox.getMachines() );
              ArrayList l2 = new  ArrayList();
@@ -331,9 +335,11 @@ public class HvVirtualBox implements HyperVisorPlugin {
              for ( Object obj : l ){
                  vm = ( IMachine ) obj;
                  if( vm.getState().name().compareTo(MachineState.Running.name()) == 0 )
+                 {
                      l2.add( vm.getName() );
+                 }
              }
-             logger.info( "List running HVms returned number of machine: "+ l2.size() );
+             logger.debug( "List running HVms returned number of machine: "+ l2.size() );
              return ( l2 );
          }
          catch( Exception ex ){

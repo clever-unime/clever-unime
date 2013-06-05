@@ -54,7 +54,7 @@ public class StorageManagerAgent extends CmAgent {
             //Instantiate StorageManager
             this.cl = Class.forName(pars.getElementContent("StorageManagerPlugin"));
             this.StoragePlugin = (StorageManagerPlugin) this.cl.newInstance();
-            this.StoragePlugin.setModuleCommunicator(mc);
+            //this.StoragePlugin.setModuleCommunicator(mc);
            // this.mc.setMethodInvokerHandler(this);
             this.StoragePlugin.setOwner(this);
             

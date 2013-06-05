@@ -59,8 +59,8 @@ public interface HyperVisorPlugin extends RunnerPlugin {
     boolean addAdapter(String id, NetworkSettings settings) throws Exception;
     boolean isRunning(String id)throws Exception;
     public List<VEState> listVms() throws Exception;
+    public List<VEState> listRunningVms() throws Exception;
     public List getOSTypes();
-    public List listRunningVms() throws Exception;
     public boolean suspend (String id) throws Exception;
     public boolean cloneVM (String id, String clone, String description) throws Exception;
     public boolean takeSnapshot (String id, String nameS, String description) throws Exception;

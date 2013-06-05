@@ -76,7 +76,7 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
             dispatcherPlugin.init( null,this );
             logger.info( "Dispatcher created" );
             //agentName=pars.getElementContent( "moduleName" );
-            dispatcherPlugin.setCommunicator( this.mc );
+            
             dispatcherPlugin.setOwner(this);
             this.threadMessageDispatcher = new ThreadMessageDispatcher(dispatcherPlugin,2000, 20); //TODO: retrieve parameters from configuration file
             this.threadMessageDispatcher.start();

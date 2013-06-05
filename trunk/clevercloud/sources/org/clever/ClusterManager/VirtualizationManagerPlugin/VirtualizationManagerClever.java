@@ -49,7 +49,7 @@ import org.jdom.Element;
 
 
 public class VirtualizationManagerClever implements VirtualizationManagerPlugin {
-    private ModuleCommunicator mc;
+//    private ModuleCommunicator mc;
     private Agent owner;
     private String version = "0.0.1";
     private String description = "Plugin per HTML5 remote desktop";
@@ -439,15 +439,7 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         return this.description;
     }
 
-    @Override
-    public void setModuleCommunicator(ModuleCommunicator mc) {
-        this.mc = mc;
-    }
-
-    @Override
-    public ModuleCommunicator getModuleCommunicator() {
-        return this.mc;
-    }
+    
 
     @Override
     public void setOwner(Agent owner) {

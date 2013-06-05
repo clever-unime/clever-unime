@@ -82,10 +82,8 @@ public class ImageManager implements ImageManagerPlugin {
  // private UUIDGenerator uuidGenerator = UUIDGenerator.getInstance();
   private String localRepository;  
   private MultiMap map;
-  private MultiMap map1;
-  private List a;
-  private ArrayList b;
-  private ArrayList b1;
+  
+ 
   private ConcurrentHashMap<String, String> paths;
   private HashMap localVE;
   private HashMap<String, String> sharedPath;
@@ -95,7 +93,7 @@ public class ImageManager implements ImageManagerPlugin {
   //private StoragePluginFactory storagePluginFactory;
   //private DistributedStoragePlugin distributedStorage;
   private ConnectionXMPP conn;
-  private ModuleCommunicator mc;
+  
   private Logger logger;
   private FileTransferManager ftm;
   private Agent owner;
@@ -118,10 +116,7 @@ public class ImageManager implements ImageManagerPlugin {
    // this.uuidGenerator=null;
     //this.des=pp.getChildText("dest");
     this.map = new MultiHashMap( );
-    this.map1 = new MultiHashMap( );
-    this.a=null;
-    this.b=new ArrayList();
-    this.b1=new ArrayList();
+   
     
     
     //this.params=new ArrayList();
@@ -326,13 +321,7 @@ public class ImageManager implements ImageManagerPlugin {
     this.initFTM();
   }
 
-  /**
-   * Sets the ModuleCommunicator for the Manager
-   * @param mc - the ModuleCommunicator object to use
-   */
-  public void setMC(ModuleCommunicator mc) {
-    this.mc = mc;
-  }
+  
 
   /**
    * This method, called when the ImageManager is initialized, will register the
@@ -351,7 +340,8 @@ public class ImageManager implements ImageManagerPlugin {
     {
       MethodInvoker mi = new MethodInvoker("MonitorAgent",
               "getStorageCurrentFreeSpace", true, null);
-      result = (List) this.mc.invoke(mi);
+      //result = (List) this.mc.invoke(mi);
+      result = (List) this.owner.invoke(mi);
 
       if (result == null)
       {
@@ -372,7 +362,8 @@ public class ImageManager implements ImageManagerPlugin {
       List para = new ArrayList();
       para.add(host);
       MethodInvoker mi = new MethodInvoker("DatabaseManagerAgent", "addHost", true, para);
-      boolean res = (Boolean) this.mc.invoke(mi);
+      //boolean res = (Boolean) this.mc.invoke(mi);
+      boolean res = (Boolean) this.owner.invoke(mi);
       if (res)
         logger.info("Host registered within the cluster");
       else
@@ -623,7 +614,7 @@ public class ImageManager implements ImageManagerPlugin {
     try
     {
       MethodInvoker mi = new MethodInvoker("NetworkManagerAgent", "getAdaptersInfo", true, null);
-      ArrayList<AdapterInfo> netcards = (ArrayList) this.mc.invoke(mi);
+      ArrayList<AdapterInfo> netcards = (ArrayList) this.owner.invoke(mi);
       IPAddress ip = null;
       for (int i = 0; i < netcards.size() && ip == null; i++)
       {
@@ -869,7 +860,8 @@ public class ImageManager implements ImageManagerPlugin {
         List para = new ArrayList();
         para.add(this.im.hostName);
         MethodInvoker mi = new MethodInvoker("DatabaseManagerAgent", "removeHost", true, para);
-        boolean res = (Boolean) this.im.mc.invoke(mi);
+        //boolean res = (Boolean) this.im.mc.invoke(mi);
+        boolean res = (Boolean) this.im.owner.invoke(mi);
         if (res)
           logger.info("Host removed from the cluster");
         else
@@ -880,18 +872,7 @@ public class ImageManager implements ImageManagerPlugin {
       }
     }
   }
-/*  public void prova(){
-      Collection c=map.values();
-      Object array[]=c.toArray();
-      for(int i=0;i<array.length;i++){
-          logger.debug("UUUUUUUUUUUUUUUUUUUUU"+((String)array[i]));
-      }
-      Collection b=map1.values(); 
-      Object array1[]=b.toArray();
-      for(int i=0;i<array1.length;i++){
-          logger.debug("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"+((String)array1[i]));
-      }
-  }*/
+
 public List SnapshotImageCreate(String localpath,VFSDescription vfsD,LockFile.lockMode lock) throws IOException, InterruptedException{
             List params=new ArrayList();
             UUID uuid=UUID.randomUUID();

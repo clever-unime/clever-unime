@@ -36,18 +36,13 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.Agent;
-import org.clever.Common.Communicator.ModuleCommunicator;
-import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
-import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.jdom.Element;
 
 /**
@@ -55,7 +50,7 @@ import org.jdom.Element;
  * @author Valerio Barbera & Luca Ciarniello
  */
 
-/***QUESTO AGENTE VA RIVISTO, A CHE SERVE IL COSTRUTTORE CON PARAMETRO?? QUALE DEVE ESSERE USATO??*/
+/***QUESTO AGENTE VA RIVISTO*/
 
 public class ImageManagerAgent extends Agent {
     
@@ -79,7 +74,7 @@ public class ImageManagerAgent extends Agent {
         
          
     
-        logger.info("\n\n||||||!!!========££$$$$$$$$ Provo se il logger funziona ImageManagerAgent di HM!!!!\n\n"); //OK FUNONZIAaaaa!!!
+        logger.debug("\n\n||||||!!!========££$$$$$$$$ Provo se il logger funziona ImageManagerAgent di HM!!!!\n\n"); 
          
 
     //Load properties from XML file
@@ -97,15 +92,14 @@ public class ImageManagerAgent extends Agent {
     try
     {
       //Load configuration_imagemanager.XMl
-        logger.info("\n\n||||||!!!========££$$$$$$$$ Provo se il logger funziona ImageManagerAgent di HM!!!!\n\n"); //OK FUNONZIAaaaa!!!
+        logger.info("\n\n||||||!!!========££$$$$$$$$ Provo se il logger funziona ImageManagerAgent di HM!!!!\n\n"); 
      
       InputStream inxml=getClass().getResourceAsStream(
               "/org/clever/HostManager/ImageManager/configuration_ImageManager.xml");
       FileStreamer fs = new FileStreamer();
       ParserXML pars = new ParserXML(fs.xmlToString(inxml));
 
-      //Instantiate ModulCommunicator
-      //agentName=pars.getElementContent("moduleName");
+      
       super.setAgentName(pars.getElementContent("moduleName"));
       
 
@@ -115,7 +109,7 @@ public class ImageManagerAgent extends Agent {
       //Setto ImageManager come ascoltatore
      //rob this.imgManager = new ImageManager();
        this.imgManager = new ImageManager(pp);
-       this.imgManager.setMC(mc);
+       
        this.imgManager.setOwner(this);
        //this.imgManager.registerHost();
        
@@ -133,7 +127,7 @@ public class ImageManagerAgent extends Agent {
     }
   
   private Class cl;
-  //private ModuleCommunicator mc;
+ 
   private ImageManager imgManager;
   //rob
   
@@ -146,18 +140,13 @@ public class ImageManagerAgent extends Agent {
     
     }
 
-  public ImageManagerAgent(ConnectionXMPP conn) {
-      super();
-      logger=Logger.getLogger("ImageManagerAgent");
-    //init();
-    this.imgManager.setXMPP(conn);
-  }
+ 
 
   private void init() { //va tolto l'underscore dopo la prova
        //loggerInstantiator2 = new LoggerInstantiator();
     logger = Logger.getLogger("ImageManagerAgent");
     
-    logger.info("\n\n||||||!!!========££$$$$$$$$ Provo se il logger funziona ImageManagerAgent di HM!!!!\n\n"); //OK FUNONZIAaaaa!!!
+    logger.info("\n\n||||||!!!========££$$$$$$$$ Provo se il logger funziona ImageManagerAgent di HM!!!!\n\n"); 
          
 
     //Load properties from XML file
@@ -193,7 +182,7 @@ public class ImageManagerAgent extends Agent {
       //Setto ImageManager come ascoltatore
      //rob this.imgManager = new ImageManager();
        this.imgManager = new ImageManager(pp);
-       this.imgManager.setMC(mc);
+       
        //this.imgManager.registerHost();
        cl = Class.forName(pars.getElementContent("ImageManagerPlugin"));
       

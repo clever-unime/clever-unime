@@ -77,17 +77,6 @@ public interface VirtualizationManagerPlugin extends RunnerPlugin{
      */
     public boolean stopVm(String id) throws CleverException;
     
-    /**
-   * Setter allowing the Agent to pass its ModuleCommunicator to the plugin
-   * @param mc - the Agent's ModuleCommunicator
-   */
-  public void setModuleCommunicator(ModuleCommunicator mc);
-
-  /**
-   * Getter for the ModuleCommunicator
-   * @return the ModuleCommunicator
-   */
-  public ModuleCommunicator getModuleCommunicator();
   
   
   public boolean stopVm(String id,Boolean poweroff) throws CleverException;

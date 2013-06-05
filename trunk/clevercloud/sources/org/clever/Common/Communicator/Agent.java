@@ -243,6 +243,25 @@ public abstract class Agent implements MethodInvokerHandler {
 
 
     }
+    
+    /**
+     * Invokes a method of an agent using the module communicator
+     *
+     * @param agentTarget the name of the target agent
+     * @param methodTarget the method that has to be invoked
+     * @param hasReply true if the method returns an object
+     * @param params the method's parameters
+     * @return the object returned by the method invoked or null if hasReply is
+     * false
+     * @throws CleverException
+     */
+    public Object invoke(MethodInvoker mi) throws CleverException {
+
+        
+        return mc.invoke(mi);
+
+
+    }
 
     /**
      * @autor marco carbone
