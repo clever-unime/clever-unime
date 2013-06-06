@@ -54,7 +54,7 @@ import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
-import org.safehaus.uuid.UUIDGenerator;
+
 import org.xml.sax.SAXException;
 
 
@@ -83,7 +83,7 @@ public class CleverMessage
   private int id = 0;
   // Contains the id of request message
   private int replyToMsg = 0;
-  private UUIDGenerator uuidGenerator = UUIDGenerator.getInstance();
+ 
   // Specify if the message require an operation answer
   private boolean hasReply = false;
   private Logger logger = Logger.getLogger( "CleverMessage" );
@@ -92,7 +92,7 @@ public class CleverMessage
 
   public CleverMessage()
   {
-    id = Math.abs( uuidGenerator.generateTimeBasedUUID().hashCode() );
+    id = UUIDProvider.getPositiveInteger();
   }
 
 

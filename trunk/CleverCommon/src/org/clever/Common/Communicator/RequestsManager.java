@@ -29,10 +29,14 @@
  */
 package org.clever.Common.Communicator;
 
+import com.fasterxml.uuid.Generators;
+
+import java.security.SecureRandom;
 import java.util.HashMap;
 import org.apache.log4j.Logger;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
-import org.safehaus.uuid.UUIDGenerator;
+import org.clever.Common.XMPPCommunicator.UUIDProvider;
+
 
 
 
@@ -41,7 +45,7 @@ public class RequestsManager
 
   private HashMap<Integer, Request> idNAT = null;
   private Logger logger = null;
-  UUIDGenerator gen = null;
+  UUIDProvider gen = null;
 
 
 
@@ -49,7 +53,9 @@ public class RequestsManager
   {
     logger = Logger.getLogger( RequestsManager.class );
     idNAT = new HashMap<Integer, Request>();
-    gen = UUIDGenerator.getInstance();
+    SecureRandom r = new SecureRandom();
+    
+    
   }
 
    /**
@@ -61,7 +67,7 @@ public class RequestsManager
     */ 
    public int addSyncRequestPending( final CleverMessage msg, Request.Type type ,long timeout)
   {
-    Integer tempId = Math.abs( gen.generateTimeBasedUUID().hashCode() );
+    Integer tempId = UUIDProvider.getPositiveInteger();
     Request request = null;
     switch( type )
     {
@@ -92,7 +98,7 @@ public class RequestsManager
     */ 
   public int addRequestPending( final CleverMessage msg, Request.Type type )
   {
-    Integer tempId = Math.abs( gen.generateTimeBasedUUID().hashCode() );
+    Integer tempId = Math.abs( UUIDProvider.getPositiveInteger() );
     Request request = null;
     switch( type )
     {
