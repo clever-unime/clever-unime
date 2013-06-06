@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.HostEntityInfo;
+import org.clever.Common.VEInfo.VEState;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 
 
@@ -97,7 +98,7 @@ public class VMAdministrationModule extends AdministrationModule{
      * Da evitare: usare i metodi del CM
      * @return ClusterManager attivo
      */
-    public List listVMs_HOST(String host, Boolean onlyrunning) throws CleverException
+    public List<VEState> listVMs_HOST(String host, Boolean onlyrunning) throws CleverException
     {
         
         List returnResponse;
@@ -110,7 +111,7 @@ public class VMAdministrationModule extends AdministrationModule{
         {
             method="listVms";
         }
-        returnResponse = ( List ) 
+        returnResponse = ( List<VEState> ) 
                                 this.execSyncCommand(
                                         host,
                                         "HyperVisorAgent",
