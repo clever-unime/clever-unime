@@ -40,21 +40,21 @@ public class CreateVMCommand extends CleverCommand{
         ArrayList params = new ArrayList();
         String id=commandLine.getOptionValue("tn");
         String istanceName=commandLine.getOptionValue("n");
-        org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode lock=org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.EX;
+      //  org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode lock=org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.EX;
           if(commandLine.hasOption("clonable")){
-              lock=org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.PR;
+        //      lock=org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.PR;
               
           }
           if(commandLine.hasOption("exclusive")){
-              lock=org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.EX;
+          //    lock=org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.EX;
           }
         
         //int lock=Integer.parseInt( commandLine.getOptionValue("lock"));
         params.add(id);
         //params.add(istanceName);
         params.add(targetHM);
-        org.clever.Common.Communicator.Utils.IstantiationParams containerParams=new org.clever.Common.Communicator.Utils.IstantiationParams(lock);
-        params.add(containerParams);
+        //org.clever.Common.Communicator.Utils.IstantiationParams containerParams=new org.clever.Common.Communicator.Utils.IstantiationParams(lock);
+        //params.add(containerParams);
         ClusterManagerAdministrationTools.instance().execAdminCommand(this, target, "VirtualizationManagerAgent", "createVM", params, commandLine.hasOption( "xml" ) );
         //ClusterManagerAdministrationTools.instance().execAdminCommand(this, target, "TestAgent", "simVirtualizationManager", params, commandLine.hasOption( "xml" ) );
            }

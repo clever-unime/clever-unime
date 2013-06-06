@@ -5,7 +5,7 @@
 package org.clever.administration.api;
 
 import java.util.*;
-import java.util.logging.Level;
+
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Request;
 import org.clever.Common.Communicator.CleverMessagesDispatcher;

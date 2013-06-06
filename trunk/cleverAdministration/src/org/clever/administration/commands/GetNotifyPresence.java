@@ -32,10 +32,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.VEInfo.CpuSettings;
-import org.clever.Common.VEInfo.MemorySettings;
-import org.clever.Common.VEInfo.StorageSettings;
-import org.clever.Common.VEInfo.VEDescription;
+
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP.ROOM;
 import org.clever.administration.ClusterManagerAdministrationTools;
 import org.jivesoftware.smack.PacketListener;

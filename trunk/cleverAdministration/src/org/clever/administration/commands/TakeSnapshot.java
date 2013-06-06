@@ -26,16 +26,9 @@ package org.clever.administration.commands;
 
 import java.util.ArrayList;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.VEInfo.CpuSettings;
-import org.clever.Common.VEInfo.MemorySettings;
-import org.clever.Common.VEInfo.StorageSettings;
-import org.clever.Common.VEInfo.VEDescription;
 import org.clever.administration.ClusterManagerAdministrationTools;
-import org.safehaus.uuid.UUIDGenerator;
 
 
 

@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.VEInfo.VEDescription;
+//import org.clever.Common.VEInfo.VEDescription;
 import org.clever.Common.XMLTools.MessageFormatter;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.clever.administration.ClusterManagerAdministrationTools;
@@ -66,10 +66,10 @@ public class RegisterVMCommand extends CleverCommand {
                 br.readLine();
                 while (((strLine = br.readLine()) != null))
                           VE=VE+strLine; 
-      VEDescription veD =(VEDescription) MessageFormatter.objectFromMessage(VE);
+     // VEDescription veD =(VEDescription) MessageFormatter.objectFromMessage(VE);
     
       
-      params.add(veD);
+      //params.add(veD);
 
       ClusterManagerAdministrationTools.instance().execAdminCommand(
               this, target, "VirtualizationManagerAgent", "register", params, commandLine.hasOption("xml"));
