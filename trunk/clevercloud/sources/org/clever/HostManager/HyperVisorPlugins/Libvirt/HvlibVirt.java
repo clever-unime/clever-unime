@@ -162,7 +162,7 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
   }
 
  
- 
+ //TODO: choose shutdown policy: if !poweroff must it destroy the domain ?
  public boolean shutDownVm( String id , Boolean poweroff) throws CleverException
  {
      if(!poweroff)
@@ -1026,6 +1026,16 @@ public long snapshotCount(String id) throws CleverException{
 
     @Override
     public boolean startVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean destroyVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean shutDownVm(String[] ids) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
  }

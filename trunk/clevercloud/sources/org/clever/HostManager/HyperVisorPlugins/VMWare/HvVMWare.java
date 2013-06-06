@@ -68,14 +68,12 @@ import com.vmware.vim25.VirtualLsiLogicController;
 import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.VirtualMachineConfigOption;
 import com.vmware.vim25.VirtualMachineConfigSpec;
-import com.vmware.vim25.VirtualMachineConfigSummary;
 import com.vmware.vim25.VirtualMachineDatastoreInfo;
 import com.vmware.vim25.VirtualMachineFileInfo;
 import com.vmware.vim25.VirtualMachinePowerState;
 import com.vmware.vim25.VirtualMachineRuntimeInfo;
 import com.vmware.vim25.VirtualMachineSnapshotInfo;
 import com.vmware.vim25.VirtualMachineSnapshotTree;
-import com.vmware.vim25.VirtualMachineSummary;
 import com.vmware.vim25.VirtualPCNet32;
 import com.vmware.vim25.VirtualSCSISharing;
 import com.vmware.vim25.VmConfigFault;
@@ -134,9 +132,7 @@ import org.clever.Common.VEInfo.VEState;
 import org.clever.Common.VEInfo.VMWrapper;
 import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
 import org.clever.HostManager.NetworkManager.AdapterInfo;
-import org.clever.HostManager.NetworkManager.IPAddress;
 import org.jdom.Element;
-import org.libvirt.LibvirtException;
 
 
 /**
@@ -2687,6 +2683,16 @@ public class HvVMWare implements HyperVisorPlugin{
 
     @Override
     public boolean startVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean destroyVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean shutDownVm(String[] ids) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

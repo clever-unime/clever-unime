@@ -24,12 +24,9 @@
  */
 package org.clever.administration.commands;
 
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.Option;
-import org.apache.commons.cli.OptionGroup;
 import org.apache.commons.cli.Options;
 import org.clever.Common.Exceptions.CleverException;
 
@@ -38,7 +35,6 @@ import org.clever.administration.ClusterManagerAdministrationTools;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
-import org.safehaus.uuid.UUIDGenerator;
 
 
 

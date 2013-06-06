@@ -41,7 +41,12 @@ import org.clever.Common.VEInfo.VEState;
 public interface HyperVisorPlugin extends RunnerPlugin {
 
     boolean destroyVm(String id) throws Exception;
+    boolean destroyVm(String ids[]) throws Exception;
+    
     boolean shutDownVm(String id) throws Exception;
+    boolean shutDownVm(String ids[]) throws Exception;
+    
+    
     boolean resume(String id) throws Exception;
     boolean startVm(String id) throws Exception;
     /**
@@ -69,6 +74,10 @@ public interface HyperVisorPlugin extends RunnerPlugin {
     public String currentSnapshot (String id)throws Exception;   
     public long snapshotCount(String id)throws Exception;
     public String getHYPVRName();
+   
+    
+    
+    
     //Aggiunti da Giovanni (VMWare)
     public boolean deleteAllSnapshot(String id) throws Exception;
     public boolean renameVM(String id, String new_id) throws Exception;
