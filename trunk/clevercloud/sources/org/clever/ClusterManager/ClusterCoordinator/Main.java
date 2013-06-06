@@ -26,7 +26,6 @@ package org.clever.ClusterManager.ClusterCoordinator;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.management.ManagementFactory; 
 
 import java.util.Properties;
 import org.apache.log4j.Logger;
