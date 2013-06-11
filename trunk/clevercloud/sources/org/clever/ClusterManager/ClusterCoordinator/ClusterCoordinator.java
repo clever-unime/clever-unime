@@ -531,7 +531,11 @@ public class ClusterCoordinator implements CleverMessageHandler
   @Override
   public synchronized void handleCleverMessage( final CleverMessage msg )
   {
-    logger.debug( "Message: " + msg.toXML() );
+      try {
+          logger.debug( "Message: " + msg.toXML() );
+      } catch (CleverException ex) {
+          logger.error("Messaggio " + msg.getId() + " non valido"); 
+      }
 
     dispatcherAgent.handleCleverMessage(msg);
     

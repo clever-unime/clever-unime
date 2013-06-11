@@ -5,6 +5,7 @@
 package org.clever.administration;
 
 import java.util.*;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Request;
 import org.clever.Common.Exceptions.CleverException;
@@ -89,7 +90,7 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler
 
 
 
-  private void sendRequest( final CleverMessage msg )
+  private void sendRequest( final CleverMessage msg ) throws CleverException
   {
     try
     {
@@ -166,7 +167,11 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler
   @Override
   public void handleCleverMessage( final CleverMessage cleverMessage )
   {
-    logger.debug( "Received:\n" + cleverMessage.toXML() );
+      try {
+          logger.debug( "Received:\n" + cleverMessage.toXML() );
+      } catch (CleverException ex) {
+          java.util.logging.Logger.getLogger(ClusterManagerAdministrationTools.class.getName()).log(Level.SEVERE, null, ex);
+      }
     CleverCommand cleverCommand = null;
     try
     {

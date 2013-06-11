@@ -377,7 +377,7 @@ public class CleverMessage
 
 
 
-  public String toXML()
+  public String toXML() throws CleverException
   {
     Element root = new Element( "message" );
     
@@ -430,6 +430,7 @@ public class CleverMessage
     catch( IOException ex )
     {
       logger.error( ex.toString() );
+      throw new CleverException(ex);
     }
     Element body_root = document.detachRootElement();
     body_root.removeNamespaceDeclaration( Namespace.NO_NAMESPACE );

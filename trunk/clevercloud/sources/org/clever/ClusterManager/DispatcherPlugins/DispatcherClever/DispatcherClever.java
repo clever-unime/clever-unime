@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.ClusterManager.Dispatcher.CLusterManagerDispatcherPlugin;
 import org.clever.Common.Communicator.Agent;
@@ -171,7 +172,11 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
      * @param msg
      */
     public void handleMessage(final CleverMessage msg) {
-        logger.debug("Dispatcher handle message: " + msg.toXML());
+        try {
+            logger.debug("Dispatcher handle message: " + msg.toXML());
+        } catch (CleverException ex) {
+            logger.error("Message " + msg.getId() + " with errors !!"); 
+        }
         logger.debug("Module name: " + msg.getBodyModule() + " and operation: " + msg.getBodyOperation());
 
        

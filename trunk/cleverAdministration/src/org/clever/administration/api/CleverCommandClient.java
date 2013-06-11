@@ -5,6 +5,7 @@
 package org.clever.administration.api;
 
 import java.util.*;
+import java.util.logging.Level;
 
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Request;
@@ -113,7 +114,7 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
  * @param msg 
  */
 
-  private synchronized void sendRequest( final CleverMessage msg )
+  private synchronized void sendRequest( final CleverMessage msg ) throws CleverException
   {
     try
     {
@@ -206,8 +207,11 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
   @Override
   public void handleCleverMessage( final CleverMessage cleverMessage )
   {
-      
-    log.debug( "Received:\n" + cleverMessage.toXML() );
+      try {
+          log.debug( "Received:\n" + cleverMessage.toXML() );
+      } catch (CleverException ex) {
+          java.util.logging.Logger.getLogger(CleverCommandClient.class.getName()).log(Level.SEVERE, null, ex);
+      }
     dispatcher.pushMessage(cleverMessage); //insert in message queue
     
   }

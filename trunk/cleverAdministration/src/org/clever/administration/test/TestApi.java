@@ -77,10 +77,14 @@ public class TestApi extends Thread{
           this.printListHost(s.getSession().getHostAdministrationModule().listClusterManagers()); 
           
           
+      
+          
+          
           List<String> response = s.getSession().getHostAdministrationModule().listActiveAgents(host_target);
           for (String agent : response)
           {
               System.out.println("Agente: " + agent);
+              System.out.println("Plugin: " + s.getSession().getHostAdministrationModule().getPluginName(host_target, agent));
           }
            
      

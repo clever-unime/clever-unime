@@ -426,12 +426,13 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
    */
   public void sendMessage( String jid, final CleverMessage message )
   {
-      //TODO: check if host is connected and throw a exception on sending failure 
-      
-    
-      
-      
-    logger.debug( "Sending message: " + message.toXML() );
+      try {
+          //TODO: check if host is connected and throw a exception on sending failure 
+
+        logger.debug( "Sending message: " + message.toXML() );
+      } catch (CleverException ex) {
+          logger.error("error" + ex);
+      }
     jid += "@" + this.getServer();
     // See if there is already a chat open
     //TODO: fix problema con jid con risorsa o senza
@@ -451,8 +452,10 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     }
     catch( XMPPException ex )
     {
-      logger.error( "Error while sending message: " + message.toXML() + " " + ex.getMessage() );
-    }
+      logger.error( "Error while sending message: " + message.getId() + " " + ex.getMessage() );
+    } catch (CleverException ex) {
+          java.util.logging.Logger.getLogger(ConnectionXMPP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+      }
   }
 
 

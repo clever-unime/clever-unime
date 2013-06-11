@@ -4,7 +4,6 @@
  */
 package org.clever.administration.api;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
@@ -124,7 +123,74 @@ public class HostAdministrationModule extends AdministrationModule{
                                         this.emptyParams,
                                         false);
         return returnResponse;
-    }       
+    }   
+    
+    /**
+     * Ritorna il nome del plugin di un particolare agente
+     * @param target
+     * @param agent
+     * @return
+     * @throws CleverException 
+     */
+    public String getPluginName(String target, String agent) throws CleverException
+    {
+        
+        String returnResponse;
+        returnResponse = ( String ) 
+                                this.execSyncCommand(
+                                        target,
+                                        agent,
+                                        "getName",
+                                        this.emptyParams,
+                                        false);
+        return returnResponse;
+    } 
+    
+    /**
+     * Ritorna la descrizione del plugin di un particolare agente
+     * @param target
+     * @param agent
+     * @return
+     * @throws CleverException 
+     */
+    public String getPluginDescription(String target, String agent) throws CleverException
+    {
+        
+        String returnResponse;
+        returnResponse = ( String ) 
+                                this.execSyncCommand(
+                                        target,
+                                        agent,
+                                        "getDescription",
+                                        this.emptyParams,
+                                        false);
+        return returnResponse;
+    } 
+    /**
+     * Ritorna la versione del plugin di un particolare agente
+     * @param target
+     * @param agent
+     * @return
+     * @throws CleverException 
+     */
+    
+    
+    public String getPluginVersion(String target, String agent) throws CleverException
+    {
+        
+        String returnResponse;
+        returnResponse = ( String ) 
+                                this.execSyncCommand(
+                                        target,
+                                        agent,
+                                        "getVersion",
+                                        this.emptyParams,
+                                        false);
+        return returnResponse;
+    } 
+    
+    
+    
         
     
     

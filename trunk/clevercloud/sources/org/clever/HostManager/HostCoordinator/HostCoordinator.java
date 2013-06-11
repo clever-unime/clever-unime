@@ -232,8 +232,12 @@ public class HostCoordinator implements CleverMessageHandler {
 
     @Override
     public synchronized void handleCleverMessage(final CleverMessage message) {
-        //TODO add check for messages: REQUEST, etc..
-        logger.debug("Message: " + message.toXML());
+        try {
+            //TODO add check for messages: REQUEST, etc..
+            logger.debug("Message: " + message.toXML());
+        } catch (CleverException ex) {
+             logger.error("Message " + message.getId() + " with errors !!"); 
+        }
         methodDispatcher(message);
     }
 

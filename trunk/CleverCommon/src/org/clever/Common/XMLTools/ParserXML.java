@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.Iterator;
@@ -82,7 +83,7 @@ public class ParserXML
     }
   }
   
-    public ParserXML(File file){
+  public ParserXML(File file){
         try {
             logger = Logger.getLogger( "ParserXML" );
             SAXBuilder builder = new SAXBuilder();
@@ -95,6 +96,21 @@ public class ParserXML
         }
   }
 
+  
+  public ParserXML(InputStream is){
+        try {
+            logger = Logger.getLogger( "ParserXML" );
+            SAXBuilder builder = new SAXBuilder();
+            document = (Document) builder.build( is );
+            rootElement = document.getRootElement();
+        } catch (JDOMException ex) {
+            logger.error( "Error while opening the file xml: " + ex );
+        } catch (IOException ex) {
+            logger.error( "Error while opening the file xml: " + ex );
+        }
+  }
+  
+  
   public ParserXML( String XMLString )
   {
     logger = Logger.getLogger( "ParserXML" );

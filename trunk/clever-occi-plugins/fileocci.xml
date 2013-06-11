@@ -1,0 +1,33 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+
+<occi>
+
+    <protocol>http</protocol>
+
+    <host>openstack.ceta-ciemat.es</host>
+
+    <port>8787</port>
+
+</occi>
+
+
+
+<auth type="keystone">
+
+    <protocol>http</protocol>
+
+    <host>openstack.ceta-ciemat.es</host>
+
+    <port>5000</port>
+    
+    <version>v2.0</version>
+
+    <username>userchain</username>
+
+    <password>er89ij</password>
+
+</auth>
+
+
+
+<tenant>demochain</tenant> 

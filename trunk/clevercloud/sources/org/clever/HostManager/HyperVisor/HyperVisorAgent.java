@@ -30,6 +30,7 @@
  */
 package org.clever.HostManager.HyperVisor;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import org.apache.log4j.Logger;
@@ -40,6 +41,7 @@ import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 import java.io.FileInputStream;
+import static org.clever.Common.Communicator.Agent.logger;
 
 public class HyperVisorAgent extends Agent {
 
@@ -53,6 +55,10 @@ public class HyperVisorAgent extends Agent {
       
     }
 
+    
+    
+    
+    //TODO: portare tutto in Agent e mettere stato di errore
     @Override
     public void initialization() throws CleverException {
         if (super.getAgentName().equals("NoName")) {
@@ -61,14 +67,31 @@ public class HyperVisorAgent extends Agent {
 
         super.start();
 
-        FileStreamer fs = new FileStreamer();
+        File cfgLocalFile = new File("./cfg/configuration_hypervisor.xml");
 
         try {
-            InputStream inxml = getClass().getResourceAsStream("./cfg/configuration_hypervisor.xml");//("/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");
+            InputStream inxml = null;
+            
+            if(cfgLocalFile.exists())
+            {
+                //A configuration file exists on cfg/...
+                inxml = new FileInputStream(cfgLocalFile);
+                logger.info("Configuration from localfile");
+                
+            }
+            else
+            {
+                //retrieve configuration from classpath
+                inxml = getClass().getResourceAsStream("/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");
+                logger.info("Configuration from classpath");
+            }
+            
+            
             
             if(inxml==null)
-                logger.debug("The variable inxml is null check configursarion file");
-            ParserXML pXML = new ParserXML(fs.xmlToString(inxml));
+                logger.debug("No configuration available");
+            
+            ParserXML pXML = new ParserXML(inxml);
             cl = Class.forName(pXML.getElementContent("HyperVisor"));
             hypervisor = (HyperVisorPlugin) cl.newInstance();
             hypervisor.init(pXML.getRootElement().getChild("pluginParams"), this); 

@@ -37,27 +37,20 @@ import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import jline.ConsoleReader;
 import jline.History;
 import jline.SimpleCompletor;
 import org.apache.commons.cli.*;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
-import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
-import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.clever.administration.commands.CleverCommand;
 
-import org.clever.administration.api.Configuration;
-import org.clever.administration.api.Session;
-import org.clever.administration.api.SessionFactory;
+
 import org.clever.administration.exceptions.CleverClientException;
 import org.clever.administration.test.TestApi;
 import org.jdom.Element;
@@ -76,7 +69,7 @@ public class CLI
   private Logger logger = null;
   private String args[]=null;
 
-  SessionFactory sf; //per API
+ 
 
 
   public CLI(String args[])
@@ -162,19 +155,7 @@ public class CLI
 
     
     
-     /* PER API */
-          Configuration conf = new Configuration();
-          //File apiConfiguration = new File( "cfg/clever_client.xml" );
-      try {
-          //conf.configure(apiConfiguration);
-          sf = conf.buildSessionFactory();
-          
-        
-      } catch (CleverClientException ex) {
-          logger.error("Error in SessionFactory Instantiation");
-          ex.printStackTrace();
-      }
-      /************/
+     
     
     
     
@@ -443,13 +424,7 @@ public class CLI
         {
           if(command.equals("exit"))
               return;
-           if(command.equals("testapi"))
-           {
-             
-               new TestApi(sf,"marvell").start();
-               new TestApi(sf,"marvell").start();
-               continue;
-           }
+          
               
           
           cleverCommand = ( CleverCommand ) classFromCommand( command ).newInstance();

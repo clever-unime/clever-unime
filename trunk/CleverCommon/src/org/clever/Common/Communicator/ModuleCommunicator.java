@@ -82,7 +82,7 @@ public class ModuleCommunicator implements MessageHandler {
             try {
                 obj = invokerHandler.handleInvocation((MethodInvoker) rcvd);
             } catch (CleverException ex) {
-                //TODO throw CleverException
+                
                 logger.error("Error on method invocation: " + ex.getMessage());
                 throw ex;
             }

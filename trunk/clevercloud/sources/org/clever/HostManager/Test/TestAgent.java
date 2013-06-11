@@ -28,12 +28,13 @@ import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.Plugins.PluginInformation;
 
 /**
  *
  * @author alessiodipietro
  */
-public class TestAgent extends Agent implements Runnable {
+public class TestAgent extends Agent implements Runnable, PluginInformation {
     
     private String version = "0.0.1";
     private String description = "Agent for testing purpose";
@@ -114,6 +115,21 @@ public class TestAgent extends Agent implements Runnable {
    public void shutDown()
     {
         
+    }
+
+    @Override
+    public String getName() {
+        return "Test Agent Plugin";
+    }
+
+    @Override
+    public String getVersion() {
+        return "0.1";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Very simple Test Agent without plugin";
     }
     
 }
