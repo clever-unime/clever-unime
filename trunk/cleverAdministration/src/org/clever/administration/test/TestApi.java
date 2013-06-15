@@ -8,6 +8,7 @@ import java.util.List;
 import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.HostEntityInfo;
+import org.clever.Common.VEInfo.VEState;
 
 import org.clever.administration.api.SessionFactory;
 
@@ -86,8 +87,17 @@ public class TestApi extends Thread{
               System.out.println("Agente: " + agent);
               System.out.println("Plugin: " + s.getSession().getHostAdministrationModule().getPluginName(host_target, agent));
           }
-           
-     
+          
+          for (VEState stato : s.getSession().getVMAdministrationModule().listVMs_HOST(host_target, true))
+          {
+              System.out.println(stato);
+          }
+          
+          //s.getSession().getVMAdministrationModule().stopVM_HOST(host_target, host_target, Boolean.FALSE);
+          
+          
+          
+          
   }
     
     

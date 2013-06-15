@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <HyperVisor>org.clever.HostManager.HyperVisorPlugins.OCCI.HvOCCI</HyperVisor>
+
+    <moduleName>HyperVisorAgent</moduleName>
+
+    <pluginParams>
+
+
+        <occi>
+
+            <protocol>http</protocol>
+
+            <host></host>
+
+            <port></port>
+
+        </occi>
+
+
+
+        <auth type="keystone">
+
+            <protocol>http</protocol>
+
+            <host></host>
+
+            <port></port>
+
+            <username></username>
+
+            <password></password>
+
+        </auth>
+
+
+
+        <tenant></tenant>
+
+    </pluginParams>
+</configuration> 

@@ -76,7 +76,7 @@ public class VMAdministrationModule extends AdministrationModule{
         Boolean returnResponse;
         ArrayList params = new ArrayList();
         params.add(VMName);
-        params.add(poweroff);
+        //params.add(poweroff);
         returnResponse = ( Boolean ) 
                                 this.execSyncCommand(
                                         host,

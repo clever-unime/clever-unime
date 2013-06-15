@@ -33,7 +33,7 @@ public class SettingsFactory {
       		settings.setCleverCommandClientProvider(clients);
                 
                 
-                //qui andranno altre configurazioni relative, per es. al client vero e proprio, tipo numero di tentativi delle richieste, timeout, ecc.
+                //qui andranno altre configurazioni relative alle Session ecc.
                 
                 return settings;
         }	

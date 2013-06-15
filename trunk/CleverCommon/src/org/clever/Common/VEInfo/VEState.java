@@ -38,19 +38,67 @@ public class VEState {
     RUNNING,
     STOPPED,
     SUSPENDED,
-    ABORTED
+    ABORTED,
+    UNKNOWN
 }
 
     
-    public VEState(STATE s, String i, String h)
+    public VEState(STATE state, String id, String name)
     {
-        state = s;
-        id = i;
-        host = h;
+        if(state != null)
+            this.state = state;
+        else
+            this.state = STATE.UNKNOWN;
+        this.id = id;
+        this.name = name;
     }
     
-    final  STATE state;
+    final STATE state;
     final String id;
-    final String host;
+    final String name;
+
+    
+    
+    @Override
+    public String toString()
+    {
+        if(name == null )
+            return null;
+        StringBuffer response = new StringBuffer(id==null?"":id).append(" NAME : ").append(name==null?"":name).append(" STATE : ");
+        
+        switch (state)
+        {
+            case RUNNING : 
+                response.append("running");
+                break;
+            case STOPPED :
+                response.append("stopped");
+                break;
+            case SUSPENDED :
+                response.append("suspended");
+                break;
+            case ABORTED :
+                response.append("aborted");
+                break;
+            case UNKNOWN :
+                response.append("unknown");
+                break;
+        }
+        return response.toString();
+        
+    }
+    
+    public STATE getState() {
+        return state;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+    
     
 }
