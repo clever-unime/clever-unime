@@ -31,6 +31,8 @@
 
             <password></password>
 
+	    <version>v2.0</version>
+
         </auth>
 
 
