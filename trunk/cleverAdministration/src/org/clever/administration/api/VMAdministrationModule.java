@@ -7,6 +7,7 @@ package org.clever.administration.api;
 import java.util.ArrayList;
 import java.util.List;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.VEInfo.VEDescription;
 import org.clever.Common.VEInfo.VEState;
 
 
@@ -22,10 +23,59 @@ public class VMAdministrationModule extends AdministrationModule{
        
     }
     
+    
+    
+    /**
+     * Crea una VM direttamente dndo il comando ad un HOST
+     * Da evitare: usare i metodi del CM
+     * @return true on success
+     */
+    public boolean createVM_HOST(String host, String veId, VEDescription ved, Boolean notExclusive) throws CleverException
+    {
+        
+        Boolean returnResponse;
+        ArrayList params = new ArrayList();
+        params.add(veId);
+        params.add(ved);
+        params.add(notExclusive);
+        returnResponse = ( Boolean ) 
+                                this.execSyncCommand(
+                                        host,
+                                        "HyperVisorAgent",
+                                        "createVm",
+                                        params,
+                                        false);
+        return returnResponse;
+    }
+    
+    
+    
+    /**
+     * Test se VM e' running
+     * Da evitare: usare i metodi del CM
+     * @return true on success
+     */
+    public boolean isRunningVM_HOST(String host, String VMName) throws CleverException
+    {
+        
+        Boolean returnResponse;
+        ArrayList params = new ArrayList();
+        params.add(VMName);
+        returnResponse = ( Boolean ) 
+                                this.execSyncCommand(
+                                        host,
+                                        "HyperVisorAgent",
+                                        "isRunning",
+                                        params,
+                                        false);
+        return returnResponse;
+    }
+    
+    
     /**
      * Lancia una VM direttamente dndo il comando ad un HOST
      * Da evitare: usare i metodi del CM
-     * @return ClusterManager attivo
+     * @return true on success
      */
     public boolean startVM_HOST(String host, String VMName) throws CleverException
     {
@@ -46,7 +96,7 @@ public class VMAdministrationModule extends AdministrationModule{
     /**
      * Lancia delle VMs direttamente dando il comando ad un HOST
      * Da evitare: usare i metodi del CM
-     * @return ClusterManager attivo
+     * @return true on success
      */
     public boolean startVMs_HOST(String host, String[] VMName) throws CleverException
     {
@@ -68,7 +118,7 @@ public class VMAdministrationModule extends AdministrationModule{
      /**
      * Ferma una VM direttamente dando il comando ad un HOST
      * Da evitare: usare i metodi del CM
-     * @return ClusterManager attivo
+     * @return true on success
      */
     public boolean stopVM_HOST(String host, String VMName, Boolean poweroff) throws CleverException
     {
@@ -93,7 +143,7 @@ public class VMAdministrationModule extends AdministrationModule{
     /**
      * Ferma piu' VM direttamente dando il comando ad un HOST
      * Da evitare: usare i metodi del CM
-     * @return ClusterManager attivo
+     * @return true on success
      */
     public boolean stopVMs_HOST(String host, String VMName[], Boolean poweroff) throws CleverException
     {
@@ -115,7 +165,7 @@ public class VMAdministrationModule extends AdministrationModule{
     /**
      * Lista delle VM direttamente dando il comando ad un HOST
      * Da evitare: usare i metodi del CM
-     * @return ClusterManager attivo
+     * @return true on success
      */
     public List<VEState> listVMs_HOST(String host, Boolean onlyrunning) throws CleverException
     {

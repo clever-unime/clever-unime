@@ -25,6 +25,7 @@ package org.clever.HostManager.HyperVisorPlugins.OCCI;
 
 
 import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -195,20 +196,10 @@ public class HvOCCI implements HyperVisorPlugin {
           requestURL.append(path);
       }
       
-      if (inURLParams != null)
+      if (inURLParams != null && inURLParams.length != 0)
       {
-          requestURL.append("?");
-          boolean separatore = false;
-          for (String param : inURLParams)
-          {
-              if(separatore)
-              {
-                  requestURL.append("&");
-              }
-              else
-                  separatore = true;
-              requestURL.append(param);
-          }
+          requestURL.append("?").append(Joiner.on('&').join(inURLParams));
+          
       }
       
       
@@ -224,11 +215,7 @@ public class HvOCCI implements HyperVisorPlugin {
       }
       request.addHeader("Content-Type", "text/occi");
 
-      if(!this.occiAuth.doAuth(request)) //authentication
-      {
-          //non autenticato
-          throw new Exception("Authentication Error");
-      }
+     
       
       if(categories != null)
       {
@@ -239,12 +226,19 @@ public class HvOCCI implements HyperVisorPlugin {
               
           }
       }
+      
       if(occi_attributes != null)
       {
           for (String attribute : occi_attributes)
           {
               request.addHeader("X-OCCI-Attribute", attribute);
           }
+      }
+      
+      if(!this.occiAuth.doAuth(request)) //authentication
+      {
+          //non autenticato
+          throw new Exception("Authentication Error");
       }
       return httpclient.execute(request);
       
@@ -506,10 +500,10 @@ public class HvOCCI implements HyperVisorPlugin {
     }
 
     @Override   //l'esclusivo viene ignorato - tutto il metodo e' da considerare e testare attentamente
-    public boolean createVm(String veId, VEDescription parameters, Boolean notExclusive) throws Exception {
+    public boolean createVm(String veId, VEDescription ved, Boolean notExclusive) throws Exception {
 
       //Qui dovrebbe creare il favor con le caratteristiche prese da VED e registrare l'immagine presa tramite imagemanager (o storage manager)
-      String flavor=null, img=null;
+      String flavor = ved.getName(), img = ved.getStorage().get(0).getDiskPath(); //per ora nello scenario della chiamata direatta all HM il diskpath e' il nome dell'immagine del repo OCCI
 
 
       String categories [] = {
@@ -527,12 +521,11 @@ public class HvOCCI implements HyperVisorPlugin {
 
 
 
-
       return this.doOCCIInvocation(true, 
                                    categories,
+                                   occiattributes,
                                    null,
-                                   null,
-                                   occiattributes).getStatusLine().getStatusCode() == HttpStatus.SC_CREATED;
+                                   null).getStatusLine().getStatusCode() == HttpStatus.SC_CREATED;
 
 
 

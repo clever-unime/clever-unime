@@ -4,13 +4,18 @@
  */
 package org.clever.administration.test;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.HostEntityInfo;
+import org.clever.Common.VEInfo.StorageSettings;
+import org.clever.Common.VEInfo.VEDescription;
 import org.clever.Common.VEInfo.VEState;
+import org.clever.Common.XMPPCommunicator.UUIDProvider;
 
 import org.clever.administration.api.SessionFactory;
+import org.clever.administration.api.VMAdministrationModule;
 
 /**
  *
@@ -54,46 +59,65 @@ public class TestApi extends Thread{
   {
       
     
+        VMAdministrationModule vmm = s.getSession().getVMAdministrationModule();
       
       
-      
-         this.printListHost(s.getSession().getHostAdministrationModule().listHostManagers()); 
-         s.getSession().getHostAdministrationModule().asyncListHostManagers(new InvocationCallback() 
-                        {
-                     
-
-                                @Override
-                                public void handleMessage(Object response) {
-                                    printListHost(( List<HostEntityInfo> )response);
-                                }
-
-                                @Override
-                                public void handleMessageError(CleverException e) {
-                                    System.out.println(e);
-                                    e.printStackTrace();
-                                }
-                         }); 
+//         this.printListHost(s.getSession().getHostAdministrationModule().listHostManagers()); 
+//         s.getSession().getHostAdministrationModule().asyncListHostManagers(new InvocationCallback() 
+//                        {
+//                     
+//
+//                                @Override
+//                                public void handleMessage(Object response) {
+//                                    printListHost(( List<HostEntityInfo> )response);
+//                                }
+//
+//                                @Override
+//                                public void handleMessageError(CleverException e) {
+//                                    System.out.println(e);
+//                                    e.printStackTrace();
+//                                }
+//                         }); 
+//          
+//          
+//          this.printListHost(s.getSession().getHostAdministrationModule().listClusterManagers()); 
+//          
+//          
+//      
+//          
+//          
+//          List<String> response = s.getSession().getHostAdministrationModule().listActiveAgents(host_target);
+//          for (String agent : response)
+//          {
+//              System.out.println("Agente: " + agent);
+//              System.out.println("Plugin: " + s.getSession().getHostAdministrationModule().getPluginName(host_target, agent));
+//          }
           
-          
-          this.printListHost(s.getSession().getHostAdministrationModule().listClusterManagers()); 
-          
-          
-      
-          
-          
-          List<String> response = s.getSession().getHostAdministrationModule().listActiveAgents(host_target);
-          for (String agent : response)
-          {
-              System.out.println("Agente: " + agent);
-              System.out.println("Plugin: " + s.getSession().getHostAdministrationModule().getPluginName(host_target, agent));
-          }
-          
-          for (VEState stato : s.getSession().getVMAdministrationModule().listVMs_HOST(host_target, true))
+          for (VEState stato : s.getSession().getVMAdministrationModule().listVMs_HOST(host_target, false))
           {
               System.out.println(stato);
           }
           
-          //s.getSession().getVMAdministrationModule().stopVM_HOST(host_target, host_target, Boolean.FALSE);
+          
+          
+          List<StorageSettings> st = new ArrayList<StorageSettings>();
+          st.add(new StorageSettings(0, null, null, "C", "cirros-0.3.0-x86_64-uec"));
+          VEDescription ved = new VEDescription( st, null, "m1.tiny", null, null, null);
+         
+//            if(s.getSession().getVMAdministrationModule().createVM_HOST(host_target, "VM-" + UUIDProvider.getPositiveInteger(), ved, Boolean.TRUE))
+//            {
+//                System.out.println("Creazione effettuata");
+//            }
+          
+          
+          if(vmm.isRunningVM_HOST(host_target, "vm-311995405"))
+                  {
+                      System.out.println("Esito stop VM: " + s.getSession().getVMAdministrationModule().stopVM_HOST(host_target, "vm-311995405", Boolean.FALSE));
+                  }
+          else
+          {
+              System.out.println("VM 311995405 non running");
+          }
           
           
           

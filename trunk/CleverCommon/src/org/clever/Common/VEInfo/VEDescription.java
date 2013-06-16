@@ -39,42 +39,31 @@ public class VEDescription
 
   private CpuSettings cpu;
   private MemorySettings mem;
-  private ArrayList storage;
-  private List network;
+  private List<StorageSettings> storage;
+  private List<NetworkSettings> network;
   private String name;
   private DesktopVirtualization desktop;
   
   //Per VMWare
   private String os_guest_id;
 
-// metodo di prova
-   public VEDescription(final MemorySettings mem)
-  {
 
-    this.mem = mem;
 
-  }
-
-  public VEDescription( final List storage, final List network, final String name,
+  public VEDescription( final List<StorageSettings> storage, final List<NetworkSettings> network, final String name,
                         final CpuSettings cpu, final MemorySettings mem, final DesktopVirtualization desktop)
   {
     this.name = name;
-    this.network = network;
-    this.storage = new ArrayList( storage );
+    this.network = (network == null?null:new ArrayList(network));
+    this.storage = (storage == null ? null:new ArrayList( storage ));
     this.cpu = cpu;
     this.mem = mem;
     this.desktop = desktop;
   }
   
-  public VEDescription( final List storage, final List network, final String name,
+  public VEDescription( final List<StorageSettings> storage, final List<NetworkSettings> network, final String name,
                         final CpuSettings cpu, final MemorySettings mem, final DesktopVirtualization desktop, final String vm_guest_id)
   {
-    this.name = name;
-    this.network = network;
-    this.storage = new ArrayList( storage );
-    this.cpu = cpu;
-    this.mem = mem;
-    this.desktop = desktop;
+    this(storage, network, name, cpu, mem, desktop);
     this.os_guest_id = vm_guest_id;
   }
 
@@ -107,28 +96,28 @@ public class VEDescription
 
 
 
-  public List getNetwork()
+  public List<NetworkSettings> getNetwork()
   {
     return network;
   }
 
 
 
-  public void setNetwork( List network )
+  public void setNetwork( List<NetworkSettings> network )
   {
     this.network = network;
   }
 
 
 
-  public List getStorage()
+  public List<StorageSettings> getStorage()
   {
     return storage;
   }
 
 
 
-  public void setStorage( List storage )
+  public void setStorage( List<StorageSettings> storage )
   {
     this.storage = new ArrayList( storage );
   }
