@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -82,12 +83,12 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
   private String tenant = null;
   private String tokenID = null;
   private String version = null;
-  JsonParser jsonParser = null;
+  final JsonParser jsonParser;
   
   JsonObject token = null;
   
   
-  String tokenJsonBodyQuery;
+  final String tokenJsonBodyQuery;
   
   
   
@@ -95,21 +96,18 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
   {
                                                                                     
                                                                        
-       this.occiURL = oURL;
-       this.keystoneURL = 
-                    new URL(auth.getChildText("protocol"), auth.getChildText("host"),
+      
+     
+       this(oURL,
+            new URL(auth.getChildText("protocol"), auth.getChildText("host"),
                             Integer.parseInt(auth.getChildText("port")), 
-                            "/");
-       this.tenant = tenant;
-       this.credentials = new UsernamePasswordCredentials(auth.getChildText("username"),
-                                                          auth.getChildText("password"));
-       this.version = auth.getChildText("version");
+                            "/"),
+             auth.getChildText("version"),
+             new UsernamePasswordCredentials(auth.getChildText("username"),
+                                                          auth.getChildText("password")),
+             tenant);
        
-       jsonParser = new JsonParser();
        
-       Authorization a = new Authorization(tenant, credentials.getUserName(), credentials.getPassword());
-       Gson gson = new Gson();
-       this.tokenJsonBodyQuery = gson.toJson(a); 
                                                                                     
   }
   
@@ -121,6 +119,10 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
     this.credentials = credentials;
     this.tenant = tenant;
     this.version = ver;
+    jsonParser = new JsonParser();
+    Authorization a = new Authorization(tenant, credentials.getUserName(), credentials.getPassword());
+    Gson gson = new Gson();
+    this.tokenJsonBodyQuery = gson.toJson(a); 
   }
 
   
@@ -137,15 +139,6 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
     HttpPost httpPost = new HttpPost(keystoneURL.toString() + "/" + this.version + "/tokens"); 
 
     httpPost.addHeader("Accept", "application/json");
-//    httpPost.addHeader("Content-Type", "application/xml");
-//
-//    String bodyxml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-//        + "<auth xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
-//        + "xmlns=\"http://docs.openstack.org/identity/api/"+ this.version + "\""
-//        + "tenantName=\"" + tenant + "\">"
-//        + "<passwordCredentials username=\"" + credentials.getUserName() + "\" password=\"" + credentials.getPassword() + "\"/>"
-//        + "</auth>";
-
     httpPost.addHeader("Content-Type", "application/json");
     
     
@@ -170,9 +163,17 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
       
   
       JsonObject responseobj = this.jsonParser.parse(new InputStreamReader(response.getEntity().getContent())).getAsJsonObject();
-      this.token = responseobj.get("access").getAsJsonObject().get("token").getAsJsonObject();
-      result = this.token.get("id").getAsString();
-      
+      synchronized(this)
+      {
+        this.token = responseobj.get("access").getAsJsonObject().get("token").getAsJsonObject();
+      }
+      Calendar expire = Calendar.getInstance();
+              
+                       
+      synchronized(this)
+      {
+         result = this.token.get("id").getAsString();
+      }
 
     } catch (IOException ex) {
       log.error("Error in token creation : " + ex.getMessage());
@@ -182,12 +183,36 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
     return tokenID = result;
   }
 
+//  private boolean isExpired() {
+//
+//    if (tokenID == null) {
+//      return true;
+//    }
+//
+//    HttpClient httpClient = new DefaultHttpClient();
+//    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10000);
+//    HttpGet httpget = new HttpGet(occiURL.toString() + "/-/"); 
+//    httpget.addHeader("X-Auth-Token", tokenID);
+// 
+//    HttpResponse response;
+//    boolean result = true; //if error token is expired
+//    try {
+//      log.debug("Testing token ...");
+//      response = httpClient.execute(httpget);
+//      result = (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK);
+//    } catch (IOException ex) {
+//      log.error("Error  : " + ex.getMessage());
+//    }
+//    
+//    return result;
+//  }
   private boolean isExpired() {
-
-    if (tokenID == null) {
-      return true;
+    synchronized(this)
+    {
+        if (tokenID == null) {
+          return true;
+        }
     }
-
     HttpClient httpClient = new DefaultHttpClient();
     HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10000);
     HttpGet httpget = new HttpGet(occiURL.toString() + "/-/"); 
@@ -205,7 +230,6 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
     
     return result;
   }
-  
   
   
   
@@ -229,7 +253,10 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
       request.addHeader("X-Auth-Token", tokenID);
 
     }
-    return tokenID != null;
+    synchronized(this)
+    {
+        return tokenID != null;
+    }
   }
 
    

@@ -109,14 +109,25 @@ public class TestApi extends Thread{
 //                System.out.println("Creazione effettuata");
 //            }
           
-          
-          if(vmm.isRunningVM_HOST(host_target, "vm-311995405"))
+          String vmstop = "vm-1253730391";
+          if(vmm.isRunningVM_HOST(host_target, vmstop))
                   {
-                      System.out.println("Esito stop VM: " + s.getSession().getVMAdministrationModule().stopVM_HOST(host_target, "vm-311995405", Boolean.FALSE));
+                      //System.out.println("Esito stop VM: " + s.getSession().getVMAdministrationModule().stopVM_HOST(host_target, vmstop, Boolean.FALSE));
                   }
           else
           {
-              System.out.println("VM 311995405 non running");
+              System.out.println("VM "+ vmstop + " non running");
+          }
+          
+          try
+          {
+              if(vmm.destroyVM_HOST(host_target, "from-curl"))
+                  System.out.println("from-curl cancellata");
+              
+          }
+          catch(CleverException e)
+          {
+              e.printStackTrace();
           }
           
           

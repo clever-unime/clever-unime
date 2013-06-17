@@ -138,6 +138,29 @@ public class VMAdministrationModule extends AdministrationModule{
     }
     
     
+    /**
+     * Ferma una VM direttamente dando il comando ad un HOST
+     * Da evitare: usare i metodi del CM
+     * @return true on success
+     */
+    public boolean destroyVM_HOST(String host, String VMName) throws CleverException
+    {
+        
+        Boolean returnResponse;
+        ArrayList params = new ArrayList();
+        params.add(VMName);
+        //params.add(poweroff);
+        returnResponse = ( Boolean ) 
+                                this.execSyncCommand(
+                                        host,
+                                        "HyperVisorAgent",
+                                        "destroyVm",
+                                        params,
+                                        false);
+        return returnResponse;
+    }
+    
+    
     //TODO: manage destroy domain action based on parameter
     
     /**

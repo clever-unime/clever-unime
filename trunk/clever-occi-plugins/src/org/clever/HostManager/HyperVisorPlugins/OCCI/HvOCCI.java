@@ -42,8 +42,10 @@ import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
@@ -56,6 +58,16 @@ import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
 
 import org.jdom.Element;
 
+
+
+
+enum HTTPMETHODS {
+    GET,
+    POST,
+    PUT,
+    DELETE,
+    HEAD
+}
 
 
 
@@ -174,8 +186,8 @@ public class HvOCCI implements HyperVisorPlugin {
     * @return
     * @throws Exception 
     */
-    private HttpResponse doOCCIInvocation(boolean post ) throws Exception {
-        return this.doOCCIInvocation(post, null, null, null, null);
+    private HttpResponse doOCCIInvocation( ) throws Exception {
+        return this.doOCCIInvocation(HTTPMETHODS.GET, null, null, null, null);
     }
   
     
@@ -188,7 +200,7 @@ public class HvOCCI implements HyperVisorPlugin {
    * @param params I parametri da mettere direttamente nell'URL dopo ? nella forma "key=value"
    * @return 
    */
-  private HttpResponse doOCCIInvocation(boolean post , String [] categories, String[] occi_attributes, String path, String[] inURLParams) throws Exception {
+  private HttpResponse doOCCIInvocation(HTTPMETHODS method , String [] categories, String[] occi_attributes, String path, String[] inURLParams) throws Exception {
       DefaultHttpClient httpclient = new DefaultHttpClient();
       StringBuffer requestURL = new StringBuffer(this.occiCompute);
       if(path != null)
@@ -205,14 +217,29 @@ public class HvOCCI implements HyperVisorPlugin {
       
       
       HttpUriRequest request;
-      if(post)
+      
+      
+      switch (method)
       {
-          request = new HttpPost(requestURL.toString());
+          case GET:
+              request = new HttpGet(requestURL.toString());
+              break;
+          case POST:
+              request = new HttpPost(requestURL.toString());
+              break;
+          case PUT:
+              request = new HttpPut(requestURL.toString());
+              break;
+          case DELETE:
+              request = new HttpDelete(requestURL.toString());
+              break;
+          default:
+              request = new HttpGet(requestURL.toString());
+          
+              
       }
-      else
-      {
-          request = new HttpGet(requestURL.toString());
-      }
+      
+     
       request.addHeader("Content-Type", "text/occi");
 
      
@@ -255,7 +282,7 @@ public class HvOCCI implements HyperVisorPlugin {
    * @throws Exception 
    */
   
-    private HttpResponse doOCCIInvocation(String vmId , String action) throws Exception 
+    private HttpResponse doOCCIInvocation(HTTPMETHODS method, String vmId , String action) throws Exception 
      {
          String categories [] = {
                 action + "; scheme=\"http://schemas.ogf.org/occi/infrastructure/compute/action#\"; class=\"action\""
@@ -264,10 +291,25 @@ public class HvOCCI implements HyperVisorPlugin {
                 "action=" + action
             };    
 
-         return this.doOCCIInvocation(true, categories, null, vmId, inURLParams);
+         return this.doOCCIInvocation(method, categories, null, vmId, inURLParams);
      }
   
   
+    
+    /**
+   * Metodo di comodo per effettuare chiamate su una VM
+   * @param vmId L'id della VM (OCCI id)
+   * @param action l'azione (per es. "start"
+   * @return
+   * @throws Exception 
+   */
+  
+    private HttpResponse doOCCIInvocation(HTTPMETHODS method, String vmId) throws Exception 
+     {
+             
+
+         return this.doOCCIInvocation(method, null, null, vmId, null);
+     }
 
   
    /**
@@ -280,8 +322,8 @@ public class HvOCCI implements HyperVisorPlugin {
      private Map<String,String> getOcciAttributes(String id) throws Exception  {
 
  
-    InputStream instream = this.doOCCIInvocation(false, null, null, id, null).getEntity().getContent();
-    
+    //InputStream instream = this.doOCCIInvocation(HTTPMETHODS.GET, null, null, id, null).getEntity().getContent();
+    InputStream instream = this.doOCCIInvocation(HTTPMETHODS.GET, id).getEntity().getContent();
     
    
     
@@ -335,7 +377,7 @@ public class HvOCCI implements HyperVisorPlugin {
    * @return OCCI UUID
    * @throws Exception 
    */
-  public String getOcciIDfromName(final String name) throws Exception {
+  private String getOcciIDfromName(final String name) throws Exception {
 
     List<VEState> vms = this.recoverVMsFromOCCIServer();
     VEState vm = null;
@@ -345,7 +387,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
             @Override
             public boolean apply(VEState t) {
-                return t.getName().equals(name);
+                return (t==null || t.getName() == null?false:t.getName().equals(name));
             }
         });
     }
@@ -375,7 +417,7 @@ public class HvOCCI implements HyperVisorPlugin {
         List<String> responses = Lists.newLinkedList(
                                         Iterables.filter(
                                                         Arrays.asList(
-                                                               streamToString(doOCCIInvocation(false).getEntity().getContent()).split("\n")
+                                                               streamToString(doOCCIInvocation().getEntity().getContent()).split("\n")
                                                         )
                                         , new IsOCCIPredicate("X-OCCI-Location")
                                         )
@@ -403,7 +445,7 @@ public class HvOCCI implements HyperVisorPlugin {
     
     
     
-    /*********** Methods to be invoked by external ***********/
+    /*********** Methods to be invoked by external (Implement methods from RunnerPlugin)***********/
  
   
     //  * @param params : This object contains the node <pluginParams> of configuration_hypervisor.xml
@@ -488,7 +530,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
       String occiID = getOcciIDfromName(name);
       int ris;
-      if((ris=this.doOCCIInvocation(occiID, "start").getStatusLine().getStatusCode()) != HttpStatus.SC_OK)
+      if((ris=this.doOCCIInvocation(HTTPMETHODS.POST, occiID, "start").getStatusLine().getStatusCode()) != HttpStatus.SC_OK)
       {
           throw new Exception("Error in startvm : HTTP response - " + ris);
           
@@ -503,7 +545,7 @@ public class HvOCCI implements HyperVisorPlugin {
     public boolean createVm(String veId, VEDescription ved, Boolean notExclusive) throws Exception {
 
       //Qui dovrebbe creare il favor con le caratteristiche prese da VED e registrare l'immagine presa tramite imagemanager (o storage manager)
-      String flavor = ved.getName(), img = ved.getStorage().get(0).getDiskPath(); //per ora nello scenario della chiamata direatta all HM il diskpath e' il nome dell'immagine del repo OCCI
+      String flavor = ved.getName(), img = ved.getStorage().get(0).getDiskPath(); //per ora nello scenario della chiamata diretta all HM il diskpath e' il nome dell'immagine del repo OCCI
 
 
       String categories [] = {
@@ -513,7 +555,7 @@ public class HvOCCI implements HyperVisorPlugin {
       };    
 
       String occiattributes [] = {
-                  "occi.compute.hostname=\"" + veId + "\"" //controllare cosa vuol dire
+                  "occi.compute.hostname=\"" + veId + "\"" 
       };
 
 
@@ -521,7 +563,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
 
 
-      return this.doOCCIInvocation(true, 
+      return this.doOCCIInvocation(HTTPMETHODS.POST, 
                                    categories,
                                    occiattributes,
                                    null,
@@ -542,12 +584,12 @@ public class HvOCCI implements HyperVisorPlugin {
 
       String occiID = getOcciIDfromName(name);
 
-      return this.doOCCIInvocation(occiID, "suspend").getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+      return this.doOCCIInvocation(HTTPMETHODS.POST, occiID, "suspend").getStatusLine().getStatusCode() == HttpStatus.SC_OK;
 
 
     }
 
-    // fa lo stop violento era uguale alla shutDownVM
+    // cancella vm
     @Override
     public boolean destroyVm(String name) throws Exception {
 
@@ -555,7 +597,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
       String occiID = getOcciIDfromName(name);
 
-      return this.doOCCIInvocation(occiID, "stop").getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+      return this.doOCCIInvocation(HTTPMETHODS.DELETE, occiID).getStatusLine().getStatusCode() == HttpStatus.SC_OK;
 
 
 
@@ -566,7 +608,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
         String occiID = getOcciIDfromName(name);
 
-        return this.doOCCIInvocation(occiID, "stop").getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+        return this.doOCCIInvocation(HTTPMETHODS.POST, occiID, "stop").getStatusLine().getStatusCode() == HttpStatus.SC_OK;
 
 
     }

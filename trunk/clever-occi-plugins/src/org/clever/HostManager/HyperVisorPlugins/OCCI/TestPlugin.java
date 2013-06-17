@@ -44,16 +44,16 @@ public class TestPlugin {
                     for(VEState ve :  plugin.listVms())
                     {
                         if(ve!=null)
-                        System.out.println(ve);
+                            System.out.println(ve);
                     }
              
-                    for(VEState ve :  plugin.listRunningVms())
-                    {
-                        if(ve!=null)
-                        System.out.println(ve);
-                    }
+//                    for(VEState ve :  plugin.listRunningVms())
+//                    {
+//                        if(ve!=null)
+//                        System.out.println(ve);
+//                    }
                     
-                    if(plugin.shutDownVm("from-curl"))
+                    if(plugin.destroyVm("from-curl"))
                     {
                         System.out.println("Tutto ok ");
                     }

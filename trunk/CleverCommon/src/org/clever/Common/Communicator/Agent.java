@@ -81,9 +81,10 @@ public abstract class Agent implements MethodInvokerHandler {
 
     public void start() throws CleverException {
         try {
-            logger.info("\nistanzio ModuleCommunicator(agentName), dove agentName: " + this.getAgentName());
-            mc = new ModuleCommunicator(this.getAgentName(), "HM"); //N.B. the module communicator was istantiated here!. Group is HM: this class is designed for a HM Agent
-            logger.info("\nnfine istanza ModuleCommunicator");
+            logger.debug("\nistanzio ModuleCommunicator(agentName), dove agentName: " + this.getAgentName());
+            mc = new ModuleCommunicator(this.getAgentName(), "HM"); // N.B. the module communicator was istantiated here!. 
+                                                                    // Group is HM: this class is designed for a HM Agent
+            logger.debug("\nnfine istanza ModuleCommunicator");
             mc.setMethodInvokerHandler(this);
 
             r = new ShutdownThread(this);
