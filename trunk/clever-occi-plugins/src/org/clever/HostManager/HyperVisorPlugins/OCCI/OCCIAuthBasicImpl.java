@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 import org.apache.http.HttpRequest;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.HttpClient;
 import org.apache.http.impl.auth.BasicScheme;
 import org.jdom.Element;
 
@@ -44,5 +45,10 @@ public class OCCIAuthBasicImpl implements OCCIAuthImpl {
     }
     return true;
   }
+
+    @Override
+    public void initClient(HttpClient client) {
+        
+    }
   
 }
