@@ -93,7 +93,10 @@ public class TestApi extends Thread{
 //              System.out.println("Plugin: " + s.getSession().getHostAdministrationModule().getPluginName(host_target, agent));
 //          }
           
-          for (VEState stato : s.getSession().getVMAdministrationModule().listVMs_HOST(host_target, false))
+        
+          List<VEState> vms = s.getSession().getVMAdministrationModule().listVMs_HOST(host_target, false);
+        
+          for (VEState stato : vms)
           {
               System.out.println(stato);
           }
@@ -109,26 +112,42 @@ public class TestApi extends Thread{
 //                System.out.println("Creazione effettuata");
 //            }
           
-          String vmstop = "vm-1253730391";
-          if(vmm.isRunningVM_HOST(host_target, vmstop))
-                  {
-                      //System.out.println("Esito stop VM: " + s.getSession().getVMAdministrationModule().stopVM_HOST(host_target, vmstop, Boolean.FALSE));
-                  }
-          else
-          {
-              System.out.println("VM "+ vmstop + " non running");
-          }
           
-          try
-          {
-              if(vmm.destroyVM_HOST(host_target, "from-curl"))
-                  System.out.println("from-curl cancellata");
-              
-          }
-          catch(CleverException e)
-          {
-              e.printStackTrace();
-          }
+          
+          
+//          String vmstop = "vm-1253730391";
+//        for(VEState stato : vms)
+//        {
+//            
+//          String vmstop = stato.getName();
+//          if(vmstop==null)
+//              continue;
+//          if(vmm.isRunningVM_HOST(host_target, vmstop))
+//                  {
+//                      try{
+//                              System.out.println("Esito stop VM: " + s.getSession().getVMAdministrationModule().stopVM_HOST(host_target, vmstop, Boolean.FALSE));
+//                      }
+//                      catch (CleverException e)
+//                      {
+//                          e.printStackTrace();
+//                      }
+//                  }
+//          else
+//          {
+//              System.out.println("VM "+ vmstop + " non running");
+//          }
+//        }
+//          
+//          try
+//          {
+//              if(vmm.destroyVM_HOST(host_target, "from-curl"))
+//                  System.out.println("from-curl cancellata");
+//              
+//          }
+//          catch(CleverException e)
+//          {
+//              e.printStackTrace();
+//          }
           
           
           

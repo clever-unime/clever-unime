@@ -31,8 +31,8 @@
 package org.clever.HostManager.HyperVisor;
 
 import java.util.List;
+import java.util.Map;
 import org.clever.Common.Communicator.Agent;
-import org.clever.Common.Exceptions.HyperVisorException;
 import org.clever.Common.Plugins.RunnerPlugin;
 import org.clever.Common.VEInfo.NetworkSettings;
 import org.clever.Common.VEInfo.VEDescription;
@@ -49,6 +49,7 @@ public interface HyperVisorPlugin extends RunnerPlugin {
     
     boolean resume(String id) throws Exception;
     boolean startVm(String id) throws Exception;
+   
     /**
      * Start n VMs
      * @param ids: IDs of VMs that have to be started
@@ -57,8 +58,12 @@ public interface HyperVisorPlugin extends RunnerPlugin {
      */
     boolean startVm(String[] ids) throws Exception;
     
-    boolean saveState(String id, String path) throws Exception;
+   
     boolean createVm(String veId, VEDescription parameters,Boolean notExclusive) throws Exception;
+    //TODO: include notExclusive in parameter
+    boolean createVm(Map<String, VEDescription> ves) throws Exception;
+    
+    boolean saveState(String id, String path) throws Exception;
     boolean resumeState(String id, String path) throws Exception;
     boolean createAndStart(String veId, VEDescription parameters,Boolean notExclusive) throws Exception;
     boolean addAdapter(String id, NetworkSettings settings) throws Exception;
@@ -86,11 +91,11 @@ public interface HyperVisorPlugin extends RunnerPlugin {
     public boolean renameSnapshot(String id, String snapName, String newSnapName, String description) throws Exception;
     public boolean attachPortRemoteAccessVm(String id) throws Exception; 
     public void releasePortRemoteAccessVm(String id) throws Exception;
-    public boolean registerVm(String id, String path) throws Exception;
-    public boolean unregisterVm(String id) throws Exception;
+    //public boolean registerVm(String id, String path) throws Exception;
+    //public boolean unregisterVm(String id) throws Exception;
     public boolean ExportOvfToLocal(String id, String TargetPhysicalPath) throws Exception;
     public boolean ImportLocalOvf(String id, String OVF_physicalPath) throws Exception;
     public void setOwner(Agent owner);
-    public String getLocalPath(String id)throws HyperVisorException;
+    //public String getLocalPath(String id)throws HyperVisorException;
     public boolean attackInterface(String id, String inf,String mac,String type) ;
 }

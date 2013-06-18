@@ -6,6 +6,7 @@ package org.clever.administration.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.VEInfo.VEDescription;
 import org.clever.Common.VEInfo.VEState;
@@ -38,6 +39,28 @@ public class VMAdministrationModule extends AdministrationModule{
         params.add(veId);
         params.add(ved);
         params.add(notExclusive);
+        returnResponse = ( Boolean ) 
+                                this.execSyncCommand(
+                                        host,
+                                        "HyperVisorAgent",
+                                        "createVm",
+                                        params,
+                                        false);
+        return returnResponse;
+    }
+    
+    
+    /**
+     * Crea delle VM direttamente dndo il comando ad un HOST
+     * Da evitare: usare i metodi del CM
+     * @return true on success
+     */
+    public boolean createVMs_HOST(String host, Map<String, VEDescription> ves) throws CleverException
+    {
+        
+        Boolean returnResponse;
+        ArrayList params = new ArrayList();
+        params.add(ves);
         returnResponse = ( Boolean ) 
                                 this.execSyncCommand(
                                         host,
@@ -98,12 +121,12 @@ public class VMAdministrationModule extends AdministrationModule{
      * Da evitare: usare i metodi del CM
      * @return true on success
      */
-    public boolean startVMs_HOST(String host, String[] VMName) throws CleverException
+    public boolean startVMs_HOST(String host, String[] VMNames) throws CleverException
     {
         
         Boolean returnResponse;
         ArrayList params = new ArrayList();
-        params.add(VMName);
+        params.add(VMNames);
         returnResponse = ( Boolean ) 
                                 this.execSyncCommand(
                                         host,
@@ -149,6 +172,28 @@ public class VMAdministrationModule extends AdministrationModule{
         Boolean returnResponse;
         ArrayList params = new ArrayList();
         params.add(VMName);
+        //params.add(poweroff);
+        returnResponse = ( Boolean ) 
+                                this.execSyncCommand(
+                                        host,
+                                        "HyperVisorAgent",
+                                        "destroyVm",
+                                        params,
+                                        false);
+        return returnResponse;
+    }
+    
+    /**
+     * Ferma una VM direttamente dando il comando ad un HOST
+     * Da evitare: usare i metodi del CM
+     * @return true on success
+     */
+    public boolean destroyVMs_HOST(String host, String VMNames) throws CleverException
+    {
+        
+        Boolean returnResponse;
+        ArrayList params = new ArrayList();
+        params.add(VMNames);
         //params.add(poweroff);
         returnResponse = ( Boolean ) 
                                 this.execSyncCommand(

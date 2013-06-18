@@ -32,7 +32,6 @@ import com.google.common.collect.Lists;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -118,6 +117,8 @@ public class HvOCCI implements HyperVisorPlugin {
     
   }
 
+    
+
   
 
   
@@ -180,6 +181,11 @@ public class HvOCCI implements HyperVisorPlugin {
 
     }
   
+    private String printHTTPStatus(StringBuilder sb, HttpResponse response)
+    {
+        return sb.append("HTTP status : ").append(response.getStatusLine().getStatusCode()).toString();
+    } 
+     
    /**
     * Metodo di comodo per effettuare un'invocazione senza argomenti
     * @param post
@@ -323,7 +329,13 @@ public class HvOCCI implements HyperVisorPlugin {
 
  
     //InputStream instream = this.doOCCIInvocation(HTTPMETHODS.GET, null, null, id, null).getEntity().getContent();
-    InputStream instream = this.doOCCIInvocation(HTTPMETHODS.GET, id).getEntity().getContent();
+    HttpResponse response = this.doOCCIInvocation(HTTPMETHODS.GET, id);
+    if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+    {
+        throw new Exception (this.printHTTPStatus(new StringBuilder("Error retrieving OCCI attributes for VM:").append(id),response));
+        
+    }
+    InputStream instream = response.getEntity().getContent();
     
    
     
@@ -407,17 +419,23 @@ public class HvOCCI implements HyperVisorPlugin {
   
   
   
+  
+  
       /** Recover state of VM from server
        * 
        * 
        * @return: List of VeState : the list is created by guava and is not suitable for serialization (copy it in another list) 
        */
       private List<VEState> recoverVMsFromOCCIServer() throws Exception {
-        
+        HttpResponse response = doOCCIInvocation();
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+        {
+            throw new Exception (this.printHTTPStatus(new StringBuilder("Error listing VMS; "),response));
+        }
         List<String> responses = Lists.newLinkedList(
                                         Iterables.filter(
                                                         Arrays.asList(
-                                                               streamToString(doOCCIInvocation().getEntity().getContent()).split("\n")
+                                                               streamToString(response.getEntity().getContent()).split("\n")
                                                         )
                                         , new IsOCCIPredicate("X-OCCI-Location")
                                         )
@@ -486,10 +504,15 @@ public class HvOCCI implements HyperVisorPlugin {
           if (auth.getAttributeValue("type").equals("keystone")) {
               occiAuth = new OCCIAuth( new OCCIAuthKeystoneImpl(this.occiURL, params.getChildText("tenant"), auth));
           }
-          else //basic
+          else if(auth.getAttributeValue("type").equals("basic"))//basic
           {
               occiAuth = new OCCIAuth( new OCCIAuthBasicImpl(auth));
           }
+          else
+          {
+              occiAuth = new OCCIAuth( new OCCINoAuth(this.occiURL));
+          }
+          occiAuth.initClient(null);
         } catch (MalformedURLException ex) {
           logger.error("Error in configuration parameters (authorization)" + ex.getMessage());
           throw new CleverException(ex);
@@ -530,13 +553,14 @@ public class HvOCCI implements HyperVisorPlugin {
 
       String occiID = getOcciIDfromName(name);
       int ris;
-      if((ris=this.doOCCIInvocation(HTTPMETHODS.POST, occiID, "start").getStatusLine().getStatusCode()) != HttpStatus.SC_OK)
+      HttpResponse response = this.doOCCIInvocation(HTTPMETHODS.POST, occiID, "start");
+      if((ris=response.getStatusLine().getStatusCode()) != HttpStatus.SC_OK)
       {
-          throw new Exception("Error in startvm : HTTP response - " + ris);
+          throw new Exception(this.printHTTPStatus(new StringBuilder("Error starting VM : ").append(name), response));
           
       }
 
-      return ris != HttpStatus.SC_OK;
+      return true;
 
 
     }
@@ -560,14 +584,17 @@ public class HvOCCI implements HyperVisorPlugin {
 
 
 
-
-
-
-      return this.doOCCIInvocation(HTTPMETHODS.POST, 
+      HttpResponse response = this.doOCCIInvocation(HTTPMETHODS.POST, 
                                    categories,
                                    occiattributes,
                                    null,
-                                   null).getStatusLine().getStatusCode() == HttpStatus.SC_CREATED;
+                                   null) ;
+
+      if(response.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED)
+      {
+          throw new Exception(this.printHTTPStatus(new StringBuilder("Error in VM creation : ").append(veId), response));
+      }
+      return true;
 
 
 
@@ -584,7 +611,15 @@ public class HvOCCI implements HyperVisorPlugin {
 
       String occiID = getOcciIDfromName(name);
 
-      return this.doOCCIInvocation(HTTPMETHODS.POST, occiID, "suspend").getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+       HttpResponse response = this.doOCCIInvocation(HTTPMETHODS.POST, occiID, "suspend");
+
+      if(response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+      {
+          throw new Exception(this.printHTTPStatus(new StringBuilder("Error in VM suspend : ").append(name), response));
+      }
+      
+      
+      return true;
 
 
     }
@@ -597,8 +632,19 @@ public class HvOCCI implements HyperVisorPlugin {
 
       String occiID = getOcciIDfromName(name);
 
-      return this.doOCCIInvocation(HTTPMETHODS.DELETE, occiID).getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+      
+      
+      HttpResponse response = this.doOCCIInvocation(HTTPMETHODS.DELETE, occiID);
 
+      if(response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+      {
+          throw new Exception(this.printHTTPStatus(new StringBuilder("Error in VM destroy : ").append(name), response));
+      }
+      
+      
+      return true;
+      
+      
 
 
     }
@@ -608,8 +654,17 @@ public class HvOCCI implements HyperVisorPlugin {
 
         String occiID = getOcciIDfromName(name);
 
-        return this.doOCCIInvocation(HTTPMETHODS.POST, occiID, "stop").getStatusLine().getStatusCode() == HttpStatus.SC_OK;
+        
+          HttpResponse response = this.doOCCIInvocation(HTTPMETHODS.POST, occiID, "stop");
 
+      if(response.getStatusLine().getStatusCode() != HttpStatus.SC_OK)
+      {
+          throw new Exception(this.printHTTPStatus(new StringBuilder("Error in VM shutdown : ").append(name), response));
+      }
+      
+      
+      return true;
+      
 
     }
 
@@ -778,22 +833,57 @@ public class HvOCCI implements HyperVisorPlugin {
   
     @Override
     public boolean destroyVm(String[] ids) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       for(String id : ids)
+       {
+           if(!this.destroyVm(id))
+           {
+               return false;
+           }
+       }
+       return true;
     }
 
     @Override
     public boolean shutDownVm(String[] ids) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       for(String id : ids)
+       {
+           if(!this.shutDownVm(id))
+           {
+               return false;
+           }
+       }
+       return true;
     }
 
     @Override
     public boolean startVm(String[] ids) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for(String id : ids)
+       {
+           if(!this.startVm(id))
+           {
+               return false;
+           }
+       }
+       return true;
     }
+    
+    
+    @Override
+    public boolean createVm(Map<String, VEDescription> ves) throws Exception {
+        for(Map.Entry<String, VEDescription> entry : ves.entrySet())
+        {
+            if(!this.createVm(entry.getKey(), entry.getValue(), false))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    
 
     @Override
     public String getHYPVRName() {
-        throw new UnsupportedOperationException("getHYPVRName Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return "OCCI/1.1";
     }
 
    /***************************************************************/

@@ -928,13 +928,9 @@ public long snapshotCount(String id) throws CleverException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public boolean registerVm(String id, String path) throws CleverException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+       
 
-    @Override
-    public boolean unregisterVm(String id) throws CleverException {
+        public boolean unregisterVm(String id) throws CleverException {
         try {
             Domain domain= (Domain) resolveUUID(id).getReference();
             if((domain.getInfo().state.name().compareTo(DomainInfo.DomainState.VIR_DOMAIN_RUNNING.name())==0) || (domain.getInfo().state.name().compareTo(DomainInfo.DomainState.VIR_DOMAIN_PAUSED.name())==0))
@@ -967,7 +963,7 @@ public long snapshotCount(String id) throws CleverException{
  
 
  
-    @Override
+   
      
      public String getLocalPath(String id) throws HyperVisorException{
       Document doc = dumpXml(id);
@@ -1036,6 +1032,11 @@ public long snapshotCount(String id) throws CleverException{
 
     @Override
     public boolean shutDownVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean createVm(Map<String, VEDescription> ves) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
  }

@@ -2151,7 +2151,7 @@ public class HvVMWare implements HyperVisorPlugin{
     }
 
     
-    @Override
+  
     /**
      * Register new Virtual Machine into Hypervisor's Inventory
      * @parm id Name of virtual machine
@@ -2239,7 +2239,7 @@ public class HvVMWare implements HyperVisorPlugin{
 
     }
 
-    @Override
+   
     /**
      * unRegister a Virtual Machine from Hypervisor's Inventory
      * @parm id Name of virtual machine
@@ -2671,7 +2671,7 @@ public class HvVMWare implements HyperVisorPlugin{
        this.owner=owner;
     }
 
-    @Override
+    
     public String getLocalPath(String id) throws HyperVisorException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
@@ -2693,6 +2693,11 @@ public class HvVMWare implements HyperVisorPlugin{
 
     @Override
     public boolean shutDownVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean createVm(Map<String, VEDescription> ves) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

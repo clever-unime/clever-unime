@@ -259,5 +259,10 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
     }
   }
 
+    @Override
+    public void initClient(HttpClient client) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
    
 }

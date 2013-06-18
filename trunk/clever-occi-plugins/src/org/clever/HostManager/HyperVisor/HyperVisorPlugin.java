@@ -31,6 +31,7 @@
 package org.clever.HostManager.HyperVisor;
 
 import java.util.List;
+import java.util.Map;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Plugins.RunnerPlugin;
 import org.clever.Common.VEInfo.NetworkSettings;
@@ -48,6 +49,7 @@ public interface HyperVisorPlugin extends RunnerPlugin {
     
     boolean resume(String id) throws Exception;
     boolean startVm(String id) throws Exception;
+   
     /**
      * Start n VMs
      * @param ids: IDs of VMs that have to be started
@@ -56,8 +58,12 @@ public interface HyperVisorPlugin extends RunnerPlugin {
      */
     boolean startVm(String[] ids) throws Exception;
     
-    boolean saveState(String id, String path) throws Exception;
+   
     boolean createVm(String veId, VEDescription parameters,Boolean notExclusive) throws Exception;
+    //TODO: include notExclusive in parameter
+    boolean createVm(Map<String, VEDescription> ves) throws Exception;
+    
+    boolean saveState(String id, String path) throws Exception;
     boolean resumeState(String id, String path) throws Exception;
     boolean createAndStart(String veId, VEDescription parameters,Boolean notExclusive) throws Exception;
     boolean addAdapter(String id, NetworkSettings settings) throws Exception;

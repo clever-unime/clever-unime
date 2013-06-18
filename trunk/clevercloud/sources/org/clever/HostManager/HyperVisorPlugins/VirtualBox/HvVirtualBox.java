@@ -912,12 +912,12 @@ public class HvVirtualBox implements HyperVisorPlugin {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
+  
     public boolean registerVm(String id, String path) throws Exception {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
+   
     public boolean unregisterVm(String id) throws Exception {
                 ISession session = null;
           IMachine vm = (IMachine) resolveUUID(id).getReference();
@@ -955,7 +955,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
         this.owner=owner;
     }
 
-    @Override
+   
     public String getLocalPath(String id) throws HyperVisorException {
         IMedium med=vbox.findMedium(id, DeviceType.HardDisk);
         String location=med.getLocation();
@@ -979,6 +979,11 @@ public class HvVirtualBox implements HyperVisorPlugin {
 
     @Override
     public boolean shutDownVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean createVm(Map<String, VEDescription> ves) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
