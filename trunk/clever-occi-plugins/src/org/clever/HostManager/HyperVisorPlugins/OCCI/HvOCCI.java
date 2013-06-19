@@ -109,6 +109,15 @@ public class HvOCCI implements HyperVisorPlugin {
     private URL occiURL = null;
     private OCCIAuth occiAuth = null;
     private String occiCompute = null;
+    
+    private DefaultHttpClient client = null;
+    
+    
+    
+    
+    
+    
+    
     //Used to convert OCCI state codes to VEState.STATE (Clever class)
     Map<String, VEState.STATE> OCCI2CLEVERSTATES = new HashMap<String, VEState.STATE>() {
         {
@@ -198,12 +207,18 @@ public class HvOCCI implements HyperVisorPlugin {
      * @return A string with HTTP status appended to StringBuilder parameter
      */
     private String manageInvocationErrors(StringBuilder sb, HttpResponse response) {
+       
         try {
-            EntityUtils.consume(response.getEntity());
+            sb.
+                append(" HTTP status : ").
+                append(response.getStatusLine().getStatusCode()).
+                append(" message : ").
+                append(this.getBodyAsString(response.getEntity()));
+            
         } catch (IOException ex) {
             logger.error("Error consuming response entity");
         }
-        return sb.append("HTTP status : ").append(response.getStatusLine().getStatusCode()).toString();
+         return sb.toString();
     }
 
     /**
@@ -213,23 +228,36 @@ public class HvOCCI implements HyperVisorPlugin {
      * @return
      * @throws Exception
      */
-    private HttpResponse doOCCIInvocation() throws Exception {
-        return this.doOCCIInvocation(HTTPMETHODS.GET, null, null, null, null);
+    private HttpResponse doOCCIInvocation(
+            boolean consumeEntity,
+            Integer success_status,
+            StringBuilder error_message) throws Exception {
+        return this.doOCCIInvocation(HTTPMETHODS.GET, null, null, null, null, consumeEntity, success_status, error_message);
     }
 
     /**
      * Effettua un'invocazione OCCI
      *
-     * @param post Metodo HTTP: post o get
+     * @param HTTPMETHODS Metodo HTTP
      * @param categories: Le Category da mettere nell'header della richiesta
      * @param occi_attributes: I X-OCCI-Attribute da mettere nell'header della
      * richiesta
      * @param path La stringa relativa alla risorsa dopo /compute/
-     * @param params I parametri da mettere direttamente nell'URL dopo ? nella
+     * @param inURLParams I parametri da mettere direttamente nell'URL dopo ? nella
+     * @param consumeEntity if true the response.entity is consumed (for thread issue)
      * forma "key=value"
      * @return
      */
-    private HttpResponse doOCCIInvocation(HTTPMETHODS method, String[] categories, String[] occi_attributes, String path, String[] inURLParams) throws Exception {
+    private HttpResponse doOCCIInvocation(
+                                HTTPMETHODS method, 
+                                String[] categories, 
+                                String[] occi_attributes, 
+                                String path, 
+                                String[] inURLParams,
+                                boolean consumeEntity,
+                                Integer success_status,
+                                StringBuilder message_error
+                                ) throws Exception {
         //DefaultHttpClient httpclient = new DefaultHttpClient();
         StringBuffer requestURL = new StringBuffer(this.occiCompute);
         if (path != null) {
@@ -291,12 +319,29 @@ public class HvOCCI implements HyperVisorPlugin {
         }
         HttpResponse response = HttpClientFactory.getThreadSafeClient().execute(request);
 
+        if(success_status!=null)
+        {
+            StringBuilder error = message_error;
+            if(error == null)
+            {
+                error = new StringBuilder("Error :");
+            }
+            if(response.getStatusLine().getStatusCode() != success_status)
+            {
+                throw new Exception(this.manageInvocationErrors(error, response));
+            }
+            
+            
+            
+        }
 
 
 
 
-
-
+        if(consumeEntity)
+        {
+            EntityUtils.consume(response.getEntity());
+        }
 
         return response;
 
@@ -313,7 +358,13 @@ public class HvOCCI implements HyperVisorPlugin {
      * @return
      * @throws Exception
      */
-    private HttpResponse doOCCIInvocation(HTTPMETHODS method, String vmId, String action) throws Exception {
+    private HttpResponse doOCCIInvocation(
+                                HTTPMETHODS method,
+                                String vmId,
+                                String action,
+                                boolean consumeEntity,
+                                Integer success_status,
+                                StringBuilder error_message) throws Exception {
         String categories[] = {
             action + "; scheme=\"http://schemas.ogf.org/occi/infrastructure/compute/action#\"; class=\"action\""
         };
@@ -321,7 +372,7 @@ public class HvOCCI implements HyperVisorPlugin {
             "action=" + action
         };
 
-        return this.doOCCIInvocation(method, categories, null, vmId, inURLParams);
+        return this.doOCCIInvocation(method, categories, null, vmId, inURLParams, consumeEntity, success_status, error_message);
     }
 
     /**
@@ -332,10 +383,14 @@ public class HvOCCI implements HyperVisorPlugin {
      * @return
      * @throws Exception
      */
-    private HttpResponse doOCCIInvocation(HTTPMETHODS method, String vmId) throws Exception {
+    private HttpResponse doOCCIInvocation(HTTPMETHODS method, 
+                                          String vmId,
+                                          boolean consumeEntity,
+                                          Integer success_status,
+                                          StringBuilder error_message) throws Exception {
 
 
-        return this.doOCCIInvocation(method, null, null, vmId, null);
+        return this.doOCCIInvocation(method, null, null, vmId, null, consumeEntity, success_status, error_message);
     }
 
     /**
@@ -351,11 +406,13 @@ public class HvOCCI implements HyperVisorPlugin {
 
 
         //InputStream instream = this.doOCCIInvocation(HTTPMETHODS.GET, null, null, id, null).getEntity().getContent();
-        HttpResponse response = this.doOCCIInvocation(HTTPMETHODS.GET, id);
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            throw new Exception(this.manageInvocationErrors(new StringBuilder("Error retrieving OCCI attributes for VM:").append(id), response));
-
-        }
+        HttpResponse response = this.doOCCIInvocation(
+                                            HTTPMETHODS.GET,
+                                            id,
+                                            false,
+                                            HttpStatus.SC_OK,
+                                            new StringBuilder("Error retrieving OCCI attributes for VM:").append(id));
+       
         HttpEntity entity = response.getEntity();
 
 
@@ -435,11 +492,11 @@ public class HvOCCI implements HyperVisorPlugin {
      * suitable for serialization (copy it in another list)
      */
     private List<VEState> recoverVMsFromOCCIServer() throws Exception {
-        HttpResponse response = doOCCIInvocation();
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-
-            throw new Exception(this.manageInvocationErrors(new StringBuilder("Error listing VMS; "), response));
-        }
+        HttpResponse response = doOCCIInvocation(
+                                        false,
+                                        HttpStatus.SC_OK,
+                                        new StringBuilder("Error listing VMS; "));
+        
         List<String> responses = Lists.newLinkedList(
                 Iterables.filter(
                 Arrays.asList(
@@ -523,7 +580,7 @@ public class HvOCCI implements HyperVisorPlugin {
         return Lists.newArrayList((this.recoverVMsFromOCCIServer())); //Copy for serialization
     }
 
-    //TODO: test if Copy result list for serilization issues (guava)
+    //TODO: test if Copy result list for serialization issues (guava)
     @Override
     public List<VEState> listRunningVms() throws Exception {
 
@@ -542,12 +599,14 @@ public class HvOCCI implements HyperVisorPlugin {
 
         String occiID = getOcciIDfromName(name);
         int ris;
-        HttpResponse response = this.doOCCIInvocation(HTTPMETHODS.POST, occiID, "start");
-        if ((ris = response.getStatusLine().getStatusCode()) != HttpStatus.SC_OK) {
-            throw new Exception(this.manageInvocationErrors(new StringBuilder("Error starting VM : ").append(name), response));
-
-        }
-
+        HttpResponse response = this.doOCCIInvocation(
+                                            HTTPMETHODS.POST,
+                                            occiID,
+                                            "start",
+                                            true,
+                                            HttpStatus.SC_OK,
+                                            new StringBuilder("Error starting VM : ").append(name));
+              
         return true;
 
 
@@ -576,11 +635,12 @@ public class HvOCCI implements HyperVisorPlugin {
                 categories,
                 occiattributes,
                 null,
-                null);
+                null,
+                true,
+                HttpStatus.SC_CREATED,
+                new StringBuilder("Error in VM creation : ").append(veId));
 
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_CREATED) {
-            throw new Exception(this.manageInvocationErrors(new StringBuilder("Error in VM creation : ").append(veId), response));
-        }
+        
         return true;
 
 
@@ -598,12 +658,13 @@ public class HvOCCI implements HyperVisorPlugin {
 
         String occiID = getOcciIDfromName(name);
 
-        HttpResponse response = this.doOCCIInvocation(HTTPMETHODS.POST, occiID, "suspend");
-
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            throw new Exception(this.manageInvocationErrors(new StringBuilder("Error in VM suspend : ").append(name), response));
-        }
-
+        HttpResponse response = this.doOCCIInvocation(
+                                        HTTPMETHODS.POST,
+                                        occiID,
+                                        "suspend",
+                                        true,
+                                        HttpStatus.SC_OK,
+                                        new StringBuilder("Error in VM suspend : ").append(name));
 
         return true;
 
@@ -620,12 +681,12 @@ public class HvOCCI implements HyperVisorPlugin {
 
 
 
-        HttpResponse response = this.doOCCIInvocation(HTTPMETHODS.DELETE, occiID);
-
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            throw new Exception(this.manageInvocationErrors(new StringBuilder("Error in VM destroy : ").append(name), response));
-        }
-
+        HttpResponse response = this.doOCCIInvocation(
+                                        HTTPMETHODS.DELETE,
+                                        occiID,
+                                        true,
+                                        HttpStatus.SC_OK,
+                                        new StringBuilder("Error in VM destroy : ").append(name));
 
         return true;
 
@@ -640,13 +701,13 @@ public class HvOCCI implements HyperVisorPlugin {
         String occiID = getOcciIDfromName(name);
 
 
-        HttpResponse response = this.doOCCIInvocation(HTTPMETHODS.POST, occiID, "stop");
-
-        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            throw new Exception(this.manageInvocationErrors(new StringBuilder("Error in VM shutdown : ").append(name), response));
-        }
-
-
+        HttpResponse response = this.doOCCIInvocation(
+                                        HTTPMETHODS.POST,
+                                        occiID,
+                                        "stop",
+                                        true,
+                                        HttpStatus.SC_OK,
+                                        new StringBuilder("Error in VM shutdown : ").append(name));
         return true;
 
 

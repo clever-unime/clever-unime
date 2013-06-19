@@ -104,39 +104,47 @@ public class TestApi extends Thread{
           
           
           List<StorageSettings> st = new ArrayList<StorageSettings>();
-          st.add(new StorageSettings(0, null, null, "C", "cirros-0.3.0-x86_64-uec"));
-          VEDescription ved = new VEDescription( st, null, "m1.tiny", null, null, null);
+//          String img = "cirros-0.3.0-x86_64-uec";
+//          String template = "m1.tiny";
+          
+          
+          String img = "cirros-0-3-0";
+          String template = "m1-tiny";
+          
+          
+          st.add(new StorageSettings(0, null, null, "C", img));
+          VEDescription ved = new VEDescription( st, null, template, null, null, null);
          
-//            if(s.getSession().getVMAdministrationModule().createVM_HOST(host_target, "VM-" + UUIDProvider.getPositiveInteger(), ved, Boolean.TRUE))
-//            {
-//                System.out.println("Creazione effettuata");
-//            }
+            if(s.getSession().getVMAdministrationModule().createVM_HOST(host_target, "VM-" + UUIDProvider.getPositiveInteger(), ved, Boolean.TRUE))
+            {
+                System.out.println("Creazione effettuata");
+            }
           
           
           
           
 //          String vmstop = "vm-1253730391";
-//        for(VEState stato : vms)
-//        {
-//            
-//          String vmstop = stato.getName();
-//          if(vmstop==null)
-//              continue;
-//          if(vmm.isRunningVM_HOST(host_target, vmstop))
-//                  {
-//                      try{
-//                              System.out.println("Esito stop VM: " + s.getSession().getVMAdministrationModule().stopVM_HOST(host_target, vmstop, Boolean.FALSE));
-//                      }
-//                      catch (CleverException e)
-//                      {
-//                          e.printStackTrace();
-//                      }
-//                  }
-//          else
-//          {
-//              System.out.println("VM "+ vmstop + " non running");
-//          }
-//        }
+        for(VEState stato : vms)
+        {
+            
+          String vmstop = stato.getName();
+          if(vmstop==null)
+              continue;
+          if(!vmm.isRunningVM_HOST(host_target, vmstop))
+                  {
+                      try{
+                              System.out.println("Esito stop VM: " + s.getSession().getVMAdministrationModule().startVM_HOST(host_target, vmstop));
+                      }
+                      catch (CleverException e)
+                      {
+                          e.printStackTrace();
+                      }
+                  }
+          else
+          {
+              System.out.println("VM "+ vmstop + " already started");
+          }
+        }
 //          
 //          try
 //          {
