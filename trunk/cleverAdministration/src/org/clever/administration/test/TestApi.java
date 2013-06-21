@@ -104,21 +104,23 @@ public class TestApi extends Thread{
           
           
           List<StorageSettings> st = new ArrayList<StorageSettings>();
-//          String img = "cirros-0.3.0-x86_64-uec";
-//          String template = "m1.tiny";
+          //String img = "cirros-0.3.0-x86_64-uec";
+          String img = "631ba9f5-3ea6-4a06-b36c-ec30770a61aa"; //sito spagnolo
+          
+          String template = "m1.tiny";
           
           
-          String img = "cirros-0-3-0";
-          String template = "m1-tiny";
+//          String img = "cirros-0-3-0";
+//          String template = "m1-tiny";
           
           
-          st.add(new StorageSettings(0, null, null, "C", img));
-          VEDescription ved = new VEDescription( st, null, template, null, null, null);
-         
-            if(s.getSession().getVMAdministrationModule().createVM_HOST(host_target, "VM-" + UUIDProvider.getPositiveInteger(), ved, Boolean.TRUE))
-            {
-                System.out.println("Creazione effettuata");
-            }
+//          st.add(new StorageSettings(0, null, null, "C", img));
+//          VEDescription ved = new VEDescription( st, null, template, null, null, null);
+//         
+//            if(s.getSession().getVMAdministrationModule().createVM_HOST(host_target, "VM-" + UUIDProvider.getPositiveInteger(), ved, Boolean.TRUE))
+//            {
+//                System.out.println("Creazione effettuata");
+//            }
           
           
           
@@ -127,13 +129,13 @@ public class TestApi extends Thread{
         for(VEState stato : vms)
         {
             
-          String vmstop = stato.getName();
-          if(vmstop==null)
+          String vm = stato.getName();
+          if(vm==null)
               continue;
-          if(!vmm.isRunningVM_HOST(host_target, vmstop))
+          if(vmm.isRunningVM_HOST(host_target, vm))
                   {
                       try{
-                              System.out.println("Esito stop VM: " + s.getSession().getVMAdministrationModule().startVM_HOST(host_target, vmstop));
+                              System.out.println("Esito stop VM: " + s.getSession().getVMAdministrationModule().stopVM_HOST(host_target, vm, false));
                       }
                       catch (CleverException e)
                       {
@@ -142,7 +144,13 @@ public class TestApi extends Thread{
                   }
           else
           {
-              System.out.println("VM "+ vmstop + " already started");
+              try{
+                       System.out.println("Esito start VM: " + s.getSession().getVMAdministrationModule().startVM_HOST(host_target, vm));
+                  }
+              catch (CleverException e)
+              {
+                  e.printStackTrace();
+              }
           }
         }
 //          

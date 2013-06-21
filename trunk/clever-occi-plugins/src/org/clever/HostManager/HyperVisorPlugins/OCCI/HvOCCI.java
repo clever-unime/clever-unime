@@ -499,8 +499,10 @@ public class HvOCCI implements HyperVisorPlugin {
         
         List<String> responses = Lists.newLinkedList(
                 Iterables.filter(
-                Arrays.asList(
-                getBodyAsString(response.getEntity()).split("\n")), new IsOCCIPredicate("X-OCCI-Location")));
+                            Arrays.asList(getBodyAsString(response.getEntity()).split("\n")),
+                            new IsOCCIPredicate("X-OCCI-Location")
+                )
+        );
 
         List<VEState> result = Lists.transform(responses, new Function<String, VEState>() {
             @Override
