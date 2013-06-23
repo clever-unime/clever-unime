@@ -1,9 +1,9 @@
-package org.clever.HostManager.HyperVisorPlugins.OCCI;
+package org.clever.HostManager.HyperVisorPlugins.OCCI.auth;
 
 
 import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;
-import org.clever.HostManager.HyperVisorPlugins.OCCI.OCCIAuthImpl;
+import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.OCCIAuthImpl;
 
 /*
  * To change this template, choose Tools | Templates
@@ -15,7 +15,7 @@ import org.clever.HostManager.HyperVisorPlugins.OCCI.OCCIAuthImpl;
  * @author salvullo
  */
 public class OCCIAuth {
-  OCCIAuth(OCCIAuthImpl impl) { 
+  public OCCIAuth(OCCIAuthImpl impl) { 
     this.impl = impl; 
   } 
   public boolean doAuth(HttpRequest request) {

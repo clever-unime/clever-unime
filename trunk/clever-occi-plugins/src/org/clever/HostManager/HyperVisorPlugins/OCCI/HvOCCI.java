@@ -23,14 +23,25 @@
  */
 package org.clever.HostManager.HyperVisorPlugins.OCCI;
 
+import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.OCCIAuthBasicImpl;
+import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.OCCINoAuth;
+import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.OCCIAuthKeystoneImpl;
+import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.OCCIAuth;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -48,6 +59,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.conn.scheme.PlainSocketFactory;
+import org.apache.http.conn.scheme.Scheme;
+import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpParams;
@@ -55,10 +70,13 @@ import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.Exceptions.HyperVisorException;
 import org.clever.Common.VEInfo.NetworkSettings;
 import org.clever.Common.VEInfo.VEDescription;
 import org.clever.Common.VEInfo.VEState;
+import org.clever.Common.VEInfo.VEState.STATE;
 import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
+import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.MySSLSocketFactory;
 
 import org.jdom.Element;
 
@@ -75,7 +93,7 @@ class HttpClientFactory {
 
     private static DefaultHttpClient client;
 
-    public synchronized static DefaultHttpClient getThreadSafeClient() {
+    public synchronized static DefaultHttpClient getThreadSafeClient()  {
 
         if (client != null) {
             return client;
@@ -87,7 +105,49 @@ class HttpClientFactory {
 
         HttpParams params = client.getParams();
         //qui vanno messi i parametri come autenticazione x509
-        ThreadSafeClientConnManager tm = new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry());
+
+        
+        
+        
+        //Per accettare tutti i certificati x509 (certificati unverified)
+        KeyStore trustStore = null;
+        try {
+            trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        } catch (KeyStoreException ex) {
+            java.util.logging.Logger.getLogger(HttpClientFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            trustStore.load(null, null);
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(HttpClientFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            java.util.logging.Logger.getLogger(HttpClientFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CertificateException ex) {
+            java.util.logging.Logger.getLogger(HttpClientFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        SSLSocketFactory sf = null;
+        try {
+            sf = new MySSLSocketFactory(trustStore);
+        } catch (NoSuchAlgorithmException ex) {
+            java.util.logging.Logger.getLogger(HttpClientFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (KeyManagementException ex) {
+            java.util.logging.Logger.getLogger(HttpClientFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (KeyStoreException ex) {
+            java.util.logging.Logger.getLogger(HttpClientFactory.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnrecoverableKeyException ex) {
+            java.util.logging.Logger.getLogger(HttpClientFactory.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+         SchemeRegistry registry = new SchemeRegistry();
+        registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+        registry.register(new Scheme("https", sf, 3200));
+        ///////////////////////////////////
+        
+        
+        //ThreadSafeClientConnManager tm = new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry());
+        ThreadSafeClientConnManager tm = new ThreadSafeClientConnManager(params, registry);
         tm.setDefaultMaxPerRoute(20);
 
         tm.setMaxTotal(200);
@@ -119,13 +179,20 @@ public class HvOCCI implements HyperVisorPlugin {
     
     
     //Used to convert OCCI state codes to VEState.STATE (Clever class)
-    Map<String, VEState.STATE> OCCI2CLEVERSTATES = new HashMap<String, VEState.STATE>() {
-        {
-            put("active", VEState.STATE.RUNNING);
-            put("inactive", VEState.STATE.STOPPED);
-            put("stopped", VEState.STATE.STOPPED);
-        }
-    };
+//    Map<String, VEState.STATE> OCCI2CLEVERSTATES = new HashMap<String, VEState.STATE>() {
+//        {
+//            put("active", VEState.STATE.RUNNING);
+//            put("inactive", VEState.STATE.STOPPED);
+//            put("stopped", VEState.STATE.STOPPED);
+//        }
+//    };
+    
+    
+     Map<String, VEState.STATE> OCCI2CLEVERSTATES = ImmutableMap.of("active", VEState.STATE.RUNNING,
+                                                                             "inactive", VEState.STATE.STOPPED,
+                                                                             "stopped", VEState.STATE.STOPPED
+                                                                            );
+    
 
     //String localPath = "/clever-repo/" + "cirros-0.3.0-x86_64-uec.img";
     public HvOCCI() {
@@ -139,6 +206,8 @@ public class HvOCCI implements HyperVisorPlugin {
         // List<String> l = asList(new String("ddd"));
 
     }
+
+   
 
     /**
      * ******************* Predicati ***********************
@@ -171,6 +240,7 @@ public class HvOCCI implements HyperVisorPlugin {
         }
     }
     private Predicate<String> isOCCIAttribute = new IsOCCIPredicate("X-OCCI-Attribute");
+    private Predicate<String> isOCCICategory = new IsOCCIPredicate("Category");
 
 //     private Predicate<String> isOCCIAttribute = new Predicate<String>(){
 //
@@ -257,7 +327,7 @@ public class HvOCCI implements HyperVisorPlugin {
                                 boolean consumeEntity,
                                 Integer success_status,
                                 StringBuilder message_error
-                                ) throws Exception {
+                                ) throws HyperVisorException, IOException {
         //DefaultHttpClient httpclient = new DefaultHttpClient();
         StringBuffer requestURL = new StringBuffer(this.occiCompute);
         if (path != null) {
@@ -315,7 +385,7 @@ public class HvOCCI implements HyperVisorPlugin {
         if (!this.occiAuth.doAuth(request)) //authentication
         {
 
-            throw new Exception("Authentication Error");
+            throw new HyperVisorException("Authentication Error");
         }
         HttpResponse response = HttpClientFactory.getThreadSafeClient().execute(request);
 
@@ -328,7 +398,7 @@ public class HvOCCI implements HyperVisorPlugin {
             }
             if(response.getStatusLine().getStatusCode() != success_status)
             {
-                throw new Exception(this.manageInvocationErrors(error, response));
+                throw new HyperVisorException(this.manageInvocationErrors(error, response));
             }
             
             
@@ -417,19 +487,28 @@ public class HvOCCI implements HyperVisorPlugin {
 
 
 
-        final Pattern p = Pattern.compile("X-OCCI-Attribute: occi\\.(compute|core)\\.(.*)=\"(.*)\"");
+        final Pattern p = Pattern.compile("X-OCCI-Attribute: *occi\\.(compute|core)\\.(.*)=\"(.*)\"");
 //    final Pattern p = Pattern.compile("X-OCCI-Attribute: occi\\.compute\\.(.*)=\"(.*)\"");
         final Map<String, String> attributes = new HashMap<String, String>();
 
-
-        for (String f : Iterables.filter(Arrays.asList(this.getBodyAsString(entity).split("\n")), isOCCIAttribute)) {
+        String[] responses = this.getBodyAsString(entity).split("\n");
+        for (String f : Iterables.filter(Arrays.asList(responses), isOCCIAttribute)) {
+            
+            
             Matcher m = p.matcher(f);
             if (m.find()) {
 
-                attributes.put(m.group(2), m.group(3)); // the first group is "compute" "core" 
+                attributes.put(m.group(2), m.group(3)); // the first group is "compute" or "core" 
             }
         }
 
+        
+        for (String f : responses) {
+            OCCIStructure s = new OCCIStructure(f);
+           logger.debug("........................................................" + s);
+        }
+        
+        
         return attributes;
 
     }
@@ -445,12 +524,12 @@ public class HvOCCI implements HyperVisorPlugin {
      */
     private VEState getVMState(String id) throws Exception {
         Map<String, String> attributes = getOcciAttributes(id); //retrieve occi attributes from OCCI server
-
+        String name = attributes.get("hostname");
 
         return new VEState(
                 OCCI2CLEVERSTATES.get(attributes.get("state")),
                 attributes.get("id"),
-                attributes.get("hostname"));
+                (name==null?attributes.get("title"):name)); //opennebula uses title as name ,instead openstack uses hostname (standard ? )
     }
 
     /**
@@ -714,6 +793,20 @@ public class HvOCCI implements HyperVisorPlugin {
 
 
     }
+    
+     @Override
+    public boolean shutDownVm(String id, Boolean poweroff) throws Exception {
+        //poweroff parameter ignored
+        return this.shutDownVm(id);
+    }
+
+    @Override
+    public boolean shutDownVm(String[] ids, Boolean poweroff) throws Exception {
+        //poweroff parameter ignored
+        return this.shutDownVm(ids);
+    }
+    
+    
 
     @Override
     public boolean isRunning(String name) throws Exception {

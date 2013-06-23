@@ -1,4 +1,4 @@
-package org.clever.HostManager.HyperVisorPlugins.OCCI;
+package org.clever.HostManager.HyperVisorPlugins.OCCI.auth;
 
 
 import com.google.gson.Gson;

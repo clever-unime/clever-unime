@@ -299,7 +299,7 @@ public class HvVMWare implements HyperVisorPlugin{
      * @return The state of operation
      * @throws Exception
      */
-    private boolean shutDownVm(String id, Boolean OSguest) throws Exception {
+    public boolean shutDownVm(String id, Boolean OSguest) throws Exception {
         String vmname = id;
         boolean status = false;
 
@@ -2698,6 +2698,11 @@ public class HvVMWare implements HyperVisorPlugin{
 
     @Override
     public boolean createVm(Map<String, VEDescription> ves) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean shutDownVm(String[] ids, Boolean poweroff) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

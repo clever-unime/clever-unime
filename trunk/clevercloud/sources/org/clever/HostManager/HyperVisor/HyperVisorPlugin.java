@@ -45,7 +45,8 @@ public interface HyperVisorPlugin extends RunnerPlugin {
     
     boolean shutDownVm(String id) throws Exception;
     boolean shutDownVm(String ids[]) throws Exception;
-    
+     boolean shutDownVm(String id, Boolean poweroff) throws Exception;
+    boolean shutDownVm(String ids[], Boolean poweroff) throws Exception;
     
     boolean resume(String id) throws Exception;
     boolean startVm(String id) throws Exception;

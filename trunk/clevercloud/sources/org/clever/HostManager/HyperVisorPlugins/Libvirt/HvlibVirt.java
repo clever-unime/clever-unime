@@ -33,8 +33,6 @@ import com.sun.jna.Pointer;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.clever.Common.Communicator.Agent;
@@ -52,15 +50,8 @@ import org.libvirt.jna.Libvirt.VirConnectDomainEventGenericCallback;
 import org.clever.Common.VEInfo.CpuSettings.Architecture;
 import org.clever.Common.XMLTools.ParserXML;
 import org.libvirt.jna.Libvirt;
-import javax.xml.parsers.*;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.VFS;
-import org.clever.Common.Storage.VirtualFileSystem;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.xml.sax.SAXException;
 
 
 
@@ -161,7 +152,7 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
       return "LibVirt";
   }
 
- 
+ @Override
  //TODO: choose shutdown policy: if !poweroff must it destroy the domain ?
  public boolean shutDownVm( String id , Boolean poweroff) throws CleverException
  {
@@ -1037,6 +1028,11 @@ public long snapshotCount(String id) throws CleverException{
 
     @Override
     public boolean createVm(Map<String, VEDescription> ves) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean shutDownVm(String[] ids, Boolean poweroff) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
  }

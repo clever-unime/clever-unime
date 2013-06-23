@@ -599,7 +599,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
          }
      }
 
-
+@Override
      public boolean shutDownVm( String id) throws Exception {
          return this.shutDownVm(id, Boolean.FALSE);
      }
@@ -984,6 +984,11 @@ public class HvVirtualBox implements HyperVisorPlugin {
 
     @Override
     public boolean createVm(Map<String, VEDescription> ves) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean shutDownVm(String[] ids, Boolean poweroff) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

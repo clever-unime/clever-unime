@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clever.HostManager.HyperVisorPlugins.OCCI;
+package org.clever.HostManager.HyperVisorPlugins.OCCI.auth;
 
 import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;

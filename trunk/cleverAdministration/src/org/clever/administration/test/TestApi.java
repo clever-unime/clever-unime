@@ -6,13 +6,10 @@ package org.clever.administration.test;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.VEInfo.StorageSettings;
-import org.clever.Common.VEInfo.VEDescription;
 import org.clever.Common.VEInfo.VEState;
-import org.clever.Common.XMPPCommunicator.UUIDProvider;
 
 import org.clever.administration.api.SessionFactory;
 import org.clever.administration.api.VMAdministrationModule;
@@ -93,12 +90,24 @@ public class TestApi extends Thread{
 //              System.out.println("Plugin: " + s.getSession().getHostAdministrationModule().getPluginName(host_target, agent));
 //          }
           
-        
+          List<String> running = new ArrayList<String>();
+          List<String> stopped = new ArrayList<String>();
           List<VEState> vms = s.getSession().getVMAdministrationModule().listVMs_HOST(host_target, false);
         
           for (VEState stato : vms)
           {
               System.out.println(stato);
+              switch(stato.getState())
+              {
+                  case RUNNING:
+                      running.add(stato.getName());
+                      break;
+                  case STOPPED:
+                      stopped.add(stato.getName());
+                      
+                              
+              }
+                  
           }
           
           
@@ -125,34 +134,34 @@ public class TestApi extends Thread{
           
           
           
-//          String vmstop = "vm-1253730391";
-        for(VEState stato : vms)
-        {
-            
-          String vm = stato.getName();
-          if(vm==null)
-              continue;
-          if(vmm.isRunningVM_HOST(host_target, vm))
-                  {
-                      try{
-                              System.out.println("Esito stop VM: " + s.getSession().getVMAdministrationModule().stopVM_HOST(host_target, vm, false));
-                      }
-                      catch (CleverException e)
-                      {
-                          e.printStackTrace();
-                      }
-                  }
-          else
-          {
-              try{
-                       System.out.println("Esito start VM: " + s.getSession().getVMAdministrationModule().startVM_HOST(host_target, vm));
-                  }
-              catch (CleverException e)
-              {
-                  e.printStackTrace();
-              }
-          }
-        }
+
+//        for(VEState stato : vms)
+//        {
+//            
+//          String vm = stato.getName();
+//          if(vm==null)
+//              continue;
+//          if(vmm.isRunningVM_HOST(host_target, vm))
+//                  {
+//                      try{
+//                              System.out.println("Esito stop VM: " + s.getSession().getVMAdministrationModule().stopVM_HOST(host_target, vm, false));
+//                      }
+//                      catch (CleverException e)
+//                      {
+//                          e.printStackTrace();
+//                      }
+//                  }
+//          else
+//          {
+//              try{
+//                       System.out.println("Esito start VM: " + s.getSession().getVMAdministrationModule().startVM_HOST(host_target, vm));
+//                  }
+//              catch (CleverException e)
+//              {
+//                  e.printStackTrace();
+//              }
+//          }
+//        }
 //          
 //          try
 //          {
@@ -164,6 +173,12 @@ public class TestApi extends Thread{
 //          {
 //              e.printStackTrace();
 //          }
+          
+          
+          
+          
+            //System.out.println("Stop le macchine attive: " + vmm.stopVMs_HOST(host_target, running.toArray(new String[running.size()]), Boolean.TRUE));
+             //System.out.println("start le macchine ferme: " + vmm.startVMs_HOST(host_target, stopped.toArray(new String[stopped.size()])));
           
           
           
