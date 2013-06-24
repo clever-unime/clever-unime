@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
+import static org.clever.HostManager.HyperVisorPlugins.OCCI.OCCIStructureTypes.Category;
 
 
 
@@ -21,7 +22,8 @@ enum OCCIStructureTypes {
     Category,
     Link,
     Attribute,
-    Location
+    Location,
+    UKNOWN
 }
 
 
@@ -86,9 +88,9 @@ public class OCCIStructure  {
                 }
                 else
                 {
-                    type = null;
-                    name = null;
-                    value=null;
+                    type = OCCIStructureTypes.UKNOWN;
+                    name = "UKNOWN";
+                    value="UKNOWN";
                     return; //TODO: manage parse error
                 }
                 
@@ -102,7 +104,7 @@ public class OCCIStructure  {
                 {
                     case Category:
                     case Link:
-                        p = Pattern.compile("^(.*?);(.*)");
+                        p = Pattern.compile("^(?:</)?([^/]+)(?:/.*>)?;(.*)");
 //                        ^(.*): (.*?);
                         
                         m = p.matcher(parsed);
@@ -110,7 +112,7 @@ public class OCCIStructure  {
                         name = m.group(1);
                         value = m.group(2);
                         for (String token : Splitter.
-                                            on(";").
+                                            on(Pattern.compile("[; ]")).
                                             trimResults().
                                             split(value))
 
@@ -121,15 +123,21 @@ public class OCCIStructure  {
                         break;
                     case Attribute:
                     case Location:
-                        p = Pattern.compile(" *(.*) *= *\"?(.*)\"?");
+                        p = Pattern.compile( "^*([^\\s]+?) *?= *\"?([^\"]+)\"?");
+                        
+                        //p = Pattern.compile("(.*)=\"?(.*)\"?");
                         m = p.matcher(parsed);
-                        m.find();
-                        name = m.group(1);
-                        value = m.group(2);
-                        break;
+                        if(m.find())
+                        {
+                            name = m.group(1);
+                            value = m.group(2);
+                            break;
+                        }
+                        logger.error("Parse error : " + parsed);
+                        
                     default:
-                        name=null;
-                        value=null;
+                        name="UKNOWN";
+                        value="UKNOWN";
                         
                 }
                 
@@ -140,9 +148,9 @@ public class OCCIStructure  {
         } //TODO: manage error parsing
         else
         {
-            name=null;
-            value=null;
-            type=null;
+            name="UKNOWN";
+            value="UKNOWN";
+            type=OCCIStructureTypes.UKNOWN;
         }
         
     }
@@ -160,6 +168,10 @@ public class OCCIStructure  {
     public OCCIStructureTypes getType() {
         return type;
     }
+
+    public String getValue() {
+        return value;
+    }
     
     
     
@@ -168,8 +180,34 @@ public class OCCIStructure  {
     @Override
     public String toString()
     {
-        final Joiner.MapJoiner mapJoiner = Joiner.on('&').withKeyValueSeparator("=");
+        
+        
+        
+        StringBuilder sb = new StringBuilder(" ").append(name);
+         
+        switch(type)
+        {
+            case Category:
+            case Link:
+                final Joiner.MapJoiner mapJoiner = Joiner.on('&').withKeyValueSeparator("===");
+                sb.append(" ---- ").append(mapJoiner.join(contents));
+                break;
+               
+            case Attribute:
+            case Location:
+                sb.append(" === ").append(value);
+                        
+        }
+        
+        return type + sb.toString();
+        
+        
+        
+        
+        /*
+        final Joiner.MapJoiner mapJoiner = Joiner.on('&').withKeyValueSeparator("===");
         return  type + " " + name + " ---- " + mapJoiner.join(contents);
+        */
     }
     
             

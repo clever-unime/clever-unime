@@ -6,6 +6,7 @@ package org.clever.administration.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.VEInfo.StorageSettings;
@@ -110,7 +111,11 @@ public class TestApi extends Thread{
                   
           }
           
-          
+          Map<String,String> details = vmm.getVMDetails_HOST(host_target, vms.get(0).getName());
+          System.out.println("IP: " + details.get("ip"));
+         
+          System.out.println("MAC: " + details.get("mac"));
+           System.out.println("STATE: " + details.get("state"));
           
           List<StorageSettings> st = new ArrayList<StorageSettings>();
           //String img = "cirros-0.3.0-x86_64-uec";

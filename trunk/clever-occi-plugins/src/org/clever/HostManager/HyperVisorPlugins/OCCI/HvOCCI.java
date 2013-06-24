@@ -30,9 +30,11 @@ import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.OCCIAuth;
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -463,6 +465,32 @@ public class HvOCCI implements HyperVisorPlugin {
         return this.doOCCIInvocation(method, null, null, vmId, null, consumeEntity, success_status, error_message);
     }
 
+    
+    
+    
+    
+    
+    
+    
+    private OCCIResponse _getVMDetails(String id) throws Exception {
+         HttpResponse response = this.doOCCIInvocation(
+                                            HTTPMETHODS.GET,
+                                            id,
+                                            false,
+                                            HttpStatus.SC_OK,
+                                            new StringBuilder("Error retrieving OCCI attributes for VM:").append(id));
+       
+        HttpEntity entity = response.getEntity();
+         Iterable<String> responses = Splitter.on("\n").omitEmptyStrings().trimResults().split(this.getBodyAsString(entity));
+        OCCIResponse r = new OCCIResponse(responses);
+        logger.debug(r.toString());
+        return r;
+    }
+    
+    
+    
+    
+    
     /**
      * Recover OCCI Attributes (occi.(core|compute).* ... ) from OCCI server
      *
@@ -491,8 +519,12 @@ public class HvOCCI implements HyperVisorPlugin {
 //    final Pattern p = Pattern.compile("X-OCCI-Attribute: occi\\.compute\\.(.*)=\"(.*)\"");
         final Map<String, String> attributes = new HashMap<String, String>();
 
-        String[] responses = this.getBodyAsString(entity).split("\n");
-        for (String f : Iterables.filter(Arrays.asList(responses), isOCCIAttribute)) {
+        //String[] responses = this.getBodyAsString(entity).split("\n");
+        
+        Iterable<String> responses = Splitter.on("\n").omitEmptyStrings().trimResults().split(this.getBodyAsString(entity));
+        
+        //for (String f : Iterables.filter(Arrays.asList(responses), isOCCIAttribute)) {
+        for (String f : Iterables.filter(responses, isOCCIAttribute)) {
             
             
             Matcher m = p.matcher(f);
@@ -502,11 +534,15 @@ public class HvOCCI implements HyperVisorPlugin {
             }
         }
 
-        
-        for (String f : responses) {
+        logger.debug(new OCCIResponse(responses));
+        /*for (String f : responses) {
             OCCIStructure s = new OCCIStructure(f);
            logger.debug("........................................................" + s);
-        }
+        }*/
+        
+        
+        
+       
         
         
         return attributes;
@@ -817,6 +853,31 @@ public class HvOCCI implements HyperVisorPlugin {
 
     }
 
+    
+    public Map<String,String> getVMDetails(String name) throws Exception {
+        String occiID = getOcciIDfromName(name);
+        OCCIResponse res = this._getVMDetails(occiID);
+        Map<String,String> result = Maps.newHashMap();
+        OCCIStructure n = res.getLinks().get("network");
+        if(n!=null)
+        {
+            result.put("ip", n.get("occi.networkinterface.address"));
+            result.put("mac", n.get("occi.networkinterface.mac"));
+            result.put("state", n.get("occi.networkinterface.state"));
+        }
+        
+        
+        
+        return result;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     @Override
     public boolean deleteSnapshot(String name, String nameS) throws Exception {
 
