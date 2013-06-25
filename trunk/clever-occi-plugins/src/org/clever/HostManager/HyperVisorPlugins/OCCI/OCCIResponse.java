@@ -4,7 +4,10 @@
  */
 package org.clever.HostManager.HyperVisorPlugins.OCCI;
 
+import com.google.common.collect.ImmutableListMultimap;
+import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import java.util.Map;
 import java.util.Map.Entry;
 import static org.clever.HostManager.HyperVisorPlugins.OCCI.OCCIStructureTypes.Category;
@@ -14,8 +17,8 @@ import static org.clever.HostManager.HyperVisorPlugins.OCCI.OCCIStructureTypes.C
  * @author maurizio
  */
 public class OCCIResponse {
-    final private Map<String, OCCIStructure> categories = Maps.newHashMap();
-    final private Map<String, OCCIStructure> links = Maps.newHashMap();
+    private Multimap<String, OCCIStructure> categories = LinkedListMultimap.create();
+    private Multimap<String, OCCIStructure> links = LinkedListMultimap.create();
     final private Map<String, String> attributes = Maps.newHashMap();
     final private Map<String, String> locations = Maps.newHashMap();
     
@@ -42,6 +45,10 @@ public class OCCIResponse {
     
     
     
+    
+    
+    
+    
     public void addOCCIStructure(String toparse)
     {
         OCCIStructure structure = new OCCIStructure(toparse);
@@ -62,11 +69,11 @@ public class OCCIResponse {
         }
     }
 
-    public Map<String, OCCIStructure> getCategories() {
+    public Multimap<String, OCCIStructure> getCategories() {
         return categories;
     }
 
-    public Map<String, OCCIStructure> getLinks() {
+    public Multimap<String, OCCIStructure> getLinks() {
         return links;
     }
 

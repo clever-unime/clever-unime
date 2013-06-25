@@ -44,7 +44,9 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +105,7 @@ class HttpClientFactory {
 
         client = new DefaultHttpClient();
 
-        ClientConnectionManager mgr = client.getConnectionManager();
+        //ClientConnectionManager mgr = client.getConnectionManager();
 
         HttpParams params = client.getParams();
         //qui vanno messi i parametri come autenticazione x509
@@ -144,7 +146,7 @@ class HttpClientFactory {
 
          SchemeRegistry registry = new SchemeRegistry();
         registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        registry.register(new Scheme("https", sf, 3200));
+        registry.register(new Scheme("https", sf, 3200)); //adhoc per opennebula spagnolo ciemat
         ///////////////////////////////////
         
         
@@ -400,6 +402,7 @@ public class HvOCCI implements HyperVisorPlugin {
             }
             if(response.getStatusLine().getStatusCode() != success_status)
             {
+                EntityUtils.consume(response.getEntity());
                 throw new HyperVisorException(this.manageInvocationErrors(error, response));
             }
             
@@ -502,8 +505,6 @@ public class HvOCCI implements HyperVisorPlugin {
      */
     private Map<String, String> getOcciAttributes(String id) throws Exception {
 
-
-        //InputStream instream = this.doOCCIInvocation(HTTPMETHODS.GET, null, null, id, null).getEntity().getContent();
         HttpResponse response = this.doOCCIInvocation(
                                             HTTPMETHODS.GET,
                                             id,
@@ -512,41 +513,13 @@ public class HvOCCI implements HyperVisorPlugin {
                                             new StringBuilder("Error retrieving OCCI attributes for VM:").append(id));
        
         HttpEntity entity = response.getEntity();
-
-
-
-        final Pattern p = Pattern.compile("X-OCCI-Attribute: *occi\\.(compute|core)\\.(.*)=\"(.*)\"");
-//    final Pattern p = Pattern.compile("X-OCCI-Attribute: occi\\.compute\\.(.*)=\"(.*)\"");
-        final Map<String, String> attributes = new HashMap<String, String>();
-
-        //String[] responses = this.getBodyAsString(entity).split("\n");
-        
-        Iterable<String> responses = Splitter.on("\n").omitEmptyStrings().trimResults().split(this.getBodyAsString(entity));
-        
-        //for (String f : Iterables.filter(Arrays.asList(responses), isOCCIAttribute)) {
-        for (String f : Iterables.filter(responses, isOCCIAttribute)) {
-            
-            
-            Matcher m = p.matcher(f);
-            if (m.find()) {
-
-                attributes.put(m.group(2), m.group(3)); // the first group is "compute" or "core" 
-            }
-        }
-
-        logger.debug(new OCCIResponse(responses));
-        /*for (String f : responses) {
-            OCCIStructure s = new OCCIStructure(f);
-           logger.debug("........................................................" + s);
-        }*/
-        
-        
-        
        
+        Iterable<String> responses = Splitter.on("\n").omitEmptyStrings().trimResults().split(this.getBodyAsString(entity));
+        OCCIResponse r = new OCCIResponse(responses);
+        logger.debug("Response: " + r);
+        return r.getAttributes();
         
         
-        return attributes;
-
     }
 
     /**
@@ -560,12 +533,12 @@ public class HvOCCI implements HyperVisorPlugin {
      */
     private VEState getVMState(String id) throws Exception {
         Map<String, String> attributes = getOcciAttributes(id); //retrieve occi attributes from OCCI server
-        String name = attributes.get("hostname");
+        String name = attributes.get("occi.compute.hostname"); //openstack uses hostname as name 
 
         return new VEState(
-                OCCI2CLEVERSTATES.get(attributes.get("state")),
-                attributes.get("id"),
-                (name==null?attributes.get("title"):name)); //opennebula uses title as name ,instead openstack uses hostname (standard ? )
+                OCCI2CLEVERSTATES.get(attributes.get("occi.compute.state")),
+                attributes.get("occi.core.id"),
+                (name==null?attributes.get("occi.core.title"):name)); //opennebula uses title as name ,instead openstack uses hostname (standard ? )
     }
 
     /**
@@ -612,14 +585,20 @@ public class HvOCCI implements HyperVisorPlugin {
                                         HttpStatus.SC_OK,
                                         new StringBuilder("Error listing VMS; "));
         
-        List<String> responses = Lists.newLinkedList(
+       /* List<String> responses = Lists.newLinkedList(
                 Iterables.filter(
                             Arrays.asList(getBodyAsString(response.getEntity()).split("\n")),
                             new IsOCCIPredicate("X-OCCI-Location")
                 )
         );
-
-        List<VEState> result = Lists.transform(responses, new Function<String, VEState>() {
+        */
+        
+        
+        Iterable<String> responses = Splitter.on("\n").omitEmptyStrings().trimResults().split(this.getBodyAsString(response.getEntity()));
+        Collection<String> vms = new OCCIResponse(responses).getLocations().keySet();
+        
+        
+        Iterable<VEState> result =  Iterables.transform(vms, new Function<String, VEState>() {
             @Override
             public VEState apply(String string) {
                 String uuid = string.replaceAll(".*/", "");
@@ -633,7 +612,7 @@ public class HvOCCI implements HyperVisorPlugin {
                 }
             }
         });
-        return result;
+        return Lists.newArrayList(result);
     }
 
     
@@ -854,17 +833,22 @@ public class HvOCCI implements HyperVisorPlugin {
     }
 
     
-    public Map<String,String> getVMDetails(String name) throws Exception {
+    public List<Map<String,String>> getVMDetails(String name) throws Exception {
         String occiID = getOcciIDfromName(name);
         OCCIResponse res = this._getVMDetails(occiID);
-        Map<String,String> result = Maps.newHashMap();
-        OCCIStructure n = res.getLinks().get("network");
-        if(n!=null)
+        List<Map<String,String>> result = new ArrayList<Map<String,String>>();
+        
+       
+        
+        for(OCCIStructure n : res.getLinks().get("network"))
         {
-            result.put("ip", n.get("occi.networkinterface.address"));
-            result.put("mac", n.get("occi.networkinterface.mac"));
-            result.put("state", n.get("occi.networkinterface.state"));
+            Map<String,String> detail = Maps.newHashMap();
+            detail.put("ip", n.get("occi.networkinterface.address"));
+            detail.put("mac", n.get("occi.networkinterface.mac"));
+            detail.put("state", n.get("occi.networkinterface.state"));
+            result.add(detail);
         }
+        
         
         
         

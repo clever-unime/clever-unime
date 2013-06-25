@@ -7,8 +7,9 @@ package org.clever.HostManager.HyperVisorPlugins.OCCI;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
-import java.util.HashMap;
+import java.util.AbstractMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
@@ -39,17 +40,38 @@ public class OCCIStructure  {
     
     static public boolean putKeyValue(Map<String,String> target, String toparse)
     {
-        final Pattern p = Pattern.compile(" *(.*) *= *\"(.*)\"");
-        Matcher m = p.matcher(toparse);
-        boolean r;
-        if(r=m.find())
+        Entry<String,String> e = getKeyValue(toparse);
+        if(e!=null)
         {
-            target.put(m.group(1), m.group(2));
+            target.put(e.getKey(), e.getValue());
+            return true;
         }
-        return r;
+        
+        return false;
         
         
     }
+    
+    
+    static public Entry<String,String> getKeyValue(String toparse)
+    {
+        final Pattern p = Pattern.compile(" *(.*) *= *\"?([^\"]*)");
+        Matcher m = p.matcher(toparse);
+        
+        if(m.find())
+        {
+            return new AbstractMap.SimpleEntry<String,String>(m.group(1), m.group(2));
+            
+        }
+        else
+        {
+            return null;
+        }
+    }
+    
+    
+    
+    
     
     final private Map<String,String> contents;
     final private String name ;
@@ -61,14 +83,23 @@ public class OCCIStructure  {
     {
         contents = Maps.newHashMap();
         
-        Pattern p = Pattern.compile("^(.*?): *");
+        
+        
+        
+        /*
+         * Gruppo1: tipo (Category , Link, X-OCCI-ATTRIBUTE, X-OCCI-LOCATION)
+         * Gruppo2: per Category e Link nome (network, compute, ...), null per altri
+         * Gruppo3: per Link (o comunque dove il nome e' nella forma </nome/idxxxxxx>) l'idxxxxxx ; null per gli altri
+         * Gruppo4: tutto quello che c'e' dopo il ';' (per Location e Category) o il ':' per X-OCCI-* 
+         */
+        Pattern p = Pattern.compile("^(.*?): *(?:(?:</)?([^/]+)(?:/(.*)>)?;)?(.*)");
         Matcher m = p.matcher(toparse);
         
         
         if(m.find())
         {
                 String tipo = m.group(1);
-                logger.debug("Tipo: " + tipo);
+                //logger.debug("Tipo: " + tipo);
 
                 if(tipo.equals("Category"))
                 {
@@ -96,7 +127,7 @@ public class OCCIStructure  {
                 
                 
                 
-                String parsed = m.replaceAll("");
+                
                 //toparse = toparse.replaceAll("^.*: ", ""); //TODO: improve it
                 
                 
@@ -104,36 +135,31 @@ public class OCCIStructure  {
                 {
                     case Category:
                     case Link:
-                        p = Pattern.compile("^(?:</)?([^/]+)(?:/.*>)?;(.*)");
-//                        ^(.*): (.*?);
-                        
-                        m = p.matcher(parsed);
-                        m.find();
-                        name = m.group(1);
-                        value = m.group(2);
+                       
+                        name = m.group(2);
+                        value = m.group(3);
                         for (String token : Splitter.
                                             on(Pattern.compile("[; ]")).
                                             trimResults().
-                                            split(value))
+                                            split(m.group(4)))
 
                             {
 
                                 putKeyValue(contents, token);
                             }
                         break;
-                    case Attribute:
                     case Location:
-                        p = Pattern.compile( "^*([^\\s]+?) *?= *\"?([^\"]+)\"?");
-                        
-                        //p = Pattern.compile("(.*)=\"?(.*)\"?");
-                        m = p.matcher(parsed);
-                        if(m.find())
-                        {
-                            name = m.group(1);
-                            value = m.group(2);
+                            name = m.group(4);
+                            value = null;
                             break;
-                        }
-                        logger.error("Parse error : " + parsed);
+                    case Attribute:
+                            Entry<String,String> e = OCCIStructure.getKeyValue(m.group(4));
+                            logger.debug("Attribute: " + e.getKey() + " value: " + e.getValue());
+                            name = e.getKey();
+                            value = e.getValue();
+                            break;
+//                        }
+                        //logger.error("Parse error : " + parsed);
                         
                     default:
                         name="UKNOWN";
@@ -151,6 +177,7 @@ public class OCCIStructure  {
             name="UKNOWN";
             value="UKNOWN";
             type=OCCIStructureTypes.UKNOWN;
+            logger.error("Parse error : " + toparse);
         }
         
     }
@@ -183,8 +210,11 @@ public class OCCIStructure  {
         
         
         
-        StringBuilder sb = new StringBuilder(" ").append(name);
-         
+        StringBuilder sb = new StringBuilder(" name: ").append(name);
+        if(value !=null)
+        {
+            sb.append(" valore: ").append(value);
+        }
         switch(type)
         {
             case Category:
@@ -192,10 +222,7 @@ public class OCCIStructure  {
                 final Joiner.MapJoiner mapJoiner = Joiner.on('&').withKeyValueSeparator("===");
                 sb.append(" ---- ").append(mapJoiner.join(contents));
                 break;
-               
-            case Attribute:
-            case Location:
-                sb.append(" === ").append(value);
+            default:
                         
         }
         
