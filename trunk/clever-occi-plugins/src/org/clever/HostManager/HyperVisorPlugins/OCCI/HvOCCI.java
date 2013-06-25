@@ -31,6 +31,9 @@ import com.google.common.base.Function;
 import com.google.common.base.Joiner;
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -50,6 +53,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -177,7 +181,7 @@ public class HvOCCI implements HyperVisorPlugin {
     private DefaultHttpClient client = null;
     
     
-    
+    private LoadingCache<String, String> fromNameToUUID;
     
     
     
@@ -205,8 +209,20 @@ public class HvOCCI implements HyperVisorPlugin {
 
         logger.info("HvOcci plugin created: ");
 
-        ThreadSafeClientConnManager tsccm = new ThreadSafeClientConnManager();
+       // ThreadSafeClientConnManager tsccm = new ThreadSafeClientConnManager();
 
+        
+        this.fromNameToUUID = CacheBuilder.newBuilder().maximumSize(1000).expireAfterAccess(30, TimeUnit.DAYS).build(new CacheLoader<String,String>(){
+
+            @Override
+            public String load(String k) throws Exception {
+                logger.debug("Cache fail: " + k);
+                return _getOcciIDfromName(k);
+            }
+        });
+        
+        
+        
         // List<String> l = asList(new String("ddd"));
 
     }
@@ -542,14 +558,14 @@ public class HvOCCI implements HyperVisorPlugin {
     }
 
     /**
-     * Recover OCCI uuid from clever name
+     * Recover OCCI uuid from clever name , invoking the OCCI server
      *
      * @param vmId name of VM (clever name)
      *
      * @return OCCI UUID
      * @throws Exception
      */
-    private String getOcciIDfromName(final String name) throws Exception {
+    private String _getOcciIDfromName(final String name) throws Exception {
 
         List<VEState> vms = this.recoverVMsFromOCCIServer();
         VEState vm = null;
@@ -572,6 +588,24 @@ public class HvOCCI implements HyperVisorPlugin {
 
     }
 
+    
+    /**
+     * Recover OCCI uuid from clever name , invoking the cache
+     *
+     * @param vmId name of VM (clever name)
+     *
+     * @return OCCI UUID
+     * @throws Exception
+     */
+    private String getOcciIDfromName(final String name) throws Exception {
+        //return this.fromNameToUUID.get(name);
+        return this._getOcciIDfromName(name);
+    }
+    
+    
+    
+    
+    
     /**
      * Recover state of VM from server
      *
@@ -604,6 +638,7 @@ public class HvOCCI implements HyperVisorPlugin {
                 String uuid = string.replaceAll(".*/", "");
                 try {
                     VEState vm = getVMState(uuid);
+                    HvOCCI.this.fromNameToUUID.put(vm.getName(), vm.getId());
                     logger.debug("VM found: " + vm);
                     return vm;
                 } catch (Exception ex) {

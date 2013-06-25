@@ -108,14 +108,15 @@ public class TestApi extends Thread{
                       
                               
               }
-                  
+              Map<String,String> details = vmm.getVMDetails_HOST(host_target, stato.getName()).get(0); //prima interfaccia
+              
+              System.out.println("IP: " + details.get("ip"));
+         
+              System.out.println("MAC: " + details.get("mac"));
+              System.out.println("STATE: " + details.get("state"));
           }
           
-          Map<String,String> details = vmm.getVMDetails_HOST(host_target, vms.get(0).getName()).get(0); //prima interfaccia
-          System.out.println("IP: " + details.get("ip"));
-         
-          System.out.println("MAC: " + details.get("mac"));
-           System.out.println("STATE: " + details.get("state"));
+          
           
           List<StorageSettings> st = new ArrayList<StorageSettings>();
           //String img = "cirros-0.3.0-x86_64-uec";
