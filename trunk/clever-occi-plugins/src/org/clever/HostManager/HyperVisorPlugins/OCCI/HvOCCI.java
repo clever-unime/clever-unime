@@ -598,8 +598,8 @@ public class HvOCCI implements HyperVisorPlugin {
      * @throws Exception
      */
     private String getOcciIDfromName(final String name) throws Exception {
-        //return this.fromNameToUUID.get(name);
-        return this._getOcciIDfromName(name);
+        return this.fromNameToUUID.get(name);
+        //return this._getOcciIDfromName(name);
     }
     
     
