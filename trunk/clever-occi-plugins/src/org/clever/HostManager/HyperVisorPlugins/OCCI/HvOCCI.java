@@ -881,9 +881,11 @@ public class HvOCCI implements HyperVisorPlugin {
             detail.put("ip", n.get("occi.networkinterface.address"));
             detail.put("mac", n.get("occi.networkinterface.mac"));
             detail.put("state", n.get("occi.networkinterface.state"));
+            
             result.add(detail);
         }
         
+        result.add(new HashMap(ImmutableMap.of("display", res.getAttributes().get("org.openstack.compute.console.vnc"))));
         
         
         

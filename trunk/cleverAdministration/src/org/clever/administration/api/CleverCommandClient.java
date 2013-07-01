@@ -134,7 +134,7 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
    * @param showXML:It sets if show the XML request/response messages.
    * @throws CleverException
    */
-  public synchronized void execAdminCommand( final InvocationCallback cleverCommand,
+  public  void execAdminCommand( final InvocationCallback cleverCommand,
                                 final String target,
                                 final String agent,
                                 final String command,
@@ -166,7 +166,7 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
    * @param showXML:It sets if show the XML request/response messages.
    * @throws CleverException
    */
-  public synchronized Object execSyncAdminCommand(
+  public Object execSyncAdminCommand(
                                 final String target,
                                 final String agent,
                                 final String command,
@@ -178,7 +178,7 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
 
     requestMsg.fillMessageFields( MessageType.REQUEST, adminHostName, target, true, params, new ExecOperation( command, params, agent ), 0 );
 
-    int id = requestManager.addSyncRequestPending(requestMsg, Request.Type.INTERNAL, 0);
+    int id = requestManager.addSyncRequestPending(requestMsg, Request.Type.INTERNAL, 180000); //TODO: retrieve from configuration
     Request request = requestManager.getRequest(id);
     
     

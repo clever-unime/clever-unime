@@ -81,8 +81,10 @@ public class RequestsManager
 
     request.setAsync(false);
     
-    
-    idNAT.put( tempId, request );
+    synchronized(this)
+    {
+        idNAT.put( tempId, request );
+    }
     logger.debug( "Sync Request added from: " + msg.getSrc() + " id: " + msg.getId()
                   + " new id (differ for EXTERNAL): " + tempId );
     return tempId;
@@ -110,7 +112,11 @@ public class RequestsManager
         break;
     }
     request.setAsync(true);
-    idNAT.put( tempId, request );
+     synchronized(this)
+    {
+        idNAT.put( tempId, request );
+    }
+    
     logger.debug( "aSync Request added from: " + msg.getSrc() + " id: " + msg.getId()
                   + " id toward HostCoordinator: " + tempId );
     return tempId;
@@ -118,7 +124,7 @@ public class RequestsManager
 
 
 
-  public boolean deleteRequestPending( int id )
+  public synchronized boolean deleteRequestPending( int id )
   {
     Integer newId = Integer.valueOf( id );
     return ( idNAT.remove( newId ) != null );
@@ -126,14 +132,14 @@ public class RequestsManager
 
 
 
-  public Request getRequest( final int id )
+  public synchronized Request getRequest( final int id )
   {
     return idNAT.get( Integer.valueOf( id ) );
   }
 
 
 
-  public int getRequestPendingId( int id )
+  public synchronized int getRequestPendingId( int id )
   {
     Integer newId = Integer.valueOf( id );
     Request request = idNAT.get( newId );
@@ -142,7 +148,7 @@ public class RequestsManager
 
 
 
-  public String getRequestPendingSrc( int id )
+  public synchronized String getRequestPendingSrc( int id )
   {
     Integer newId = Integer.valueOf( id );
     Request request = idNAT.get( newId );

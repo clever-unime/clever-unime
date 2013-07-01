@@ -55,7 +55,7 @@ public class OCCIStructure  {
     
     static public Entry<String,String> getKeyValue(String toparse)
     {
-        final Pattern p = Pattern.compile(" *(.*) *= *\"?([^\"]*)");
+        final Pattern p = Pattern.compile(" *(.*?) *= *\"?([^\"]*)");
         Matcher m = p.matcher(toparse);
         
         if(m.find())

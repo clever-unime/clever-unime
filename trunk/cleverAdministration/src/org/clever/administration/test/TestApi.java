@@ -108,12 +108,13 @@ public class TestApi extends Thread{
                       
                               
               }
-              Map<String,String> details = vmm.getVMDetails_HOST(host_target, stato.getName()).get(0); //prima interfaccia
-              
-              System.out.println("IP: " + details.get("ip"));
+              List<Map<String,String>> details = vmm.getVMDetails_HOST(host_target, stato.getName());
+              Map<String, String> net = details.get(0);
+              System.out.println("IP: " + net.get("ip"));
          
-              System.out.println("MAC: " + details.get("mac"));
-              System.out.println("STATE: " + details.get("state"));
+              System.out.println("MAC: " + net.get("mac"));
+              System.out.println("STATE: " + net.get("state"));
+              System.out.println("DISPLAY: " + details.get(1).get("display"));
           }
           
           

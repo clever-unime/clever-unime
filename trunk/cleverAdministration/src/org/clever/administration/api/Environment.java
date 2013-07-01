@@ -10,7 +10,6 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
-import org.clever.administration.ClusterManagerAdministrationTools;
 import org.clever.administration.exceptions.CleverClientException;
 
 /**
@@ -18,7 +17,7 @@ import org.clever.administration.exceptions.CleverClientException;
  *
  * @author maurizio
  */
-class Environment {
+public class Environment {
     
     
     private static final Logger log = Logger.getLogger(Environment.class);
