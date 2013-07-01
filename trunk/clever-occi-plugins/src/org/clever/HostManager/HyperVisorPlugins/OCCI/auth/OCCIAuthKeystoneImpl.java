@@ -21,6 +21,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.util.EntityUtils;
 import org.jdom.Element;
 
 
@@ -224,6 +225,8 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
       log.debug("Testing token ...");
       response = httpClient.execute(httpget);
       result = (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK);
+//      BufferedReader bs = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+//      while (bs.readLine()!=null);
     } catch (IOException ex) {
       log.error("Error  : " + ex.getMessage());
     }

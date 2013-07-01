@@ -10,7 +10,9 @@ import java.util.Map;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.VEInfo.StorageSettings;
+import org.clever.Common.VEInfo.VEDescription;
 import org.clever.Common.VEInfo.VEState;
+import org.clever.Common.XMPPCommunicator.UUIDProvider;
 
 import org.clever.administration.api.SessionFactory;
 import org.clever.administration.api.VMAdministrationModule;
@@ -114,26 +116,25 @@ public class TestApi extends Thread{
          
               System.out.println("MAC: " + net.get("mac"));
               System.out.println("STATE: " + net.get("state"));
-              System.out.println("DISPLAY: " + details.get(1).get("display"));
+              if(details.size()!=1)
+                  System.out.println("DISPLAY: " + details.get(1).get("display"));
           }
           
           
           
           List<StorageSettings> st = new ArrayList<StorageSettings>();
-          //String img = "cirros-0.3.0-x86_64-uec";
-          String img = "631ba9f5-3ea6-4a06-b36c-ec30770a61aa"; //sito spagnolo
-          
-          String template = "m1.tiny";
-          
-          
-//          String img = "cirros-0-3-0";
-//          String template = "m1-tiny";
-          
+         // String img = "cirros-0.3.0-x86_64-uec";
+          String img = "cirros-0-3-0"; //unime openstacks
+          //String img = "631ba9f5-3ea6-4a06-b36c-ec30770a61aa"; //sito spagnolo
+          //String img = "ttylinux"; //sito infn nebula
+          //String template = "m1.small";
+          String template = "m1-small"; //unime openstack
+
           
 //          st.add(new StorageSettings(0, null, null, "C", img));
 //          VEDescription ved = new VEDescription( st, null, template, null, null, null);
 //         
-//            if(s.getSession().getVMAdministrationModule().createVM_HOST(host_target, "VM-" + UUIDProvider.getPositiveInteger(), ved, Boolean.TRUE))
+//            if(s.getSession().getVMAdministrationModule().createVM_HOST(host_target, "VMPLUGIN-" + UUIDProvider.getPositiveInteger(), ved, Boolean.TRUE))
 //            {
 //                System.out.println("Creazione effettuata");
 //            }

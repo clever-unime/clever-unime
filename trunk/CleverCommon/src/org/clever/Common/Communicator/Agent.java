@@ -97,7 +97,7 @@ public abstract class Agent implements MethodInvokerHandler {
         } catch (IllegalAccessException e) {
             throw new CleverException(e, "Error Access");
         } catch (Exception e) {
-            throw new CleverException(e);
+            throw CleverException.newCleverException(e, e.getMessage());
         }
 
     }
@@ -157,12 +157,14 @@ public abstract class Agent implements MethodInvokerHandler {
                 }
 
             } catch (IllegalAccessException ex1) {
-                logger.error("Error: " + ex);
+                logger.error("Error: " + ex1);
                 throw new CleverException("Illegal Argument Exception: " + ex.getMessage());
             } catch (IllegalArgumentException ex1) {
             } catch (InvocationTargetException ex1) {
-                logger.error("Error: " + ex);
-                throw new CleverException(ex1.getTargetException(), "Error on plugin method invocation: " + ex1.getTargetException().getMessage());
+                logger.error("Error: " + ex1);
+                Throwable exception = ex1.getTargetException();
+                
+                throw CleverException.newCleverException(exception, "Error on plugin method invocation: " + ex1.getTargetException().getMessage());
             } catch (NoSuchMethodException ex1) {
                 logger.error("Error: " + ex);
                 throw new CleverException("method not found: " + ex.getMessage());

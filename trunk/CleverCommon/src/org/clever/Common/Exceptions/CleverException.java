@@ -31,6 +31,21 @@
 package org.clever.Common.Exceptions;
 
 public class CleverException extends Exception {
+    
+    public static CleverException newCleverException(Throwable e , String message)
+    {
+        
+        if (e instanceof CleverException)
+        {
+            return (CleverException)e;
+        }
+        else
+        {
+            return new CleverException(e, message);
+        }
+    }
+    
+    
     private Throwable InternalException;
     /**
      * Creates a new instance of <code>CleverException</code> without detail message.
@@ -62,6 +77,10 @@ public class CleverException extends Exception {
 
     }
 
+    
+    
+    
+    
     public Throwable getInternalException() {
         return InternalException;
     }
