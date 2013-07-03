@@ -45,7 +45,7 @@ public class testAPI {
             
             
             
-            System.out.println("Provo ad uscire: ");
+            System.out.println("Chiusura: ");
             
         } catch (CleverClientException ex) {
             System.err.println("errore nella configurazione: controllare log");

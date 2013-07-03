@@ -260,20 +260,20 @@ public class VMAdministrationModule extends AdministrationModule{
     
     
     /**
-     * Lista delle VM direttamente dando il comando ad un HOST
+     * 
      * Da evitare: usare i metodi del CM
      * @return true on success
      */
-    public List<Map<String,String>> getVMDetails_HOST(String host, String name) throws CleverException
+    public Map<String,Object> getVMDetails_HOST(String host, String name) throws CleverException
     {
         
-        List<Map<String,String>> returnResponse;
+        Map<String,Object> returnResponse;
         String method;
         
-            method="getVMDetails";
+        method="getVMDetails";
         ArrayList p = new ArrayList();
         p.add(name);
-        returnResponse = ( List<Map<String,String>> ) 
+        returnResponse = ( Map<String,Object> ) 
                                 this.execSyncCommand(
                                         host,
                                         "HyperVisorAgent",

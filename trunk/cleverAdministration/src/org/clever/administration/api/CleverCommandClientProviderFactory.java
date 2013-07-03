@@ -31,7 +31,7 @@ class CleverCommandClientProviderFactory {
         }
         catch ( Exception e ) {
                 log.error( "Could not instantiate  Clever command client", e );
-                throw new CleverClientException("Could not instantiate  Clever command client: " + providerClass);
+                throw new CleverClientException(e, "Could not instantiate  Clever command client: " + providerClass);
         }
         clients.configure(properties);
         return clients;

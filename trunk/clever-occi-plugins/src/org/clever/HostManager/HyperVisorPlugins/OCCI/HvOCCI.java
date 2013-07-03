@@ -47,16 +47,13 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -66,7 +63,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -82,7 +78,6 @@ import org.clever.Common.Exceptions.HyperVisorException;
 import org.clever.Common.VEInfo.NetworkSettings;
 import org.clever.Common.VEInfo.VEDescription;
 import org.clever.Common.VEInfo.VEState;
-import org.clever.Common.VEInfo.VEState.STATE;
 import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
 import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.MySSLSocketFactory;
 
@@ -166,39 +161,144 @@ class HttpClientFactory {
     }
 }
 
+
+
+
+
+
 /**
  *
  * @author Salvatore Monforte, Maurizio Paone, Davide Saitta
  */
 public class HvOCCI implements HyperVisorPlugin {
 
+    
+    class OCCIFeatures {
+
+       
+
+       
+    
+        
+     class FeaturesCacheLoader extends CacheLoader<String,String>
+     {
+            private final String errorMessage;
+            public FeaturesCacheLoader(String err)
+            {
+                errorMessage = err;
+            }
+            @Override
+            public String load(String k) throws Exception {
+                HvOCCI.this.retrieveServerFeatures();
+                String result = actions.getIfPresent(k);
+                if(result==null)
+                    throw new HyperVisorException(new StringBuilder(errorMessage).append(' ').append(k).toString());
+                return result; //ritorna senza fare il load del risultato; null se fallisce totalmente
+            }
+     }
+        
+        
+        
+    
+    
+     private LoadingCache<String, String> actions;
+     private LoadingCache<String, String> templates;
+     private LoadingCache<String, String> images;
+
+     public OCCIFeatures()
+     {
+         actions = CacheBuilder.
+                        newBuilder().
+                        maximumSize(1000).
+                        expireAfterAccess(30, TimeUnit.DAYS).
+                        build(new FeaturesCacheLoader("OCCI action not found"));
+         
+          templates = CacheBuilder.
+                        newBuilder().
+                        maximumSize(1000).
+                        expireAfterAccess(30, TimeUnit.DAYS).
+                        build(new FeaturesCacheLoader("Template not found"));
+          
+          images = CacheBuilder.
+                        newBuilder().
+                        maximumSize(1000).
+                        expireAfterAccess(30, TimeUnit.DAYS).
+                        build(new FeaturesCacheLoader("Image not found"));
+         
+         
+     }
+     
+     public void addAction(String name, String scheme)
+     {
+         actions.put(name, scheme);
+     }
+     
+     
+      public void addTemplate(String name, String schema) {
+            logger.debug("Inserisco template: " + name +" "+schema);
+            templates.put(name, schema);
+      }
+
+      public void addImage(String name, String schema) {
+           images.put(name, schema);
+      }
+     
+      
+      
+      private String getEntity(LoadingCache<String, String> entities, String name) throws Exception
+      {
+          try {
+             return entities.get(name);
+         } catch (ExecutionException ex) {
+             if(ex.getCause()!=null)
+                    throw new Exception(ex.getCause());
+             throw new HyperVisorException("Unknown error");
+         }
+      }
+    
+     public String getAction(String name) throws Exception
+     {
+        return getEntity(actions,name);
+     }
+     
+      private String getTemplate(String flavor) throws Exception {
+            return getEntity(templates,flavor);
+        }
+      
+       private String getImage(String image) throws Exception {
+            return getEntity(images,image);
+        }
+    
+}
+    
+    
+    
+    
     private Agent owner;
     private Logger logger;
     private URL occiURL = null;
     private OCCIAuth occiAuth = null;
     private String occiCompute = null;
-    private DefaultHttpClient client = null;
+    
     private LoadingCache<String, String> fromNameToUUID;
-    //Used to convert OCCI state codes to VEState.STATE (Clever class)
-//    Map<String, VEState.STATE> OCCI2CLEVERSTATES = new HashMap<String, VEState.STATE>() {
-//        {
-//            put("active", VEState.STATE.RUNNING);
-//            put("inactive", VEState.STATE.STOPPED);
-//            put("stopped", VEState.STATE.STOPPED);
-//        }
-//    };
+    
+    private OCCIFeatures features;
+    
+    
+    
     Map<String, VEState.STATE> OCCI2CLEVERSTATES = ImmutableMap.of("active", VEState.STATE.RUNNING,
             "inactive", VEState.STATE.STOPPED,
             "stopped", VEState.STATE.STOPPED);
+    private String occiQuery;
 
-    //String localPath = "/clever-repo/" + "cirros-0.3.0-x86_64-uec.img";
+    
     public HvOCCI() {
 
         logger = Logger.getLogger(HvOCCI.class);
 
         logger.info("HvOcci plugin created: ");
 
-        // ThreadSafeClientConnManager tsccm = new ThreadSafeClientConnManager();
+       
 
 
         this.fromNameToUUID = CacheBuilder.newBuilder().maximumSize(1000).expireAfterAccess(30, TimeUnit.DAYS).build(new CacheLoader<String, String>() {
@@ -209,7 +309,7 @@ public class HvOCCI implements HyperVisorPlugin {
             }
         });
 
-
+        features = new OCCIFeatures();
 
         // List<String> l = asList(new String("ddd"));
 
@@ -248,13 +348,7 @@ public class HvOCCI implements HyperVisorPlugin {
     private Predicate<String> isOCCIAttribute = new IsOCCIPredicate("X-OCCI-Attribute");
     private Predicate<String> isOCCICategory = new IsOCCIPredicate("Category");
 
-//     private Predicate<String> isOCCIAttribute = new Predicate<String>(){
-//
-//        @Override
-//        public boolean apply(String t) {
-//            return t.startsWith("X-OCCI-Attribute");
-//        }
-//    };
+
     /**
      * *****************************************************
      */
@@ -277,6 +371,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
     /**
      * Consumes the HTTP entity to release the connection.
+     * Append to StringBuilder the error message
      *
      * @param sb A stringbuilder where the method append the HTTP status
      * @param response The HttpResponse that embed the Invocation error
@@ -298,24 +393,13 @@ public class HvOCCI implements HyperVisorPlugin {
         return sb.toString();
     }
 
+    
+    
     /**
-     * Metodo di comodo per effettuare un'invocazione senza argomenti
-     *
-     * @param post
-     * @return
-     * @throws Exception
-     */
-    private HttpResponse doOCCIInvocation(
-            boolean consumeEntity,
-            Integer success_status,
-            StringBuilder error_message) throws Exception {
-        return this.doOCCIInvocation(HTTPMETHODS.GET, null, null, null, null, consumeEntity, success_status, error_message);
-    }
-
-    /**
-     * Effettua un'invocazione OCCI
+     * Effettua un'invocazione OCCI passando il path di base
      *
      * @param HTTPMETHODS Metodo HTTP
+     * @param basePath Path base per l'azione 
      * @param categories: Le Category da mettere nell'header della richiesta
      * @param occi_attributes: I X-OCCI-Attribute da mettere nell'header della
      * richiesta
@@ -328,6 +412,7 @@ public class HvOCCI implements HyperVisorPlugin {
      */
     private HttpResponse doOCCIInvocation(
             HTTPMETHODS method,
+            String basePath,
             String[] categories,
             String[] occi_attributes,
             String path,
@@ -335,8 +420,8 @@ public class HvOCCI implements HyperVisorPlugin {
             boolean consumeEntity,
             Integer success_status,
             StringBuilder message_error) throws HyperVisorException, IOException {
-        //DefaultHttpClient httpclient = new DefaultHttpClient();
-        StringBuffer requestURL = new StringBuffer(this.occiCompute);
+       
+        StringBuilder requestURL = new StringBuilder(basePath);
         if (path != null) {
             requestURL.append(path);
         }
@@ -411,20 +496,65 @@ public class HvOCCI implements HyperVisorPlugin {
 
         }
 
-
-
-
         if (consumeEntity) {
             EntityUtils.consume(response.getEntity());
         }
-
         return response;
 
 
 
 
     }
+    
+    
+    
+    
+    /**
+     * Metodo di comodo per effettuare un'invocazione senza argomenti
+     *
+     * @param post
+     * @return
+     * @throws Exception
+     */
+    private HttpResponse doOCCIComputeInvocation(
+            boolean consumeEntity,
+            Integer success_status,
+            StringBuilder error_message) throws Exception {
+        return this.doOCCIComputeInvocation(HTTPMETHODS.GET, null, null, null, null, consumeEntity, success_status, error_message);
+    }
 
+    /**
+     * Effettua un'invocazione OCCI al servizio di compute
+     *
+     * @param HTTPMETHODS Metodo HTTP
+     * @param categories: Le Category da mettere nell'header della richiesta
+     * @param occi_attributes: I X-OCCI-Attribute da mettere nell'header della
+     * richiesta
+     * @param path La stringa relativa alla risorsa dopo /compute/
+     * @param inURLParams I parametri da mettere direttamente nell'URL dopo ?
+     * nella
+     * @param consumeEntity if true the response.entity is consumed (for thread
+     * issue) forma "key=value"
+     * @return
+     */
+    private HttpResponse doOCCIComputeInvocation(
+            HTTPMETHODS method,
+            String[] categories,
+            String[] occi_attributes,
+            String path,
+            String[] inURLParams,
+            boolean consumeEntity,
+            Integer success_status,
+            StringBuilder message_error) throws HyperVisorException, IOException {
+       
+       return this.doOCCIInvocation(method, this.occiCompute, categories, occi_attributes, path, inURLParams, consumeEntity, success_status, message_error);
+
+
+    }
+   
+    
+    
+    
     /**
      * Metodo di comodo per effettuare chiamate su una VM
      *
@@ -433,43 +563,56 @@ public class HvOCCI implements HyperVisorPlugin {
      * @return
      * @throws Exception
      */
-    private HttpResponse doOCCIInvocation(
+    private HttpResponse doOCCIComputeInvocation(
             HTTPMETHODS method,
             String vmId,
             String action,
             boolean consumeEntity,
             Integer success_status,
             StringBuilder error_message) throws Exception {
+        
+        
+        
+        String schema = features.getAction(action);
+        
+       
+        
+        /*
         String categories[] = {
             action + "; scheme=\"http://schemas.ogf.org/occi/infrastructure/compute/action#\"; class=\"action\""
-        };
+        };*/
+        
+        String categories[] = {
+            new StringBuilder(action).append("; scheme=\"").append(schema).append("\"; class=\"action\"").toString() 
+         };
+        
         String inURLParams[] = {
             "action=" + action
         };
 
-        return this.doOCCIInvocation(method, categories, null, vmId, inURLParams, consumeEntity, success_status, error_message);
+        return this.doOCCIComputeInvocation(method, categories, null, vmId, inURLParams, consumeEntity, success_status, error_message);
     }
 
     /**
      * Metodo di comodo per effettuare chiamate su una VM
      *
      * @param vmId L'id della VM (OCCI id)
-     * @param action l'azione (per es. "start"
+     * 
      * @return
      * @throws Exception
      */
-    private HttpResponse doOCCIInvocation(HTTPMETHODS method,
+    private HttpResponse doOCCIComputeInvocation(HTTPMETHODS method,
             String vmId,
             boolean consumeEntity,
             Integer success_status,
             StringBuilder error_message) throws Exception {
 
 
-        return this.doOCCIInvocation(method, null, null, vmId, null, consumeEntity, success_status, error_message);
+        return this.doOCCIComputeInvocation(method, null, null, vmId, null, consumeEntity, success_status, error_message);
     }
 
     private OCCIResponse _getVMDetails(String id) throws Exception {
-        HttpResponse response = this.doOCCIInvocation(
+        HttpResponse response = this.doOCCIComputeInvocation(
                 HTTPMETHODS.GET,
                 id,
                 false,
@@ -477,7 +620,7 @@ public class HvOCCI implements HyperVisorPlugin {
                 new StringBuilder("Error retrieving OCCI attributes for VM:").append(id));
 
         HttpEntity entity = response.getEntity();
-        Iterable<String> responses = Splitter.on("\n").omitEmptyStrings().trimResults().split(this.getBodyAsString(entity));
+        Iterable<String> responses = splitResponse(entity);
         OCCIResponse r = new OCCIResponse(responses);
         logger.debug(r.toString());
         return r;
@@ -494,7 +637,7 @@ public class HvOCCI implements HyperVisorPlugin {
      */
     private Map<String, String> getOcciAttributes(String id) throws Exception {
 
-        HttpResponse response = this.doOCCIInvocation(
+        HttpResponse response = this.doOCCIComputeInvocation(
                 HTTPMETHODS.GET,
                 id,
                 false,
@@ -503,13 +646,67 @@ public class HvOCCI implements HyperVisorPlugin {
 
         HttpEntity entity = response.getEntity();
 
-        Iterable<String> responses = Splitter.on("\n").omitEmptyStrings().trimResults().split(this.getBodyAsString(entity));
+        Iterable<String> responses = splitResponse(entity);
         OCCIResponse r = new OCCIResponse(responses);
         logger.debug("Response: " + r);
         return r.getAttributes();
 
 
     }
+    
+    
+    private void retrieveServerFeatures() throws HyperVisorException
+    {
+        try {
+            logger.debug("Retrieving features from server");
+        HttpResponse response = this.doOCCIInvocation(
+                                HTTPMETHODS.GET,
+                                this.occiQuery,
+                                null,
+                                null,
+                                null,
+                                null,
+                                false,
+                                HttpStatus.SC_OK,
+                                new StringBuilder("Error on server features retrieving "));
+            OCCIResponse f = new OCCIResponse(splitResponse(response.getEntity()));
+            
+            logger.debug("Features: " + f.toString());
+            
+            for (Entry<String, OCCIStructure> a : f.getCategories().entries())
+            {
+                final String classe = a.getValue().get("class");
+                final String name = a.getKey();
+                final String schema = a.getValue().get("scheme");
+                final String rel = a.getValue().get("rel");
+                if(classe.equals("action"))
+                {
+                    logger.debug("Action found : " + name);
+                    features.addAction(name, schema);
+                }
+                else if(rel != null && classe.equals("mixin"))
+                {
+                    if( rel.equals("http://schemas.ogf.org/occi/infrastructure#resource_tpl"))
+                    {
+                        logger.debug("Template found : " + name);
+                        features.addTemplate(name, schema);
+                    }
+                    else if(rel.equals("http://schemas.ogf.org/occi/infrastructure#os_tpl"))
+                    {
+                        logger.debug("Image template found : " + name);
+                        features.addImage(name, schema);
+                    }                    
+                    
+                }
+            }
+            
+            
+        } catch (IOException ex) {
+            throw new HyperVisorException("Error in body parsing of server response: " + ex.getMessage());
+        }
+    }
+    
+    
 
     /**
      * Recover VEState of a particular VM from OCCI server
@@ -573,6 +770,13 @@ public class HvOCCI implements HyperVisorPlugin {
         return this.fromNameToUUID.get(name);
         //return this._getOcciIDfromName(name);
     }
+    
+    
+    private Iterable<String> splitResponse(HttpEntity entity) throws IOException
+    {
+        return Splitter.on("\n").omitEmptyStrings().trimResults().split(this.getBodyAsString(entity));
+    }
+    
 
     /**
      * Recover state of VM from server
@@ -582,21 +786,13 @@ public class HvOCCI implements HyperVisorPlugin {
      * suitable for serialization (copy it in another list)
      */
     private List<VEState> recoverVMsFromOCCIServer() throws Exception {
-        HttpResponse response = doOCCIInvocation(
+        HttpResponse response = doOCCIComputeInvocation(
                 false,
                 HttpStatus.SC_OK,
                 new StringBuilder("Error listing VMS; "));
 
-        /* List<String> responses = Lists.newLinkedList(
-         Iterables.filter(
-         Arrays.asList(getBodyAsString(response.getEntity()).split("\n")),
-         new IsOCCIPredicate("X-OCCI-Location")
-         )
-         );
-         */
-
-
-        Iterable<String> responses = Splitter.on("\n").omitEmptyStrings().trimResults().split(this.getBodyAsString(response.getEntity()));
+        //Iterable<String> responses = Splitter.on("\n").omitEmptyStrings().trimResults().split(this.getBodyAsString(response.getEntity()));
+        Iterable<String> responses = splitResponse(response.getEntity());
         Collection<String> vms = new OCCIResponse(responses).getLocations().keySet();
 
 
@@ -618,7 +814,7 @@ public class HvOCCI implements HyperVisorPlugin {
         return Lists.newArrayList(result);
     }
 
-    /* ********* Methods to be invoked by external (Implement methods from RunnerPlugin)**********
+    /* ********* Methods to be invoked by external ( methods Implementation from RunnerPlugin)**********
      */
     //  * @param params : This object contains the node <pluginParams> of configuration_hypervisor.xml
     @Override
@@ -641,6 +837,9 @@ public class HvOCCI implements HyperVisorPlugin {
                 this.occiURL = new URL(protocol, host, Integer.parseInt(port), "/"); //con il null o stringa vuota come file NullPointerException
 
                 this.occiCompute = this.occiURL.toString() + (computePath == null ? "/compute/" : computePath);
+                
+                this.occiQuery = this.occiURL.toString() + "/-/";
+                
 
 
             } catch (MalformedURLException ex) {
@@ -671,6 +870,8 @@ public class HvOCCI implements HyperVisorPlugin {
         }
 
         this.owner = owner;
+        
+         this.retrieveServerFeatures();
     }
 
     @Override
@@ -697,7 +898,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
         String occiID = getOcciIDfromName(name);
         int ris;
-        HttpResponse response = this.doOCCIInvocation(
+        HttpResponse response = this.doOCCIComputeInvocation(
                 HTTPMETHODS.POST,
                 occiID,
                 "start",
@@ -716,10 +917,15 @@ public class HvOCCI implements HyperVisorPlugin {
         //Qui dovrebbe creare il favor con le caratteristiche prese da VED e registrare l'immagine presa tramite imagemanager (o storage manager)
         String flavor = ved.getName(), img = ved.getStorage().get(0).getDiskPath(); //per ora nello scenario della chiamata diretta all HM il diskpath e' il nome dell'immagine del repo OCCI
 
+        
+        
+        String templateSchema = features.getTemplate(flavor);
+        String imageSchema = features.getImage(img);
         String categories[] = {
-            "compute; scheme=\"http://schemas.ogf.org/occi/infrastructure#\"; class=\"kind\"",
-            flavor + "; scheme=\"http://schemas.openstack.org/template/resource#\"; class=\"mixin\"",
-            img + "; scheme=\"http://schemas.openstack.org/template/os#\"; class=\"mixin\""
+            "compute; scheme=\"http://schemas.ogf.org/occi/infrastructure#\"; class=\"kind\"", //forse si dovrebbero aggiungere anche i kind
+            new StringBuilder(flavor).append("; scheme=\"").append(templateSchema).append("\"; class=\"mixin\"").toString(),
+            new StringBuilder(img).append("; scheme=\"").append(imageSchema).append("\"; class=\"mixin\"").toString()
+            
         };
 
         String occiattributes[] = {
@@ -729,7 +935,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
 
 
-        HttpResponse response = this.doOCCIInvocation(HTTPMETHODS.POST,
+        HttpResponse response = this.doOCCIComputeInvocation(HTTPMETHODS.POST,
                 categories,
                 occiattributes,
                 null,
@@ -747,7 +953,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
     @Override
     public boolean createAndStart(String veId, VEDescription parameters, Boolean notExclusive) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet. 1");
     }
 
     @Override
@@ -756,7 +962,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
         String occiID = getOcciIDfromName(name);
 
-        HttpResponse response = this.doOCCIInvocation(
+        HttpResponse response = this.doOCCIComputeInvocation(
                 HTTPMETHODS.POST,
                 occiID,
                 "suspend",
@@ -779,7 +985,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
 
 
-        HttpResponse response = this.doOCCIInvocation(
+        HttpResponse response = this.doOCCIComputeInvocation(
                 HTTPMETHODS.DELETE,
                 occiID,
                 true,
@@ -799,7 +1005,7 @@ public class HvOCCI implements HyperVisorPlugin {
         String occiID = getOcciIDfromName(name);
 
 
-        HttpResponse response = this.doOCCIInvocation(
+        HttpResponse response = this.doOCCIComputeInvocation(
                 HTTPMETHODS.POST,
                 occiID,
                 "stop",
@@ -832,23 +1038,35 @@ public class HvOCCI implements HyperVisorPlugin {
 
     }
 
-    public List<Map<String, String>> getVMDetails(String name) throws Exception {
+    public Map<String, Object> getVMDetails(String name) throws Exception {
         String occiID = getOcciIDfromName(name);
         OCCIResponse res = this._getVMDetails(occiID);
-        List<Map<String, String>> result = new ArrayList<Map<String, String>>();
+        Map<String, Object> result = Maps.newHashMap();
 
 
         try {
+            List<Map<String,String>> reti = Lists.newArrayList();
             for (OCCIStructure n : res.getLinks().get("network")) {
                 Map<String, String> detail = Maps.newHashMap();
                 detail.put("ip", n.get("occi.networkinterface.address"));
                 detail.put("mac", n.get("occi.networkinterface.mac"));
                 detail.put("state", n.get("occi.networkinterface.state"));
 
-                result.add(detail);
+                reti.add(detail);
             }
+            result.put("network", reti);
 
-            result.add(new HashMap(ImmutableMap.of("display", res.getAttributes().get("org.openstack.compute.console.vnc"))));
+            result.put("display", res.getAttributes().get("org.openstack.compute.console.vnc"));
+            
+            
+            result.put("memory", res.getAttributes().get("occi.compute.memory"));
+            
+            result.put("cores", res.getAttributes().get("occi.compute.cores"));
+            
+            result.put("architecture", res.getAttributes().get("occi.compute.architecture"));
+            
+          
+
         } catch (NullPointerException e) {
             //display not found
         }
@@ -965,17 +1183,17 @@ public class HvOCCI implements HyperVisorPlugin {
 
     @Override
     public void releasePortRemoteAccessVm(String id) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet. 2");
     }
 
     @Override
     public boolean ExportOvfToLocal(String id, String TargetPhysicalPath) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.3");
     }
 
     @Override
     public boolean ImportLocalOvf(String id, String OVF_physicalPath) throws Exception {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.4");
     }
 
     @Override
@@ -985,7 +1203,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
     @Override
     public boolean attackInterface(String id, String inf, String mac, String type) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException("Not supported yet.5");
     }
 
     @Override

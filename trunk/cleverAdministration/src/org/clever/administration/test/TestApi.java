@@ -110,25 +110,27 @@ public class TestApi extends Thread{
                       
                               
               }
-              List<Map<String,String>> details = vmm.getVMDetails_HOST(host_target, stato.getName());
-              Map<String, String> net = details.get(0);
+             Map<String,Object> details = vmm.getVMDetails_HOST(host_target, stato.getName());
+             Map<String, String> net = ((List<Map<String,String>>)details.get("network")).get(0); //prima interfaccia
               System.out.println("IP: " + net.get("ip"));
          
               System.out.println("MAC: " + net.get("mac"));
               System.out.println("STATE: " + net.get("state"));
-              if(details.size()!=1)
-                  System.out.println("DISPLAY: " + details.get(1).get("display"));
+              System.out.println("DISPLAY: " + details.get("display"));
+              System.out.println("MEMORY: " + details.get("memory"));
+              System.out.println("CORES: " + details.get("cores"));
           }
           
           
           
           List<StorageSettings> st = new ArrayList<StorageSettings>();
          // String img = "cirros-0.3.0-x86_64-uec";
-          String img = "cirros-0-3-0"; //unime openstacks
-          //String img = "631ba9f5-3ea6-4a06-b36c-ec30770a61aa"; //sito spagnolo
-          //String img = "ttylinux"; //sito infn nebula
+         // String img = "cirros-0-3-0"; //unime openstacks
+          //String img = "631ba9f5-3ea6-4a06-b36c-ec30770a61aa"; //sito spagnolo openstack 
+          String img = "ttylinux"; //sito infn nebula e es
           //String template = "m1.small";
-          String template = "m1-small"; //unime openstack
+          String template = "small"; //nebula es
+          //String template = "m1-small"; //unime openstack
 
           
 //          st.add(new StorageSettings(0, null, null, "C", img));
@@ -186,7 +188,7 @@ public class TestApi extends Thread{
           
           
             //System.out.println("Stop le macchine attive: " + vmm.stopVMs_HOST(host_target, running.toArray(new String[running.size()]), Boolean.TRUE));
-             //System.out.println("start le macchine ferme: " + vmm.startVMs_HOST(host_target, stopped.toArray(new String[stopped.size()])));
+            //System.out.println("start le macchine ferme: " + vmm.startVMs_HOST(host_target, stopped.toArray(new String[stopped.size()])));
           
           
           
