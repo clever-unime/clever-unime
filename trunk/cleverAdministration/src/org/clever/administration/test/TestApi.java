@@ -93,6 +93,31 @@ public class TestApi extends Thread{
 //              System.out.println("Plugin: " + s.getSession().getHostAdministrationModule().getPluginName(host_target, agent));
 //          }
           
+        
+           // String img = "cirros-0.3.0-x86_64-uec";
+         // String img = "cirros-0-3-0"; //unime openstacks
+          //String img = "631ba9f5-3ea6-4a06-b36c-ec30770a61aa"; //sito spagnolo openstack 
+          String img = "ttylinux"; //sito infn nebula e es
+          //String template = "m1.small";
+          String template = "small"; //nebula es
+          //String template = "m1-small"; //unime openstack
+
+        
+        
+        
+         System.out.println("Templates:");
+         for (String t : vmm.listTemplates_HOST(host_target))
+         {
+             System.out.println(t);
+         }
+        
+        
+         System.out.println("Images:");
+         for (String t : vmm.listImageTemplates_HOST(host_target))
+         {
+             System.out.println(t);
+         }
+        
           List<String> running = new ArrayList<String>();
           List<String> stopped = new ArrayList<String>();
           List<VEState> vms = s.getSession().getVMAdministrationModule().listVMs_HOST(host_target, false);
@@ -124,14 +149,7 @@ public class TestApi extends Thread{
           
           
           List<StorageSettings> st = new ArrayList<StorageSettings>();
-         // String img = "cirros-0.3.0-x86_64-uec";
-         // String img = "cirros-0-3-0"; //unime openstacks
-          //String img = "631ba9f5-3ea6-4a06-b36c-ec30770a61aa"; //sito spagnolo openstack 
-          String img = "ttylinux"; //sito infn nebula e es
-          //String template = "m1.small";
-          String template = "small"; //nebula es
-          //String template = "m1-small"; //unime openstack
-
+      
           
 //          st.add(new StorageSettings(0, null, null, "C", img));
 //          VEDescription ved = new VEDescription( st, null, template, null, null, null);

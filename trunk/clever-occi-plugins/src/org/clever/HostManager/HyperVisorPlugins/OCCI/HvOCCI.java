@@ -702,7 +702,7 @@ public class HvOCCI implements HyperVisorPlugin {
             
             
         } catch (IOException ex) {
-            throw new HyperVisorException("Error in body parsing of server response: " + ex.getMessage());
+            throw new HyperVisorException("Error parsing the server response: " + ex.getMessage());
         }
     }
     
@@ -1262,6 +1262,19 @@ public class HvOCCI implements HyperVisorPlugin {
         }
         return true;
     }
+    
+    
+    
+    public List<String> listTemplates() throws Exception {
+        return Lists.newArrayList(this.features.templates.asMap().keySet());
+    }
+    
+    public List<String> listImageTemplates() throws Exception {
+        return Lists.newArrayList(this.features.images.asMap().keySet());
+    }
+    
+    
+    
 
     @Override
     public String getHYPVRName() {

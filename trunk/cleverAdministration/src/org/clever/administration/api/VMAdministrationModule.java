@@ -259,6 +259,11 @@ public class VMAdministrationModule extends AdministrationModule{
     }
     
     
+    
+    
+    
+    /********************* Usate per OCCI : da rivedere e eventualmente, rifattorizzando, metterle per tutti ************************/
+    
     /**
      * 
      * Da evitare: usare i metodi del CM
@@ -279,6 +284,52 @@ public class VMAdministrationModule extends AdministrationModule{
                                         "HyperVisorAgent",
                                         method,
                                         p,
+                                        false);
+        return returnResponse;
+    }
+    
+    /**
+     * 
+     * Da evitare: usare i metodi del CM
+     * @return true on success
+     */
+    public List<String> listTemplates_HOST(String host) throws CleverException
+    {
+        
+        List<String> returnResponse;
+        String method;
+        
+        method="listTemplates";
+        
+        returnResponse = ( List<String> ) 
+                                this.execSyncCommand(
+                                        host,
+                                        "HyperVisorAgent",
+                                        method,
+                                        this.emptyParams,
+                                        false);
+        return returnResponse;
+    }
+    
+    /**
+     * 
+     * Da evitare: usare i metodi del CM
+     * @return true on success
+     */
+    public List<String> listImageTemplates_HOST(String host) throws CleverException
+    {
+        
+        List<String> returnResponse;
+        String method;
+        
+        method="listImageTemplates";
+        
+        returnResponse = ( List<String> ) 
+                                this.execSyncCommand(
+                                        host,
+                                        "HyperVisorAgent",
+                                        method,
+                                        this.emptyParams,
                                         false);
         return returnResponse;
     }
