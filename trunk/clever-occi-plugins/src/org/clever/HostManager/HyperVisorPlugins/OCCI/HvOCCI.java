@@ -925,7 +925,8 @@ public class HvOCCI implements HyperVisorPlugin {
             "compute; scheme=\"http://schemas.ogf.org/occi/infrastructure#\"; class=\"kind\"", //forse si dovrebbero aggiungere anche i kind
             new StringBuilder(flavor).append("; scheme=\"").append(templateSchema).append("\"; class=\"mixin\"").toString(),
             new StringBuilder(img).append("; scheme=\"").append(imageSchema).append("\"; class=\"mixin\"").toString()
-            
+                                        
+                
         };
 
         String occiattributes[] = {

@@ -1,5 +1,6 @@
 package org.clever.administration.api;
 
+import org.clever.administration.api.modules.HostAdministrationModule;
 import org.clever.administration.annotations.GetShellModule;
 import org.clever.administration.api.modules.VMAdministrationModule;
 import org.clever.administration.api.modules.AdministrationModule;
@@ -50,7 +51,7 @@ final public class Session {
      * per es.: getActiveCM, listHostManagers,ecc.
      * @return 
      */
-    @GetShellModule(name="ham")
+    @GetShellModule(name="ham", comment="Low level module for clever hosta administration")
     public HostAdministrationModule getHostAdministrationModule() {
         return hostAdministrationModule;
     }
@@ -60,7 +61,7 @@ final public class Session {
      * 
      * @return 
      */
-     @GetShellModule(name="vmm")
+    @GetShellModule(name="vmm", comment="Low level module for VM administration")
     public VMAdministrationModule getVMAdministrationModule() {
         return vMAdministrationModule;
     }

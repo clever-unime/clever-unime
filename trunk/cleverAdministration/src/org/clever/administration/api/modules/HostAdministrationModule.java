@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clever.administration.api;
+package org.clever.administration.api.modules;
 
 import org.clever.administration.api.modules.AdministrationModule;
 import java.util.List;
@@ -10,13 +10,16 @@ import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
+import org.clever.administration.annotations.HasScripts;
 import org.clever.administration.annotations.ShellCommand;
+import org.clever.administration.api.Session;
 
 
 /**
  * Modulo per gestire le entita' clever a livello di hosts: HostManager e ClusterManager
  * @author maurizio
  */
+@HasScripts(value="HAM", script="scripts/ham.bsh")
 public class HostAdministrationModule extends AdministrationModule{
     
     public HostAdministrationModule (Session s)
@@ -27,7 +30,7 @@ public class HostAdministrationModule extends AdministrationModule{
     
     /**
      * Ritorna il ClusterManager attivo
-     * @return ClusterManager attivo
+     * @return active ClusterManager 
      */
     @ShellCommand
     public String getActiveCM()

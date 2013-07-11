@@ -10,6 +10,7 @@ import java.util.Map;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.VEInfo.VEDescription;
 import org.clever.Common.VEInfo.VEState;
+import org.clever.administration.annotations.HasScripts;
 import org.clever.administration.api.Session;
 
 
@@ -17,6 +18,7 @@ import org.clever.administration.api.Session;
  * Modulo per gestire le VM
  * @author maurizio
  */
+@HasScripts(value="VMM", script="scripts/vmm.bsh")
 public class VMAdministrationModule extends AdministrationModule{
     
     public VMAdministrationModule (Session s)

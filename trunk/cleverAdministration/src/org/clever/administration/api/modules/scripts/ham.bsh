@@ -1,0 +1,53 @@
+create_module ()
+{
+    getComment() {
+     return "Module for clever host administration";
+    }
+    
+    acm() {
+        print(getHAM.getActiveCM());
+    }
+
+    lhms() {
+        for (hm : getHAM().listHostManagers())
+                print(hm.getNick());
+    }
+
+    lcms() {
+        for (cm : getHAM().listClusterManagers())
+        {
+    
+                print(cm.getNick() + " active: " + cm.isActive());
+        }
+    }
+
+    laas(target) {   
+        for (ag : getHAM().listActiveAgents(target))
+        {
+            print(ag);
+        }
+    }
+
+    iplugin (target, agent) {
+        name = getHAM().getPluginName(target,agent);
+        description = getHAM().getPluginDescription(target,agent);
+        version = getHAM().getPluginVersion(target,agent);
+        print("Plugin");
+        print(name);
+        print("********** Description ***********");
+        print(description);
+        print("********** Version ***********");
+        print(version);
+
+
+
+    }
+
+
+    getHAM()
+    {
+        return sf.getSession().getHostAdministrationModule();
+    }
+
+    return this;
+}

@@ -8,19 +8,41 @@ import bsh.EvalError;
 import bsh.Interpreter;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
+import jline.ArgumentCompletor;
+import jline.Completor;
 import jline.ConsoleReader;
 import jline.History;
+import jline.NullCompletor;
+import jline.SimpleCompletor;
 import org.clever.administration.annotations.GetShellModule;
-import org.clever.administration.annotations.ShellCommand;
+import org.clever.administration.annotations.HasScripts;
 import org.clever.administration.api.Configuration;
 import org.clever.administration.api.Session;
 import org.clever.administration.api.SessionFactory;
 import org.clever.administration.api.modules.AdministrationModule;
 import org.clever.administration.exceptions.CleverClientException;
+
+
+class ModuleDelimiter extends ArgumentCompletor.AbstractArgumentDelimiter
+{
+
+    @Override
+    public boolean isDelimiterChar(String string, int i) {
+        return string.charAt(i) == '.';
+    }
+
+}
+
+
+
+
+
 
 /**
  *
@@ -31,9 +53,13 @@ public class Shell {
   private ConsoleReader cleverConsole;
   private History cleverConsoleHistory;
   private Interpreter interpreter;
-  private String confFile = null; 
+  private SimpleCompletor simpleCompletor;
+  private ArgumentCompletor argumentCompletor;
+  private Map<String,String> modules;
+  
+  
   private Session s ;
-    private SessionFactory sf;
+  private SessionFactory sf;
   public Shell(String conf)
   {
     init(conf);
@@ -41,6 +67,7 @@ public class Shell {
   
   public void init(String conf)
   {
+      modules = new HashMap();
     interpreter = new Interpreter();
     initInterpreter(conf);
     
@@ -83,6 +110,13 @@ public class Shell {
 
     private void showShell() {
       String command = "";
+      simpleCompletor = new SimpleCompletor(modules.keySet().toArray(new String[0]));
+      argumentCompletor = new ArgumentCompletor(
+              new Completor[] {simpleCompletor, new SimpleCompletor("suca"),new NullCompletor()} , 
+              new ModuleDelimiter()
+              
+              );
+      cleverConsole.addCompletor(argumentCompletor);
       do
       {
           try {
@@ -122,6 +156,10 @@ public class Shell {
           interpreter.set("sf", sf);
           interpreter.set("session", s);
           collectCommands();
+          
+          
+          
+          
       } catch (EvalError ex) {
           ex.printStackTrace();
       } catch (CleverClientException ex) {
@@ -134,8 +172,9 @@ public class Shell {
         System.out.println("Prendo i metodi e compongo la shell");
         for (Method m : sessionClass.getMethods())
         {
-            System.out.println("metodo: " + m.getName());
-            if (m.getAnnotation(GetShellModule.class) != null)
+            
+            //if (m.getAnnotation(GetShellModule.class) != null)
+            if (m.isAnnotationPresent(GetShellModule.class))
             {
                 String nomeModulo = ((GetShellModule)m.getAnnotation(GetShellModule.class)).name();
                 String commento = ((GetShellModule)m.getAnnotation(GetShellModule.class)).comment();
@@ -143,11 +182,28 @@ public class Shell {
                     //aggiungere l'autocompletamento 
                     //String nomeMetodo = m.getName();
                     //Decidere se usare eval
+                    
                     AdministrationModule modulo = (AdministrationModule) m.invoke(s, null);
-                    System.out.println("modulo " + nomeModulo +  " valore: " +modulo);
+                    
+                    System.out.println("Creating wrapper module for  " + modulo +  " with name: " + nomeModulo+ " : " +commento);
                     interpreter.set(nomeModulo, modulo);
+                    
                     //prendere il tipo di ritorno fare reflection sulla classe , controllare i metodi annotati
                     //con ShellCommand e aggiungere a autocompletamento
+                    
+                    Class moduloClass = m.getReturnType();
+                    
+                    modules.put(nomeModulo, commento);
+                    
+                    
+                    if(moduloClass.isAnnotationPresent(HasScripts.class))
+                    {
+                        HasScripts ann = (HasScripts) moduloClass.getAnnotation(HasScripts.class);
+                        
+                        createScriptModule(ann.value(),ann.script(),modulo);
+                    }
+                    
+                    
                 } catch (IllegalAccessException ex) {
                     ex.printStackTrace();
                 } catch (IllegalArgumentException ex) {
@@ -181,5 +237,15 @@ public class Shell {
         
     }
   }
+
+    private void createScriptModule(String moduleName, String scriptName, Object module) throws EvalError {
+       InputStream script = module.getClass().getResourceAsStream(scriptName);
+       interpreter.eval(new InputStreamReader(script)); //carica create_module() and
+       interpreter.set(moduleName, interpreter.eval("create_module()")); //lancia create_module e il risultato lo mette in una variabile chiamata <moduleName> (object script)
+       String comment = interpreter.eval(moduleName + ".getComment()").toString();
+       modules.put(moduleName, comment);
+       System.out.println("Script loading from " + scriptName + " with module name: " + moduleName + " : " + comment);
+       
+    }
     
 }
