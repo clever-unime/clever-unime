@@ -2,11 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.clever.administration.api;
+package org.clever.administration.api.modules;
 
 import java.util.ArrayList;
 import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.administration.api.CleverCommandClient;
+import org.clever.administration.api.CleverCommandClientProvider;
+import org.clever.administration.api.Session;
+import org.clever.administration.api.Settings;
 import org.clever.administration.commands.CleverCommand;
 
 /**
