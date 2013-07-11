@@ -15,7 +15,7 @@ import org.clever.Common.VEInfo.VEState;
 import org.clever.Common.XMPPCommunicator.UUIDProvider;
 
 import org.clever.administration.api.SessionFactory;
-import org.clever.administration.api.VMAdministrationModule;
+import org.clever.administration.api.modules.VMAdministrationModule;
 
 /**
  *
@@ -94,12 +94,12 @@ public class TestApi extends Thread{
 //          }
           
         
-           // String img = "cirros-0.3.0-x86_64-uec";
+           String img = "cirros-0.3.0-x86_64-uec";
          // String img = "cirros-0-3-0"; //unime openstacks
           //String img = "631ba9f5-3ea6-4a06-b36c-ec30770a61aa"; //sito spagnolo openstack 
-          String img = "ttylinux"; //sito infn nebula e es
-          //String template = "m1.small";
-          String template = "small"; //nebula es
+          //String img = "ttylinux"; //sito infn nebula e es
+          String template = "m1.small";
+          //String template = "small"; //nebula es
           //String template = "m1-small"; //unime openstack
 
         
@@ -136,14 +136,20 @@ public class TestApi extends Thread{
                               
               }
              Map<String,Object> details = vmm.getVMDetails_HOST(host_target, stato.getName());
-             Map<String, String> net = ((List<Map<String,String>>)details.get("network")).get(0); //prima interfaccia
-              System.out.println("IP: " + net.get("ip"));
+             List<Map<String,String>> net = ((List<Map<String,String>>)details.get("network"));
+             for(Map<String,String> i : net)
+             {
+                 
+             
+              System.out.println("IP: " + i.get("ip"));
          
-              System.out.println("MAC: " + net.get("mac"));
-              System.out.println("STATE: " + net.get("state"));
+              System.out.println("MAC: " + i.get("mac"));
+              System.out.println("STATE: " + i.get("state"));
+             }
               System.out.println("DISPLAY: " + details.get("display"));
               System.out.println("MEMORY: " + details.get("memory"));
               System.out.println("CORES: " + details.get("cores"));
+             
           }
           
           
@@ -151,14 +157,14 @@ public class TestApi extends Thread{
           List<StorageSettings> st = new ArrayList<StorageSettings>();
       
           
-//          st.add(new StorageSettings(0, null, null, "C", img));
-//          VEDescription ved = new VEDescription( st, null, template, null, null, null);
-//         
-//            if(s.getSession().getVMAdministrationModule().createVM_HOST(host_target, "VMPLUGIN-" + UUIDProvider.getPositiveInteger(), ved, Boolean.TRUE))
-//            {
-//                System.out.println("Creazione effettuata");
-//            }
-          
+          st.add(new StorageSettings(0, null, null, "C", img));
+          VEDescription ved = new VEDescription( st, null, template, null, null, null);
+         
+            /*if(s.getSession().getVMAdministrationModule().createVM_HOST(host_target, "VMPLUGIN-" + UUIDProvider.getPositiveInteger(), ved, Boolean.TRUE))
+            {
+                System.out.println("Creazione effettuata");
+            }
+          */
           
           
           
@@ -190,18 +196,21 @@ public class TestApi extends Thread{
 //              }
 //          }
 //        }
-//          
-//          try
-//          {
-//              if(vmm.destroyVM_HOST(host_target, "from-curl"))
-//                  System.out.println("from-curl cancellata");
-//              
-//          }
-//          catch(CleverException e)
-//          {
-//              e.printStackTrace();
-//          }
+//        
           
+          /*
+         try
+          {
+	      //vmm.stopVM_HOST(host_target, "vmplugin-638497822", false);
+              if(vmm.destroyVM_HOST(host_target, "vmplugin-1505692512"))
+                  System.out.println("vmplugin-1505692512 cancellata");
+              
+          }
+          catch(CleverException e)
+          {
+              e.printStackTrace();
+          }
+  */
           
           
           

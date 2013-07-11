@@ -4,11 +4,13 @@
  */
 package org.clever.administration.api;
 
+import org.clever.administration.api.modules.AdministrationModule;
 import java.util.List;
 import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
+import org.clever.administration.annotations.ShellCommand;
 
 
 /**
@@ -27,6 +29,7 @@ public class HostAdministrationModule extends AdministrationModule{
      * Ritorna il ClusterManager attivo
      * @return ClusterManager attivo
      */
+    @ShellCommand
     public String getActiveCM()
     {
             return  this.

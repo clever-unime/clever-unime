@@ -8,18 +8,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Calendar;
+import java.text.DateFormat;
+import java.text.ParseException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.jdom.Element;
+import org.joda.time.DateTime;
+import org.joda.time.format.ISODateTimeFormat;
 
 
 
@@ -87,6 +89,7 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
   
   
   final String tokenJsonBodyQuery;
+    private DateTime expire;
   
   
   
@@ -164,19 +167,23 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
       synchronized(this)
       {
         this.token = responseobj.get("access").getAsJsonObject().get("token").getAsJsonObject();
-      }
-      Calendar expire = Calendar.getInstance();
-              
-                       
-      synchronized(this)
-      {
-         result = this.token.get("id").getAsString();
+      
+        expire = DateTime.parse(token.get("expires").getAsString(),ISODateTimeFormat.dateTimeNoMillis());
+        
+        //DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssX"); 
+        //2013-07-10T11:00:11Z
+        //expire.setTime(df.parse(token.get("expires").getAsString()));
+
+
+        log.debug("Token will expire on: " + expire);
+
+        result = this.token.get("id").getAsString();
       }
 
     } catch (IOException ex) {
       log.error("Error in token creation : " + ex.getMessage());
       
-    } 
+    }  
     
     return tokenID = result;
   }
@@ -205,12 +212,15 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
 //    return result;
 //  }
   private boolean isExpired() {
+    
     synchronized(this)
     {
         if (tokenID == null) {
           return true;
         }
+        return expire.isBeforeNow();
     }
+    /*
     HttpClient httpClient = new DefaultHttpClient();
     HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10000);
     HttpGet httpget = new HttpGet(occiURL.toString() + "/-/"); 
@@ -229,6 +239,7 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
     }
     
     return result;
+    * */
   }
   
   

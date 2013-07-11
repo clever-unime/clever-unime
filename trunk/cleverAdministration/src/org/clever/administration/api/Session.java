@@ -1,5 +1,9 @@
 package org.clever.administration.api;
 
+import org.clever.administration.annotations.GetShellModule;
+import org.clever.administration.api.modules.VMAdministrationModule;
+import org.clever.administration.api.modules.AdministrationModule;
+
 
 /**
  * Classe che permette di invocare le API
@@ -46,6 +50,7 @@ final public class Session {
      * per es.: getActiveCM, listHostManagers,ecc.
      * @return 
      */
+    @GetShellModule(name="ham")
     public HostAdministrationModule getHostAdministrationModule() {
         return hostAdministrationModule;
     }
@@ -55,6 +60,7 @@ final public class Session {
      * 
      * @return 
      */
+     @GetShellModule(name="vmm")
     public VMAdministrationModule getVMAdministrationModule() {
         return vMAdministrationModule;
     }
