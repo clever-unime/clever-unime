@@ -4,6 +4,7 @@
  */
 package org.clever.administration.api;
 
+import java.util.Properties;
 import org.apache.log4j.Logger;
 
 /** Implementazione di SessionFactory. 
@@ -14,6 +15,7 @@ import org.apache.log4j.Logger;
 public class SessionFactoryImpl implements SessionFactory {
 
     private Settings settings;
+    
     private static final Logger log = Logger.getLogger(Configuration.class);
     
     private final ThreadLocal<Session> sessionHolder = new ThreadLocal<Session>() {
@@ -29,6 +31,15 @@ public class SessionFactoryImpl implements SessionFactory {
     };
 
 
+    /**
+     * Le properties passate per creare le settings: per consultarle dall'esterno
+     * @return 
+     */
+    public Properties getProperties()
+    {
+        return settings.getProperties();
+    }
+    
     
     
     public SessionFactoryImpl(Settings settings) {

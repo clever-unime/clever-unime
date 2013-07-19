@@ -217,7 +217,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
      } 
      
      
-     public boolean VerificaNecessitaCM(ConnectionXMPP connect)	//torna true se il numero di CM in clever Main è < della soglia!
+     private boolean VerificaNecessitaCM(ConnectionXMPP connect)	//torna true se il numero di CM in clever Main è < della soglia!
      {        
          int tmp = connect.getNum_CCsInRoom(ROOM.CLEVER_MAIN); //questa nuova funzione di connection XMPP l'ho fatta io!
          

@@ -31,7 +31,7 @@ public class SettingsFactory {
       
       		CleverCommandClientProvider clients = createCleverClientCommandProvider(props);
       		settings.setCleverCommandClientProvider(clients);
-                
+                settings.setProperties(props); //per poterci accedere dall'esterno
                 
                 //qui andranno altre configurazioni relative alle Session ecc.
                 

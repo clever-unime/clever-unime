@@ -51,7 +51,7 @@ final public class Session {
      * per es.: getActiveCM, listHostManagers,ecc.
      * @return 
      */
-    @GetShellModule(name="ham", comment="Low level module for clever hosta administration")
+    @GetShellModule(name="ham", comment="Low level module for clever host administration")
     public HostAdministrationModule getHostAdministrationModule() {
         return hostAdministrationModule;
     }

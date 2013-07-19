@@ -58,6 +58,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -69,6 +70,7 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.apache.log4j.Logger;
@@ -107,6 +109,9 @@ class HttpClientFactory {
         //ClientConnectionManager mgr = client.getConnectionManager();
 
         HttpParams params = client.getParams();
+        HttpConnectionParams.setConnectionTimeout(params, 10000); //TODO: from plugin params
+        HttpConnectionParams.setSoTimeout(params, 10000); //TODO: from plugin params
+        
         //qui vanno messi i parametri come autenticazione x509
 
 
@@ -479,7 +484,22 @@ public class HvOCCI implements HyperVisorPlugin {
 
             throw new HyperVisorException("Authentication Error");
         }
-        HttpResponse response = HttpClientFactory.getThreadSafeClient().execute(request);
+        HttpResponse response = null;
+        int tries = 0;
+        IOException e = null;
+        while(response == null && tries++ < 4) //TODO: retrieve number of HTTP request retries by plugin params
+        {    try {
+                response = HttpClientFactory.getThreadSafeClient().execute(request);
+            } catch (IOException ex) {
+                logger.error("HTTP Timeout on read or socket operation" + ex.getMessage());
+                e = ex;
+            }
+        }
+        if(response==null)
+        {
+            logger.error("Fatal HTTP Timeout on read or socket operation" );
+            throw new HyperVisorException("Fatal timeout on HTTP request " + (e!=null? e.getMessage() : "null exception")); //TODO:embed exception in CleverException
+        }
 
         if (success_status != null) {
             StringBuilder error = message_error;

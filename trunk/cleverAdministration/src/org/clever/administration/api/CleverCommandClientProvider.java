@@ -27,5 +27,15 @@ public interface CleverCommandClientProvider {
 	 * @param p
 	 */
 	public void configure(Properties p); 
+        
+     public String getUsername();
+
+    public String getServername();
+
+    public Integer getPort();
+
+    public String getNickname();
+
+    public String getRoom();
 	
 }

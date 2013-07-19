@@ -69,5 +69,25 @@ public abstract class CleverCommandClientProviderImpl implements CleverCommandCl
             this.maxHandlers = m;
         }
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getServername() {
+        return servername;
+    }
+
+    public Integer getPort() {
+        return port;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getRoom() {
+        return room;
+    }
     
 }

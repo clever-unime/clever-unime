@@ -11,6 +11,8 @@ import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.VEInfo.VEDescription;
 import org.clever.Common.VEInfo.VEState;
 import org.clever.administration.annotations.HasScripts;
+import org.clever.administration.annotations.ShellCommand;
+import org.clever.administration.annotations.ShellParameter;
 import org.clever.administration.api.Session;
 
 
@@ -18,7 +20,7 @@ import org.clever.administration.api.Session;
  * Modulo per gestire le VM
  * @author maurizio
  */
-@HasScripts(value="VMM", script="scripts/vmm.bsh")
+@HasScripts(value="VMM", script="scripts/vmm.bsh", comment="Administration module for VMs")
 public class VMAdministrationModule extends AdministrationModule{
     
     public VMAdministrationModule (Session s)
@@ -146,7 +148,10 @@ public class VMAdministrationModule extends AdministrationModule{
      * Da evitare: usare i metodi del CM
      * @return true on success
      */
-    public boolean stopVM_HOST(String host, String VMName, Boolean poweroff) throws CleverException
+    @ShellCommand(comment="Stop VM directly invoking an HOST")
+    public boolean stopVM_HOST(@ShellParameter(name="host", comment="HOST target") String host,
+                               @ShellParameter(name="VMName", comment="VM name") String VMName, 
+                               @ShellParameter(name="poweroff", comment="Force poweroff") Boolean poweroff) throws CleverException
     {
         
         Boolean returnResponse;
@@ -216,7 +221,10 @@ public class VMAdministrationModule extends AdministrationModule{
      * Da evitare: usare i metodi del CM
      * @return true on success
      */
-    public boolean stopVMs_HOST(String host, String VMName[], Boolean poweroff) throws CleverException
+     @ShellCommand(comment="Stop VMs directly invoking an HOST")
+    public boolean stopVMs_HOST(@ShellParameter(name="host", comment="HOST target") String host,
+                                @ShellParameter(name="VMs", comment="An String array containing the names of VM to stop") String VMName[],
+                                @ShellParameter(name="poweroff", comment="Force poweroff") Boolean poweroff) throws CleverException
     {
         
         Boolean returnResponse;
@@ -238,7 +246,9 @@ public class VMAdministrationModule extends AdministrationModule{
      * Da evitare: usare i metodi del CM
      * @return true on success
      */
-    public List<VEState> listVMs_HOST(String host, Boolean onlyrunning) throws CleverException
+    @ShellCommand(comment="Lista delle VM direttamente dando il comando ad un HOST")
+    public List<VEState> listVMs_HOST(@ShellParameter(name="host", comment="HOST target") String host,
+                                      @ShellParameter(name="onlyrunning", comment="List only runing VM")  Boolean onlyrunning) throws CleverException
     {
         
         List returnResponse;

@@ -12,6 +12,7 @@ import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.clever.administration.annotations.HasScripts;
 import org.clever.administration.annotations.ShellCommand;
+import org.clever.administration.annotations.ShellParameter;
 import org.clever.administration.api.Session;
 
 
@@ -19,7 +20,7 @@ import org.clever.administration.api.Session;
  * Modulo per gestire le entita' clever a livello di hosts: HostManager e ClusterManager
  * @author maurizio
  */
-@HasScripts(value="HAM", script="scripts/ham.bsh")
+@HasScripts(value="HAM", script="scripts/ham.bsh", comment="Administration module for Clever Host")
 public class HostAdministrationModule extends AdministrationModule{
     
     public HostAdministrationModule (Session s)
@@ -49,6 +50,7 @@ public class HostAdministrationModule extends AdministrationModule{
      * @return List di Hostmanager
      * @throws CleverException 
      */
+     @ShellCommand
     public List<HostEntityInfo> listHostManagers() throws CleverException
     {
         String target = this.getActiveCM();
@@ -83,6 +85,7 @@ public class HostAdministrationModule extends AdministrationModule{
      * @return List di Hostmanager
      * @throws CleverException 
      */
+     @ShellCommand
     public List<HostEntityInfo> listClusterManagers() throws CleverException
     {
         String target = this.getActiveCM();
@@ -117,7 +120,8 @@ public class HostAdministrationModule extends AdministrationModule{
      * @return List di Hostmanager
      * @throws CleverException 
      */
-    public List<String> listActiveAgents(String target) throws CleverException
+    @ShellCommand(comment="List agents on a clever host (CM or HM)")
+    public List<String> listActiveAgents(@ShellParameter(name="target", comment="the target host ") String target) throws CleverException
     {
         
         List returnResponse;
@@ -138,6 +142,7 @@ public class HostAdministrationModule extends AdministrationModule{
      * @return
      * @throws CleverException 
      */
+     @ShellCommand(comment="Retrieve the name of agent plugin")
     public String getPluginName(String target, String agent) throws CleverException
     {
         

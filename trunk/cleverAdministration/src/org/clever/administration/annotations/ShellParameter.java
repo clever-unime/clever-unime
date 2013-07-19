@@ -14,15 +14,8 @@ import java.lang.annotation.Target;
  * @author maurizio
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface HasScripts {
-    
-    /**
-     *
-     * @return The module name 
-     */
-    String value();
-    String script() default "module.bsh"; //la risorsa script sara' cosi' nello stesso package del nome e si chiamera' module.bsh
-
-    public String comment() default "Shell module";
+@Target(ElementType.PARAMETER)
+public @interface ShellParameter {
+    String name() default "";
+    String comment() default "";
 }

@@ -59,7 +59,7 @@ public class Configuration {
             if(inxml==null)
             {
                 final String error = "Configuration file not found in classpath: " + Environment.CONFIGURATION_FILE_NAME;
-                log.error("Configuration file not found in classpath: " + Environment.CONFIGURATION_FILE_NAME);
+                log.error(error);
                 throw new CleverClientException(error);
             }
             

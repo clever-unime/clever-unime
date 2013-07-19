@@ -1,17 +1,10 @@
-create_module ()
-{
-    //import org.clever.Common.VeInfo.*;
-    
-    getComment() {
-     return "Module for VMs administration";
-    }
-    //versioni host deprecate
-    lvms(target) {
-            for (vm : getVMM().listVMs_HOST(target, false))
-            {
-                print(vm);
-            }
-    }
+ //versioni host deprecate
+lvms(target) {
+        for (vm : getVMM().listVMs_HOST(target, false))
+        {
+            print(vm);
+        }
+}
 
 
 dvm(target,vm) {
@@ -21,21 +14,18 @@ dvm(target,vm) {
              {
                  
              
-              System.out.println("IP: " + i.get("ip"));
+              print("IP: " + i.get("ip"));
          
-              System.out.println("MAC: " + i.get("mac"));
-              System.out.println("STATE: " + i.get("state"));
+              print("MAC: " + i.get("mac"));
+              print("STATE: " + i.get("state"));
              }
-              System.out.println("DISPLAY: " + details.get("display"));
-              System.out.println("MEMORY: " + details.get("memory"));
-              System.out.println("CORES: " + details.get("cores"));
+              print("DISPLAY: " + details.get("display"));
+              print("MEMORY: " + details.get("memory"));
+              print("CORES: " + details.get("cores"));
     }
     
 
-     getVMM()
-     {
-        return sf.getSession().getVMAdministrationModule();
-        }
-
-    return this;
-}
+ getVMM()
+ {
+    return sf.getSession().getVMAdministrationModule();
+ }
