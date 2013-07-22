@@ -65,11 +65,39 @@ changesf(name){
         
  } 
 
+closesf(name) {
+        if(name=="initial")
+        {
+            print("I can't destroy the initial Session Factory");
+            return; 
+        }
+        newsf = sfs.get(name);
+        if(newsf == null) {
+            print("SessionFactory with name " + name + " does not exist");
+            
+        }
+        else
+        {
+            if(newsf == sf)
 
-register_module(name,closureCreationModule)
+            {
+                print("You are trying to destroy the current SessionFactory: it is ok, but before I must switch to initial SessionFactory.");
+                changesf("initial");
+
+            }
+            newsf.closeAllSessions();
+            sfs.remove(name);
+
+        }
+}
+
+
+register_module(name,closureCreationModule) //oggetto (normalmente uno scripted object) con una funzione get_module() che ritorni un modulo di amministrazione
 {
     modules.put(name,closureCreationModule);
 }
+
+
 
 
 set_modules()
@@ -78,7 +106,7 @@ set_modules()
     for (e : modules.entrySet())
     {
         String c = "global." + e.getKey() + "=e.getValue().get_module()";   
-         print (c);//String c = "print(e.getKey())"; 
+         //print (c);//String c = "print(e.getKey())"; 
         eval(c);
 
     }

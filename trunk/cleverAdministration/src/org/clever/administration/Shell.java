@@ -19,15 +19,12 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import jline.console.ConsoleReader;
@@ -324,18 +321,13 @@ public class Shell {
                 String nomeModulo = ((GetShellModule)m.getAnnotation(GetShellModule.class)).name();
                 String commento = ((GetShellModule)m.getAnnotation(GetShellModule.class)).comment();
                 try {
-                    //aggiungere l'autocompletamento 
-                    //String nomeMetodo = m.getName();
-                    //Decidere se usare eval
-                    //non va cosi' 
-                    //AdministrationModule modulo = (AdministrationModule) m.invoke(s, null);
-                    
+                                    
                     
                     
                     StringBuilder closure = new StringBuilder("create_loader(){get_module(){").append("return sf.getSession().").append(m.getName()).append("();}return this;}");
-                    System.out.println(closure);
+                    //System.out.println(closure);
                     interpreter.eval(closure.toString());
-                    
+                    sfs.remove(m)
                     interpreter.eval("register_module(\"" + nomeModulo +"\", create_loader())");
                     
                     Class moduloClass = m.getReturnType();
