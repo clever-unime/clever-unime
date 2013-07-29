@@ -30,9 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
@@ -53,7 +51,6 @@ public class InfoAgent extends CmAgent
     
     public InfoAgent( ConnectionXMPP connectionXMPP ) throws CleverException
     {   super();
-        logger = Logger.getLogger( "InfoAgent" );
         this.connectionXMPP= connectionXMPP;
     }
     

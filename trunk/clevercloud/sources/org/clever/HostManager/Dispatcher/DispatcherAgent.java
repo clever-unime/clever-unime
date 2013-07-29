@@ -125,15 +125,15 @@ public class DispatcherAgent extends Agent
     private int notificationsThreshold;    
    
 
-    public DispatcherAgent(ConnectionXMPP connectionXMPP, int notificationsThreshold)
+    public DispatcherAgent(ConnectionXMPP connectionXMPP, int notificationsThreshold) throws CleverException
     {   super();
-        logger = Logger.getLogger("DispatcherAgentHM");
+        
         this.connectionXMPP = connectionXMPP;
         this.notificationsThreshold = notificationsThreshold;
     }
-    public DispatcherAgent(){
+    public DispatcherAgent() throws CleverException{
         super();
-        logger=Logger.getLogger("DispatcherAgentHM");
+       
     }
     
      @Override

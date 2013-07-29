@@ -19,7 +19,7 @@ public class StorageManagerAgent extends CmAgent {
     private Class cl;
     private StorageManagerPlugin StoragePlugin;
 
-    public StorageManagerAgent() {
+    public StorageManagerAgent() throws CleverException {
        /* logger = Logger.getLogger("StorageManagerAgent");
         //Load properties from XML file
         try {
@@ -31,7 +31,7 @@ public class StorageManagerAgent extends CmAgent {
             logger.error("Missing logger.properties");
         }*/
         super();
-        logger=Logger.getLogger("StorageManagerAgent");
+       
     }
 
     @Override

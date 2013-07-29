@@ -49,14 +49,15 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
     private ThreadMessageDispatcher threadMessageDispatcher;
     private ConnectionXMPP connectionXMPP = null;
     
-    public DispatcherAgent( ConnectionXMPP connectionXMPP ) 
-    {   super();
-        logger = Logger.getLogger("DispatcherAgent");
+    public DispatcherAgent( ConnectionXMPP connectionXMPP ) throws CleverException 
+    {   
+        super();
+        
         this.connectionXMPP = connectionXMPP;   
     }
-    public DispatcherAgent(){
+    public DispatcherAgent() throws CleverException{
         super();
-        logger= Logger.getLogger("DispatcherAgent");
+     
     }
     
     @Override

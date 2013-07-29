@@ -46,7 +46,7 @@ public class TestAgent extends CmAgent implements Runnable
     
     public TestAgent() throws CleverException, IOException
     {   super();
-        logger = Logger.getLogger("TestAgent");
+       
     }
     
     @Override

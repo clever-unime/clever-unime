@@ -49,8 +49,8 @@ public class TestAgent extends Agent implements Runnable, PluginInformation {
     public TestAgent() throws CleverException
     {        
          super();
-         logger=Logger.getLogger("TestAgent");
-         logger.info("\n\nPROVA TEST AGENT HM\n");         
+         
+          
          
     }
     

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
+import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 import org.jdom.Element;
@@ -40,9 +41,9 @@ public class ServiceManagerAgent extends Agent {
     private ServiceManagerPlugin service_manager;
     private Class cl;
 
-    public ServiceManagerAgent() {
+    public ServiceManagerAgent() throws CleverException {
         super();
-        logger = Logger.getLogger("ServiceManager");
+       
     }
 
     @Override

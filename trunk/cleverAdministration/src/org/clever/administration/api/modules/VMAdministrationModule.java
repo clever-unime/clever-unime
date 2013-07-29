@@ -105,7 +105,9 @@ public class VMAdministrationModule extends AdministrationModule{
      * Da evitare: usare i metodi del CM
      * @return true on success
      */
-    public boolean startVM_HOST(String host, String VMName) throws CleverException
+    @ShellCommand(comment="Start VM directly invoking an HOST")
+    public boolean startVM_HOST(@ShellParameter(name="host", comment="HOST target") String host,
+                                @ShellParameter(name="VMname", comment="Name of VM that has to be started ") String VMName) throws CleverException
     {
         
         Boolean returnResponse;
@@ -126,6 +128,7 @@ public class VMAdministrationModule extends AdministrationModule{
      * Da evitare: usare i metodi del CM
      * @return true on success
      */
+    
     public boolean startVMs_HOST(String host, String[] VMNames) throws CleverException
     {
         
@@ -174,7 +177,9 @@ public class VMAdministrationModule extends AdministrationModule{
      * Da evitare: usare i metodi del CM
      * @return true on success
      */
-    public boolean destroyVM_HOST(String host, String VMName) throws CleverException
+     @ShellCommand(comment="Destroy VM directly invoking an HOST")
+    public boolean destroyVM_HOST(@ShellParameter(name="host", comment="HOST target") String host,
+                                  @ShellParameter(name="VMName", comment="VM to be destroyed") String VMName) throws CleverException
     {
         
         Boolean returnResponse;
@@ -301,51 +306,58 @@ public class VMAdministrationModule extends AdministrationModule{
         return returnResponse;
     }
     
-    /**
-     * 
-     * Da evitare: usare i metodi del CM
-     * @return true on success
-     */
-    public List<String> listTemplates_HOST(String host) throws CleverException
-    {
-        
-        List<String> returnResponse;
-        String method;
-        
-        method="listTemplates";
-        
-        returnResponse = ( List<String> ) 
-                                this.execSyncCommand(
-                                        host,
-                                        "HyperVisorAgent",
-                                        method,
-                                        this.emptyParams,
-                                        false);
-        return returnResponse;
-    }
     
-    /**
-     * 
-     * Da evitare: usare i metodi del CM
-     * @return true on success
-     */
-    public List<String> listImageTemplates_HOST(String host) throws CleverException
-    {
-        
-        List<String> returnResponse;
-        String method;
-        
-        method="listImageTemplates";
-        
-        returnResponse = ( List<String> ) 
-                                this.execSyncCommand(
-                                        host,
-                                        "HyperVisorAgent",
-                                        method,
-                                        this.emptyParams,
-                                        false);
-        return returnResponse;
-    }
+    
+    
+    
+    
+//    /**
+//     * 
+//     * Da evitare: usare i metodi del CM
+//     * @return true on success
+//     */
+//     @ShellCommand(comment="Lista dei template per VM (solo OCCI)")
+//    public List<String> listTemplates_HOST(@ShellParameter(name="host", comment="HOST target") String host) throws CleverException
+//    {
+//        
+//        List<String> returnResponse;
+//        String method;
+//        
+//        method="listTemplates";
+//        
+//        returnResponse = ( List<String> ) 
+//                                this.execSyncCommand(
+//                                        host,
+//                                        "HyperVisorAgent",
+//                                        method,
+//                                        this.emptyParams,
+//                                        false);
+//        return returnResponse;
+//    }
+//    
+//    /**
+//     * 
+//     * Da evitare: usare i metodi del CM
+//     * @return true on success
+//     */
+//     @ShellCommand(comment="Lista dei template per le immagini (solo OCCI)")
+//    public List<String> listImageTemplates_HOST(@ShellParameter(name="host", comment="HOST target") String host) throws CleverException
+//    {
+//        
+//        List<String> returnResponse;
+//        String method;
+//        
+//        method="listImageTemplates";
+//        
+//        returnResponse = ( List<String> ) 
+//                                this.execSyncCommand(
+//                                        host,
+//                                        "HyperVisorAgent",
+//                                        method,
+//                                        this.emptyParams,
+//                                        false);
+//        return returnResponse;
+//    }
     
             
         

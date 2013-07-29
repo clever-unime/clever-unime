@@ -62,9 +62,9 @@ public class VirtualizationManagerAgent extends CmAgent {
   
     
    //05/24/2012 
-    public VirtualizationManagerAgent() {
+    public VirtualizationManagerAgent() throws CleverException {
       super();
-      logger=Logger.getLogger("VirtualizationManagerAgent");
+     
     }
     
     

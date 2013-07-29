@@ -34,41 +34,22 @@ import org.clever.Common.Exceptions.CleverException;
  * @author alessiodipietro
  */
 public abstract class CmAgent extends Agent implements NotificationHandler  {
-    public CmAgent()
+    public CmAgent() throws CleverException
     {  
        super();
-       logger = Logger.getLogger( "CMAgent" );
+       this.group = "CM";
+       
     }
 
     public CmAgent(String name) throws CleverException
     {   
+        //TODO: controllare perche' chiama sempre super() senza parametro
         super();
-        logger.info("\nDOPO LA CHIAMATA A SUPER(NAME) DI CMAGENT\n");
+        this.group = "CM";
     }
     
     
-    @Override
-    public void start() throws CleverException {
-        try {
-            logger.info("\nistanzio ModuleCommunicator(agentName), dove agentName: " + this.getAgentName());
-            mc = new ModuleCommunicator(this.getAgentName(), "CM"); //N.B. the module communicator was istantiated here!. Group is HM: this class is designed for a HM Agent
-            logger.info("\n\nfine istanza ModuleCommunicator");
-            mc.setMethodInvokerHandler(this);
-            
-            r = new ShutdownThread(this);
-        } catch (java.lang.NullPointerException e) {
-            throw new CleverException(e, "Missing logger.properties or configuration not found");
-        } catch (java.io.IOException e) {
-            throw new CleverException(e, "Error on reading logger.properties");
-        } catch (InstantiationException e) {
-            throw new CleverException(e, "MC Plugin Instantiation error");
-        } catch (IllegalAccessException e) {
-            throw new CleverException(e, "Error Access");
-        } catch (Exception e) {
-            throw new CleverException(e);
-        }
-
-    }
+   
     
     
     

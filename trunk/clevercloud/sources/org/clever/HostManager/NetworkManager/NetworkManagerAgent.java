@@ -46,10 +46,10 @@ public class NetworkManagerAgent extends Agent
     
     
     
-    public NetworkManagerAgent() throws IOException
+    public NetworkManagerAgent() throws  CleverException
     {
        super();
-       logger = Logger.getLogger("NetworkManagerAgent");       
+            
     }
     
     @Override

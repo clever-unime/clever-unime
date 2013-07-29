@@ -69,7 +69,7 @@ public class HostAdministrationModule extends AdministrationModule{
     public void asyncListHostManagers(InvocationCallback cc) throws CleverException
     {
         String target = this.getActiveCM();
-        List returnResponse;
+      
         this.execASyncCommand(
                     cc,
                     target,

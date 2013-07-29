@@ -42,9 +42,14 @@ loadsf(name, filename) {
 }
 
 listsf() {
-    for(namesf : sfs.keySet())
+    for(entry : sfs.entrySet())
     {
-        print(namesf);
+        namesf = new StringBuilder(entry.getKey());
+        if(entry.getValue() == sf)
+        {
+            namesf.append(" *");
+        }
+        print(namesf.toString());
     }
 }
 

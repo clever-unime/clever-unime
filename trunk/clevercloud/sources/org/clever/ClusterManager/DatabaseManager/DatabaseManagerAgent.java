@@ -47,11 +47,10 @@ public class DatabaseManagerAgent extends CmAgent
     private DatabaseManagerPlugin DbManagerPlugin;
     private Class cl;
     
-    public DatabaseManagerAgent() 
+    public DatabaseManagerAgent() throws CleverException 
     {
             super();
-            logger = Logger.getLogger("DatabaseManagerAgent");  
-       
+              
     }
     
     

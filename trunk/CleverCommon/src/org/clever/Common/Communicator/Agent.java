@@ -37,6 +37,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.clever.Common.Exceptions.CleverException;
@@ -48,25 +49,55 @@ import org.clever.Common.Shared.LoggerInstantiator;
  */
 public abstract class Agent implements MethodInvokerHandler {
 
-    public LoggerInstantiator loggerInstantiator;
-    public static Logger logger = null;
-    protected ModuleCommunicator mc = null;
+    
+    final public  Logger logger ;
+    final protected ModuleCommunicator mc ;
     private String agentName = "";
     public static Runnable r; //this handle of kind Runnable is used to instantiate the thread for shutdown
+    protected String group = null; //gruppo per le comunicazioni HM per hostmanager CM per Clustermanager
 
-    public Agent() {
+    public Agent() throws CleverException {
+        logger = Logger.getLogger(this.getClass());
         try {
             Properties prop = new Properties();
             InputStream in = getClass().getResourceAsStream("/org/clever/Common/Shared/logger.properties");
             prop.load(in);
             PropertyConfigurator.configure(prop);
+            group = "HM";
+            
+            
         } catch (IOException e) {
 
             logger.error("Missing logger.properties");
         }
-
-        loggerInstantiator = new LoggerInstantiator();
-        logger = Logger.getLogger("Agent");
+        try {
+            
+            mc = new ModuleCommunicator(); // N.B. the module communicator was istantiated here!. 
+                                                                       // Group is HM: this class is designed for a HM Agent
+        } catch (InstantiationException ex) {
+            
+            logger.error("Error on Agent creation: " + ex);
+           
+            throw new CleverException(ex);
+        } catch (IllegalAccessException ex) {
+            logger.error("Error on Agent creation: " + ex);
+           
+            throw new CleverException(ex);
+        } catch (ClassNotFoundException ex) {
+            logger.error("Error on Agent creation: " + ex);
+           
+            throw new CleverException(ex);
+        } catch (IOException ex) {
+            logger.error("Error on Agent creation: " + ex);
+           
+            throw new CleverException(ex);
+        }
+        
+        
+        
+        
+        
+        
     }
 
     /*
@@ -82,21 +113,14 @@ public abstract class Agent implements MethodInvokerHandler {
     public void start() throws CleverException {
         try {
             logger.debug("\nistanzio ModuleCommunicator(agentName), dove agentName: " + this.getAgentName());
-            mc = new ModuleCommunicator(this.getAgentName(), "HM"); // N.B. the module communicator was istantiated here!. 
-                                                                    // Group is HM: this class is designed for a HM Agent
-            logger.debug("\nnfine istanza ModuleCommunicator");
+           
             mc.setMethodInvokerHandler(this);
-
+            mc.init(agentName, this.group);
             r = new ShutdownThread(this);
         } catch (java.lang.NullPointerException e) {
-            throw new CleverException(e, "Missing logger.properties or configuration not found");
-        } catch (java.io.IOException e) {
-            throw new CleverException(e, "Error on reading logger.properties");
-        } catch (InstantiationException e) {
-            throw new CleverException(e, "MC Plugin Instantiation error");
-        } catch (IllegalAccessException e) {
-            throw new CleverException(e, "Error Access");
-        } catch (Exception e) {
+            throw CleverException.newCleverException(e, "Missing logger.properties or configuration not found");
+        } 
+        catch (Exception e) {
             throw CleverException.newCleverException(e, e.getMessage());
         }
 
@@ -280,38 +304,40 @@ public abstract class Agent implements MethodInvokerHandler {
     public static void main(String[] args) throws NoSuchMethodException, IllegalArgumentException, InvocationTargetException, Exception {
 
 
-
+        Agent agent = null;
         if (args.length == 1) {
+            
             try {
                 Class agentClass = Class.forName(args[0]);
-                Agent agent = (Agent) agentClass.newInstance();
+                agent = (Agent) agentClass.newInstance();
 
 
 
                 agent.setAgentName("NoName");
                 agent.initialization();
             } catch (InstantiationException ex) {
-                logger.error("Error instantiating agent: " + ex);
+                
+                agent.logger.error("Error instantiating agent: " + ex);
             } catch (IllegalAccessException ex) {
-                logger.error("Error instantiating agent: " + ex);
+                agent.logger.error("Error instantiating agent: " + ex);
             } catch (ClassNotFoundException ex) {
-                logger.error("Error instantiating agent: " + ex);
+                agent.logger.error("Error instantiating agent: " + ex);
             }
         } else {
             try {
                 Class agentClass = Class.forName(args[0]);
-                Agent agent = (Agent) agentClass.newInstance();
+                agent = (Agent) agentClass.newInstance();
 
                 agent.setAgentName(args[1]);
 
 
                 agent.initialization();
             } catch (InstantiationException ex) {
-                logger.error("Error instantiating agent: " + ex);
+                agent.logger.error("Error instantiating agent: " + ex);
             } catch (IllegalAccessException ex) {
-                logger.error("Error instantiating agent: " + ex);
+                agent.logger.error("Error instantiating agent: " + ex);
             } catch (ClassNotFoundException ex) {
-                logger.error("Error instantiating agent: " + ex);
+                agent.logger.error("Error instantiating agent: " + ex);
             }
         }
 
@@ -324,7 +350,7 @@ public abstract class Agent implements MethodInvokerHandler {
             try {
                 Thread.sleep(1000000); //Inside, the main thread goes to sleep periodically 
             } catch (Exception ex) {
-                logger.error("Error during thread master sleep");
+                agent.logger.error("Error during thread master sleep");
                 System.exit(1);
             }
         }

@@ -132,69 +132,17 @@ public class ImageManagerAgent extends Agent {
   //rob
   
 
-  public ImageManagerAgent() 
+  public ImageManagerAgent() throws CleverException 
   {     
         super();
-        logger=Logger.getLogger("ImageManagerAgent");
-     // init();
+      
+   
     
     }
 
  
 
-  private void init() { //va tolto l'underscore dopo la prova
-       //loggerInstantiator2 = new LoggerInstantiator();
-    logger = Logger.getLogger("ImageManagerAgent");
-    
-    logger.info("\n\n||||||!!!========££$$$$$$$$ Provo se il logger funziona ImageManagerAgent di HM!!!!\n\n"); 
-         
-
-    //Load properties from XML file
- /*  try
-    {
-      Properties prop = new Properties();
-      InputStream in = getClass().getResourceAsStream("/org/clever/Common/Shared/logger.properties");
-      prop.load(in);
-      PropertyConfigurator.configure(prop);
-
-    } catch (IOException e) {
-      logger.error("Missing logger.properties");
-    }
-*/
-    try
-    {
-      //Load configuration_imagemanager.XMl
-        logger.info("\n\n||||||!!!========££$$$$$$$$ Provo se il logger funziona ImageManagerAgent di HM!!!!\n\n"); //OK FUNONZIAaaaa!!!
-     
-      InputStream inxml=getClass().getResourceAsStream(
-              "/org/clever/HostManager/ImageManager/configuration_ImageManager.xml");
-      FileStreamer fs = new FileStreamer();
-      ParserXML pars = new ParserXML(fs.xmlToString(inxml));
-
-      //Instantiate ModulCommunicator
-      //agentName=pars.getElementContent("moduleName");
-      super.setAgentName(pars.getElementContent("moduleName"));
-      
-
-      Element pp=pars.getRootElement().getChild("pluginsParams");
-      
-      
-      //Setto ImageManager come ascoltatore
-     //rob this.imgManager = new ImageManager();
-       this.imgManager = new ImageManager(pp);
-       
-       //this.imgManager.registerHost();
-       cl = Class.forName(pars.getElementContent("ImageManagerPlugin"));
-      
-      logger.info("ImageManager created!");
-
-    } catch (IOException io_ex) {
-      logger.error("ImageManager Error: " + io_ex);
-
-    } catch (Exception ex) {
-      logger.error("ImageManage Error: " + ex);
-    }
-  }
+  
 
   public ImageManager getImgManager() {
     return this.imgManager;

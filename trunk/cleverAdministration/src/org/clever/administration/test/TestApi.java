@@ -105,18 +105,18 @@ public class TestApi extends Thread{
         
         
         
-         System.out.println("Templates:");
-         for (String t : vmm.listTemplates_HOST(host_target))
-         {
-             System.out.println(t);
-         }
-        
-        
-         System.out.println("Images:");
-         for (String t : vmm.listImageTemplates_HOST(host_target))
-         {
-             System.out.println(t);
-         }
+//         System.out.println("Templates:");
+//         for (String t : vmm.listTemplates_HOST(host_target))
+//         {
+//             System.out.println(t);
+//         }
+//        
+//        
+//         System.out.println("Images:");
+//         for (String t : vmm.listImageTemplates_HOST(host_target))
+//         {
+//             System.out.println(t);
+//         }
         
           List<String> running = new ArrayList<String>();
           List<String> stopped = new ArrayList<String>();

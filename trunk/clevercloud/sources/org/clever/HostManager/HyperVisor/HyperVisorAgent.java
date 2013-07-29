@@ -33,13 +33,11 @@ package org.clever.HostManager.HyperVisor;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import org.apache.log4j.Logger;
 //import java.util.logging.Logger;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.ParserXML;
 import java.io.FileInputStream;
-import static org.clever.Common.Communicator.Agent.logger;
 
 public class HyperVisorAgent extends Agent {
 
@@ -47,9 +45,9 @@ public class HyperVisorAgent extends Agent {
     private Class cl;
     
     
-    public HyperVisorAgent()  {
+    public HyperVisorAgent() throws CleverException  {
         super();
-        logger=Logger.getLogger("HypervisorAgent");  
+        
       
     }
 

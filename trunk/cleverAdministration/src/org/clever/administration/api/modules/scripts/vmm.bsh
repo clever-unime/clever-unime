@@ -1,4 +1,7 @@
  //versioni host deprecate
+import org.clever.Common.VEInfo.*;
+
+
 lvms(target) {
         for (vm : getVMM().listVMs_HOST(target, false))
         {
@@ -6,6 +9,9 @@ lvms(target) {
         }
 }
 
+
+
+//PER OCCI DA METTERE IN SCRIPT ESTERNO
 
 dvm(target,vm) {
              details = getVMM().getVMDetails_HOST(target, vm);
@@ -23,7 +29,65 @@ dvm(target,vm) {
               print("MEMORY: " + details.get("memory"));
               print("CORES: " + details.get("cores"));
     }
+  
+
+
+lts(target) {
+    templates = getVMM().execSyncCommand(
+                                        target,
+                                        "HyperVisorAgent",
+                                        "listTemplates",
+                                        new ArrayList(),
+                                        false);
+    for(template : templates)
+    {
+        print(template);
+    }
     
+}
+
+
+
+lits(target) {
+     templates = getVMM().execSyncCommand(
+                                        target,
+                                        "HyperVisorAgent",
+                                        "listImageTemplates",
+                                        new ArrayList(),
+                                        false);
+    for(template : templates)
+    {
+        print(template);
+    }
+    
+} 
+
+las(target) {
+     actions = getVMM().execSyncCommand(
+                                        target,
+                                        "HyperVisorAgent",
+                                        "listActions",
+                                        new ArrayList(),
+                                        false);
+    for(action : actions)
+    {
+        print(action);
+    }
+    
+}
+
+
+
+createvm(target, name, template,image)
+{
+    List<StorageSettings> st = new ArrayList<StorageSettings>();
+    st.add(new StorageSettings(0, null, null, "C", image));
+    VEDescription ved = new VEDescription( st, null, template, null, null, null);
+    getVMM().createVM_HOST(target, name, ved, true);
+}
+
+
+
 
  getVMM()
  {

@@ -49,10 +49,10 @@ public class MonitorAgent extends Agent
     
    
 
-  public MonitorAgent()
+  public MonitorAgent() throws CleverException
   {   
       super();
-      logger = Logger.getLogger("MonitorAgent");      
+         
   }
   
    @Override

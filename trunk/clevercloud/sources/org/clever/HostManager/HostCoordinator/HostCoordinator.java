@@ -210,8 +210,9 @@ public class HostCoordinator implements CleverMessageHandler {
 
 
 
-            mc = new ModuleCommunicator("HostCoordinator","HM");
-            logger.debug("Module Communicator instantiated");
+            mc = new ModuleCommunicator();
+            mc.init("HostCoordinator","HM");
+           
             logger.info("HostCoordinator created");
         } catch (Exception e) {
             logger.error("Error on HostCoordinator creation: " + e);

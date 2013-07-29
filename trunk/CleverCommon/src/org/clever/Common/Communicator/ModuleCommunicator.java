@@ -34,7 +34,6 @@ import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.MessageFormatter;
 import org.clever.Common.XMLTools.ParserXML;
 import java.io.IOException;
-import javax.management.Notification;
 import org.apache.log4j.*;
 import java.util.Properties;
 import java.io.InputStream;
@@ -46,7 +45,10 @@ public class ModuleCommunicator implements MessageHandler {
     //private NotifyEventHandler eventHandler;
     private Logger logger;
 
-    public ModuleCommunicator(String moduleName, String group) throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
+    
+    
+    
+    public ModuleCommunicator() throws InstantiationException, IllegalAccessException, ClassNotFoundException, IOException {
         logger = Logger.getLogger("ModuleCommunicator");
         try {
             Properties prop = new Properties();
@@ -57,7 +59,13 @@ public class ModuleCommunicator implements MessageHandler {
             throw new java.lang.NullPointerException("Missing logger.properties");
         }
 
-        try {
+       
+    }
+    
+    
+    public void init(String moduleName, String group)
+    {
+         try {
             FileStreamer fs = new FileStreamer();
             InputStream inxml = getClass().getResourceAsStream("/org/clever/Common/Communicator/configuration_communicator.xml");
             ParserXML pXML = new ParserXML(fs.xmlToString(inxml));
@@ -69,9 +77,17 @@ public class ModuleCommunicator implements MessageHandler {
             cp.init(moduleName, group);
         } catch (IOException ex) {
             logger.error("Error while initializing Module Communicator", ex);
+        } catch (ClassNotFoundException ex) {
+            logger.error("Error while initializing Module Communicator Plugin", ex);
+        } catch (InstantiationException ex) {
+             logger.error("Error while initializing Module Communicator", ex);
+        } catch (IllegalAccessException ex) {
+             logger.error("Error while initializing Module Communicator", ex);
         }
         cp.setMessageHandler(this);
     }
+    
+    
 
     @Override
     public String handleMessage(String msg) throws CleverException {
@@ -96,7 +112,11 @@ public class ModuleCommunicator implements MessageHandler {
     }
 
     public Object invoke(MethodInvoker method) throws CleverException {
-
+        if( cp == null ) //plugin not instantiated
+        {
+            throw new CleverException("Communication plugin not instantiated");
+        }
+        
         if (method.getHasReturn()) {
             logger.debug("Before sendRecv with has return: " + method.getModule());
 

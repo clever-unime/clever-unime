@@ -53,7 +53,7 @@ public class InfoAgent extends Agent
         //nota questo infoagent deve avere un nome diverso dall'info agentr del cluster managre residente
         //sullo stesso host, altrimenti si verificano problemi di registrazione sul bus!
         super();
-        logger = Logger.getLogger("InfoAgent");
+       
         
         mf = ModuleFactory.getInstance();
         
@@ -70,7 +70,7 @@ public class InfoAgent extends Agent
             throw new CleverException( e );
         }
     }
-    public InfoAgent(){
+    public InfoAgent() throws CleverException{
         super();
     }
     

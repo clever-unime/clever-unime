@@ -327,7 +327,7 @@ public class Shell {
                     StringBuilder closure = new StringBuilder("create_loader(){get_module(){").append("return sf.getSession().").append(m.getName()).append("();}return this;}");
                     //System.out.println(closure);
                     interpreter.eval(closure.toString());
-                    sfs.remove(m)
+                  
                     interpreter.eval("register_module(\"" + nomeModulo +"\", create_loader())");
                     
                     Class moduloClass = m.getReturnType();
