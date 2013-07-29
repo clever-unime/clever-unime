@@ -344,7 +344,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
          cfgFile = new File( this.cfgPath_VirtManager); 
          if( !cfgFile.exists() ) 
          {                
-             inxml = getClass().getResourceAsStream("/org/clever/ClusterManager/VirtualizzationManager/configuration_VirtualizationManager.xml");
+             inxml = getClass().getResourceAsStream("/org/clever/ClusterManager/VirtualizationManager/configuration_VirtualizationManager.xml");
                 
              try                
              {                    
@@ -352,7 +352,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
              }                
              catch( IOException ex )
              {               
-                 this.logger.error( "The copy of the file 'configuration_VirtualizzationManager.xml' is failed; " + ex );                    
+                 this.logger.error( "The copy of the file 'configuration_VirtualizationManager.xml' is failed; " + ex );                    
                  System.exit( 1 );            	
              }            
          }
