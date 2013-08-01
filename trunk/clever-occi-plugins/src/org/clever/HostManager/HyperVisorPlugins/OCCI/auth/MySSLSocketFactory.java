@@ -19,39 +19,58 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.log4j.Logger;
+
 
 /**
  *
  * @author maurizio
  */
-public class MySSLSocketFactory extends SSLSocketFactory {
+public class MySSLSocketFactory {
+    final SSLSocketFactory socketFactory;
     SSLContext sslContext = SSLContext.getInstance("TLS");
+    Logger log = Logger.getLogger(MySSLSocketFactory.class);
 
-    public MySSLSocketFactory(KeyStore truststore) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException {
-        super(truststore);
+    public MySSLSocketFactory() throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException {
+       
 
         TrustManager tm = new X509TrustManager() {
             public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                log.debug("Authentication: " + authType + "" );
             }
 
             public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                log.debug("Authentication: " + authType + "" );
             }
 
             public X509Certificate[] getAcceptedIssuers() {
-                return null;
+                return new X509Certificate[]{};
             }
         };
 
-        sslContext.init(null, new TrustManager[] { tm }, null);
+        this.sslContext.init(null, new TrustManager[] { tm }, null);
+        
+        socketFactory = new SSLSocketFactory(sslContext, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
     }
 
+    public SSLSocketFactory getSSLSocketFactory()
+    {
+        return socketFactory;
+    }
+    
+    
+    
+    /*
     @Override
     public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException, UnknownHostException {
+        log.debug("Creato socket per " + host);
         return sslContext.getSocketFactory().createSocket(socket, host, port, autoClose);
     }
 
     @Override
     public Socket createSocket() throws IOException {
+        log.debug("creato socket");
         return sslContext.getSocketFactory().createSocket();
     }
+    * */
 }

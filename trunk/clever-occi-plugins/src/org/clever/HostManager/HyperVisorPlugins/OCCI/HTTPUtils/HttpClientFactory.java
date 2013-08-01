@@ -17,6 +17,7 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.PoolingClientConnectionManager;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -28,18 +29,14 @@ import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.MySSLSocketFactory;
  */
 public class HttpClientFactory {
 
-    private static DefaultHttpClient client;
+   
+    private final PoolingClientConnectionManager tm;
     
     
     
-    
-    public synchronized static DefaultHttpClient getThreadSafeClient() {
-
-        if (client != null) {
-            return client;
-        }
-
-        client = new DefaultHttpClient();
+    public HttpClientFactory()
+    {
+        DefaultHttpClient client = new DefaultHttpClient();
 
         //ClientConnectionManager mgr = client.getConnectionManager();
 
@@ -71,7 +68,8 @@ public class HttpClientFactory {
 
         SSLSocketFactory sf = null;
         try {
-            sf = new MySSLSocketFactory(trustStore);
+            
+            sf = new MySSLSocketFactory().getSSLSocketFactory();
         } catch (NoSuchAlgorithmException ex) {
             java.util.logging.Logger.getLogger(HttpClientFactory.class.getName()).log(Level.SEVERE, null, ex);
         } catch (KeyManagementException ex) {
@@ -81,24 +79,30 @@ public class HttpClientFactory {
         } catch (UnrecoverableKeyException ex) {
             java.util.logging.Logger.getLogger(HttpClientFactory.class.getName()).log(Level.SEVERE, null, ex);
         }
-        sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+        
 
         SchemeRegistry registry = new SchemeRegistry();
-        registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
-        registry.register(new Scheme("https", sf, 3200)); //adhoc per opennebula spagnolo ciemat
+        registry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
+        registry.register(new Scheme("https", 3200, sf)); //adhoc per opennebula spagnolo ciemat
        //registry.register(new Scheme("https", sf, 3000)); //adhoc per opennebula infnmat
         ///////////////////////////////////
 
 
         //ThreadSafeClientConnManager tm = new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry());
-        ThreadSafeClientConnManager tm = new ThreadSafeClientConnManager(params, registry);
+        tm = new PoolingClientConnectionManager(registry);
         tm.setDefaultMaxPerRoute(20);
 
         tm.setMaxTotal(200);
 
-        client = new DefaultHttpClient(tm, params);
+        
 
-        return client;
+    }
+    
+    
+    
+    public DefaultHttpClient getThreadSafeClient() {
+
+        return new DefaultHttpClient(tm);
     }
 }
 

@@ -198,6 +198,11 @@ public class HvOCCI implements HyperVisorPlugin {
     
     private Agent owner;
     private Logger logger;
+    
+    final private HttpClientFactory httpClientFactory;
+    
+    
+    
     private URL occiURL = null;
     private OCCIAuth occiAuth = null;
     private String occiCompute = null;
@@ -218,7 +223,7 @@ public class HvOCCI implements HyperVisorPlugin {
 
         logger = Logger.getLogger(HvOCCI.class);
 
-        logger.info("HvOcci plugin created: ");
+       
 
        
 
@@ -232,7 +237,12 @@ public class HvOCCI implements HyperVisorPlugin {
         });
 
         features = new OCCIFeatures();
+        
+        httpClientFactory = new HttpClientFactory(); 
 
+        
+        
+         logger.info("HvOcci plugin created: ");
         // List<String> l = asList(new String("ddd"));
 
     }
@@ -440,7 +450,7 @@ public class HvOCCI implements HyperVisorPlugin {
         IOException e = null;
         while(response == null && tries++ < 4) //TODO: retrieve number of HTTP request retries by plugin params
         {    try {
-                response = HttpClientFactory.getThreadSafeClient().execute(request);
+                response = httpClientFactory.getThreadSafeClient().execute(request);
             } catch (IOException ex) {
                 logger.error("HTTP Timeout on read or socket operation" + ex.getMessage());
                 e = ex;
@@ -894,7 +904,7 @@ public class HvOCCI implements HyperVisorPlugin {
                 } else {
                     occiAuth = new OCCIAuth(new OCCINoAuth(this.occiURL));
                 }
-                occiAuth.initClient(HttpClientFactory.getThreadSafeClient()); //controllare se multithread funziona
+                occiAuth.initClient(httpClientFactory.getThreadSafeClient()); //controllare se multithread funziona
             } catch (MalformedURLException ex) {
                 logger.error("Error in configuration parameters (authorization)" + ex.getMessage());
                 throw new CleverException(ex);
