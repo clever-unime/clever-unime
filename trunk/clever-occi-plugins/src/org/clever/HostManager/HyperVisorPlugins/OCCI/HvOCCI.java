@@ -834,23 +834,45 @@ public class HvOCCI implements HyperVisorPlugin {
      * @throws Exception
      */
     private String _getOcciIDfromName(final String name) throws Exception {
-
-        List<VEState> vms = this.recoverVMsFromOCCIServer();
-        VEState vm = null;
-        try {
-            vm = Iterables.find(vms, new Predicate<VEState>() {
+        int retries = 10; //TODO: retrieve from params
+        Predicate <VEState> pr = new Predicate<VEState>() {
                 @Override
                 public boolean apply(VEState t) {
-                    return (t == null || t.getName() == null ? false : t.getName().equals(name));
+                    logger.debug("esamino: " + t.getName() + " confrontata con: "+ name);
+                    return ((t == null || t.getName() == null) ? false : t.getName().equalsIgnoreCase(name));
                 }
-            });
-        } catch (java.util.NoSuchElementException ex) {
-            throw new Exception("VM not found");
-        }
+            };
+        VEState vm = null;
+        while( retries-- > 0 )
+        {
+            List<VEState> vms = this.recoverVMsFromOCCIServer();
+            
+            try {
+                vm = Iterables.find(vms, pr);
+            } catch (java.util.NoSuchElementException ex) {
+                if(retries > 0)
+                {
+                    logger.debug("tentativo: " + retries);
+                    continue;
+                }
+                throw new Exception("VM not found");
+            }
 
-        if (vm == null) {
-            throw new Exception("VM not found");
+            if (vm == null) {
+                if(retries > 0)
+                {
+                    logger.debug("tentativo: " + retries);
+                    continue;
+                }
+                throw new Exception("VM not found");
+            }
         }
+        
+        if (vm == null) {
+                throw new Exception("VM not found");
+            }
+        
+        
         logger.debug("From name " + name + " to id: " + vm.getId());
         return vm.getId();
 
