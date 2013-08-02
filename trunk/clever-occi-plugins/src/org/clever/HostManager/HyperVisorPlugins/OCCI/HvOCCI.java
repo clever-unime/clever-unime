@@ -199,7 +199,7 @@ public class HvOCCI implements HyperVisorPlugin {
     private Agent owner;
     private Logger logger;
     
-    final private HttpClientFactory httpClientFactory;
+    private HttpClientFactory httpClientFactory;
     
     
     
@@ -228,17 +228,7 @@ public class HvOCCI implements HyperVisorPlugin {
        
 
 
-        this.fromNameToUUID = CacheBuilder.newBuilder().maximumSize(1000).expireAfterAccess(30, TimeUnit.DAYS).build(new CacheLoader<String, String>() {
-            @Override
-            public String load(String k) throws Exception {
-                logger.debug("Cache fail: " + k);
-                return _getOcciIDfromName(k);
-            }
-        });
-
-        features = new OCCIFeatures();
-        
-        httpClientFactory = new HttpClientFactory(); 
+       
 
         
         
@@ -893,6 +883,12 @@ public class HvOCCI implements HyperVisorPlugin {
 
             logger.debug("URL used for OCCI invocation: " + this.occiCompute);
 
+            
+            
+            features = new OCCIFeatures();
+            logger.debug("HttpClientFactory creating ...");
+            httpClientFactory = new HttpClientFactory(); 
+            
 
             Element auth = params.getChild("auth");
             try {
@@ -912,6 +908,20 @@ public class HvOCCI implements HyperVisorPlugin {
         }
 
         this.owner = owner;
+        
+        
+        
+         this.fromNameToUUID = CacheBuilder.newBuilder().maximumSize(1000).expireAfterAccess(30, TimeUnit.DAYS).build(new CacheLoader<String, String>() {
+            @Override
+            public String load(String k) throws Exception {
+                logger.debug("Cache fail: " + k);
+                return _getOcciIDfromName(k);
+            }
+        });
+
+        
+        
+        
         
          this.retrieveServerFeatures();
     }
