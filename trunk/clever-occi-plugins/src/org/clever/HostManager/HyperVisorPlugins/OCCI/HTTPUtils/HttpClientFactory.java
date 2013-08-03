@@ -4,26 +4,20 @@
  */
 package org.clever.HostManager.HyperVisorPlugins.OCCI.HTTPUtils;
 
-import java.io.IOException;
 import java.security.KeyManagementException;
-import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
-import java.security.cert.CertificateException;
-import java.util.logging.Level;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.conn.scheme.SchemeSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.PoolingClientConnectionManager;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.log4j.Logger;
-import org.clever.HostManager.HyperVisorPlugins.OCCI.HvOCCI;
-import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.MySSLSocketFactory;
+import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.MySocketFactory;
 
 /**
  *
@@ -32,47 +26,42 @@ import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.MySSLSocketFactory;
 public class HttpClientFactory {
 
    
-    private final PoolingClientConnectionManager tm;
+    private final PoolingClientConnectionManager poolingManager;
     Logger logger = Logger.getLogger(HttpClientFactory.class);
     HttpParams params;
+    private boolean acceptAllCertificate; 
+    private final Integer[] ports;
+    private final String protocol;
     
-    public HttpClientFactory()
+    
+    
+    /**
+     * 
+     * @param aac Accept All Certificates: the http client accepts all server certificates (also self-signed cert)
+     * @param ports ()
+     */
+    public HttpClientFactory(String protocol , boolean aac, Integer [] ports)
     {
+        
+        this.acceptAllCertificate = aac;
+        this.ports = ports;
+        this.protocol = protocol;
         DefaultHttpClient client = new DefaultHttpClient();
 
         //ClientConnectionManager mgr = client.getConnectionManager();
 
-         params = client.getParams();
+        params = client.getParams();
         HttpConnectionParams.setConnectionTimeout(params, 10000); //TODO: from plugin params
         HttpConnectionParams.setSoTimeout(params, 10000); //TODO: from plugin params
+       
         
-        //qui vanno messi i parametri come autenticazione x509
-
         logger.debug("Http params: " + params);
-
-
-        //Per accettare tutti i certificati x509 (certificati unverified)
-        KeyStore trustStore = null;
+        SchemeSocketFactory sf = null;
         try {
-            logger.debug("trustStore creating ...");
-            trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        } catch (KeyStoreException ex) {
-            logger.error(ex);
-        }
-        try {
-            trustStore.load(null, null);
-        } catch (IOException ex) {
-            logger.error(ex);
-        } catch (NoSuchAlgorithmException ex) {
-            logger.error(ex);
-        } catch (CertificateException ex) {
-            logger.error(ex);
-        }
-        logger.debug("SSLSocketFactory creating ...");
-        SSLSocketFactory sf = null;
-        try {
+           
+            sf = new MySocketFactory(protocol, aac).getSocketFactory();
             
-            sf = new MySSLSocketFactory().getSSLSocketFactory();
+            
         } catch (NoSuchAlgorithmException ex) {
             logger.error(ex);
         } catch (KeyManagementException ex) {
@@ -82,33 +71,39 @@ public class HttpClientFactory {
         } catch (UnrecoverableKeyException ex) {
             logger.error(ex);
         }
-        
- logger.debug("Registry creating ...");
-        SchemeRegistry registry = new SchemeRegistry();
-        registry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-        registry.register(new Scheme("https", 3200, sf)); //adhoc per opennebula spagnolo ciemat
-       //registry.register(new Scheme("https", sf, 3000)); //adhoc per opennebula infnmat
-        ///////////////////////////////////
+         poolingManager = new PoolingClientConnectionManager(this.createRegistry(sf));
+         poolingManager.setDefaultMaxPerRoute(20);
+         poolingManager.setMaxTotal(200);
 
-
-        //ThreadSafeClientConnManager tm = new ThreadSafeClientConnManager(params, mgr.getSchemeRegistry());
-         logger.debug("PoolingClientConnectionManager creating ...");
-        tm = new PoolingClientConnectionManager(registry);
-       // tm = new ThreadSafeClientConnManager();
-           logger.debug("PoolingClientConnectionManager created");
-        tm.setDefaultMaxPerRoute(20);
-
-        tm.setMaxTotal(200);
-
-         logger.debug("HTTPCLientFactory created");
+        logger.debug("HTTPCLientFactory created");
 
     }
     
-    
+    private SchemeRegistry createRegistry(SchemeSocketFactory sf)
+    {
+         SchemeRegistry registry = new SchemeRegistry();
+         
+        
+         for(Integer port : ports)
+                {
+                   registry.register(new Scheme(protocol, port, sf)); 
+                }
+         /*if(this.acceptAllCertificate)
+         {
+                for(Integer port : ports)
+                {
+                   registry.register(new Scheme("https", port, sf)); 
+                }
+         }*/
+         
+         
+         return registry;
+        
+    }
     
     public DefaultHttpClient getThreadSafeClient() {
 
-        return new DefaultHttpClient(tm,params);
+        return new DefaultHttpClient(poolingManager,params);
     }
 }
 

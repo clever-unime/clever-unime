@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
+import org.clever.HostManager.HyperVisorPlugins.OCCI.HTTPUtils.HttpClientFactory;
 import org.jdom.Element;
 
 /*
@@ -63,7 +64,7 @@ public class OCCINoAuth implements OCCIAuthImpl {
   }
 
     @Override
-    public void initClient(HttpClient client) {
+    public void initClient(HttpClientFactory client) {
         
     }
 }

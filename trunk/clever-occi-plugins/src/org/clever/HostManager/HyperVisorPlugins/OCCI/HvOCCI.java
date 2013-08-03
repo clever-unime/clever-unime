@@ -93,6 +93,7 @@ enum HTTPMETHODS {
  * @author Salvatore Monforte, Maurizio Paone, Davide Saitta
  */
 public class HvOCCI implements HyperVisorPlugin {
+    private boolean aac;
 
     
     class OCCIFeatures {
@@ -213,7 +214,8 @@ public class HvOCCI implements HyperVisorPlugin {
     
     
     
-    Map<String, VEState.STATE> OCCI2CLEVERSTATES = ImmutableMap.of("active", VEState.STATE.RUNNING,
+    Map<String, VEState.STATE> OCCI2CLEVERSTATES = ImmutableMap.of(
+            "active", VEState.STATE.RUNNING,
             "inactive", VEState.STATE.STOPPED,
             "stopped", VEState.STATE.STOPPED);
     private String occiQuery;
@@ -838,7 +840,7 @@ public class HvOCCI implements HyperVisorPlugin {
                     logger.debug("VM found: " + vm);
                     return vm;
                 } catch (Exception ex) {
-                    logger.error("error in conversion from OCCI to clever vmstate : " + ex);
+                    logger.error("error on conversion from OCCI to clever vmstate : " + ex);
                     return new VEState(null, null, null);
                 }
             }
@@ -862,7 +864,12 @@ public class HvOCCI implements HyperVisorPlugin {
                 logger.info("HOST for OCCI invocation: " + host);
                 String port = occi.getChildText("port");
                 logger.info("Port for OCCI invocation: " + port);
-
+                
+                aac = (occi.getChildText("acceptAllCertificates") !=null && occi.getChildText("acceptAllCertificates").equalsIgnoreCase("true") ? true : false);
+                aac &= protocol.equalsIgnoreCase("https"); // non ha senso accettare tutti i certificati se non https
+                logger.info("Accept all certificate: " + aac);
+                
+                
                 String computePath = occi.getChildText("compute_path");
 
 
@@ -887,7 +894,7 @@ public class HvOCCI implements HyperVisorPlugin {
             
             features = new OCCIFeatures();
             logger.debug("HttpClientFactory creating ...");
-            httpClientFactory = new HttpClientFactory(); 
+            httpClientFactory = new HttpClientFactory(occiURL.getProtocol(),aac, new Integer[]{occiURL.getPort()}); //per ora metto solo la porta di occi 
             
 
             Element auth = params.getChild("auth");
@@ -900,7 +907,7 @@ public class HvOCCI implements HyperVisorPlugin {
                 } else {
                     occiAuth = new OCCIAuth(new OCCINoAuth(this.occiURL));
                 }
-                occiAuth.initClient(httpClientFactory.getThreadSafeClient()); //controllare se multithread funziona
+                occiAuth.initClient(httpClientFactory); 
             } catch (MalformedURLException ex) {
                 logger.error("Error in configuration parameters (authorization)" + ex.getMessage());
                 throw new CleverException(ex);

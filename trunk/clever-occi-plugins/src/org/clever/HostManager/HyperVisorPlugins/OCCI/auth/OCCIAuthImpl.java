@@ -6,6 +6,7 @@ package org.clever.HostManager.HyperVisorPlugins.OCCI.auth;
 
 import org.apache.http.HttpRequest;
 import org.apache.http.client.HttpClient;
+import org.clever.HostManager.HyperVisorPlugins.OCCI.HTTPUtils.HttpClientFactory;
 
 /**
  *
@@ -13,5 +14,5 @@ import org.apache.http.client.HttpClient;
  */
 public interface OCCIAuthImpl {
   boolean doAuth(HttpRequest request);
-  void initClient(HttpClient client);
+  public void initClient(HttpClientFactory client);
 }

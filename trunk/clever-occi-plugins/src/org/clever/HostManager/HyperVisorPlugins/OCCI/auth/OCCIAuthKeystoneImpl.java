@@ -19,6 +19,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
+import org.clever.HostManager.HyperVisorPlugins.OCCI.HTTPUtils.HttpClientFactory;
 import org.jdom.Element;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
@@ -188,29 +189,7 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
     return tokenID = result;
   }
 
-//  private boolean isExpired() {
-//
-//    if (tokenID == null) {
-//      return true;
-//    }
-//
-//    HttpClient httpClient = new DefaultHttpClient();
-//    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10000);
-//    HttpGet httpget = new HttpGet(occiURL.toString() + "/-/"); 
-//    httpget.addHeader("X-Auth-Token", tokenID);
-// 
-//    HttpResponse response;
-//    boolean result = true; //if error token is expired
-//    try {
-//      log.debug("Testing token ...");
-//      response = httpClient.execute(httpget);
-//      result = (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK);
-//    } catch (IOException ex) {
-//      log.error("Error  : " + ex.getMessage());
-//    }
-//    
-//    return result;
-//  }
+
   private boolean isExpired() {
     
     synchronized(this)
@@ -220,26 +199,7 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
         }
         return expire.isBeforeNow();
     }
-    /*
-    HttpClient httpClient = new DefaultHttpClient();
-    HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10000);
-    HttpGet httpget = new HttpGet(occiURL.toString() + "/-/"); 
-    httpget.addHeader("X-Auth-Token", tokenID);
- 
-    HttpResponse response;
-    boolean result = true; //if error token is expired
-    try {
-      log.debug("Testing token ...");
-      response = httpClient.execute(httpget);
-      result = (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK);
-//      BufferedReader bs = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-//      while (bs.readLine()!=null);
-    } catch (IOException ex) {
-      log.error("Error  : " + ex.getMessage());
-    }
-    
-    return result;
-    * */
+   
   }
   
   
@@ -271,9 +231,11 @@ public class OCCIAuthKeystoneImpl implements OCCIAuthImpl {
   }
 
     @Override
-    public void initClient(HttpClient client) {
+    public void initClient(HttpClientFactory client) {
         
     }
+
+   
 
    
 }

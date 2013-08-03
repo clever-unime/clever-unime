@@ -8,6 +8,7 @@ import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.auth.BasicScheme;
+import org.clever.HostManager.HyperVisorPlugins.OCCI.HTTPUtils.HttpClientFactory;
 import org.jdom.Element;
 
 /*
@@ -47,7 +48,7 @@ public class OCCIAuthBasicImpl implements OCCIAuthImpl {
   }
 
     @Override
-    public void initClient(HttpClient client) {
+    public void initClient(HttpClientFactory client) {
         
     }
   
