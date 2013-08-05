@@ -41,6 +41,10 @@ import com.google.common.collect.Maps;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -48,6 +52,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -70,6 +75,8 @@ import org.clever.Common.VEInfo.VEDescription;
 import org.clever.Common.VEInfo.VEState;
 import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
 import org.clever.HostManager.HyperVisorPlugins.OCCI.HTTPUtils.HttpClientFactory;
+import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.OCCIAuthToken;
+import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.OCCIAuthX509Impl;
 
 import org.jdom.Element;
 
@@ -894,7 +901,21 @@ public class HvOCCI implements HyperVisorPlugin {
             
             features = new OCCIFeatures();
             logger.debug("HttpClientFactory creating ...");
-            httpClientFactory = new HttpClientFactory(occiURL.getProtocol(),aac, new Integer[]{occiURL.getPort()}); //per ora metto solo la porta di occi 
+            try {
+                httpClientFactory = new HttpClientFactory(occiURL.getProtocol(),aac, new Integer[]{occiURL.getPort()}); //per ora metto solo la porta di occi
+            } catch (NoSuchAlgorithmException ex) {
+                 logger.error("Error in configuration parameters (authorization)" + ex.getMessage());
+                throw new CleverException(ex);
+            } catch (KeyManagementException ex) {
+                 logger.error("Error in configuration parameters (authorization)" + ex.getMessage());
+                throw new CleverException(ex);
+            } catch (KeyStoreException ex) {
+                logger.error("Error in configuration parameters (authorization)" + ex.getMessage());
+                throw new CleverException(ex);
+            } catch (UnrecoverableKeyException ex) {
+                logger.error("Error in configuration parameters (authorization)" + ex.getMessage());
+                throw new CleverException(ex);
+            }
             
 
             Element auth = params.getChild("auth");
@@ -904,7 +925,18 @@ public class HvOCCI implements HyperVisorPlugin {
                 } else if (auth.getAttributeValue("type").equals("basic"))//basic
                 {
                     occiAuth = new OCCIAuth(new OCCIAuthBasicImpl(auth));
-                } else {
+                }  else if (auth.getAttributeValue("type").equals("x509"))
+                {
+                    logger.debug("auth x509");
+                    occiAuth = new OCCIAuth(new OCCIAuthX509Impl("cert.pem"));
+                } 
+                else if (auth.getAttributeValue("type").equals("token"))
+                {
+                    logger.debug("auth token (for okeanos)");
+                    occiAuth = new OCCIAuth(new OCCIAuthToken(auth));
+                }
+                
+                else {
                     occiAuth = new OCCIAuth(new OCCINoAuth(this.occiURL));
                 }
                 occiAuth.initClient(httpClientFactory); 

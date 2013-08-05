@@ -4,10 +4,13 @@
  */
 package org.clever.HostManager.HyperVisorPlugins.OCCI.HTTPUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -26,12 +29,13 @@ import org.clever.HostManager.HyperVisorPlugins.OCCI.auth.MySocketFactory;
 public class HttpClientFactory {
 
    
-    private final PoolingClientConnectionManager poolingManager;
+    private PoolingClientConnectionManager poolingManager;
     Logger logger = Logger.getLogger(HttpClientFactory.class);
     HttpParams params;
     private boolean acceptAllCertificate; 
     private final Integer[] ports;
     private final String protocol;
+    private final MySocketFactory sf;
     
     
     
@@ -40,7 +44,7 @@ public class HttpClientFactory {
      * @param aac Accept All Certificates: the http client accepts all server certificates (also self-signed cert)
      * @param ports ()
      */
-    public HttpClientFactory(String protocol , boolean aac, Integer [] ports)
+    public HttpClientFactory(String protocol , boolean aac, Integer [] ports) throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException, UnrecoverableKeyException
     {
         
         this.acceptAllCertificate = aac;
@@ -56,28 +60,34 @@ public class HttpClientFactory {
        
         
         logger.debug("Http params: " + params);
-        SchemeSocketFactory sf = null;
-        try {
+        
+       
            
-            sf = new MySocketFactory(protocol, aac).getSocketFactory();
+         sf = new MySocketFactory(protocol, aac);
             
             
-        } catch (NoSuchAlgorithmException ex) {
-            logger.error(ex);
-        } catch (KeyManagementException ex) {
-            logger.error(ex);
-        } catch (KeyStoreException ex) {
-           logger.error(ex);
-        } catch (UnrecoverableKeyException ex) {
-            logger.error(ex);
-        }
-         poolingManager = new PoolingClientConnectionManager(this.createRegistry(sf));
+       
+         poolingManager = new PoolingClientConnectionManager(this.createRegistry(sf.getSocketFactory()));
          poolingManager.setDefaultMaxPerRoute(20);
          poolingManager.setMaxTotal(200);
 
         logger.debug("HTTPCLientFactory created");
 
     }
+    
+    
+    public void addClientCertificate(InputStream icert) throws KeyStoreException, CertificateException, NoSuchAlgorithmException, KeyManagementException, UnrecoverableKeyException, IOException
+    {
+        sf.addClientCertificate(icert);
+        
+         poolingManager = new PoolingClientConnectionManager(this.createRegistry(sf.getSocketFactory()));
+         poolingManager.setDefaultMaxPerRoute(20);
+         poolingManager.setMaxTotal(200);
+
+        logger.debug("HTTPCLientFactory created");
+    }
+    
+    
     
     private SchemeRegistry createRegistry(SchemeSocketFactory sf)
     {
