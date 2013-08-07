@@ -44,7 +44,7 @@ public class OCCINoAuth implements OCCIAuthImpl {
     return !isExpired();
   }
   private boolean isExpired() {
-   
+   /*
     HttpClient httpClient = new DefaultHttpClient();
     HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), 10000);
     HttpGet httpget = new HttpGet(occiURL.toString() + "/-/"); 
@@ -61,6 +61,8 @@ public class OCCINoAuth implements OCCIAuthImpl {
     }
     
     return result;
+    * */
+      return false;
   }
 
     @Override

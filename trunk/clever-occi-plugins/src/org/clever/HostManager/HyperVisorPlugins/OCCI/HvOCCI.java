@@ -943,6 +943,9 @@ public class HvOCCI implements HyperVisorPlugin {
             } catch (MalformedURLException ex) {
                 logger.error("Error in configuration parameters (authorization)" + ex.getMessage());
                 throw new CleverException(ex);
+            } catch (Exception ex) {
+                 logger.error("Error in configuration parameters (authorization)" + ex.getMessage());
+                throw new CleverException(ex);
             }
         }
 

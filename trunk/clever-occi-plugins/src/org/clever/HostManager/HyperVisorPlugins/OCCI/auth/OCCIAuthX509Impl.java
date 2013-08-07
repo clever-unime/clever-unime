@@ -10,8 +10,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.http.HttpRequest;
 import org.clever.HostManager.HyperVisorPlugins.OCCI.HTTPUtils.HttpClientFactory;
 
@@ -51,25 +49,32 @@ public class OCCIAuthX509Impl implements OCCIAuthImpl {
   }
 
     @Override
-    public void initClient(HttpClientFactory client) {
+    public void initClient(HttpClientFactory client) throws Exception{
         File f = new File(certpath);
      try {
          client.addClientCertificate(new FileInputStream(f));
          log.debug("cetificato aggiunto: " + certpath);
      } catch (KeyStoreException ex) {
          log.error(ex);
+         throw ex;
      } catch (CertificateException ex) {
          log.error(ex);
+          throw ex;
      } catch (NoSuchAlgorithmException ex) {
          log.error(ex);
+          throw ex;
      } catch (KeyManagementException ex) {
          log.error(ex);
+          throw ex;
      } catch (UnrecoverableKeyException ex) {
          log.error(ex);
+          throw ex;
      } catch (FileNotFoundException ex) {
          log.error(ex);
+          throw ex;
      } catch (IOException ex) {
          log.error(ex);
+          throw ex;
      }
     }
 }

@@ -22,7 +22,7 @@ public class OCCIAuth {
   public boolean doAuth(HttpRequest request) {
     return impl.doAuth(request);
   }
-  public void initClient(HttpClientFactory client)
+  public void initClient(HttpClientFactory client) throws Exception
   {
       impl.initClient(client);
   }

@@ -14,5 +14,5 @@ import org.clever.HostManager.HyperVisorPlugins.OCCI.HTTPUtils.HttpClientFactory
  */
 public interface OCCIAuthImpl {
   boolean doAuth(HttpRequest request);
-  public void initClient(HttpClientFactory client);
+  public void initClient(HttpClientFactory client) throws Exception;
 }

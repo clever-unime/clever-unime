@@ -53,14 +53,14 @@ public class TestPlugin {
 //                        System.out.println(ve);
 //                    }
                     
-                    if(plugin.destroyVm("from-curl"))
+                   /* if(plugin.destroyVm("from-curl"))
                     {
                         System.out.println("Tutto ok ");
                     }
                     else
                     {
                         System.err.println("Errore");
-                    }
+                    }*/
                     //plugin.startVm("from-curl");
                     
                     

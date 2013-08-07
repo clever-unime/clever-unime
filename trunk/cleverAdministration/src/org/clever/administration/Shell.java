@@ -115,7 +115,6 @@ public class Shell {
         cleverHistoryFile.createNewFile();
       }
       cleverConsoleHistory = new FileHistory(cleverHistoryFile);
-      //cleverConsoleHistory.setHistoryFile( cleverHistoryFile );
       cleverConsole.setHistory( cleverConsoleHistory );
       sf.closeAllSessions();
       Runtime.getRuntime().addShutdownHook(new Thread(){
