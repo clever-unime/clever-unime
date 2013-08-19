@@ -40,4 +40,14 @@ public interface RunnerPlugin extends PluginInformation
 
   public void init( Element params, Agent owner ) throws CleverException;
   //TODO: method like release, suspend, ...
+  /**
+   * This method must be implemented in order to deallocate all resource taken from plugin and 
+   * necessary for the instantiation of the new plugin, this method is invoked before this plugin is released 
+   * to generate other plugin.
+   */
+  public void shutdownPluginInstance();
+  
+  public void setOwner(Agent owner);
+  
+  
 }

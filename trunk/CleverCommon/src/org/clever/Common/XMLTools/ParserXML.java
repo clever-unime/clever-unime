@@ -103,6 +103,7 @@ public class ParserXML
             SAXBuilder builder = new SAXBuilder();
             document = (Document) builder.build( is );
             rootElement = document.getRootElement();
+            
         } catch (JDOMException ex) {
             logger.error( "Error while opening the file xml: " + ex );
         } catch (IOException ex) {

@@ -119,7 +119,7 @@ class NotificationThread extends Thread implements PacketListener
 
 public class DispatcherAgent extends Agent 
 {    
-    private Class cl = null;
+    //private Class cl = null;
     private ConnectionXMPP connectionXMPP = null;
     private NotificationThread notificationThread;
     private int notificationsThreshold;    

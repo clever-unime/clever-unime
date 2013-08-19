@@ -33,14 +33,14 @@ import java.io.IOException;
 import java.util.List;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.ModuleCommunicator;
-import org.clever.Common.Plugins.PluginInformation;
+import org.clever.Common.Plugins.RunnerPlugin;
 
 
 
-public interface MonitorPlugin extends PluginInformation
+public interface MonitorPlugin extends RunnerPlugin
 {
 
-  void init();
+  //void init();
 
 
 

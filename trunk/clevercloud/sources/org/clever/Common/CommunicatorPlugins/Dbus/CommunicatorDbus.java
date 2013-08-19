@@ -86,12 +86,13 @@ public class CommunicatorDbus implements CommunicationPlugin, CleverDbusInterfac
     @Override
     public String sendRecv(String to, String msg) throws CleverException {
         try {
-
+            //logger.debug("SendReceive Started");
             senderConnection = DBusConnection.getConnection(DBusConnection.SESSION);
             logger.debug("Creating connection to remote object " + baseObjectPath + to + " on bus " + serviceBusName+"."+to+this.group);
             CleverDbusInterface c = (CleverDbusInterface) senderConnection.getRemoteObject(serviceBusName+"."+to+this.group, baseObjectPath + to);
             String reply=null;
             DBusAsyncReply<String> rep=senderConnection.callMethodAsync(c,"OnMessage", msg);
+            
             while(!rep.hasReply())
                 try {
                 Thread.currentThread().sleep(50)    ;
@@ -119,6 +120,12 @@ public class CommunicatorDbus implements CommunicationPlugin, CleverDbusInterfac
             logger.error(ex_msg, ex);
             throw new CleverException(ex_msg);
         }
+        catch (Exception ex) {
+            StackTraceElement[] ar=ex.getStackTrace();
+            logger.error(ar.length+" "+ar[0].toString()+ar[1].toString()+ar[2].toString()+ar[3].toString()+ar[4].toString()+ar[5].toString()+ar[6].toString()+ar[7].toString()+ar[8].toString()+ar[9].toString()+ar[10].toString()+ar[11].toString());
+            throw new CleverException("Generic Exception: "+to);
+        }
+        
     }
 
     @Override

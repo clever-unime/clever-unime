@@ -850,12 +850,13 @@ public class DbSedna implements DatabaseManagerPlugin {
         boolean existsAgentNode = false;
         String filter = "";
         Collection collect = null;
+        logger.debug("checkagentnode");
         try {
 
             collect = this.connect();
             XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
             ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/cm/agent[@name='" + agentId + "']" + location);
-            ResourceIterator results = resultSet.getIterator();
+            ResourceIterator results = resultSet.getIterator(); 
             existsAgentNode = results.hasMoreResources();
 
 
@@ -941,5 +942,8 @@ public class DbSedna implements DatabaseManagerPlugin {
             logger.error("Retrieving attribute \"name\" failed:" + ex.getMessage());
         }
         return a;
+    }
+    public void shutdownPluginInstance(){
+        
     }
 }

@@ -1278,4 +1278,7 @@ public class NetworkManagerLinux implements NetworkManagerPlugin
     public void setOwner(Agent owner) {
         this.owner=owner;
     }
+    public void shutdownPluginInstance(){
+        
+    }
 }

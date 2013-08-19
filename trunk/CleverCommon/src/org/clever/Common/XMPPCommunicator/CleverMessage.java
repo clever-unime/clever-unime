@@ -92,7 +92,7 @@ public class CleverMessage
 
   public CleverMessage()
   {
-    id = UUIDProvider.getPositiveInteger();
+    id = org.clever.Common.UUIDProvider.UUIDProvider.getPositiveInteger();
   }
 
 

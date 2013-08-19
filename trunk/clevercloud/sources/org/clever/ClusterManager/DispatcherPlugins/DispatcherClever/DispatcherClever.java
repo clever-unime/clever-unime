@@ -53,7 +53,7 @@ import org.jdom.Element;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.util.StringUtils;
-
+import org.clever.ClusterManager.Dispatcher.DispatcherAgent;
 
 
 
@@ -67,10 +67,6 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
     private RequestsManager requestsManager = null;
     private Logger logger = null;
     private Map<String, List<String>> notificationDelivery = new HashMap<String, List<String>>();
-
-
-   
-
 
     @Override
     public String getName() {
@@ -89,9 +85,12 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
 
     @Override
     public void init(Element params,Agent owner) throws CleverException {
-        requestsManager = new RequestsManager();
         logger = Logger.getLogger("DispatcherClever");
+        requestsManager = new RequestsManager();
+        if(this.connectionXMPP==null)
+            this.connectionXMPP=((DispatcherAgent)this.owner).connectionXMPP;
         this.connectionXMPP.addPresenceListener(ConnectionXMPP.ROOM.CLEVER_MAIN, this);
+        
     }
 
     @Override
@@ -346,5 +345,7 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
     public void setOwner(Agent owner){
         this.owner=owner;
     }
-
+    public void shutdownPluginInstance(){
+        
+    }
 }

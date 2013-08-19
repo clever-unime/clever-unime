@@ -35,7 +35,7 @@ import java.security.SecureRandom;
 import java.util.HashMap;
 import org.apache.log4j.Logger;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
-import org.clever.Common.XMPPCommunicator.UUIDProvider;
+import org.clever.Common.UUIDProvider.UUIDProvider;
 
 
 

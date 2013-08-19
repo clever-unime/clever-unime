@@ -80,19 +80,32 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
     @Override
     public void init(Element params, Agent owner) throws CleverException {
         if(params!=null){
-            //Read param from configuration_networkManager.xml
             this.HostManagerServiceGuacaTarget = params.getChildText("HostManagerServiceGuacaTarget");
         }
         //this.owner = owner;
-        //If the data struct, for matching between VM and HM, isen't into DB then init it.
-       if(!this.checkMatchingVmHMNode())
-            this.initVmHMNodeDB();
-         if(!this.checkVmRunningNode())
-            this.initVmRunningDB(); 
+        try {
 
+            //If the data struct, for matching between VM and HM, isen't into DB then init it.
+            if (!this.checkMatchingVmHMNode()) {
+                this.initVmHMNodeDB();
+            }
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        try {
+            if (!this.checkVmRunningNode()) {
+                this.initVmRunningDB();
+            }
+            
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        
     }
     private boolean checkVmRunningNode() throws CleverException{
-       List params = new ArrayList();
+         
+        List params = new ArrayList();
         params.add("VirtualizationManagerAgent");
         params.add("/"+this.nodoVmRunning); //XPath location with eventual predicate
         return (Boolean)this.owner.invoke("DatabaseManagerAgent", "checkAgentNode", true, params); 
@@ -102,7 +115,12 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         List params = new ArrayList();
         params.add("VirtualizationManagerAgent");
         params.add("/"+this.nodoMatchingVmHM); //XPath location with eventual predicate
-        return (Boolean)this.owner.invoke("DatabaseManagerAgent", "checkAgentNode", true, params);
+        try{
+            return (Boolean)this.owner.invoke("DatabaseManagerAgent", "checkAgentNode", true, params);
+        }catch(Exception e){
+            logger.error(e.getMessage());
+            return false;
+        }
     }
     
      private void initVmRunningDB() throws CleverException{
@@ -113,7 +131,7 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         params.add("into");
         params.add(""); //XPath location with eventual predicate
         this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
-         
+        
      }
     private void initVmHMNodeDB() throws CleverException{
         String node="<"+this.nodoMatchingVmHM+"/>";
@@ -123,6 +141,8 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         params.add("into");
         params.add(""); //XPath location with eventual predicate
         this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
+        
+        
     }
 
     private void dispatchToExtern(String host_manager, String agent, String OS_service, ServiceObject serviceobject) throws Exception{
@@ -975,6 +995,10 @@ public String listMac_address(String id) throws CleverException{
     this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
     }
     
+     
+    public void shutdownPluginInstance(){
+        
+    }
 }
 
  

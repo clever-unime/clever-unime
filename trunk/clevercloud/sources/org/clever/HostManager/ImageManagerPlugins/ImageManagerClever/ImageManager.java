@@ -1,6 +1,7 @@
 /*
  * The MIT License
  *
+ * Copyright Università degli studi di Messina.
  * Copyright Valerio Barbera & Luca Ciarniello.
  * Copyright 2012 Giuseppe Tricomi
  *
@@ -112,6 +113,12 @@ public class ImageManager implements ImageManagerPlugin {
    * Instantiates a new ImageManager
    */
   public ImageManager(Element pp) {
+      init(pp,this.owner);
+  }
+  public ImageManager() {
+  }
+  
+  public void init( Element params, Agent owner ){
     logger = Logger.getLogger("ImageManager");
    // this.uuidGenerator=null;
     //this.des=pp.getChildText("dest");
@@ -911,4 +918,19 @@ public List SnapshotImageCreate(String localpath,VFSDescription vfsD,LockFile.lo
              
         
 }
+
+    public String getDescription() {
+        return ("This plugin is used to manage Disk repository fo Virtualization system");
+    }
+
+    public String getVersion() {
+        return ("Version 0.1");
+    }
+
+    public String getName() {
+        return ("ImageManager plugin for CLEVER");
+    }
+
+    public void shutdownPluginInstance() {
+    }
 }

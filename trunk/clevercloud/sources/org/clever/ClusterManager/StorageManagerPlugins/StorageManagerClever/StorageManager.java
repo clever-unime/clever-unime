@@ -715,5 +715,8 @@ public String SnapshotImageCreate(String localpath,String logicalpath,String HMT
             this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
             params.clear();
             return result.get(1).toString();
-}
+    }
+    public void shutdownPluginInstance(){
+        
+    }
 }
