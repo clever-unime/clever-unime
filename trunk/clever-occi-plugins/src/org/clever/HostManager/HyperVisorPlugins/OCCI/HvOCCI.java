@@ -52,9 +52,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
@@ -233,14 +233,6 @@ public class HvOCCI implements HyperVisorPlugin {
         logger = Logger.getLogger(HvOCCI.class);
 
        
-
-       
-
-
-       
-
-        
-        
          logger.info("HvOcci plugin created: ");
         // List<String> l = asList(new String("ddd"));
 
@@ -420,12 +412,11 @@ public class HvOCCI implements HyperVisorPlugin {
                 request.addHeader("Accept", "text/plain, text/occi");
 
                 StringBuilder body = new StringBuilder();
-                //provare openstack
                 for(NameValuePair p : params)
                 {
                     body.append(p.getName()).append(": ").append(p.getValue()).append("\n");
                 }
-                ((HttpPost)request).setEntity(new StringEntity(body.toString()));
+                ((HttpEntityEnclosingRequest)request).setEntity(new StringEntity(body.toString()));
             }
         else
         {
@@ -467,7 +458,7 @@ public class HvOCCI implements HyperVisorPlugin {
                 error = new StringBuilder("Error :");
             }
             if (response.getStatusLine().getStatusCode() != success_status) {
-                
+                logger.debug("Status Code not equal expected one: " + success_status);
                 throw new HyperVisorException(this.manageInvocationErrors(error, response));
                 //EntityUtils.consume(response.getEntity());
             }
@@ -639,7 +630,7 @@ public class HvOCCI implements HyperVisorPlugin {
         HttpEntity entity = response.getEntity();
         Iterable<String> responses = splitResponse(entity);
         OCCIResponse r = new OCCIResponse(responses);
-        logger.debug(r.toString());
+        logger.debug("Details: " + r.toString());
         return r;
     }
 
@@ -848,7 +839,8 @@ public class HvOCCI implements HyperVisorPlugin {
                     return vm;
                 } catch (Exception ex) {
                     logger.error("error on conversion from OCCI to clever vmstate : " + ex);
-                    return new VEState(null, null, null);
+                    //throw new RuntimeException(ex); //TODO : fare meglio
+                    return null;
                 }
             }
         });
@@ -902,7 +894,12 @@ public class HvOCCI implements HyperVisorPlugin {
             features = new OCCIFeatures();
             logger.debug("HttpClientFactory creating ...");
             try {
-                httpClientFactory = new HttpClientFactory(occiURL.getProtocol(),aac, new Integer[]{occiURL.getPort()}); //per ora metto solo la porta di occi
+                httpClientFactory = new HttpClientFactory(
+                                                occiURL.getProtocol(),
+                                                aac,
+                                                new Integer[]{occiURL.getPort()},
+                                                10000, //TODO: from plugin parameters
+                                                10000); //per ora metto solo la porta di occi
             } catch (NoSuchAlgorithmException ex) {
                  logger.error("Error in configuration parameters (authorization)" + ex.getMessage());
                 throw new CleverException(ex);
@@ -928,7 +925,7 @@ public class HvOCCI implements HyperVisorPlugin {
                 }  else if (auth.getAttributeValue("type").equals("x509"))
                 {
                     logger.debug("auth x509");
-                    occiAuth = new OCCIAuth(new OCCIAuthX509Impl("cert.pem"));
+                    occiAuth = new OCCIAuth(new OCCIAuthX509Impl(auth));
                 } 
                 else if (auth.getAttributeValue("type").equals("token"))
                 {
@@ -1324,6 +1321,7 @@ public class HvOCCI implements HyperVisorPlugin {
     public Map<String, Object> getVMDetails(String name) throws Exception {
         String occiID = getOcciIDfromName(name);
         OCCIResponse res = this._getVMDetails(occiID);
+        logger.debug("Dettagli recuperati: " + res);
         Map<String, Object> result = Maps.newHashMap();
 
 

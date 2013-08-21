@@ -41,10 +41,15 @@ public class TestPlugin {
                     plugin.init(pXML.getRootElement().getChild("pluginParams"), null);
                    
                     
+                    
+                    
                     for(VEState ve :  plugin.listVms())
                     {
                         if(ve!=null)
+                        {
                             System.out.println(ve);
+                           // plugin.startVm(ve.getName());
+                        }
                     }
              
 //                    for(VEState ve :  plugin.listRunningVms())

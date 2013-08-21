@@ -176,7 +176,7 @@ public class Shell {
           try {
               p = interpreter.get("prompt").toString();
           } catch (EvalError ex) {
-              //prompt not defined intyo bsh interpreter: using default
+              //prompt not defined into bsh interpreter: using default
               p = prompt +"*";
           }
           try {

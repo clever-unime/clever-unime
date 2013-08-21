@@ -13,6 +13,7 @@ import java.io.StringReader;
 import java.security.Key;
 import java.security.KeyManagementException;
 import java.security.KeyPair;
+
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -24,6 +25,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,13 +33,18 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509ExtendedKeyManager;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.SchemeSocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openssl.PEMDecryptorProvider;
+import org.bouncycastle.openssl.PEMEncryptedKeyPair;
+import org.bouncycastle.openssl.PEMKeyPair;
+import org.bouncycastle.openssl.PEMParser;
 import org.bouncycastle.openssl.PEMReader;
+import org.bouncycastle.openssl.jcajce.JcaPEMKeyConverter;
+import org.bouncycastle.openssl.jcajce.JcePEMDecryptorProviderBuilder;
 import org.clever.HostManager.HyperVisorPlugins.OCCI.fileutils.InputStreamSplitter;
 
 
@@ -51,6 +58,7 @@ public class MySocketFactory {
     Logger log = Logger.getLogger(MySocketFactory.class);
     private final String protocol;
     private final boolean acceptAllCertificates;
+    private List<X509Certificate> certs;
 
     public MySocketFactory(String protocol, boolean aac) throws 
                                             NoSuchAlgorithmException, 
@@ -91,7 +99,7 @@ public class MySocketFactory {
              public void checkServerTrusted(X509Certificate[] xcs, String string, String string1, String string2) throws CertificateException {
                 for (X509Certificate c : xcs)
                             {
-                                log.debug("check server trusted : " + c);
+                                //log.debug("check server trusted : " + c);
                                  acceptedissuers.add(c);
                             }
              }
@@ -105,7 +113,7 @@ public class MySocketFactory {
              public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
                   for (X509Certificate c : xcs)
                             {
-                                log.debug("check server trusted : " + c);
+                                //log.debug("check server trusted : " + c);
                                  acceptedissuers.add(c);
                             }
              }
@@ -130,40 +138,52 @@ public class MySocketFactory {
     
     private KeyStore loadKeystore(InputStream icerts) throws IOException, NoSuchAlgorithmException, CertificateException, KeyStoreException, InvalidKeySpecException
     {
-        List<Certificate> certs = new ArrayList<Certificate>();
+        certs = new ArrayList<X509Certificate>();
         Key key = null;
         final KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
         keystore.load(null, null);
         int i=0;
+        log.debug("Certs parsing ...");
         for (String cert : InputStreamSplitter.split(icerts, ".*BEGIN.*", ".*END.*",true))
         {
-            log.debug(cert);
-            //if(cert.matches(".*CERTIFICATE.*"))
-            if(i++!=1)
+           
+            String certtrim = cert.replaceAll("[\r\n]", "");
+             log.debug(certtrim);
+            if(certtrim.matches(".*CERTIFICATE.*"))
+           
             {
-                certs.add(CertificateFactory.
-                                            getInstance("X.509").
-                                            generateCertificate( 
-                                                new ByteArrayInputStream(cert.getBytes())
-                                            )
-                          );
+                log.debug("Storing certificate");
+                certs.add(
+                        ((X509Certificate)CertificateFactory.
+                                                getInstance("X.509").
+                                                generateCertificate(new ByteArrayInputStream(cert.getBytes()))
+                        )
+                     );
+               
                 
             }
             else 
-            //if(cert.matches(".*KEY.*"))
+            if(certtrim.matches(".*KEY.*"))
             {
+                log.debug("Storing key");
                 
                 if (Security.getProvider("BC") == null) {
                     Security.addProvider(new BouncyCastleProvider());
                 }
-                PEMReader pemReader = new PEMReader(new StringReader(cert));
-                KeyPair keyPair = (KeyPair) pemReader.readObject();
+                //PEMReader pemReader = new PEMReader(new StringReader(cert));
+                PEMParser pemParser = new PEMParser(new StringReader(cert));
+                
+                
+                
+                JcaPEMKeyConverter converter = new JcaPEMKeyConverter().setProvider("BC");
+                KeyPair keyPair = converter.getKeyPair((PEMKeyPair) pemParser.readObject());
                 key = keyPair.getPrivate();
 
                 
             }
             
         }
+        
         keystore.setKeyEntry("proxycert", key, "".toCharArray(), certs.toArray(new Certificate[1]));
        // InputStream i = new FileInputStream(new File("keystore.jks"));
        // keystore.load(i, "123456".toCharArray());
@@ -202,6 +222,11 @@ public class MySocketFactory {
     {
         
         return socketFactory;
+    }
+    
+    public Date getCertExpirationDate()
+    {
+        return certs.get(0).getNotAfter();
     }
     
     

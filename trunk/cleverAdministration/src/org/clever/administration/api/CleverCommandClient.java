@@ -202,7 +202,7 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
   }
   
   
-  
+  //invocato direttamente dalla coda XMPP
   
   @Override
   public void handleCleverMessage( final CleverMessage cleverMessage )
