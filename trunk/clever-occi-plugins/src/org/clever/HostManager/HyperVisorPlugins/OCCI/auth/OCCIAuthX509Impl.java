@@ -59,10 +59,6 @@ public class OCCIAuthX509Impl implements OCCIAuthImpl {
             }
         };
 
-
-
-
-
         certpath = auth.getChildText("certificatePath");
         if (auth.getChildText("retrieveCertificateURL") != null) {
             try {

@@ -894,12 +894,23 @@ public class HvOCCI implements HyperVisorPlugin {
             features = new OCCIFeatures();
             logger.debug("HttpClientFactory creating ...");
             try {
+                Integer timeout = 10000;
+                String t = occi.getChildText("httpTimeOut");
+                if(t !=null)
+                {
+                    
+                    timeout = Integer.parseInt(t);
+                }
+                logger.info("Timeout for HTTP requests: " + timeout);
                 httpClientFactory = new HttpClientFactory(
                                                 occiURL.getProtocol(),
                                                 aac,
                                                 new Integer[]{occiURL.getPort()},
-                                                10000, //TODO: from plugin parameters
-                                                10000); //per ora metto solo la porta di occi
+                                                timeout, //TODO: from plugin parameters
+                                                timeout); //per ora metto solo la porta di occi
+                
+                
+                
             } catch (NoSuchAlgorithmException ex) {
                  logger.error("Error in configuration parameters (authorization)" + ex.getMessage());
                 throw new CleverException(ex);
