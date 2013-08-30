@@ -205,7 +205,7 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
   //invocato direttamente dalla coda XMPP
   
   @Override
-  public void handleCleverMessage( final CleverMessage cleverMessage )
+  public synchronized void handleCleverMessage( final CleverMessage cleverMessage )
   {
       try {
           log.debug( "Received:\n" + cleverMessage.toXML() );
@@ -262,7 +262,7 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
 
     @Override
     public void dispatch(CleverMessage message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        log.warn("Dispatch not implemented : received an unexpected REQUEST message ?");
     }
   
   

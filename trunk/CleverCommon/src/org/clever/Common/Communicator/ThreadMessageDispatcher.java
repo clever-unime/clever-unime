@@ -62,6 +62,7 @@ public class ThreadMessageDispatcher extends Thread {
 
     /**
      * Method invoked for insert a CleverMessage in Queue
+     * se sincronizzato si blocca tutto
      */
     public  void pushMessage(CleverMessage msg)
     {
