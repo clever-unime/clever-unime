@@ -53,7 +53,7 @@ public class SQLite{
         {
             workdir.mkdirs();
         }
-        File db=new File(this.SQLiteDB+"VMStorageMapping.db");
+        File db=new File(this.SQLiteDB+"MappingDB.db");
         if(!db.exists())
         {
             if(this.openCon())
