@@ -84,6 +84,8 @@ public class SQLite{
                     logger.error("Exception with init of sqlite db failed to create work table:"+eg.getMessage());
                 }
             }
+            else 
+                logger.debug("Is not possible open connection with sqlite DB");
         }
     }
     
@@ -160,8 +162,13 @@ public class SQLite{
     public boolean insertElementAtMap(String fname,String response,String size,String date, String lock){
         boolean res=true;
         try{
-            if(this.SQLiteConnection.isClosed())
+            if(this.SQLiteConnection==null)
+            {
                 this.openCon();
+            }
+            else if(this.SQLiteConnection.isClosed()){
+                this.openCon();
+            }
             Statement statement = this.SQLiteConnection.createStatement();
             statement.executeUpdate("insert into map values('"+fname+"','"+response+"','"+size+"','"+date+"','"+lock+"')");
             this.SQLiteConnection.commit();
@@ -179,8 +186,13 @@ public class SQLite{
     public boolean deleteElementInMap(String condition){
         boolean res=true;
         try{
-            if(this.SQLiteConnection.isClosed())
+            if(this.SQLiteConnection==null)
+            {
                 this.openCon();
+            }
+            else if(this.SQLiteConnection.isClosed()){
+                this.openCon();
+            }
             Statement statement = this.SQLiteConnection.createStatement();
             statement.executeUpdate("delete from map where "+condition);
             this.SQLiteConnection.commit();
@@ -203,7 +215,11 @@ public class SQLite{
      */
     public ResultSet retrieveElementsInMap(String filename){
         try{
-            if(this.SQLiteConnection.isClosed()){
+            if(this.SQLiteConnection==null)
+            {
+                this.openCon();
+            }
+            else if(this.SQLiteConnection.isClosed()){
                 this.openCon();
             }
             ResultSet res = statement.executeQuery("select * from map where filename='"+filename+"'");
@@ -228,8 +244,13 @@ public class SQLite{
     public boolean updateElementInMap(String condition,String set){
         boolean res=true;
         try{
-            if(this.SQLiteConnection.isClosed())
+            if(this.SQLiteConnection==null)
+            {
                 this.openCon();
+            }
+            else if(this.SQLiteConnection.isClosed()){
+                this.openCon();
+            }
             Statement statement = this.SQLiteConnection.createStatement();
             statement.executeUpdate("update map set "+set+" where "+condition);
             
