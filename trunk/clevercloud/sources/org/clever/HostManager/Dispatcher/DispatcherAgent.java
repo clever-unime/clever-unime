@@ -139,7 +139,7 @@ public class DispatcherAgent extends Agent
      @Override
 public void initialization() throws CleverException
 {
-    super.setAgentName("DispatcherAgent");    
+    super.setAgentName("DispatcherAgentHm");    
     super.start();
     
     notificationThread = new NotificationThread(connectionXMPP, notificationsThreshold);
