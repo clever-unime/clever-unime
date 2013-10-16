@@ -71,6 +71,7 @@ class NotificationThread extends Thread implements PacketListener
 
     @Override
     public synchronized void run() {
+        logger.debug("Start NotificationThread run!");
         String target = null;
         while (true) {
             //no messages
@@ -84,20 +85,30 @@ class NotificationThread extends Thread implements PacketListener
                     logger.error("InterruptedException: "+ex);
                 }
             }
+            logger.debug("£$£ target4");
             target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
+            logger.debug("?=) target="+target);
             //no active cc
-            if (target == null) {
+            while(target == null) {
                 try {
+                    logger.debug("£$£ target5");
                     CMisPresent = false;
                     while (!CMisPresent) {
                         wait();
+                        logger.debug("£$£ target6");
                     }
+                    logger.debug("£$£ target6A");
+                    target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
+                    logger.debug("£$£ target7");
                 } catch (InterruptedException ex) {
                     logger.error("InterruptedException: "+ex);
                 }
             }
+            logger.debug("£$£ target8");
             CleverMessage msg = queue.poll();
+            logger.debug("£$£ target9");
             msg.setDst(target);
+            logger.debug("X?X target="+target);
             connectionXMPP.sendMessage(target, msg);
 
         }
@@ -106,6 +117,7 @@ class NotificationThread extends Thread implements PacketListener
     @Override
     public synchronized void processPacket(Packet packet) {
         if (connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN) != null) {
+            //logger.debug("£$£ un cm è entrato nella room ");
             CMisPresent = true;
             this.notifyAll();
         }
@@ -136,11 +148,18 @@ public class DispatcherAgent extends Agent
      @Override
 public void initialization() throws CleverException
 {
-    super.setAgentName("DispatcherAgent");    
+    super.setAgentName("DispatcherAgentHm");    
     super.start();
     
     notificationThread = new NotificationThread(connectionXMPP, notificationsThreshold);
     notificationThread.start();    
+    
+    String hostid=this.connectionXMPP.getHostName();
+    Notification notification=new Notification();
+    notification.setId("PRESENCE/HM");
+    logger.debug("?=)** hostId= "+hostid);
+    notification.setHostId(hostid);
+    this.sendNotification(notification);
 }
 
     @Override

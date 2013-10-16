@@ -29,8 +29,8 @@ package org.clever.HostManager.ImageManagerPlugins.ImageManagerClever;
  */
 public class LockFile {
     
-public static String risposta="";    
-    
+private static String risposta="";    
+/*    
 public interface Mode {
 public static final int NL = 0;
 public static final int CR = 1;
@@ -39,50 +39,112 @@ public static final int PR = 3;
 public static final int PW = 4;
 public static final int EX = 5;
 }
+*/
+public enum lockMode {NL,CR,CW,PR,PW,EX};
 /**
  * 
  * @param currentLock the current lock on the replication (0 to 5)
  * @param newLock new lock that you want to apply (0 to 5)
  * @return 
  */    
-public String checkLock(int currentLock,int newLock){
+public String checkLock(lockMode currentLock,lockMode newLock){
 
 switch (currentLock) {
-case Mode.NL: 
+case NL: 
                 risposta="SI";
                 break;
-case Mode.CR: 
-                if(newLock==Mode.EX)
+case CR: 
+                if(newLock==lockMode.EX)
                 risposta="NO";
                 else
                 risposta="SI";    
                 break; 
-case Mode.CW: 
-                if(newLock==Mode.EX || newLock==Mode.PW || newLock==Mode.PR)
+case CW: 
+                if(newLock==lockMode.EX || newLock==lockMode.PW || newLock==lockMode.PR)
                 risposta="NO";
                 else
                 risposta="SI";
                 break; 
-case Mode.PR: 
-                if(newLock==Mode.EX || newLock==Mode.PW || newLock==Mode.CW)
+case PR: 
+                if(newLock==lockMode.EX || newLock==lockMode.PW || newLock==lockMode.CW)
                 risposta="NO";
                 else
                 risposta="SI";
                 break;
-case Mode.PW: 
-                if(newLock==Mode.NL || newLock==Mode.CR)
+case PW: 
+                if(newLock==lockMode.NL || newLock==lockMode.CR)
                 risposta="SI";
                 else
                 risposta="NO";
                 break;    
-case Mode.EX: 
-                if(newLock==Mode.NL) 
+case EX: 
+                if(newLock==lockMode.NL) 
                     risposta="SI";
                 else
                     risposta="NO";
                 break;     
     }
+org.apache.log4j.Logger.getLogger("LockFile").debug("item \"risposta\" is:"+risposta);
 return risposta;
         
 }
+/**
+ * This function returns an appropiate string representation of lockMode l
+ * @param l
+ * @return 
+ */
+    public static String getLockType(lockMode l){
+        String risposta="";
+        switch(l){
+           case NL:{
+                risposta="Null Lock";
+                return risposta;
+            }
+            case CR:{
+                risposta="Concurrent Read";
+                return risposta;
+            }
+            case CW:{
+                risposta="Concurrent Write";
+                return risposta;
+            }
+            case PR:{
+                risposta="Protected Read";
+                return risposta;
+            }
+            case PW:{
+                risposta="Protected Write";
+                return risposta;
+            }
+            case EX:{
+                risposta="Exclusive";
+                return risposta;
+            }
+        }
+        return risposta;
+    }
+    /**
+     * This function returns the apropiate lockmode indicate by string representation,
+     * or null if representation don't match with a lockmode available.  
+     * @param representation
+     * @return 
+     */
+    public static lockMode getLockEnumType(String representation){
+        if(representation.isEmpty())
+            return null;
+        else if(representation.equals("Null Lock"))
+            return lockMode.NL;
+        else if(representation.equals("Concurrent Read"))
+            return lockMode.CR;
+        else if(representation.equals("Concurrent Write"))
+            return lockMode.CW;
+        else if(representation.equals("Protected Read"))
+            return lockMode.PR;
+        else if(representation.equals("Protected Write"))
+            return lockMode.PW;
+        else if(representation.equals("Exclusive"))
+            return lockMode.EX;
+        else
+            return null;
+    }
 }

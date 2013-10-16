@@ -216,7 +216,10 @@ public class HvVMWare implements HyperVisorPlugin{
         this.notification = new Notification();
         this.owner = owner;
     }
-        
+    
+    public String getHYPVRName(){
+        return "VMWare";
+    }
    
     /**
      * Instance connect service with Hypervisor VMWare
@@ -516,10 +519,11 @@ public class HvVMWare implements HyperVisorPlugin{
      * Create a new Virtual Machine
      * @param id Name of Virtual Machine we want power off
      * @param veD Description of Virtual Machine by its features
+     * @param notExclusive Give information on lock tipe used for VM's Hdd
      * @return The state of operation
      * @throws Exception
      */
-    public boolean createVm(String id, VEDescription veD) throws Exception {
+    public boolean createVm(String id, VEDescription veD,Boolean notExclusive) throws Exception {
         boolean status = false;
         String vmName = id;
         int porta=-1;
@@ -860,8 +864,8 @@ public class HvVMWare implements HyperVisorPlugin{
      * @return State of the operation
      * @throws Exception 
      */
-    public boolean createAndStart(String id, VEDescription veD) throws Exception {
-        this.createVm(id, veD);
+    public boolean createAndStart(String id, VEDescription veD,Boolean notExclusive) throws Exception {
+        this.createVm(id, veD,notExclusive);
         return ( this.startVm(id) );
     }
        
@@ -920,8 +924,7 @@ public class HvVMWare implements HyperVisorPlugin{
         catch(Exception e){
             this.disconnectVMWare(this.si);
             logger.error("Error: "+e);
-            return null;
-            //throw e;
+            throw e;
         }
     }
         
@@ -1103,15 +1106,8 @@ public class HvVMWare implements HyperVisorPlugin{
                     String id = id1.toString();
                     logger.info("VM adding: "+id);  
                     VMWrapper wrap = this.createVMwrapper(id);
-                    if(wrap!= null){
-                        this.m.put(id, wrap);
-                        logger.info("VM added: "+id);
-                    }
-                    else
-                    {
-                        this.m.put(id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)", null);
-                        logger.info("VM added: "+id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)");
-                    }
+                    this.m.put(id, wrap);
+                    logger.info("VM added: "+id);
                }
                return;
             }
@@ -1127,13 +1123,7 @@ public class HvVMWare implements HyperVisorPlugin{
 		     if(a == false){
                         String id = id1.toString();
 			VMWrapper wrap = this.createVMwrapper(id);
-			if(wrap!= null){
-                            this.m.put(id, wrap);
-                        }
-                        else
-                        {
-                            this.m.put(id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)", null);
-                        }
+			this.m.put(id, wrap);
                      }
 		  }
               }

@@ -34,7 +34,7 @@ import org.apache.commons.vfs2.Selectors;
 import org.apache.commons.vfs2.VFS;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
-
+import org.apache.log4j.Logger;
 /**
  *
  * @author giancarloalteri
@@ -44,13 +44,14 @@ import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 public class VirtualFileSystem {
 
     private String uri;
-    
+    private Logger logger;
     public VirtualFileSystem(){
-        
+        this.logger=Logger.getLogger("VirtualFileSystem");
     }
             
     public VirtualFileSystem(String uri){
         this.uri=uri;
+        this.logger=Logger.getLogger("VirtualFileSystem");
     } 
 
     /**
@@ -138,7 +139,7 @@ public class VirtualFileSystem {
     }  
    //
     this.uri=vfsD.getType().name().replace("_", ":")+"://"+vfsD.getHostname()+vfsD.getPort()+"/"+vfsD.getPath();
-
+     
   }
     /**
      * This method makes the URI resolver

@@ -224,7 +224,7 @@ public class HostCoordinator implements CleverMessageHandler {
     }
 
     public void start() throws CleverException {
-                   this.init();
+        this.init();
        
         this.changeStatus();
         this.launchAgents();

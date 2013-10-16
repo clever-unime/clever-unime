@@ -30,7 +30,7 @@ import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Plugins.RunnerPlugin;
 import org.clever.Common.VEInfo.DesktopVirtualization;
 import org.clever.Common.VEInfo.VEDescription;
-
+import java.util.List;
 /**
  *
  * @author giovalenti
@@ -59,7 +59,7 @@ public interface VirtualizationManagerPlugin extends RunnerPlugin{
      * @return
      * @throws CleverException
      */
-    public String createVM(String id,String targetHM,Integer lock) throws CleverException;
+    public String createVM(String id,String targetHM,org.clever.Common.Communicator.Utils.IstantiationParams param) throws CleverException;
     
     /**
      * Starting VM
@@ -105,4 +105,9 @@ public interface VirtualizationManagerPlugin extends RunnerPlugin{
   public boolean deleteVm(String id) throws CleverException;
   
   public boolean attackInterface(String id,String inf,String mac,String type) throws CleverException;
+  
+  public List listVm(String targetHM,Boolean running,Boolean hypvr)throws CleverException;
+  
+  public void manageReUpHost(String HmName);
+  
 }

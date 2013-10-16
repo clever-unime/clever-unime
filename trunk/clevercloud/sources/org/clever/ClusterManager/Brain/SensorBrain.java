@@ -52,12 +52,12 @@ public class SensorBrain implements BrainInterface {
 
     Logger logger;
     DispatcherAgent dispatcherAgent;
-    
+
     public SensorBrain(DispatcherAgent dispatcherAgent) {
         logger = Logger.getLogger("SensorBrain");
         this.dispatcherAgent = dispatcherAgent;
     }
-    
+
     @Override
     public void handleNotification(Notification notification) {
         logger.debug("Received notification " + notification.getId());

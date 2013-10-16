@@ -122,14 +122,17 @@ public class HvVirtualBox implements HyperVisorPlugin {
 
     
 
-     public boolean createAndStart ( String id, VEDescription vmD ) throws Exception
+     public boolean createAndStart ( String id, VEDescription vmD,Boolean notExclusive ) throws Exception
      {
 
-             createVm( id, vmD );
+             createVm( id, vmD,notExclusive );
              return ( startVm(id) );
 
      }
      
+     public String getHYPVRName(){
+             return "VirtualBox";
+     }
      
      public List getOSTypes()
     {
@@ -147,7 +150,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
 
 
 
-      public boolean createVm(String id, VEDescription veD)throws Exception {
+      public boolean createVm(String id, VEDescription veD,Boolean notExclusive)throws Exception {
            try{
                 IMachine vm;
                 
@@ -162,7 +165,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
                 logger.info ("VM "+id+"created ");
 
                 vbox.registerMachine(vm);
-                attachDevice(vm, veD);
+                attachDevice(vm, veD,notExclusive);
                 VMWrapper vmW = new VMWrapper(vm, veD);
                 m.put(id, vmW);
                 
@@ -193,7 +196,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
         }
      }
 
-     private void attachDevice (IMachine vm, VEDescription vmD){
+     private void attachDevice (IMachine vm, VEDescription vmD,boolean notExclusive){
          try{
              ISession session = mgr.getSessionObject();
              vm.lockMachine(session, LockType.Write);
@@ -207,6 +210,10 @@ public class HvVirtualBox implements HyperVisorPlugin {
              IMedium medium = vbox.findMedium(stor.getDiskPath(), DeviceType.HardDisk);
  //StorageController data should be already in VEDescription object.
              IStorageController controller= mutable.addStorageController("IDE", StorageBus.IDE);
+                          //settiamo il tipo di hd come multiattach.Si potrebbe anche realizzare con createDiffStorage 
+             //ma prima bisogna testare se l'immagine nella repository locale viene vista come in NotCreated state
+             if(notExclusive)
+                medium.setType(MediumType.MultiAttach);
              mutable.attachDevice(controller.getName(), 0, 0, DeviceType.HardDisk, medium);
              mutable.saveSettings();
              session.unlockMachine();
@@ -301,13 +308,14 @@ public class HvVirtualBox implements HyperVisorPlugin {
      public List listHVms() throws Exception{
          try{
             ArrayList l = new ArrayList(vbox.getMachines());
-            logger.info("List VMs returned numero di macchine: "+l.size());
+            logger.info("List VMs rturned numero di macchine: "+l.size());
             ArrayList l2 = new ArrayList();
             IMachine vm;
             for(Object obj: l){
                 vm = (IMachine)obj;
                 l2.add(vm.getName());
             }
+            
             
             return (l2);
          }
@@ -341,20 +349,12 @@ public class HvVirtualBox implements HyperVisorPlugin {
             ArrayList listCl = new ArrayList(m.keySet());
             ArrayList listLib = new ArrayList (listHVms());
             if (listCl.isEmpty()){
-               for(Object id1 : listLib)
-               {
+               for(Object id1 : listLib){
                     String id = id1.toString();
                     logger.info("VM adding: "+id);
                     VMWrapper wrap = createVMwrapper(id);
-                    if(wrap!= null){
-                        m.put(id, wrap);
-                        logger.info("VM added: "+id);
-                    }
-                    else
-                    {
-                        m.put(id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)", null);
-                        logger.info("VM added: "+id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)");
-                    }
+                    m.put(id, wrap);
+                    logger.info("VM added: "+id);
                }
                return;
             }
@@ -371,13 +371,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
 		      if(a == false){
 			  String id = id1.toString();
 			  VMWrapper wrap = createVMwrapper(id);
-			  if(wrap!= null){
-                                m.put(id, wrap);
-                          }
-                          else
-                          {
-                                m.put(id+"(VM present some problems! Verify integrity of the VM [e.g. HDD problems]. Contact Administrator)", null);
-                          }
+			  m.put(id, wrap);
 		      }
 		  }
               }
@@ -412,11 +406,11 @@ public class HvVirtualBox implements HyperVisorPlugin {
             }
              catch(VBoxException e){
                  logger.error("Error :"+e);
-                 return null;
+                 throw e; //TODO add a efficent exception managing
             }
             catch(Exception e){
                  logger.error("Error: "+e);
-                 return null;
+                throw e;
             }
         }
 

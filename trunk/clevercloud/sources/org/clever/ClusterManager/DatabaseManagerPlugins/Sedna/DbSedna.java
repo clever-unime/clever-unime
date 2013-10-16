@@ -2,6 +2,7 @@
  * The MIT License
  *
  * Copyright 2011 Alessio Di Pietro.
+ * Copyright 2013 Tricomi Giuseppe
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +42,7 @@ import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XQueryService;
 
 /**
- *
+ * @author Giuseppe Tricomi
  * @author alessiodipietro
  */
 public class DbSedna implements DatabaseManagerPlugin {
@@ -799,8 +800,10 @@ public class DbSedna implements DatabaseManagerPlugin {
 
             updateStr = "update delete "
                     + " document(\"" + this.document + "\")/" + xpathAgent + location;
+            
             serviceUpdate.update(updateStr);
             collect.close();
+            
         } catch (XMLDBException ex) {
             logger.error("Delete node failed: " + ex.getMessage());
             throw new CleverException("CM database update failed! " + ex);
@@ -875,5 +878,400 @@ public class DbSedna implements DatabaseManagerPlugin {
     @Override
     public void setOwner(Agent owner) {
         this.owner=owner;
+    }
+    
+    /**
+     * This method returns the attribute "name" of the the children of a node pointed by location where node value is equal to condition
+     * Probabilmente questo metodo è da eliminare.
+     * @param agentId
+     * @param location
+     * @param condition
+     * @return
+     */
+   @Override
+  synchronized public List getNameAttributes(String agentId,String location,String condition) {
+        ArrayList a=new ArrayList();     
+        String xpathAgent ="/agent[@name='" + agentId + "']";
+        try{
+            Collection collect = this.connect();
+            String updateStr = "let $p := document(\"" + this.document + "\")/" + xpathAgent + "" + location + " where $p/" + condition + " return data($p/@name)";
+            
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.queryResource(document, updateStr);
+            ResourceIterator results = resultSet.getIterator();
+            while (results.hasMoreResources()) {
+                Resource res = results.nextResource();
+                a.add(res.getContent());
+            }
+            
+            collect.close();
+
+        } catch (XMLDBException ex) {
+            logger.error("Retrieving attribute \"name\" failed:" + ex.getMessage());
+        }
+        return a;
+    }
+
+/**
+     * This method returns the attribute "name" of the the children of a node pointed by location where node value is equal to condition
+     * Probabilmente questo metodo è da eliminare.
+     * @param agentId
+     * @param location
+     * @param condition
+     * @return
+     */
+  synchronized public List getNameAttributes(String agentId,String location,String condition,String ret) {
+        ArrayList a=new ArrayList();     
+        String xpathAgent ="/agent[@name='" + agentId + "']";
+        try{
+            Collection collect = this.connect();
+            String updateStr = "let $p := document(\"" + this.document + "\")/" + xpathAgent + "" + location + " where $p/" + condition + " return data($p"+ret+")";
+            
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.queryResource(document, updateStr);
+            ResourceIterator results = resultSet.getIterator();
+            while (results.hasMoreResources()) {
+                Resource res = results.nextResource();
+                a.add(res.getContent());
+            }
+            
+            collect.close();
+
+        } catch (XMLDBException ex) {
+            logger.error("Retrieving attribute \"name\" failed:" + ex.getMessage());
+        }
+        return a;
+    }
+   public boolean checkAgent(String agentId) throws CleverException {
+        boolean existsAgent = false;
+        Collection collect = null;
+        try {
+
+            collect = this.connect();
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/cm/agent[@name='" + agentId + "']");
+            ResourceIterator results = resultSet.getIterator();
+            existsAgent = results.hasMoreResources();
+
+
+        } catch (XMLDBException ex) {
+            logger.error("Check Agent node failed: " + ex.getMessage());
+            throw new CleverException("Error checking node: " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+
+            }
+        }
+        return existsAgent;
+    }
+
+     public boolean checkAgent(String agentId, String hostId) throws CleverException {
+        boolean existsAgent = false;
+        Collection collect = null;
+
+        try {
+
+            collect = this.connect();
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/hm[@name='" + hostId + "']/agent[@name='" + agentId + "']");
+            ResourceIterator results = resultSet.getIterator();
+            existsAgent = results.hasMoreResources();
+
+
+        } catch (XMLDBException ex) {
+            logger.error("Check Agent node failed: " + ex.getMessage());
+            throw new CleverException("Error checking node: " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+            }
+        }
+        return existsAgent;
+    }
+    
+    public void addAgent(String agentId, String hostId) throws CleverException {
+        Collection collect = null;
+        try {
+            collect = this.connect();
+            SednaUpdateService serviceUpdate = (SednaUpdateService) collect.getService("SednaUpdateService", "1.0");
+            String updateStr = "update insert <agent name='" + agentId + "'></agent>"
+                    + " into document(\"" + this.document + "\")/" + xpath + "/[@name='" + hostId + "']";
+            serviceUpdate.update(updateStr);
+
+        } catch (XMLDBException ex) {
+            logger.error("Insert Agent node failed: " + ex.getMessage());
+            throw new CleverException("Error inserting Agent node: " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+
+            }
+
+        }
+    }
+    
+    public void addAgent(String agentId) throws CleverException {
+        Collection collect = null;
+
+        try {
+            collect = this.connect();
+            SednaUpdateService serviceUpdate = (SednaUpdateService) collect.getService("SednaUpdateService", "1.0");
+            String updateStr = "update insert <agent name='" + agentId + "'></agent>"
+                    + " into document(\"" + this.document + "\")/" + xpath + "/cm";
+            serviceUpdate.update(updateStr);
+
+        } catch (XMLDBException ex) {
+            logger.error("Insert Agent node failed: " + ex.getMessage());
+            throw new CleverException("Error inserting Agent node: " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+
+            }
+
+        }
+    }
+    
+     public void deleteNode(String hostId, String agentId, String location) throws CleverException {
+        String updateStr = null;
+        Collection collect = null;
+        String xpathHm = xpath + "/hm[@name='" + hostId + "']";
+        String xpathAgent = xpathHm + "/agent[@name='" + agentId + "']";
+
+        logger.debug("Connecting to XMLDB");
+
+
+        try {
+            //insert data node
+            collect = this.connect();
+            SednaUpdateService serviceUpdate = (SednaUpdateService) collect.getService("SednaUpdateService", "1.0");
+
+            updateStr = "update delete "
+                    + " document(\"" + this.document + "\")/" + xpathAgent + location;
+            serviceUpdate.update(updateStr);
+            //collect.close();
+        } catch (XMLDBException ex) {
+            logger.error("Delete node failed: " + ex.getMessage());
+            throw new CleverException("HM database update failed! " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+                throw new CleverException("Error closing connection " + ex);
+            }
+        }
+    }
+
+    public String queryJoin(String agentId, String location1, String location2) throws CleverException {
+        StringBuffer result = new StringBuffer();
+        Collection collect = null;
+        try {
+            collect = this.connect();
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/cm/agent[@name='" + agentId + "']" + location1 + " | "
+                    + xpath + "/cm/agent[@name='" + agentId + "']" + location2);
+
+            ResourceIterator results = resultSet.getIterator();
+            logger.debug("Executing query xpath=" + this.xpath + "/cm/agent[@name='" + agentId + "']" + location1 + " | "
+                    + xpath + "/cm/agent[@name='" + agentId + "']" + location2);
+            while (results.hasMoreResources()) {
+                XMLResource resource = (XMLResource) results.nextResource();
+                result.append(resource.toString());
+                result.append('\n');
+            }
+
+        } catch (XMLDBException ex) {
+            logger.error("Execute query failed: " + ex);
+            throw new CleverException("Error executing query: " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+            }
+        }
+        return result.substring(0);
+    }
+
+   
+    public String getAgentPrefix(String agentId) throws CleverException {
+        return "document(\"cleverData\")" + this.xpath + "/cm/agent[@name='" + agentId + "']";
+    }
+
+    
+    public String rawQuery(String query) throws CleverException {
+        StringBuffer result = new StringBuffer();
+        Collection collect = null;
+        try {
+            collect = this.connect();
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.query(query);
+            ResourceIterator results = resultSet.getIterator();
+            logger.debug("Executing query=" + query);
+            while (results.hasMoreResources()) {
+                XMLResource resource = (XMLResource) results.nextResource();
+                result.append(resource.toString());
+                result.append('\n');
+            }
+
+
+        } catch (XMLDBException ex) {
+            logger.error("Error executing query: " + ex);
+            throw new CleverException("Error executing query: " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+            }
+
+        }
+        return result.toString();
+    }
+
+   
+    public String queryJoin(String hostId, String agentId, String location1, String location2) throws CleverException {
+        StringBuffer result = new StringBuffer();
+        Collection collect = null;
+        try {
+            collect = this.connect();
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/hm[@name=\"" + hostId + "\"]/agent[@name='" + agentId + "']" + location1 + " | "
+                    + xpath + "/hm[@name=\"" + hostId + "\"]/agent[@name='" + agentId + "']" + location2);
+
+            ResourceIterator results = resultSet.getIterator();
+            logger.debug("Executing query xpath=" + this.xpath + "/cm/agent[@name='" + agentId + "']" + location1 + " | "
+                    + xpath + "/cm/agent[@name='" + agentId + "']" + location2);
+            while (results.hasMoreResources()) {
+                XMLResource resource = (XMLResource) results.nextResource();
+                result.append(resource.toString());
+                result.append('\n');
+            }
+
+        } catch (XMLDBException ex) {
+            logger.error("Execute query failed: " + ex);
+            throw new CleverException("Error executing query: " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+            }
+        }
+        return result.substring(0);
+    }
+
+    
+    public String getAgentPrefix(String hostId, String agentId) throws CleverException {
+        return "document(\"cleverData\")" + this.xpath + "/hm[@name=\"" + hostId + "\"]/agent[@name='" + agentId + "']";
+    }
+
+  
+    public void replaceNode(String agentId, String location, String node) throws CleverException {
+        String updateStr = null;
+        Collection collect = null;
+        String xpathCm = xpath + "/cm";
+        String xpathAgent = xpathCm + "/agent[@name='" + agentId + "']";
+
+        try {
+            //insert data node
+            collect = this.connect();
+            SednaUpdateService serviceUpdate = (SednaUpdateService) collect.getService("SednaUpdateService", "1.0");
+
+            updateStr = "update replace $x in"
+                    + " document(\"" + this.document + "\")/" + xpathAgent + location
+                    + " with "+node;
+            serviceUpdate.update(updateStr);
+            collect.close();
+        } catch (XMLDBException ex) {
+            logger.error("Replace node failed: " + ex.getMessage());
+            throw new CleverException("CM database update failed! " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+                throw new CleverException("Error closing connection " + ex);
+            }
+        }
+    }
+
+  
+    public void replaceNode(String hostId, String agentId, String location, String node) throws CleverException {
+        String updateStr = null;
+        Collection collect = null;
+        String xpathHm = xpath + "/hm[@name='" + hostId + "']";
+        String xpathAgent = xpathHm + "/agent[@name='" + agentId + "']";
+
+        logger.debug("Connecting to XMLDB");
+
+
+        try {
+            //insert data node
+            collect = this.connect();
+            SednaUpdateService serviceUpdate = (SednaUpdateService) collect.getService("SednaUpdateService", "1.0");
+
+            updateStr = "update replace $x in"
+                    + " document(\"" + this.document + "\")/" + xpathAgent + location
+                    + " with "+node;
+            serviceUpdate.update(updateStr);
+            //collect.close();
+        } catch (XMLDBException ex) {
+            logger.error("Update node failed: " + ex.getMessage());
+            throw new CleverException("HM database update failed! " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+                throw new CleverException("Error closing connection " + ex);
+            }
+        }
+    }
+    
+    /**
+     * This fuction prepare context necessary for storing SAS/Publish notify.
+     * @param HostId
+     * @param agentId
+     * @param node
+     * @param location
+     * @throws CleverException 
+     */
+    synchronized public void PrepareNode4Sens(String HostId,String agentId,String location) throws CleverException {
+        logger.debug("Esperimento2.1"); 
+        if(!this.checkAgentNode(agentId,location)){
+             logger.debug("Esperimento2.2");
+             this.insertNode(HostId,agentId,"<SASPubblicationHistory/>","into","");
+         }
     }
 }

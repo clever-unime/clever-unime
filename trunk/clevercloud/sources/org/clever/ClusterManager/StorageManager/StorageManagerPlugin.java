@@ -29,7 +29,7 @@ import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Plugins.RunnerPlugin;
 import org.clever.Common.Storage.VFSDescription;
-
+import org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile;
 /**
  *
  * @author giancarloalteri
@@ -111,7 +111,7 @@ public interface StorageManagerPlugin extends RunnerPlugin{
     * @throws CleverException
     * @throws Exception 
     */
-   public String lockManager(String path,String targetHM,Integer lock) throws CleverException,Exception;
+   public String lockManager(String path,String targetHM,LockFile.lockMode lock) throws CleverException,Exception;
   
    /**
     * This method checks if the path set by the user during registration is valid

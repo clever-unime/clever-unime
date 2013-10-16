@@ -46,9 +46,9 @@ public interface HyperVisorPlugin extends RunnerPlugin {
     boolean resume(String id) throws Exception;
     boolean startVm(String id) throws Exception;
     boolean saveState(String id, String path) throws Exception;
-    boolean createVm(String veId, VEDescription parameters) throws Exception;
+    boolean createVm(String veId, VEDescription parameters,Boolean notExclusive) throws Exception;
     boolean resumeState(String id, String path) throws Exception;
-    boolean createAndStart(String veId, VEDescription parameters) throws Exception;
+    boolean createAndStart(String veId, VEDescription parameters,Boolean notExclusive) throws Exception;
     boolean addAdapter(String id, NetworkSettings settings) throws Exception;
     boolean isRunning(String id)throws Exception;
     public List listVms() throws Exception;
@@ -61,7 +61,7 @@ public interface HyperVisorPlugin extends RunnerPlugin {
     public boolean deleteSnapshot (String id, String nameS) throws Exception;
     public String currentSnapshot (String id)throws Exception;   
     public long snapshotCount(String id)throws Exception;
- 
+    public String getHYPVRName();
     //Aggiunti da Giovanni (VMWare)
     public boolean deleteAllSnapshot(String id) throws Exception;
     public boolean renameVM(String id, String new_id) throws Exception;

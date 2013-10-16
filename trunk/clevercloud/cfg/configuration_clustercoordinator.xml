@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <server>localhost</server>
+<server>localhost</server>
   <port>5222</port>
   <tls>false</tls>
   <caJks />
   <caJksPassword />
   <certPkcs12 />
   <certPkcs12Password />
-  <username>cmgiusimone</username>
-  <password>esbkuxi</password>
-  <nickname>cmgiusimone</nickname>
+  <username></username>
+  <password></password>
+  <nickname></nickname>
   <room>vision@conference.localhost</room>
   <roomclients>SHELL-vision@conference.localhost</roomclients>
   <threshold>1</threshold>
@@ -37,7 +37,19 @@
       <name />
     </agent>
     <agent>
+      <class>org.clever.ClusterManager.SAS.SASAgent</class>
+      <name />
+    </agent>
+    <agent>
+      <class>org.clever.ClusterManager.WebAgent.WebAgent</class>
+      <name />
+    </agent>
+    <agent>
       <class>org.clever.ClusterManager.VirtualizationManager.VirtualizationManagerAgent</class>
+      <name />
+    </agent>
+    <agent>
+      <class>org.clever.ClusterManager.ESOSAgent.ESOSAgent</class>
       <name />
     </agent>
   </agents>

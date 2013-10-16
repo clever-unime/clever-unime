@@ -458,7 +458,7 @@ public class ClusterCoordinator implements CleverMessageHandler
 
   /** This function has the task to start the Cluster Coordinator, 
    * inside the functions are called in sequence: init(),
-   * connectionManagement, tryActiveCC() and launchAgent().
+   * connectionManagement,  launchAgent() and tryActiveCC().
    * 
    * @throws CleverException 
    */
@@ -473,7 +473,7 @@ public class ClusterCoordinator implements CleverMessageHandler
             logger.error("Errore in start: "+ex);
             throw ex;
         }
-      this.tryActiveCC(conn, this);
+      
       
       logger.info("Starting procedure launching Agents for CM");    
       
@@ -489,6 +489,7 @@ public class ClusterCoordinator implements CleverMessageHandler
                 throw ex;
             }
       }
+      this.tryActiveCC(conn, this);
   }
     
    
@@ -506,10 +507,11 @@ public class ClusterCoordinator implements CleverMessageHandler
   public synchronized void setAsActiveCC( final boolean active, boolean activeAgents)throws CleverException
   {
     if( active )
-    {       
+    {   
+        logger.debug("devo settare il cm come active cc");
         conn.getMultiUserChat().changeAvailabilityStatus("CM_ACTIVE", Mode.chat ); //set the status of this Cluster Coordinator active
         conn.joinInRoom(roomclients, ROOM.SHELL, conn.getUsername(), "CM_ACTIVE"); //join in the room shell with statu "CM_ACTIVE"
-        
+        logger.debug("settato il cm come active cc");
         //If this cluster coordinator has enabled the launch of the agents only if active 
         //(this is dictated by the state of the Boolean variable to true activeAgents)
         //launch it!
@@ -539,6 +541,9 @@ public class ClusterCoordinator implements CleverMessageHandler
   {
     logger.debug( "Message: " + msg.toXML() );
 
+    dispatcherAgent.handleCleverMessage(msg);
+    
+    /*
     switch( msg.getType() )
 
     {
@@ -555,9 +560,11 @@ public class ClusterCoordinator implements CleverMessageHandler
         dispatcherPlugin.dispatch( msg );
         break;
     }
+    *
+    * */
   }
 
-  public void handleNotification(CleverMessage msg){
+ /* public void handleNotification(CleverMessage msg){
 
       Notification notification=msg.getNotificationFromMessage();
       //Pass notification to dispatcher
@@ -570,7 +577,7 @@ public class ClusterCoordinator implements CleverMessageHandler
       
       this.brainInterface.handleNotification(notification);
   }
-
+*/
   
   public Iterator getHosts() 
   { //torna la lista di tutti gli host connessi alla stanza CLEVER_MAIN
