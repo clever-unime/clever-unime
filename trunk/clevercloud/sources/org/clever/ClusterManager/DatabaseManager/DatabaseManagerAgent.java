@@ -46,7 +46,7 @@ public class DatabaseManagerAgent extends CmAgent
 {
     private DatabaseManagerPlugin DbManagerPlugin;
     private Class cl;
-    
+    private String configPath="./cfg/configuration_dbManagerPlugin.xml";
     public DatabaseManagerAgent() 
     {
             super();
@@ -72,7 +72,19 @@ public class DatabaseManagerAgent extends CmAgent
          //   InputStream in = getClass().getResourceAsStream( "/org/clever/Common/Shared/logger.properties" );
          //   prop.load( in );
          //   PropertyConfigurator.configure( prop );
-            InputStream inxml = getClass().getResourceAsStream( "/org/clever/ClusterManager/DatabaseManager/configuration_dbManagerPlugin.xml" );
+            File configfile=new File(this.configPath);
+            InputStream inxml;
+            
+            if(!configfile.exists()){
+                
+                
+                inxml= getClass().getResourceAsStream( "/org/clever/ClusterManager/DatabaseManager/configuration_dbManagerPlugin.xml" );
+            }
+            else
+            {
+                inxml = new FileInputStream(this.configPath);
+                
+            }
             ParserXML pXML = new ParserXML( fs.xmlToString( inxml ) );
             
             cl = Class.forName( pXML.getElementContent( "DbManagerPlugin" ) );
