@@ -49,7 +49,7 @@ import org.jivesoftware.smackx.muc.Occupant;
 
 
 import org.clever.ClusterManager.MonitorManager.SendMeasureRequest;
-
+import org.clever.Common.Measure.*;
 
 
 public class MonitorManagerAgent extends CmAgent
@@ -160,8 +160,55 @@ public class MonitorManagerAgent extends CmAgent
     }
     */
     
-    public String getMeasure() throws CleverException{
-                        
+    
+    public String getCpuIdle() throws CleverException{ 
+        
+        List params = new ArrayList();
+        
+        String result = null;
+        result = getMeasure("webuntu", "getCpuIdle", params);
+        
+        return result;
+    }
+    
+    
+    
+    
+    public String getMeasure(String target, String method, List params) throws CleverException{                        
+
+        String measure = null;
+       
+        try{
+
+            
+            //Thread t = new Thread(new SendMeasureRequest(this, "webuntu", "CloudMonitorAgent", "getTotalUsedMemory", true, params));
+            //t.start();
+            
+            measure = "NoThread --> " + this.remoteInvocation(target,"CloudMonitorAgent",method, true, params).toString(); 
+
+            //measure = (String) this.invoke("CloudMonitorAgent","getTotalUsedMemory", true, params);
+        
+            /*
+            while(t.isAlive()){
+                logger.debug("Thread is working...");
+            }
+            t.interrupt();
+            logger.debug("Thread successfully stopped.");
+            */
+            
+
+        
+        } catch (Exception ex) {
+            logger.error("Errore: " + ex);
+        }
+        
+        return measure;
+        
+        
+     }
+
+    /*
+     public String getMeasure() throws CleverException{                        
 
         List params = new ArrayList();
         String measure = null;
@@ -198,7 +245,7 @@ public class MonitorManagerAgent extends CmAgent
         
         
      }
-
+     */
     
     
     

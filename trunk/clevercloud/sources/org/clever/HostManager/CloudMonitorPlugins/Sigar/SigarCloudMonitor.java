@@ -42,14 +42,17 @@ import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
 import org.jdom.Element;
 
+import org.clever.Common.Measure.*;
+import org.hyperic.sigar.Cpu;
+
 
 
 public class SigarCloudMonitor implements CloudMonitorPlugin{
 
-    //private HWMonitor hwMonitor = null;
     ModuleCommunicator mc;
     private Agent owner;
     private Sigar sigar;
+    
 
     public SigarCloudMonitor() throws IOException
     {
@@ -58,12 +61,6 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     
 
     public void init(Element params, Agent owner) throws CleverException{
-        
-               
-
-        //HwMonitorFactory HwMonitorFactory = new HwMonitorFactory();
-        //this.setHwMonitor(HwMonitorFactory.getHwMonitor());
-        
         
     }
 
@@ -84,6 +81,39 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     }
     
     
+    public void setOwner(Agent owner) {
+        this.owner=owner;
+    }
+    
+    
+    
+    //----------------------------------------
+    //CPU MONITOR
+    //----------------------------------------
+    public CpuM getCpuIdle() throws SigarException {
+        
+        
+        Cpu cpu=null;
+        cpu = this.sigar.getCpu();
+        
+        
+        CpuM obj = new CpuM(CpuM.SubType_m.idle);
+        obj.setValue(cpu.getIdle());
+        
+        return obj;
+    }
+    
+
+    //----------------------------------------
+    //NETWORKING MONITOR
+    //----------------------------------------   
+    
+    
+    
+    //----------------------------------------
+    //MEMORY MONITOR
+    //----------------------------------------
+
     public String getTotalUsedMemory() {
         
         
@@ -145,9 +175,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         
     }
 
-    public void setOwner(Agent owner) {
-        this.owner=owner;
-    }
+
 
 
 }

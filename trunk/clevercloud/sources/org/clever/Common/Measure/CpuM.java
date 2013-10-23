@@ -30,23 +30,32 @@ import java.util.Date;
  *
  * @author webwolf
  */
-public class Cpu extends Measure{
+public class CpuM extends Measure{
     
-    public Cpu(){
+    
+    public enum SubType_m {idle, total, sys, usr};
+    private SubType_m stype_m=null;
+        
+        
+    
+    public CpuM(SubType_m stype_m){
         
         super();
         
+        this.stype_m=stype_m;
+
         super.setUnit_m("MHz");
         
-        Date date = new Date();
-        super.setDate(date);
-        
         super.setType_m(Type_m.cpu);
-        
+
        
     }
     
-    
+    @Override
+    public String toString(){
+        String str=this.stype_m + " " + this.getValue().toString();
+        return str;
+    }
     
     
 }

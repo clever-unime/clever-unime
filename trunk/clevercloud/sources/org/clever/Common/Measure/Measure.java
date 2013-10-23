@@ -34,12 +34,14 @@ import java.util.Date;
  */
 public abstract class Measure {
     
-    private Date date=null;
+    private long date=0;
     private String unit_m=null;
     private String source=null;
     
     public enum Type_m {cpu, mem, hd, net};
     private Type_m type_m=null;
+    
+
     
     private Object value=null;
 
@@ -59,22 +61,17 @@ public abstract class Measure {
         this.type_m = type_m;
     }
     
-    
-    
-    
-    
-     
 
     public String getFormatDate() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return dateFormat.format(date);
     }
     
-    public Date getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -99,6 +96,7 @@ public abstract class Measure {
     }
 
     public void setValue(Object value) {
+        this.setDate(System.currentTimeMillis());
         this.value = value;
     }
     
