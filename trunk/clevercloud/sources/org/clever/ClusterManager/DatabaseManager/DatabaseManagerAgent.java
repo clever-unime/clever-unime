@@ -142,7 +142,7 @@ public class DatabaseManagerAgent extends CmAgent
     }
     
     @Override
-   public void shutDown()
+    public void shutDown()
     {
         
     }

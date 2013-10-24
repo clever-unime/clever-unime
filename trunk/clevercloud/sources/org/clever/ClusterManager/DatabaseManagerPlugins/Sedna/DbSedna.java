@@ -188,6 +188,35 @@ public class DbSedna implements DatabaseManagerPlugin {
             }
         }
     }
+    
+    
+    
+    
+    
+    
+    private void insertMeasure(){
+        
+        
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     @Override
     synchronized public void addHm(String hostId) {

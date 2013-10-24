@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <server>localhost</server>
+  <server>webuntu</server>
   <port>5222</port>
   <tls>false</tls>
   <caJks />
   <caJksPassword />
   <certPkcs12 />
   <certPkcs12Password />
-  <username></username>
-  <password></password>
-  <nickname></nickname>
-  <room>vision@conference.localhost</room>
-  <roomclients>SHELL-vision@conference.localhost</roomclients>
+  <username>cmwebuntu</username>
+  <password>qvubvpt</password>
+  <nickname>cmwebuntu</nickname>
+  <room>room@conference.webuntu</room>
+  <roomclients>SHELL-room@conference.webuntu</roomclients>
   <threshold>1</threshold>
   <!-- questa threshold non viene più usata, ne uso una dentro configuration_initiator -->
   <activeAgents>true</activeAgents>
@@ -40,6 +40,12 @@
       <class>org.clever.ClusterManager.VirtualizationManager.VirtualizationManagerAgent</class>
       <name />
     </agent>
+    
+    <agent>
+      <class>org.clever.ClusterManager.MonitorManager.MonitorManagerAgent</class>
+      <name />
+    </agent>
+    
   </agents>
   <brain>
     <class>org.clever.ClusterManager.Brain.SensorBrain</class>

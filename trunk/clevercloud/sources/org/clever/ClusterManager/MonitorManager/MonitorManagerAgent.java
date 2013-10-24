@@ -29,6 +29,7 @@ package org.clever.ClusterManager.MonitorManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -57,11 +58,6 @@ public class MonitorManagerAgent extends CmAgent
     private String version = "1.0";
     private String description = "Monitoring of the Clever resources about Cluster Manager";
 
-
-    
-    //private ConnectionXMPP connectionXMPP = null;
-    //private  ArrayList <CmAgent> Agents = new ArrayList(3);
-    //private ModuleFactory mf;
     
     
     
@@ -83,27 +79,12 @@ public class MonitorManagerAgent extends CmAgent
             super.setAgentName("MonitorManagerAgent");
         
         
-        
         super.start();
-        
-        
-        /*
-        System.out.println( "richiamo get misura" ); 
-        
-        try{
 
-            String aaa=this.getMeasure();
-            
-            logger.debug("OMG OMGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG: "+aaa);
-
-          
-        } catch (Exception ex) {
-            logger.error("Errore: " + ex);
-        }
-        * */
-        
         
     }
+    
+    
   
     @Override
     public Class getPluginClass() {
@@ -129,7 +110,7 @@ public class MonitorManagerAgent extends CmAgent
     @Override
     public void shutDown()
     {
-        //AGGIUNGERE ???? -> throw new UnsupportedOperationException("Not supported yet.");
+        
     }
     
         
@@ -165,13 +146,24 @@ public class MonitorManagerAgent extends CmAgent
         
         List params = new ArrayList();
         
-        String result = null;
+        String result = null;   //Risultato serializzato proveniente dal HM
+        String xmldata = null;  //Xml con le misure deserializzato
+        
         result = getMeasure("webuntu", "getCpuIdle", params);
         
         //DESERIALIZZARE IL RISULTATO
         
         //SCRIVERE IL RISULTATO SU SEDNA (HUMAN READABLE)
-        
+        //measure = (String) this.invoke("CloudMonitorAgent","getTotalUsedMemory", true, params);
+        List params1 = new ArrayList();
+        /*
+        params1.add("VirtualizationManagerAgent");
+        params1.add(" attribute {'created'}{'" + new Date().toString() + "'}");
+        params1.add("into");
+        params1.add("/Matching_VM_HM/VM[@name='" + nameVM + "']");
+        */
+        //this.invoke("DatabaseManagerAgent", "insertNode", true, params1);
+
         
         return result;
     }
@@ -189,7 +181,7 @@ public class MonitorManagerAgent extends CmAgent
             //Thread t = new Thread(new SendMeasureRequest(this, "webuntu", "CloudMonitorAgent", "getTotalUsedMemory", true, params));
             //t.start();
             
-            measure = "NoThread --> " + this.remoteInvocation(target,"CloudMonitorAgent",method, true, params).toString(); 
+            measure = "NoThread --> \n" + this.remoteInvocation(target,"CloudMonitorAgent",method, true, params).toString(); 
 
             //measure = (String) this.invoke("CloudMonitorAgent","getTotalUsedMemory", true, params);
         

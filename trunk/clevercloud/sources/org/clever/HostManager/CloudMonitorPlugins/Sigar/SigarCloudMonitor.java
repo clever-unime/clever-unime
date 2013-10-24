@@ -43,8 +43,11 @@ import org.hyperic.sigar.SigarException;
 import org.jdom.Element;
 
 import org.clever.Common.Measure.*;
+import org.clever.Common.XMLTools.MessageFormatter;
 import org.hyperic.sigar.Cpu;
 
+import java.io.*;
+import static org.clever.Common.Communicator.Agent.logger;
 
 
 public class SigarCloudMonitor implements CloudMonitorPlugin{
@@ -90,17 +93,42 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     //----------------------------------------
     //CPU MONITOR
     //----------------------------------------
-    public CpuM getCpuIdle() throws SigarException {
+    public String getCpuIdle() throws SigarException {
         
         
         Cpu cpu=null;
         cpu = this.sigar.getCpu();
-        
+        String xmlobj=null;
         
         CpuM obj = new CpuM(CpuM.SubType_m.idle);
         obj.setValue(cpu.getIdle());
         
-        return obj;
+        xmlobj=MessageFormatter.messageFromObject(obj);
+        
+        
+        
+        /*
+        // serialize the object
+        String serializedObject = "";
+        try {
+            ByteArrayOutputStream bo = new ByteArrayOutputStream();
+            ObjectOutputStream so = new ObjectOutputStream(bo);
+            so.writeObject(obj);
+            so.flush();
+            serializedObject = bo.toString();
+            
+            logger.debug("AAA"+serializedObject);
+            
+            
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        
+        */
+ 
+        
+        
+        return xmlobj;
     }
     
 
