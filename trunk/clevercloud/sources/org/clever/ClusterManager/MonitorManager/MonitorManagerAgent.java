@@ -168,6 +168,11 @@ public class MonitorManagerAgent extends CmAgent
         String result = null;
         result = getMeasure("webuntu", "getCpuIdle", params);
         
+        //DESERIALIZZARE IL RISULTATO
+        
+        //SCRIVERE IL RISULTATO SU SEDNA (HUMAN READABLE)
+        
+        
         return result;
     }
     

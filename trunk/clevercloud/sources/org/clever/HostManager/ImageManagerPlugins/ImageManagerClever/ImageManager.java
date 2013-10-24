@@ -189,11 +189,12 @@ public class ImageManager implements ImageManagerPlugin {
                 //se la chiave non esiste
                 logger.debug("element searched : "+file_s.getName().getURI());
                 ResultSet rs=this.sqlite.retrieveElementsInMap(file_s.getName().getURI());
-                
+                logger.debug("pos0A");
              if ((!rs.isAfterLast()&&!rs.isBeforeFirst())) {
-                
+                logger.debug("posA");
                 if (file_s.getType().equals(FileType.FOLDER)) {
-                        response=""+this.localRepository+id;
+                    logger.debug("pos1");
+                    response=""+this.localRepository+id;
                          params.add("new");
                          params.add(response);
                          params.add(lastMod);//date
@@ -202,6 +203,7 @@ public class ImageManager implements ImageManagerPlugin {
                          
                        }
                     else{
+                    logger.debug("pos2");
                     response=this.localRepository+id+"."+file_s.getName().getExtension();
                     params.add("new");
                     params.add(response);
@@ -210,9 +212,11 @@ public class ImageManager implements ImageManagerPlugin {
                     params.add(lock);//lock
                     
                     }
-                   
+                    logger.debug("pos3");
                     FileSystemManager mgr = VFS.getManager();
+                    logger.debug("pos4");
                     FileObject file_d=mgr.resolveFile(response);
+                    logger.debug("pos5");
                     vfs.cp(file_s, file_d);
                     
                 if (file_s.getType().equals(FileType.FOLDER)) {
@@ -225,6 +229,7 @@ public class ImageManager implements ImageManagerPlugin {
                     
                  }
                 else{
+                 logger.debug("posB");
                         //b = (ArrayList) map.get(file_s.getName());
                 // scorre la prima HasMap
 
@@ -290,15 +295,14 @@ public class ImageManager implements ImageManagerPlugin {
                        
                     } 
                     else{
-                    
-                    response=this.localRepository+id+"."+file_s.getName().getExtension();
-                    logger.debug("Image4");
-                    this.sqlite.insertElementAtMap(file_s.getName().getURI(), response,new Long(content.getSize()).toString() ,lastMod,LockFile.getLockType(lock));
-                     params.add("insert");
-                    params.add(response);       
-                    params.add(lastMod);
-                    params.add(content.getSize());
-                    params.add(lock);
+                        response=this.localRepository+id+"."+file_s.getName().getExtension();
+                        logger.debug("Image4");
+                        this.sqlite.insertElementAtMap(file_s.getName().getURI(), response,new Long(content.getSize()).toString() ,lastMod,LockFile.getLockType(lock));
+                        params.add("insert");
+                        params.add(response);       
+                        params.add(lastMod);
+                        params.add(content.getSize());
+                        params.add(lock);
                     }
                     
                     FileSystemManager mgr = VFS.getManager();

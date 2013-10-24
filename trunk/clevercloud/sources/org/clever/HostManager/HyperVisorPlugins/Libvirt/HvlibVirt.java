@@ -129,7 +129,11 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
   {
     try
     {
-        String con , system;
+
+        String con="qemu:///system"; 
+        logger.debug("i2");
+        String system;
+
         if((system = params.getChildText( "system" ))!=null)
             {
                 if (system.equals("true"))
@@ -139,9 +143,11 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
             }    
         else
             con="qemu:///system";
-                 
-                    
+
+
+      
       this.conn = new Connect( con, false );
+
      /* int res=99;
      if((res = Libvirt.INSTANCE.virEventRegisterDefaultImpl()) == -1)
           logger.error("Error on register event loop");
@@ -150,6 +156,7 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
       */
       logger.info( "LibVirt plugin initialized: " + "connected to qemu:///system" );
       updateMap();
+      
     }
     catch( LibvirtException e )
     {
@@ -392,11 +399,17 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
     Domain d = null;
     try
     {
+        logger.debug("c1");
       String goldI=veD.getName();
+      logger.debug("c2");
       veD.setName(id);
+      logger.debug("c3");
       d = conn.domainDefineXML( veDescriptionToXML( veD,notExclusive ) );
+      logger.debug("c4");
       VMWrapper vmW = new VMWrapper( d, veD );
+      logger.debug("c5");
       idVMWrapper.put( id, vmW );
+      logger.debug("c6");
       // future works can substitute the mechanism of creation snapshot realized in Virtualization Manager Clever with this.
       /*if(notExclusive){
           String vmname=java.util.UUID.randomUUID().toString();
