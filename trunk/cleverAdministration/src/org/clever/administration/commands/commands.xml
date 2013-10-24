@@ -215,5 +215,11 @@
     <string>storage1</string>
     <class>org.clever.administration.commands.StorageCommand</class>
   </command>-->
+  
+    <command>
+    	<string>getmeasure</string>
+    	<class>org.clever.administration.commands.GetMeasureCommand</class>
+    </command>
+  
 
 </commands>

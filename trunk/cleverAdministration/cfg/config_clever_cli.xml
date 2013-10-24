@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <server>webuntu</server>
+  <port>5222</port>
+  <!--<username>test-giancarlo</username>
+  <password>storage</password>
+  <nickname>test-giancarlo</nickname>-->
+  <username>adminclever</username>
+  <password>pass</password>
+  <nickname>admin</nickname>
+  <room>SHELL-room@conference.webuntu</room>
+  <roomclients>SHELL-giancarlo@conference.ing-clever-master.me.trigrid.it</roomclients>
+</configuration>
+

@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <org.clever.Common.VEInfo.VEDescription>
     <os_guest_id>ubuntuGuest</os_guest_id>
-    <name>qtest</name> 
+    <name>UbuVirt</name> 
     <storage>
         <org.clever.Common.VEInfo.StorageSettings>
-            <diskPath>/prova/home/giuseppe/Scrivania/ubuVM.qcow2</diskPath>
+            <diskPath>nodo/ubuQCOW.qcow</diskPath>
         </org.clever.Common.VEInfo.StorageSettings>
     </storage>
     <cpu>
-        <numCpu>1</numCpu>
-        <coresXCpu>1</coresXCpu>
+        <numCpu>2</numCpu>
+        <coresXCpu>2</coresXCpu>
         <frequency>0.0</frequency>
-        <architecture>X86</architecture>
+        <architecture>X86_64</architecture>
     </cpu>
     <mem>
-        <size>512</size>
+        <size>1024288</size>
     </mem>
     <network>
         <org.clever.Common.VEInfo.NetworkSettings></org.clever.Common.VEInfo.NetworkSettings>
