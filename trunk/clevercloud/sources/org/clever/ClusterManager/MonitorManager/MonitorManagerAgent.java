@@ -72,14 +72,30 @@ public class MonitorManagerAgent extends CmAgent
     @Override
     public void initialization() throws CleverException {       
         
-        
-        System.out.println( "initialization mma" ); 
-        
+        boolean checkdb=true;
+        List params = null;
+
         if(super.getAgentName().equals("NoName"))
             super.setAgentName("MonitorManagerAgent");
         
         
         super.start();
+        
+        
+        
+        
+        //check "measure" node into sedna db
+        checkdb=(Boolean)this.invoke("DatabaseManagerAgent", "checkMeasure", true, params);
+
+        if(!checkdb){
+        
+            this.invoke("DatabaseManagerAgent", "addMeasure", true, params);
+            logger.debug("MonitorManagerAgent: Measure DB node created!");
+        }
+        else
+            logger.error("MonitorManagerAgent: Measure DB node exist!");
+        
+        
 
         
     }
@@ -126,20 +142,6 @@ public class MonitorManagerAgent extends CmAgent
     //-----------------------------------------------------
     
     
-    /*
-    public getCpuMeasures() throws CleverException{
-        
-        try{
-            
-            
-            
-            
-        }catch (Exception ex) {
-            logger.error("Errore: " + ex);
-        }
-        
-    }
-    */
     
     
     public String getCpuIdle() throws CleverException{ 
@@ -156,13 +158,14 @@ public class MonitorManagerAgent extends CmAgent
         //SCRIVERE IL RISULTATO SU SEDNA (HUMAN READABLE)
         //measure = (String) this.invoke("CloudMonitorAgent","getTotalUsedMemory", true, params);
         List params1 = new ArrayList();
+        params1.add(result);
         /*
         params1.add("VirtualizationManagerAgent");
         params1.add(" attribute {'created'}{'" + new Date().toString() + "'}");
         params1.add("into");
         params1.add("/Matching_VM_HM/VM[@name='" + nameVM + "']");
         */
-        //this.invoke("DatabaseManagerAgent", "insertNode", true, params1);
+        this.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
 
         
         return result;
@@ -181,7 +184,7 @@ public class MonitorManagerAgent extends CmAgent
             //Thread t = new Thread(new SendMeasureRequest(this, "webuntu", "CloudMonitorAgent", "getTotalUsedMemory", true, params));
             //t.start();
             
-            measure = "NoThread --> \n" + this.remoteInvocation(target,"CloudMonitorAgent",method, true, params).toString(); 
+            measure = this.remoteInvocation(target,"CloudMonitorAgent",method, true, params).toString(); 
 
             //measure = (String) this.invoke("CloudMonitorAgent","getTotalUsedMemory", true, params);
         

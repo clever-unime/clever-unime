@@ -79,4 +79,7 @@ public interface DatabaseManagerPlugin extends RunnerPlugin {
   public void setOwner(Agent owner);
   List getNameAttributes(String agentId,String location,String condition);
   //String getFatherAttributeNode(String agentId,String location,String sonCondition,String tipo) throws XMLDBException;
+  boolean checkMeasure();
+  void addMeasure();
+  void insertMeasure(String measure);
 }

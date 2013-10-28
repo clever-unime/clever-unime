@@ -48,6 +48,7 @@ import org.hyperic.sigar.Cpu;
 
 import java.io.*;
 import static org.clever.Common.Communicator.Agent.logger;
+import org.hyperic.sigar.CpuPerc;
 
 
 public class SigarCloudMonitor implements CloudMonitorPlugin{
@@ -97,12 +98,16 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         
         
         Cpu cpu=null;
-        cpu = this.sigar.getCpu();
+        CpuPerc cpuperc=null;
+        //cpu = this.sigar.getCpu();
+        cpuperc = this.sigar.getCpuPerc();
         String xmlobj=null;
         
-        CpuM obj = new CpuM(CpuM.SubType_m.idle);
-        obj.setValue(cpu.getIdle());
+        CpuM obj = new CpuM(CpuM.SubType_m.idle, "%");
+        obj.setValue(CpuPerc.format(cpuperc.getIdle()));
         
+        
+        //FORMAT obj TO xml
         xmlobj=MessageFormatter.messageFromObject(obj);
         
         

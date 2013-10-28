@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import net.cfoster.sedna.SednaUpdateService;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -194,18 +195,89 @@ public class DbSedna implements DatabaseManagerPlugin {
     
     
     
-    private void insertMeasure(){
+    public void insertMeasure(String measure){
         
-        
-        
+        Collection collect = null;
+        try {
+            
+            logger.debug("BBB");
+            
+            
+            collect = this.connect();
+            SednaUpdateService serviceUpdate = (SednaUpdateService) collect.getService("SednaUpdateService", "1.0");
+            
+            //String xpath = "/clever/cluster[@id='clustermain']";
+            
+            String xpathMe = xpath + "/measure";
+            //String xpathAgent = xpathCm + "/agent[@name='" + agentId + "']";
+            String updateStr ="update insert "+measure+" into document(\"" + this.document + "\")/" + xpathMe;
+            
+                        
+            serviceUpdate.update(updateStr);
+            
+            
+            
+            collect.close();
+            
+            
+        } catch (XMLDBException ex) {
+            logger.error("Insert measure failed: " + ex.getMessage());
+        }
     }
     
     
     
     
+      public boolean checkMeasure() {
+        boolean existsMe = false;
+        Collection collect = null;
+        try {
+            collect = this.connect();
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+
+            //check HM node
+            ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/measure");
+            ResourceIterator results = resultSet.getIterator();
+            existsMe = results.hasMoreResources();
+
+        } catch (XMLDBException ex) {
+            logger.error("Check ME node failed: " + ex.getMessage());
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+            }
+        }
+
+        return existsMe;
+
+    }  
     
-    
-    
+      public void addMeasure() {
+        Collection collect = null;
+        try {
+            collect = this.connect();
+            SednaUpdateService serviceUpdate = (SednaUpdateService) collect.getService("SednaUpdateService", "1.0");
+            String updateStr = "update insert <measure></measure>"
+                    + " into document(\"" + this.document + "\")/" + xpath;
+            serviceUpdate.update(updateStr);
+        } catch (XMLDBException ex) {
+            logger.error("Insert ME node failed: " + ex.getMessage());
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+            }
+
+        }
+
+    }  
     
     
     
