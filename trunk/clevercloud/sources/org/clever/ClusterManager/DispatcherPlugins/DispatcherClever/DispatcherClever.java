@@ -80,6 +80,12 @@ class RequestThread implements Runnable {
 
                     dispatcher.dispatch( this.message );
                     break;
+                      /*
+                  case MEASURE:
+
+                    dispatcher.dispatchMeasure( this.message );
+                    break;
+                    */
         }
        }
 
@@ -377,5 +383,15 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
     public void setOwner(Agent owner){
         this.owner=owner;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 }

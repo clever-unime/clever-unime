@@ -47,6 +47,8 @@ import org.clever.Common.XMLTools.MessageFormatter;
 import org.hyperic.sigar.Cpu;
 
 import java.io.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import static org.clever.Common.Communicator.Agent.logger;
 import org.hyperic.sigar.CpuPerc;
 
@@ -61,6 +63,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     public SigarCloudMonitor() throws IOException
     {
         this.sigar = new Sigar();
+        
     }
     
 
@@ -94,13 +97,17 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     //----------------------------------------
     //CPU MONITOR
     //----------------------------------------
-    public String getCpuIdle() throws SigarException {
+    public String getCpuIdle(){
         
         
         Cpu cpu=null;
         CpuPerc cpuperc=null;
-        //cpu = this.sigar.getCpu();
-        cpuperc = this.sigar.getCpuPerc();
+        try {
+            //cpu = this.sigar.getCpu();
+            cpuperc = this.sigar.getCpuPerc();
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
         String xmlobj=null;
         
         CpuM obj = new CpuM(CpuM.SubType_m.idle, "%");
@@ -109,6 +116,9 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         
         //FORMAT obj TO xml
         xmlobj=MessageFormatter.messageFromObject(obj);
+        
+        
+        
         
         
         

@@ -30,11 +30,17 @@ import java.util.List;
 import java.util.Queue;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
+import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.XMLTools.MessageFormatter;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
+import org.clever.Common.XMPPCommunicator.ErrorResult;
+import org.clever.Common.XMPPCommunicator.MethodConfiguration;
 import org.clever.Common.XMPPCommunicator.NotificationOperation;
+import org.clever.Common.XMPPCommunicator.OperationResult;
+import org.clever.Common.XMPPCommunicator.Result;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Packet;
 
@@ -137,21 +143,21 @@ public class DispatcherAgent extends Agent
     }
     
      @Override
-public void initialization() throws CleverException
-{
-    super.setAgentName("DispatcherAgent");    
-    super.start();
-    
-    notificationThread = new NotificationThread(connectionXMPP, notificationsThreshold);
-    notificationThread.start();    
-    
-    String hostid=this.connectionXMPP.getHostName();
-    Notification notification=new Notification();
-    notification.setId("PRESENCE/HM");
-    logger.debug("?=)** hostId= "+hostid);
-    notification.setHostId(hostid);
-    this.sendNotification(notification);
-}
+    public void initialization() throws CleverException
+    {
+        super.setAgentName("DispatcherAgent");    
+        super.start();
+
+        notificationThread = new NotificationThread(connectionXMPP, notificationsThreshold);
+        notificationThread.start();    
+
+        String hostid=this.connectionXMPP.getHostName();
+        Notification notification=new Notification();
+        notification.setId("PRESENCE/HM");
+        logger.debug("?=)** hostId= "+hostid);
+        notification.setHostId(hostid);
+        this.sendNotification(notification);
+    }
 
     @Override
     public void sendNotification(Notification notification) {
@@ -175,6 +181,9 @@ public void initialization() throws CleverException
 
 
     }
+    
+     
+    
 
     @Override
     public Class getPluginClass() {
@@ -198,4 +207,95 @@ public void initialization() throws CleverException
     {
         
     }
+    
+    
+    
+    
+    
+    
+    
+    
+        public void sendMeasure(String measure) {
+         
+           
+         
+                CleverMessage cleverMsg = new CleverMessage();
+                
+                cleverMsg.setDst(this.connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN));
+                
+                cleverMsg.setSrc(this.connectionXMPP.getUsername());
+                
+                cleverMsg.setHasReply(false);
+                
+                cleverMsg.setType( CleverMessage.MessageType.MEASURE );
+      
+                cleverMsg.setBody("    <notification useAttachementId=\"true\">\n" +
+"      <hostId>webuntu</hostId>\n" +
+"      <agentId />\n" +
+"      <notificationId>PRESENCE/HM</notificationId>\n" +
+"    </notification>");
+                
+                
+                cleverMsg.addAttachment( measure );
+                
+                logger.debug("ZZZ " + cleverMsg.getDst() +" "+cleverMsg.getSrc()+"\n"+measure);
+                
+                //cleverMsg.setReplyToMsg(message.getId());
+                
+                connectionXMPP.sendMessage(connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN), cleverMsg);
+                
+                
+                
+                
+                /*
+                try {
+                    
+                    
+                    if (cleverMsg.needsForReply()) {
+                        
+                        cleverMsg.setType( CleverMessage.MessageType.REPLY );
+                        
+                        cleverMsg.setBody( new OperationResult( Result.ResultType.OBJECT,
+                                                    obj,
+                                                    methodConf.getModuleName(),
+                                                    methodConf.getMethodName() ) 
+                                         );
+                        
+                        cleverMsg.addAttachment( measure );
+
+                    } else {
+
+                        return;
+                    }
+                 
+                    
+                    
+
+                } catch (CleverException ex) {
+                    //TODO: use specialized CleverException for non such method
+
+                    cleverMsg.setType(CleverMessage.MessageType.ERROR);
+                    cleverMsg.setBody(new ErrorResult(Result.ResultType.ERROR,
+                            (new CleverException(ex)).toString(),
+                            methodConf.getModuleName(),
+                            methodConf.getMethodName()));
+                    
+                    cleverMsg.addAttachment(measure);
+
+
+                } finally {
+                    connectionXMPP.sendMessage(this.connectionXMPP.getUsername(), cleverMsg);
+                }
+         */
+     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

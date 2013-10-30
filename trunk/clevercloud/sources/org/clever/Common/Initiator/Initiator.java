@@ -387,7 +387,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
          //procedo con l'autenticazione sul server XMPP:                    
          conn.authenticate(username, password ); //mi autentico sul server XMPP               
          //conn.joinInRoom(room, ROOM.CLEVER_MAIN, conn.getUsername(),"INITIATOR"); //entro nella stanza CLEVER_MAIN con lo status INITIATOR!!!!        
-        conn.joinInRoom(room, ROOM.CLEVER_MAIN, nickname); // 28//11/2011: ho cambiato il valore dello status, quando si connette solo l'initiator lo status è vuoto!
+         conn.joinInRoom(room, ROOM.CLEVER_MAIN, nickname); // 28//11/2011: ho cambiato il valore dello status, quando si connette solo l'initiator lo status è vuoto!
          
          conn.addListener(ROOM.CLEVER_MAIN, new Initiator_Listener(this.conn, this, this.flag_abilityCM, this.flag_abilityHM)); //collego il listener all'initiator!                 
      } 

@@ -67,7 +67,8 @@ public class CleverMessage
     NOTIFY,
     REPLY,
     ERROR,
-    UNKNOWN
+    UNKNOWN,
+    MEASURE
   }
 
   private Schema xsd = null;
@@ -143,6 +144,10 @@ public class CleverMessage
     else if( pars.getElementAttributeContent( "message", "type" ).equalsIgnoreCase( "Error" ) )
     {
       type = CleverMessage.MessageType.ERROR;
+    }
+    else if( pars.getElementAttributeContent( "message", "type" ).equalsIgnoreCase( "Measure" ) )
+    {
+      type = CleverMessage.MessageType.MEASURE;
     }
     else
     {
@@ -379,6 +384,8 @@ public class CleverMessage
 
   public String toXML()
   {
+      
+      
     Element root = new Element( "message" );
     
 
@@ -399,6 +406,10 @@ public class CleverMessage
     Element reply = new Element( "replyToMsg" );
     reply.addContent( String.valueOf( replyToMsg ) );
     root.addContent( reply );
+    
+    
+    
+    
     if( hasReply )
     {
       Element hreply = new Element( "hasReply" );
@@ -414,9 +425,12 @@ public class CleverMessage
     Element b = new Element( "body" );
     SAXBuilder builder = new SAXBuilder();
     Document document = null;
+   
+    
     try
     {
       document = builder.build( new StringReader( this.getBody() ) );
+      
     }
     catch( JDOMException ex )
     {

@@ -75,6 +75,7 @@ public class MonitorManagerAgent extends CmAgent
         boolean checkdb=true;
         List params = null;
 
+        
         if(super.getAgentName().equals("NoName"))
             super.setAgentName("MonitorManagerAgent");
         

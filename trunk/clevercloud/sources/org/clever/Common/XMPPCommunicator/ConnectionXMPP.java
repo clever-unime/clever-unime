@@ -44,6 +44,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.ParticipantStatusListener;
 import org.apache.log4j.*;
+import static org.clever.Common.Communicator.Agent.logger;
 import org.clever.Common.Exceptions.CleverException;
 import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.Chat;
@@ -394,7 +395,14 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
    */
   public void sendMessage( String jid, final CleverMessage message )
   {
+      
+      
+      
     logger.debug( "Sending message: " + message.toXML() );
+    
+    
+    
+    
     jid += "@" + this.getServer();
     // See if there is already a chat open
     Chat chat = cleverChatManagerListener.getChat( jid.toLowerCase() );
