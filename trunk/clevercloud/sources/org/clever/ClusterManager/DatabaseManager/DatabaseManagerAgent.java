@@ -25,7 +25,8 @@
  */
 package org.clever.ClusterManager.DatabaseManager;
 
-
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.XMLTools.FileStreamer;
