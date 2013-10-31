@@ -27,6 +27,30 @@ package org.clever.Common.Measure;
  *
  * @author webwolf
  */
-public class Ram {
+public class MemoryM extends Measure{
+    
+    public enum SubType_m {total, used, free};
+    private SubType_m stype_m=null;
+    
+    
+    public MemoryM(MemoryM.SubType_m stype_m, Measure.Unit_m unit_m){
+        
+        super();
+        
+        this.stype_m=stype_m;
+
+        super.setUnit_m(unit_m);
+        
+        super.setType_m(Measure.Type_m.mem);
+
+       
+    }
+    
+    @Override
+    public String toString(){
+        String str=this.stype_m + " " + this.getValue().toString();
+        return str;
+    }
+
     
 }

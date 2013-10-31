@@ -194,14 +194,12 @@ public class DbSedna implements DatabaseManagerPlugin {
     
     
     
-    
+    //NEWMONITOR
     public void insertMeasure(String measure){
         
         Collection collect = null;
         try {
-            
-            logger.debug("BBB");
-            
+
             
             collect = this.connect();
             SednaUpdateService serviceUpdate = (SednaUpdateService) collect.getService("SednaUpdateService", "1.0");

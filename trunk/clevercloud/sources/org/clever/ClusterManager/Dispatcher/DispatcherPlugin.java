@@ -52,4 +52,11 @@ public interface DispatcherPlugin extends RunnerPlugin
   //  public void scheduleMsg(CleverMessage msg);
 
   public void setOwner(Agent owner);
+  
+  
+  //NEWMONITOR
+  public void handleMeasure(final CleverMessage message);
+          
+          
+          
 }

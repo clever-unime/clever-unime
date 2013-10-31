@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
 import org.clever.Common.Communicator.Agent;
@@ -80,12 +81,9 @@ class RequestThread implements Runnable {
 
                     dispatcher.dispatch( this.message );
                     break;
-                      /*
-                  case MEASURE:
+                      
 
-                    dispatcher.dispatchMeasure( this.message );
-                    break;
-                    */
+                   
         }
        }
 
@@ -323,6 +321,33 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
 
 
     }*/
+    
+    
+    //NEWMONITOR
+    @Override
+    public void handleMeasure(final CleverMessage message) {
+        
+        String result = message.getAttachment(0);
+        String src=message.getSrc();
+        result= "<sourceHM name=\""+src+"\" >\n"+result+"\n</sourceHM>";
+        
+        logger.debug("Measure Received: "+ result);
+        
+        List params1 = new ArrayList();
+        params1.add(result);
+        
+        try {
+            owner.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
+        } catch (CleverException ex) {
+            logger.error("Send Measure to DatabaseManagerAgent failed: "+ ex);
+        }
+        
+        
+    }
+    
+    
+    
+    
 
     @Override
     public void handleNotification(Notification notification) {

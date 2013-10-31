@@ -100,7 +100,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     public String getCpuIdle(){
         
         
-        Cpu cpu=null;
+        //Cpu cpu=null;
         CpuPerc cpuperc=null;
         try {
             //cpu = this.sigar.getCpu();
@@ -110,16 +110,12 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         }
         String xmlobj=null;
         
-        CpuM obj = new CpuM(CpuM.SubType_m.idle, "%");
+        CpuM obj = new CpuM(CpuM.SubType_m.idle, CpuM.Unit_m.percent);
         obj.setValue(CpuPerc.format(cpuperc.getIdle()));
         
         
         //FORMAT obj TO xml
         xmlobj=MessageFormatter.messageFromObject(obj);
-        
-        
-        
-        
         
         
         /*
@@ -146,7 +142,68 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         return xmlobj;
     }
     
+    public String getCpuSys(){
+        
+        
+        CpuPerc cpuperc=null;
+        String xmlobj=null;
+        CpuM obj = null;
+        
+        try {
+            
+            cpuperc = this.sigar.getCpuPerc();
+            
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        obj = new CpuM(CpuM.SubType_m.sys, CpuM.Unit_m.percent);
+        obj.setValue(CpuPerc.format(cpuperc.getSys()));
+        
+        
+        //FORMAT obj TO xml
+        xmlobj=MessageFormatter.messageFromObject(obj);
+        
 
+        
+        return xmlobj;
+    }
+
+    
+    public String getCpuUser(){
+        
+        
+        
+        CpuPerc cpuperc=null;
+        String xmlobj=null;
+        CpuM obj = null;
+        
+        try {
+            
+            cpuperc = this.sigar.getCpuPerc();
+            
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        obj = new CpuM(CpuM.SubType_m.usr, CpuM.Unit_m.percent);
+        obj.setValue(CpuPerc.format(cpuperc.getUser()));
+        
+        
+        //FORMAT obj TO xml
+        xmlobj=MessageFormatter.messageFromObject(obj);
+        
+
+        
+        return xmlobj;
+    }
+    
+    
+    
+    
+    
     //----------------------------------------
     //NETWORKING MONITOR
     //----------------------------------------   
@@ -159,28 +216,31 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
 
     public String getTotalUsedMemory() {
         
-        
-        System.out.println( "sono dentro getTotalUsedMemory" ); 
-        
-        String totmem=null;
         Mem mem = null;
+        
+        String xmlobj=null;
+        MemoryM obj = null;
         
         try {
             
             mem = this.sigar.getMem();
             
-            
-            
-        } catch (SigarException se) {
-            se.printStackTrace();
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        totmem="Total used system memory.......: " + mem.getUsed() / 1024 / 1024+ " MB";
         
-        //System.out.println(totmem);
+        obj = new MemoryM(MemoryM.SubType_m.used, MemoryM.Unit_m.MB);
+        obj.setValue(mem.getUsed() / 1024 / 1024);
         
         
-        return totmem;
+        //FORMAT obj TO xml
+        xmlobj=MessageFormatter.messageFromObject(obj);
+        
+
+        
+        return xmlobj;       
+       
         
     }
 

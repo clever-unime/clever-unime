@@ -54,7 +54,7 @@ public class ThSendMeasure implements Runnable{
     private ConnectionXMPP conn=null;
     private CloudMonitorAgent ma=null;
 
-    
+    private List params = new ArrayList();
     
    
     //List params = null;
@@ -68,30 +68,50 @@ public class ThSendMeasure implements Runnable{
     }
     
     
+    public void dispatchMeasure(String measure){
+        
+        try {
+                this.params.add(measure);
+                this.ma.invoke("DispatcherAgent","sendMeasure", false, this.params);
+                this.params.clear();
+
+        }catch (CleverException ex) {
+                logger.error("Error: "+ ex );
+        }
+        
+    }
     
     @Override
     public void run() {
         
-        List params = new ArrayList();
+        
         
         logger.debug("ThSendMeasure start!");
+        
+        //Inizializzazione
         try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {
-            Logger.getLogger(ThSendMeasure.class.getName()).log(Level.SEVERE, null, ex);
+            logger.debug("ThSendMeasure sleep failed: "+ex);
         }
+        
+        
+        
         for(int i=0; i<10; i++){
             
-            params.add(this.monitorPlugin.getCpuIdle());
-
-            try {
-                
-                this.ma.invoke("DispatcherAgent","sendMeasure", false, params);
-
-            } catch (CleverException ex) {
-                logger.error("Error: "+ ex );
-            }
-            params.clear();
+            
+            //CPU monitor
+            dispatchMeasure(this.monitorPlugin.getCpuIdle());
+            
+            dispatchMeasure(this.monitorPlugin.getCpuSys());
+            
+            dispatchMeasure(this.monitorPlugin.getCpuUser());
+            
+            
+            //Memory monitor
+            dispatchMeasure(this.monitorPlugin.getTotalUsedMemory());
+            
+            
         }
         
     }

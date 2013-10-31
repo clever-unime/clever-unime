@@ -83,8 +83,6 @@ public class MonitorManagerAgent extends CmAgent
         super.start();
         
         
-        
-        
         //check "measure" node into sedna db
         checkdb=(Boolean)this.invoke("DatabaseManagerAgent", "checkMeasure", true, params);
 

@@ -61,6 +61,7 @@ import org.xml.sax.SAXException;
 
 public class CleverMessage
 {
+  //NEWMONITOR
   public enum MessageType
   {
     REQUEST,
@@ -147,6 +148,7 @@ public class CleverMessage
     }
     else if( pars.getElementAttributeContent( "message", "type" ).equalsIgnoreCase( "Measure" ) )
     {
+      //NEWMONITOR
       type = CleverMessage.MessageType.MEASURE;
     }
     else

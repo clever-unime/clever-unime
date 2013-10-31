@@ -20,6 +20,9 @@ public interface CloudMonitorPlugin extends RunnerPlugin{
     public String getTotalUsedMemory();
     
     public String getCpuIdle();
+    public String getCpuSys();
+    public String getCpuUser();
+    
     
     
 }

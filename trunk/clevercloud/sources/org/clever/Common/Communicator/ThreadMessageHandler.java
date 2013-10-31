@@ -27,6 +27,7 @@ package org.clever.Common.Communicator;
 import java.util.logging.Logger;
 import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
+import static org.clever.Common.XMPPCommunicator.CleverMessage.MessageType.MEASURE;
 
 /**
  *
@@ -68,26 +69,34 @@ class ThreadMessageHandler extends Thread{
           while(true)
           {
              switch( this.message.getType() )
-
             {
 
                       case NOTIFY:
                           Notification notification=this.message.getNotificationFromMessage();
-
-
                           //Pass notification to dispatcher
                           dispatcher.handleNotification(notification);
-
                         break;
+                          
                       case ERROR:
+                          
                       case REPLY:
                         dispatcher.handleMessage( this.message );
                         break;
+                          
                       case REQUEST:
 
                         dispatcher.dispatch( this.message );
                         break;
+                          
+                      //NEWMONITOR
+                      case MEASURE:
+                        //org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger("Dispatcher Measure");
+                        //logger.debug("CIAO");
+                        dispatcher.handleMeasure( this.message );
+                        break;
+                          
             }
+             
             this.threadDispatcher.threadTerminated(this);
             try {
                 this.wait();

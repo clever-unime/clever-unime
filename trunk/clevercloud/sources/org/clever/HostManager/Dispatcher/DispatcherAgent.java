@@ -44,6 +44,8 @@ import org.clever.Common.XMPPCommunicator.Result;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Packet;
 
+
+import org.clever.Common.Measure.*;
 /**
  *
  * @author alessiodipietro
@@ -214,7 +216,7 @@ public class DispatcherAgent extends Agent
     
     
     
-    
+        //NEWMONITOR
         public void sendMeasure(String measure) {
          
            
@@ -229,64 +231,26 @@ public class DispatcherAgent extends Agent
                 
                 cleverMsg.setType( CleverMessage.MessageType.MEASURE );
       
-                cleverMsg.setBody("    <notification useAttachementId=\"true\">\n" +
-"      <hostId>webuntu</hostId>\n" +
-"      <agentId />\n" +
-"      <notificationId>PRESENCE/HM</notificationId>\n" +
-"    </notification>");
+                cleverMsg.setBody(
+                                    "    <measure useAttachementId=\"true\">\n" +
+                                    "      <HM>"+this.connectionXMPP.getUsername()+"</HM>\n" +
+                                    "      <agentId>CloudMonitorAgent</agentId>\n" +
+                                    "      <measureId></measureId>\n" +
+                                    "      <timestamp></timestamp>\n" +
+                                    "    </measure>"
+                                    );
                 
                 
                 cleverMsg.addAttachment( measure );
-                
-                logger.debug("ZZZ " + cleverMsg.getDst() +" "+cleverMsg.getSrc()+"\n"+measure);
+
+                        
+                logger.debug("ZZZ " + cleverMsg.getDst() +" "+cleverMsg.getSrc()+"\n");
                 
                 //cleverMsg.setReplyToMsg(message.getId());
                 
                 connectionXMPP.sendMessage(connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN), cleverMsg);
                 
-                
-                
-                
-                /*
-                try {
-                    
-                    
-                    if (cleverMsg.needsForReply()) {
-                        
-                        cleverMsg.setType( CleverMessage.MessageType.REPLY );
-                        
-                        cleverMsg.setBody( new OperationResult( Result.ResultType.OBJECT,
-                                                    obj,
-                                                    methodConf.getModuleName(),
-                                                    methodConf.getMethodName() ) 
-                                         );
-                        
-                        cleverMsg.addAttachment( measure );
 
-                    } else {
-
-                        return;
-                    }
-                 
-                    
-                    
-
-                } catch (CleverException ex) {
-                    //TODO: use specialized CleverException for non such method
-
-                    cleverMsg.setType(CleverMessage.MessageType.ERROR);
-                    cleverMsg.setBody(new ErrorResult(Result.ResultType.ERROR,
-                            (new CleverException(ex)).toString(),
-                            methodConf.getModuleName(),
-                            methodConf.getMethodName()));
-                    
-                    cleverMsg.addAttachment(measure);
-
-
-                } finally {
-                    connectionXMPP.sendMessage(this.connectionXMPP.getUsername(), cleverMsg);
-                }
-         */
      }
     
     
