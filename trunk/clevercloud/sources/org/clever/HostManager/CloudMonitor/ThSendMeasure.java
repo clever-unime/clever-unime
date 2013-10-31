@@ -99,18 +99,31 @@ public class ThSendMeasure implements Runnable{
         
         for(int i=0; i<10; i++){
             
-            
+            /*
             //CPU monitor
             dispatchMeasure(this.monitorPlugin.getCpuIdle());
-            
             dispatchMeasure(this.monitorPlugin.getCpuSys());
-            
             dispatchMeasure(this.monitorPlugin.getCpuUser());
             
             
             //Memory monitor
             dispatchMeasure(this.monitorPlugin.getTotalUsedMemory());
+            dispatchMeasure(this.monitorPlugin.getTotalFreeMemory());
+            dispatchMeasure(this.monitorPlugin.getTotalMemory());
             
+            
+            //Network monitor
+            dispatchMeasure(this.monitorPlugin.getInterfaceRX());
+            dispatchMeasure(this.monitorPlugin.getInterfaceTX());
+            dispatchMeasure(this.monitorPlugin.getInterfacePktRX());
+            dispatchMeasure(this.monitorPlugin.getInterfacePktTX());
+            */
+            
+            
+            //Storage monitor
+            dispatchMeasure(this.monitorPlugin.getTotalStorage());
+            dispatchMeasure(this.monitorPlugin.getAvailStorage());
+
             
         }
         

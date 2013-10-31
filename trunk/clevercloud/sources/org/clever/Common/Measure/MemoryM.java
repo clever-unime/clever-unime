@@ -33,11 +33,9 @@ public class MemoryM extends Measure{
     private SubType_m stype_m=null;
     
     
-    public MemoryM(MemoryM.SubType_m stype_m, Measure.Unit_m unit_m){
+    public MemoryM(MemoryM.SubType_m stype_m, MemoryM.Unit_m unit_m){
         
         super();
-        
-        this.stype_m=stype_m;
 
         super.setUnit_m(unit_m);
         

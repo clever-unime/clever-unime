@@ -27,6 +27,25 @@ package org.clever.Common.Measure;
  *
  * @author webwolf
  */
-public class Network {
+public class NetworkM extends Measure{
+    
+    public enum SubType_m {rx, tx, pkt_rx, pkt_tx};
+    private SubType_m stype_m=null;
+    
+    public NetworkM(NetworkM.SubType_m stype_m, NetworkM.Unit_m unit_m){
+        
+        super();
+
+        super.setUnit_m(unit_m);
+        
+        super.setType_m(Measure.Type_m.net);
+       
+    }
+    
+    @Override
+    public String toString(){
+        String str=this.stype_m + " " + this.getValue().toString();
+        return str;
+    }  
     
 }
