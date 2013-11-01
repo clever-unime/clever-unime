@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <server>nicolaubuntu</server>
+  <port>5222</port>
+  <tls>false</tls>
+  <caJks />
+  <caJksPassword />
+  <certPkcs12 />
+  <certPkcs12Password />
+  <username>probe</username>
+  <password>pass</password>
+  <nickname>probe</nickname>
+  <room>room@conference.nicolaubuntu</room>
+  <threshold>1</threshold>
+  <!-- la threshold effettivamnte usata x istanziare i CC è questa!! -->
+  <activatedCM>true</activatedCM>
+  <!--> questo flag specifica se l'initiator può istanziare Cluster manager <-->
+  <activatedHM>true</activatedHM>
+  <!--questo flag specifica se l'initiator può istanziare Host manager -->
+  <replaceAgents>true</replaceAgents>
+  <librariespath>./libraries</librariespath>
+  <notificationsthreshold>200</notificationsthreshold>
+  <numReloadAgent>4</numReloadAgent>
+  <!--imposto il numero di lanci max consentiti per un agente-->
+  <timeReloadAgent>10</timeReloadAgent>
+  <!-- imposto il max tempo x il rilancio di un agente -->
+  <agents>
+      
+    <agent>
+      <class>org.clever.HostManager.HyperVisor.HyperVisorAgent</class>
+      <name>HyperVisorAgent</name>
+    </agent>
+    <agent>
+      <class>org.clever.HostManager.ImageManager.ImageManagerAgent</class>
+      <name />
+    </agent>
+    <agent>
+      <class>org.clever.HostManager.Monitor.MonitorAgent</class>
+      <name />
+    </agent>
+    <agent>
+      <class>org.clever.HostManager.NetworkManager.NetworkManagerAgent</class>
+      <name />
+    </agent>
+    
+    <agent>
+      <class>org.clever.HostManager.CloudMonitor.CloudMonitorAgent</class>
+      <name>CloudMonitorAgent</name>
+    </agent>
+    
+  </agents>
+</configuration>
+

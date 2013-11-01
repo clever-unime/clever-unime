@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+      <modulefactory>
+         <!--<class>org.clever.Common.Initiator.ModuleFactory.ModuleFactoryLocal</class>-->
+         <class>org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking</class>
+          <name></name> 
+      </modulefactory>
+      
+</configuration>

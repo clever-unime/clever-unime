@@ -1,0 +1,360 @@
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2013-10-29 19:31:40,747 [main] INFO  XMPPCommunicator {138}- XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2013-10-29 19:31:41,342 [main] DEBUG XMPPCommunicator {308}- XMPP connection established with username: probe password: pass server: nicolaubuntu port: 5222
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2013-10-29 19:31:41,348 [main] INFO  XMPPCommunicator {242}- Creating room: room@conference.nicolaubuntu with nickname: probe
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2013-10-29 19:31:41,377 [main] INFO  XMPPCommunicator {248}- Created room: room@conference.nicolaubuntu with nickname: probe
+org.clever.Common.Initiator.Initiator: start 2013-10-29 19:31:41,386 [main] INFO  Initiator {497}- Lancio processo Initiator, pid: 6761@webuntu
+org.clever.Common.Initiator.Initiator: launchHostCoordinator 2013-10-29 19:31:41,388 [main] INFO  Initiator {441}- Lancio host coordinator
+org.clever.HostManager.HostCoordinator.HostCoordinator: init 2013-10-29 19:31:41,392 [main] DEBUG Host Coordinator {92}- CLASSPATH= /home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/log4j.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/jdom.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/xstream-1.4.2-20110928.170215-1.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/smack.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/jug-lgpl-2.0.0.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/smackx.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/bcprov-jdk16-145.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/client-1.1.3.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/api-1.1.3.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/sigar.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/dbus-2.7.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/hexdump-0.2.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/build/classes
+org.clever.HostManager.HostCoordinator.HostCoordinator: init 2013-10-29 19:31:41,398 [main] DEBUG Host Coordinator {125}- ./libraries:/usr/lib/jvm/java-7-oracle/jre/lib/amd64:/usr/lib/jvm/java-7-oracle/jre/lib/i386::/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib:./libraries
+org.clever.HostManager.HostCoordinator.HostCoordinator: init 2013-10-29 19:31:41,398 [main] INFO  Host Coordinator {127}- Initiator created
+org.clever.HostManager.HostCoordinator.HostCoordinator: init 2013-10-29 19:31:41,400 [main] INFO  Host Coordinator {137}- 
+
+ valori nuovi caricati: 4 10
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:31:41,410 [main] INFO  DispatcherAgentHM {91}- 
+istanzio ModuleCommunicator(agentName), dove agentName: DispatcherAgent
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,418 [main] INFO  DbusCommunicationPlugin {62}- Initializing the Dbus Communication plugin 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,505 [main] INFO  DbusCommunicationPlugin {65}- Creating the connection to the SessionBus 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,520 [main] DEBUG DbusCommunicationPlugin {71}- Creating the Service on Dbus org.clever.Common.CommunicatorPlugins.DispatcherAgentHM
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,521 [main] DEBUG DbusCommunicationPlugin {74}- Creating the Object on Dbus /org/clever/Common/CommunicatorPlugins/Dbus/CleverDbusInterface/DispatcherAgent
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:31:41,521 [main] INFO  DispatcherAgentHM {94}- 
+nfine istanza ModuleCommunicator
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: getHostName 2013-10-29 19:31:41,523 [main] DEBUG XMPPCommunicator {437}- Host name: webuntu
+org.clever.HostManager.Dispatcher.NotificationThread: run 2013-10-29 19:31:41,523 [NotificationThread] DEBUG NotificationThread {74}- Start NotificationThread run!
+org.clever.HostManager.Dispatcher.DispatcherAgent: initialization 2013-10-29 19:31:41,523 [main] DEBUG DispatcherAgentHM {151}- ?=)** hostId= webuntu
+org.clever.HostManager.Dispatcher.DispatcherAgent: sendNotification 2013-10-29 19:31:41,524 [main] DEBUG DispatcherAgentHM {160}- preparing notify clever message
+org.clever.HostManager.Dispatcher.DispatcherAgent: sendNotification 2013-10-29 19:31:41,631 [main] DEBUG DispatcherAgentHM {174}- notification sent
+org.clever.HostManager.Dispatcher.NotificationThread: run 2013-10-29 19:31:41,631 [NotificationThread] DEBUG NotificationThread {103}- X?X target=cmnicolaubuntu
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: sendMessage 2013-10-29 19:31:41,634 [NotificationThread] DEBUG XMPPCommunicator {397}- Sending message: <?xml version="1.0" encoding="UTF-8"?>
+<message id="873902091" type="NOTIFY">
+  <source>probe</source>
+  <destination>cmnicolaubuntu</destination>
+  <timestamp>Tue Oct 29 19:31:41 CET 2013</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <notification useAttachementId="true">
+      <hostId>probe</hostId>
+      <agentId />
+      <notificationId>PRESENCE/HM</notificationId>
+    </notification>
+  </body>
+  <attachement id="0"><![CDATA[<null/>]]></attachement>
+</message>
+
+
+org.clever.Common.Initiator.ModuleFactory.ModuleFactory: getInstance 2013-10-29 19:31:41,637 [main] DEBUG ModuleFactory {169}- ModuleFactory created: org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:31:41,637 [main] INFO  InfoAgent {91}- 
+istanzio ModuleCommunicator(agentName), dove agentName: InfoAgent
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,640 [main] INFO  DbusCommunicationPlugin {62}- Initializing the Dbus Communication plugin 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,641 [main] INFO  DbusCommunicationPlugin {65}- Creating the connection to the SessionBus 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,642 [main] DEBUG DbusCommunicationPlugin {71}- Creating the Service on Dbus org.clever.Common.CommunicatorPlugins.InfoAgentHM
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,644 [main] DEBUG DbusCommunicationPlugin {74}- Creating the Object on Dbus /org/clever/Common/CommunicatorPlugins/Dbus/CleverDbusInterface/InfoAgent
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:31:41,644 [main] INFO  InfoAgent {94}- 
+nfine istanza ModuleCommunicator
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,645 [main] INFO  Host Coordinator {192}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,648 [main] INFO  ModuleFactory {130}- New process launched!HyperVisorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,649 [main] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,651 [main] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,652 [main] INFO  Host Coordinator {194}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,652 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.HyperVisor.HyperVisorAgent
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,652 [main] INFO  Host Coordinator {188}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,653 [main] INFO  ModuleFactory {86}- New process launched!
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,653 [main] INFO  ModuleFactory {104}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,655 [main] INFO  ModuleFactory {111}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,655 [main] INFO  Host Coordinator {190}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,655 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.ImageManager.ImageManagerAgent
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,656 [main] INFO  Host Coordinator {188}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,656 [main] INFO  ModuleFactory {86}- New process launched!
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,657 [main] INFO  ModuleFactory {104}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,658 [main] INFO  ModuleFactory {111}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,658 [main] INFO  Host Coordinator {190}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,659 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.Monitor.MonitorAgent
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,659 [main] INFO  Host Coordinator {188}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,660 [main] INFO  ModuleFactory {86}- New process launched!
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,660 [main] INFO  ModuleFactory {104}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,662 [main] INFO  ModuleFactory {111}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,662 [main] INFO  Host Coordinator {190}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,662 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.NetworkManager.NetworkManagerAgent
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,663 [main] INFO  Host Coordinator {192}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,663 [main] INFO  ModuleFactory {130}- New process launched!CloudMonitorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,665 [main] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:41,666 [main] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,667 [main] INFO  Host Coordinator {194}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,667 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.CloudMonitor.CloudMonitorAgent
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,675 [main] INFO  DbusCommunicationPlugin {62}- Initializing the Dbus Communication plugin 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,675 [main] INFO  DbusCommunicationPlugin {65}- Creating the connection to the SessionBus 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,677 [main] DEBUG DbusCommunicationPlugin {71}- Creating the Service on Dbus org.clever.Common.CommunicatorPlugins.HostCoordinatorHM
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,678 [main] DEBUG DbusCommunicationPlugin {74}- Creating the Object on Dbus /org/clever/Common/CommunicatorPlugins/Dbus/CleverDbusInterface/HostCoordinator
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,678 [main] DEBUG Host Coordinator {214}- Module Communicator instantiated
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:41,678 [main] INFO  Host Coordinator {215}- HostCoordinator created
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:31:41,832 [main] INFO  CloudMonitorAgent {91}- 
+istanzio ModuleCommunicator(agentName), dove agentName: CloudMonitorAgent
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,891 [main] INFO  DbusCommunicationPlugin {62}- Initializing the Dbus Communication plugin 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,991 [main] INFO  DbusCommunicationPlugin {65}- Creating the connection to the SessionBus 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,994 [main] DEBUG DbusCommunicationPlugin {71}- Creating the Service on Dbus org.clever.Common.CommunicatorPlugins.CloudMonitorAgentHM
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:41,995 [main] DEBUG DbusCommunicationPlugin {74}- Creating the Object on Dbus /org/clever/Common/CommunicatorPlugins/Dbus/CleverDbusInterface/CloudMonitorAgent
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:31:41,996 [main] INFO  CloudMonitorAgent {94}- 
+nfine istanza ModuleCommunicator
+org.clever.HostManager.CloudMonitor.CloudMonitorAgent: initialization 2013-10-29 19:31:42,006 [main] INFO  CloudMonitorAgent {69}- CloudMonitorPlugin created 
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:42,863 [Thread-19] INFO  ModuleFactory {130}- New process launched!NetworkManagerAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:42,864 [Thread-19] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:42,880 [Thread-19] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:43,463 [Thread-13] INFO  ModuleFactory {130}- New process launched!HyperVisorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:43,464 [Thread-13] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:43,469 [Thread-13] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:43,818 [Thread-17] INFO  ModuleFactory {130}- New process launched!MonitorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:43,819 [Thread-17] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:43,822 [Thread-17] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:47,680 [Thread-24] INFO  ModuleFactory {130}- New process launched!NetworkManagerAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:47,681 [Thread-24] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:47,684 [Thread-24] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:48,963 [Thread-26] INFO  ModuleFactory {130}- New process launched!HyperVisorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:48,965 [Thread-26] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:48,968 [Thread-26] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:49,045 [Thread-15] INFO  ModuleFactory {130}- New process launched!ImageManagerAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:49,047 [Thread-15] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:49,050 [Thread-15] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:49,982 [Thread-32] INFO  ModuleFactory {130}- New process launched!HyperVisorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:49,984 [Thread-32] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:49,987 [Thread-32] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:50,059 [Thread-28] INFO  ModuleFactory {130}- New process launched!MonitorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:50,059 [Thread-28] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:50,060 [Thread-28] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:50,536 [Thread-38] INFO  ModuleFactory {130}- New process launched!MonitorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:50,538 [Thread-38] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:50,542 [Thread-38] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:51,707 [Thread-30] INFO  ModuleFactory {130}- New process launched!NetworkManagerAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:51,709 [Thread-30] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:51,712 [Thread-30] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:52,972 [Thread-42] INFO  ModuleFactory {130}- New process launched!NetworkManagerAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:52,972 [Thread-36] INFO  ModuleFactory {130}- New process launched!HyperVisorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:52,972 [Thread-40] INFO  ModuleFactory {130}- New process launched!MonitorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:52,972 [Thread-34] INFO  ModuleFactory {130}- New process launched!ImageManagerAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:52,973 [Thread-36] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:52,974 [Thread-40] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2013-10-29 19:31:55,221 [main] INFO  XMPPCommunicator {138}- XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2013-10-29 19:31:55,807 [main] DEBUG XMPPCommunicator {308}- XMPP connection established with username: probe password: pass server: nicolaubuntu port: 5222
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2013-10-29 19:31:55,813 [main] INFO  XMPPCommunicator {242}- Creating room: room@conference.nicolaubuntu with nickname: probe
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2013-10-29 19:31:55,843 [main] INFO  XMPPCommunicator {248}- Created room: room@conference.nicolaubuntu with nickname: probe
+org.clever.Common.Initiator.Initiator: start 2013-10-29 19:31:55,848 [main] INFO  Initiator {497}- Lancio processo Initiator, pid: 7191@webuntu
+org.clever.Common.Initiator.Initiator: launchHostCoordinator 2013-10-29 19:31:55,848 [main] INFO  Initiator {441}- Lancio host coordinator
+org.clever.HostManager.HostCoordinator.HostCoordinator: init 2013-10-29 19:31:55,851 [main] DEBUG Host Coordinator {92}- CLASSPATH= /home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/log4j.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/jdom.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/xstream-1.4.2-20110928.170215-1.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/smack.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/jug-lgpl-2.0.0.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/smackx.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/bcprov-jdk16-145.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/client-1.1.3.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/api-1.1.3.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/sigar.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/dbus-2.7.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/hexdump-0.2.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/build/classes
+org.clever.HostManager.HostCoordinator.HostCoordinator: init 2013-10-29 19:31:55,859 [main] DEBUG Host Coordinator {125}- ./libraries:/usr/lib/jvm/java-7-oracle/jre/lib/amd64:/usr/lib/jvm/java-7-oracle/jre/lib/i386::/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib:./libraries
+org.clever.HostManager.HostCoordinator.HostCoordinator: init 2013-10-29 19:31:55,860 [main] INFO  Host Coordinator {127}- Initiator created
+org.clever.HostManager.HostCoordinator.HostCoordinator: init 2013-10-29 19:31:55,862 [main] INFO  Host Coordinator {137}- 
+
+ valori nuovi caricati: 4 10
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:31:55,872 [main] INFO  DispatcherAgentHM {91}- 
+istanzio ModuleCommunicator(agentName), dove agentName: DispatcherAgent
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:55,879 [main] INFO  DbusCommunicationPlugin {62}- Initializing the Dbus Communication plugin 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:55,967 [main] INFO  DbusCommunicationPlugin {65}- Creating the connection to the SessionBus 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:55,979 [main] DEBUG DbusCommunicationPlugin {71}- Creating the Service on Dbus org.clever.Common.CommunicatorPlugins.DispatcherAgentHM
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:55,980 [main] DEBUG DbusCommunicationPlugin {74}- Creating the Object on Dbus /org/clever/Common/CommunicatorPlugins/Dbus/CleverDbusInterface/DispatcherAgent
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:31:55,981 [main] INFO  DispatcherAgentHM {94}- 
+nfine istanza ModuleCommunicator
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: getHostName 2013-10-29 19:31:55,983 [main] DEBUG XMPPCommunicator {437}- Host name: webuntu
+org.clever.HostManager.Dispatcher.NotificationThread: run 2013-10-29 19:31:55,983 [NotificationThread] DEBUG NotificationThread {74}- Start NotificationThread run!
+org.clever.HostManager.Dispatcher.DispatcherAgent: initialization 2013-10-29 19:31:55,984 [main] DEBUG DispatcherAgentHM {151}- ?=)** hostId= webuntu
+org.clever.HostManager.Dispatcher.DispatcherAgent: sendNotification 2013-10-29 19:31:55,984 [main] DEBUG DispatcherAgentHM {160}- preparing notify clever message
+org.clever.HostManager.Dispatcher.DispatcherAgent: sendNotification 2013-10-29 19:31:56,087 [main] DEBUG DispatcherAgentHM {174}- notification sent
+org.clever.HostManager.Dispatcher.NotificationThread: run 2013-10-29 19:31:56,087 [NotificationThread] DEBUG NotificationThread {103}- X?X target=cmnicolaubuntu
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: sendMessage 2013-10-29 19:31:56,090 [NotificationThread] DEBUG XMPPCommunicator {397}- Sending message: <?xml version="1.0" encoding="UTF-8"?>
+<message id="1466699617" type="NOTIFY">
+  <source>probe</source>
+  <destination>cmnicolaubuntu</destination>
+  <timestamp>Tue Oct 29 19:31:56 CET 2013</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <notification useAttachementId="true">
+      <hostId>probe</hostId>
+      <agentId />
+      <notificationId>PRESENCE/HM</notificationId>
+    </notification>
+  </body>
+  <attachement id="0"><![CDATA[<null/>]]></attachement>
+</message>
+
+
+org.clever.Common.Initiator.ModuleFactory.ModuleFactory: getInstance 2013-10-29 19:31:56,093 [main] DEBUG ModuleFactory {169}- ModuleFactory created: org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:31:56,093 [main] INFO  InfoAgent {91}- 
+istanzio ModuleCommunicator(agentName), dove agentName: InfoAgent
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:56,097 [main] INFO  DbusCommunicationPlugin {62}- Initializing the Dbus Communication plugin 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:56,097 [main] INFO  DbusCommunicationPlugin {65}- Creating the connection to the SessionBus 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:56,099 [main] DEBUG DbusCommunicationPlugin {71}- Creating the Service on Dbus org.clever.Common.CommunicatorPlugins.InfoAgentHM
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:56,100 [main] DEBUG DbusCommunicationPlugin {74}- Creating the Object on Dbus /org/clever/Common/CommunicatorPlugins/Dbus/CleverDbusInterface/InfoAgent
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:31:56,100 [main] INFO  InfoAgent {94}- 
+nfine istanza ModuleCommunicator
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,101 [main] INFO  Host Coordinator {192}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,104 [main] INFO  ModuleFactory {130}- New process launched!HyperVisorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,106 [main] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,108 [main] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,108 [main] INFO  Host Coordinator {194}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,108 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.HyperVisor.HyperVisorAgent
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,108 [main] INFO  Host Coordinator {188}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,109 [main] INFO  ModuleFactory {86}- New process launched!
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,109 [main] INFO  ModuleFactory {104}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,111 [main] INFO  ModuleFactory {111}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,111 [main] INFO  Host Coordinator {190}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,112 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.ImageManager.ImageManagerAgent
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,112 [main] INFO  Host Coordinator {188}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,113 [main] INFO  ModuleFactory {86}- New process launched!
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,113 [main] INFO  ModuleFactory {104}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,115 [main] INFO  ModuleFactory {111}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,115 [main] INFO  Host Coordinator {190}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,116 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.Monitor.MonitorAgent
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,116 [main] INFO  Host Coordinator {188}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,120 [main] INFO  ModuleFactory {86}- New process launched!
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,120 [main] INFO  ModuleFactory {104}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,122 [main] INFO  ModuleFactory {111}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,122 [main] INFO  Host Coordinator {190}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,123 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.NetworkManager.NetworkManagerAgent
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,123 [main] INFO  Host Coordinator {192}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,127 [main] INFO  ModuleFactory {130}- New process launched!CloudMonitorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,127 [main] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:56,129 [main] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,129 [main] INFO  Host Coordinator {194}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,129 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.CloudMonitor.CloudMonitorAgent
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:56,134 [main] INFO  DbusCommunicationPlugin {62}- Initializing the Dbus Communication plugin 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:56,134 [main] INFO  DbusCommunicationPlugin {65}- Creating the connection to the SessionBus 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:56,138 [main] DEBUG DbusCommunicationPlugin {71}- Creating the Service on Dbus org.clever.Common.CommunicatorPlugins.HostCoordinatorHM
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:56,139 [main] DEBUG DbusCommunicationPlugin {74}- Creating the Object on Dbus /org/clever/Common/CommunicatorPlugins/Dbus/CleverDbusInterface/HostCoordinator
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,139 [main] DEBUG Host Coordinator {214}- Module Communicator instantiated
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:31:56,139 [main] INFO  Host Coordinator {215}- HostCoordinator created
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:31:56,281 [main] INFO  CloudMonitorAgent {91}- 
+istanzio ModuleCommunicator(agentName), dove agentName: CloudMonitorAgent
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:56,334 [main] INFO  DbusCommunicationPlugin {62}- Initializing the Dbus Communication plugin 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:56,425 [main] INFO  DbusCommunicationPlugin {65}- Creating the connection to the SessionBus 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:56,427 [main] DEBUG DbusCommunicationPlugin {71}- Creating the Service on Dbus org.clever.Common.CommunicatorPlugins.CloudMonitorAgentHM
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:31:56,429 [main] DEBUG DbusCommunicationPlugin {74}- Creating the Object on Dbus /org/clever/Common/CommunicatorPlugins/Dbus/CleverDbusInterface/CloudMonitorAgent
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:31:56,429 [main] INFO  CloudMonitorAgent {94}- 
+nfine istanza ModuleCommunicator
+org.clever.HostManager.CloudMonitor.CloudMonitorAgent: initialization 2013-10-29 19:31:56,443 [main] INFO  CloudMonitorAgent {69}- CloudMonitorPlugin created 
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:58,196 [Thread-13] INFO  ModuleFactory {130}- New process launched!HyperVisorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:58,197 [Thread-13] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:31:58,212 [Thread-13] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2013-10-29 19:32:24,236 [main] INFO  XMPPCommunicator {138}- XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2013-10-29 19:32:24,831 [main] DEBUG XMPPCommunicator {308}- XMPP connection established with username: probe password: pass server: nicolaubuntu port: 5222
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2013-10-29 19:32:24,841 [main] INFO  XMPPCommunicator {242}- Creating room: room@conference.nicolaubuntu with nickname: probe
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2013-10-29 19:32:24,871 [main] INFO  XMPPCommunicator {248}- Created room: room@conference.nicolaubuntu with nickname: probe
+org.clever.Common.Initiator.Initiator: start 2013-10-29 19:32:24,877 [main] INFO  Initiator {497}- Lancio processo Initiator, pid: 7437@webuntu
+org.clever.Common.Initiator.Initiator: launchHostCoordinator 2013-10-29 19:32:24,877 [main] INFO  Initiator {441}- Lancio host coordinator
+org.clever.HostManager.HostCoordinator.HostCoordinator: init 2013-10-29 19:32:24,880 [main] DEBUG Host Coordinator {92}- CLASSPATH= /home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/log4j.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/jdom.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/xstream-1.4.2-20110928.170215-1.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/smack.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/jug-lgpl-2.0.0.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/smackx.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/bcprov-jdk16-145.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/client-1.1.3.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/api-1.1.3.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/sigar.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/dbus-2.7.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/libraries/hexdump-0.2.jar:/home/webwolf/NetBeansProjects/clever-unime/trunk/Monitoring/build/classes
+org.clever.HostManager.HostCoordinator.HostCoordinator: init 2013-10-29 19:32:24,892 [main] DEBUG Host Coordinator {125}- ./libraries:/usr/lib/jvm/java-7-oracle/jre/lib/amd64:/usr/lib/jvm/java-7-oracle/jre/lib/i386::/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib:./libraries
+org.clever.HostManager.HostCoordinator.HostCoordinator: init 2013-10-29 19:32:24,893 [main] INFO  Host Coordinator {127}- Initiator created
+org.clever.HostManager.HostCoordinator.HostCoordinator: init 2013-10-29 19:32:24,894 [main] INFO  Host Coordinator {137}- 
+
+ valori nuovi caricati: 4 10
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:32:24,898 [main] INFO  DispatcherAgentHM {91}- 
+istanzio ModuleCommunicator(agentName), dove agentName: DispatcherAgent
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:24,904 [main] INFO  DbusCommunicationPlugin {62}- Initializing the Dbus Communication plugin 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:24,986 [main] INFO  DbusCommunicationPlugin {65}- Creating the connection to the SessionBus 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,000 [main] DEBUG DbusCommunicationPlugin {71}- Creating the Service on Dbus org.clever.Common.CommunicatorPlugins.DispatcherAgentHM
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,001 [main] DEBUG DbusCommunicationPlugin {74}- Creating the Object on Dbus /org/clever/Common/CommunicatorPlugins/Dbus/CleverDbusInterface/DispatcherAgent
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:32:25,001 [main] INFO  DispatcherAgentHM {94}- 
+nfine istanza ModuleCommunicator
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: getHostName 2013-10-29 19:32:25,003 [main] DEBUG XMPPCommunicator {437}- Host name: webuntu
+org.clever.HostManager.Dispatcher.NotificationThread: run 2013-10-29 19:32:25,003 [NotificationThread] DEBUG NotificationThread {74}- Start NotificationThread run!
+org.clever.HostManager.Dispatcher.DispatcherAgent: initialization 2013-10-29 19:32:25,003 [main] DEBUG DispatcherAgentHM {151}- ?=)** hostId= webuntu
+org.clever.HostManager.Dispatcher.DispatcherAgent: sendNotification 2013-10-29 19:32:25,003 [main] DEBUG DispatcherAgentHM {160}- preparing notify clever message
+org.clever.HostManager.Dispatcher.DispatcherAgent: sendNotification 2013-10-29 19:32:25,107 [main] DEBUG DispatcherAgentHM {174}- notification sent
+org.clever.HostManager.Dispatcher.NotificationThread: run 2013-10-29 19:32:25,107 [NotificationThread] DEBUG NotificationThread {103}- X?X target=cmnicolaubuntu
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: sendMessage 2013-10-29 19:32:25,111 [NotificationThread] DEBUG XMPPCommunicator {397}- Sending message: <?xml version="1.0" encoding="UTF-8"?>
+<message id="1504541062" type="NOTIFY">
+  <source>probe</source>
+  <destination>cmnicolaubuntu</destination>
+  <timestamp>Tue Oct 29 19:32:25 CET 2013</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <notification useAttachementId="true">
+      <hostId>probe</hostId>
+      <agentId />
+      <notificationId>PRESENCE/HM</notificationId>
+    </notification>
+  </body>
+  <attachement id="0"><![CDATA[<null/>]]></attachement>
+</message>
+
+
+org.clever.Common.Initiator.ModuleFactory.ModuleFactory: getInstance 2013-10-29 19:32:25,113 [main] DEBUG ModuleFactory {169}- ModuleFactory created: org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:32:25,114 [main] INFO  InfoAgent {91}- 
+istanzio ModuleCommunicator(agentName), dove agentName: InfoAgent
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,116 [main] INFO  DbusCommunicationPlugin {62}- Initializing the Dbus Communication plugin 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,116 [main] INFO  DbusCommunicationPlugin {65}- Creating the connection to the SessionBus 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,118 [main] DEBUG DbusCommunicationPlugin {71}- Creating the Service on Dbus org.clever.Common.CommunicatorPlugins.InfoAgentHM
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,119 [main] DEBUG DbusCommunicationPlugin {74}- Creating the Object on Dbus /org/clever/Common/CommunicatorPlugins/Dbus/CleverDbusInterface/InfoAgent
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:32:25,119 [main] INFO  InfoAgent {94}- 
+nfine istanza ModuleCommunicator
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,120 [main] INFO  Host Coordinator {192}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,123 [main] INFO  ModuleFactory {130}- New process launched!HyperVisorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,125 [main] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,127 [main] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,127 [main] INFO  Host Coordinator {194}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,127 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.HyperVisor.HyperVisorAgent
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,127 [main] INFO  Host Coordinator {188}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,128 [main] INFO  ModuleFactory {86}- New process launched!
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,128 [main] INFO  ModuleFactory {104}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,130 [main] INFO  ModuleFactory {111}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,130 [main] INFO  Host Coordinator {190}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,131 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.ImageManager.ImageManagerAgent
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,131 [main] INFO  Host Coordinator {188}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,131 [main] INFO  ModuleFactory {86}- New process launched!
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,132 [main] INFO  ModuleFactory {104}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,134 [main] INFO  ModuleFactory {111}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,134 [main] INFO  Host Coordinator {190}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,134 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.Monitor.MonitorAgent
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,134 [main] INFO  Host Coordinator {188}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,135 [main] INFO  ModuleFactory {86}- New process launched!
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,136 [main] INFO  ModuleFactory {104}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,137 [main] INFO  ModuleFactory {111}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,138 [main] INFO  Host Coordinator {190}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,138 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.NetworkManager.NetworkManagerAgent
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,138 [main] INFO  Host Coordinator {192}- # inizio lancio agente nell'HC
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,139 [main] INFO  ModuleFactory {130}- New process launched!CloudMonitorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,139 [main] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:25,142 [main] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,143 [main] INFO  Host Coordinator {194}- #fine lancio agente nell'HC!
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,143 [main] DEBUG Host Coordinator {196}- Agent created: org.clever.HostManager.CloudMonitor.CloudMonitorAgent
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,149 [main] INFO  DbusCommunicationPlugin {62}- Initializing the Dbus Communication plugin 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,149 [main] INFO  DbusCommunicationPlugin {65}- Creating the connection to the SessionBus 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,151 [main] DEBUG DbusCommunicationPlugin {71}- Creating the Service on Dbus org.clever.Common.CommunicatorPlugins.HostCoordinatorHM
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,152 [main] DEBUG DbusCommunicationPlugin {74}- Creating the Object on Dbus /org/clever/Common/CommunicatorPlugins/Dbus/CleverDbusInterface/HostCoordinator
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,152 [main] DEBUG Host Coordinator {214}- Module Communicator instantiated
+org.clever.HostManager.HostCoordinator.HostCoordinator: launchAgents 2013-10-29 19:32:25,152 [main] INFO  Host Coordinator {215}- HostCoordinator created
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:32:25,289 [main] INFO  CloudMonitorAgent {91}- 
+istanzio ModuleCommunicator(agentName), dove agentName: CloudMonitorAgent
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,347 [main] INFO  DbusCommunicationPlugin {62}- Initializing the Dbus Communication plugin 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,444 [main] INFO  DbusCommunicationPlugin {65}- Creating the connection to the SessionBus 
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,448 [main] DEBUG DbusCommunicationPlugin {71}- Creating the Service on Dbus org.clever.Common.CommunicatorPlugins.CloudMonitorAgentHM
+org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus: init 2013-10-29 19:32:25,450 [main] DEBUG DbusCommunicationPlugin {74}- Creating the Object on Dbus /org/clever/Common/CommunicatorPlugins/Dbus/CleverDbusInterface/CloudMonitorAgent
+org.clever.Common.Communicator.Agent: start 2013-10-29 19:32:25,450 [main] INFO  CloudMonitorAgent {94}- 
+nfine istanza ModuleCommunicator
+org.clever.HostManager.CloudMonitor.CloudMonitorAgent: initialization 2013-10-29 19:32:25,466 [main] INFO  CloudMonitorAgent {69}- CloudMonitorPlugin created 
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:28,143 [Thread-13] INFO  ModuleFactory {130}- New process launched!HyperVisorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:28,144 [Thread-13] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:28,158 [Thread-13] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:28,449 [Thread-15] INFO  ModuleFactory {130}- New process launched!ImageManagerAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:28,451 [Thread-15] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:28,455 [Thread-15] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:28,476 [Thread-17] INFO  ModuleFactory {130}- New process launched!MonitorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:28,477 [Thread-17] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:28,478 [Thread-17] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:31,758 [Thread-24] INFO  ModuleFactory {130}- New process launched!HyperVisorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:31,760 [Thread-24] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:31,763 [Thread-24] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:33,384 [Thread-19] INFO  ModuleFactory {130}- New process launched!NetworkManagerAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:33,386 [Thread-19] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:33,389 [Thread-19] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:37,684 [Thread-26] INFO  ModuleFactory {130}- New process launched!ImageManagerAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:37,686 [Thread-26] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:37,689 [Thread-26] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:37,694 [Thread-28] INFO  ModuleFactory {130}- New process launched!MonitorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:37,695 [Thread-28] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:37,699 [Thread-28] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:37,726 [Thread-30] INFO  ModuleFactory {130}- New process launched!HyperVisorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:37,727 [Thread-30] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:37,728 [Thread-30] INFO  ModuleFactory {152}- Thread for replacement started
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:40,660 [Thread-38] INFO  ModuleFactory {130}- New process launched!HyperVisorAgent
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:40,661 [Thread-38] INFO  ModuleFactory {145}- Thread ReplacementAgentDead abilitated
+org.clever.Common.Initiator.ModuleFactory.ModuleFactoryMultiTasking: createAgent 2013-10-29 19:32:40,662 [Thread-38] INFO  ModuleFactory {152}- Thread for replacement started
