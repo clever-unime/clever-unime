@@ -27,6 +27,38 @@ package org.clever.Common.Measure;
  *
  * @author webwolf
  */
-public class Storage {
     
+
+public class StorageM extends Measure{
+    
+    public enum SubType_m {total, used, free, read, write};
+    private SubType_m stype_m=null;
+    
+    private String partition=null;
+    private String filesystem=null;
+    
+    public StorageM(StorageM.SubType_m stype_m, Measure.Unit_m unit_m, String partition, String filesystem){
+        
+        super();
+
+        super.setUnit_m(unit_m);
+        
+        super.setType_m(Measure.Type_m.sto);
+        
+        this.filesystem=filesystem;
+        
+        this.stype_m=stype_m;
+        
+        this.partition=partition;
+        
+        this.setF_date(super.getFormatDate(super.getDate()));
+            
+       
+    }
+    
+    @Override
+    public String toString(){
+        String str=this.stype_m + " " + this.getValue().toString();
+        return str;
+    }    
 }

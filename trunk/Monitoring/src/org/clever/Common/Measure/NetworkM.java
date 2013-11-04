@@ -1,8 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2011 Alessio Di Pietro
- *.
+ * Copyright 2013 webwolf.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.clever.ClusterManager.Brain;
-
-import org.clever.Common.Communicator.Notification;
+package org.clever.Common.Measure;
 
 /**
  *
- * @author alessiodipietro
+ * @author webwolf
  */
-public interface BrainInterface {
-    public void handleNotification(Notification notification);
+public class NetworkM extends Measure{
+    
+    public enum SubType_m {rx, tx, pkt_rx, pkt_tx};
+    private SubType_m stype_m=null;
+    
+    public NetworkM(NetworkM.SubType_m stype_m, NetworkM.Unit_m unit_m){
+        
+        super();
 
+        super.setUnit_m(unit_m);
+        
+        super.setType_m(Measure.Type_m.net);
+        
+        this.stype_m=stype_m;
+       
+    }
+    
+    @Override
+    public String toString(){
+        String str=this.stype_m + " " + this.getValue().toString();
+        return str;
+    }  
+    
 }
