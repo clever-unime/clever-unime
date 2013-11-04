@@ -34,6 +34,10 @@ public interface CloudMonitorPlugin extends RunnerPlugin{
     
     public String getTotalStorage();
     public String getAvailStorage();
+    public String getUsedStorage();
+    public String getUsedPercentStorage();
+    public String getReadBytesStorage();
+    public String getWriteBytesStorage();
     
     
 }

@@ -40,6 +40,8 @@ public class MemoryM extends Measure{
         super.setUnit_m(unit_m);
         
         super.setType_m(Measure.Type_m.mem);
+        
+        this.stype_m=stype_m;
 
        
     }

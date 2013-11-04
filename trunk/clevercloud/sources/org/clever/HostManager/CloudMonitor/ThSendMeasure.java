@@ -123,7 +123,10 @@ public class ThSendMeasure implements Runnable{
             //Storage monitor
             dispatchMeasure(this.monitorPlugin.getTotalStorage());
             dispatchMeasure(this.monitorPlugin.getAvailStorage());
-
+            dispatchMeasure(this.monitorPlugin.getUsedStorage());
+            dispatchMeasure(this.monitorPlugin.getUsedPercentStorage());
+            dispatchMeasure(this.monitorPlugin.getReadBytesStorage());
+            dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
             
         }
         

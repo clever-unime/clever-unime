@@ -46,6 +46,8 @@ public class CpuM extends Measure{
         
         super.setType_m(Measure.Type_m.cpu);
         
+        this.stype_m=stype_m;
+        
 
        
     }

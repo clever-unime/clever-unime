@@ -304,6 +304,191 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     }    
     
     
+    public String getUsedStorage(){
+        
+        String xmlobj=null;
+        StorageM obj = null;
+            
+            
+        try {
+
+            
+            SigarProxy proxy = SigarProxyCache.newInstance(this.sigar);
+        
+            FileSystem[] fileSystemList = proxy.getFileSystemList();
+            
+            for (int i = 0; i < fileSystemList.length; i++) {
+                
+                FileSystem fs = fileSystemList[i];
+                
+                if (fs.getType() == FileSystem.TYPE_LOCAL_DISK){
+                    
+                    FileSystemUsage usage = this.sigar.getFileSystemUsage(fs.getDirName());
+                   
+                    
+                    obj = new StorageM(StorageM.SubType_m.used, StorageM.Unit_m.GB, fs.getDevName(), fs.toString());
+            
+                    obj.setValue(usage.getUsed()/1024/1024);
+
+                    //FORMAT obj TO xml
+                    xmlobj=MessageFormatter.messageFromObject(obj);
+
+
+                }
+
+            }
+
+            
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return xmlobj;
+        
+    }       
+    
+    
+    
+    
+    public String getUsedPercentStorage(){
+        
+        String xmlobj=null;
+        StorageM obj = null;
+            
+            
+        try {
+
+            
+            SigarProxy proxy = SigarProxyCache.newInstance(this.sigar);
+        
+            FileSystem[] fileSystemList = proxy.getFileSystemList();
+            
+            for (int i = 0; i < fileSystemList.length; i++) {
+                
+                FileSystem fs = fileSystemList[i];
+                
+                if (fs.getType() == FileSystem.TYPE_LOCAL_DISK){
+                    
+                    FileSystemUsage usage = this.sigar.getFileSystemUsage(fs.getDirName());
+                   
+                    
+                    obj = new StorageM(StorageM.SubType_m.used, StorageM.Unit_m.percent, fs.getDevName(), fs.toString());
+            
+                    obj.setValue(usage.getUsePercent()*100);
+
+                    //FORMAT obj TO xml
+                    xmlobj=MessageFormatter.messageFromObject(obj);
+
+
+                }
+
+            }
+
+            
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return xmlobj;
+        
+    }       
+
+    
+    
+    
+       
+    public String getReadBytesStorage(){
+        
+        String xmlobj=null;
+        StorageM obj = null;
+            
+            
+        try {
+
+            
+            SigarProxy proxy = SigarProxyCache.newInstance(this.sigar);
+        
+            FileSystem[] fileSystemList = proxy.getFileSystemList();
+            
+            for (int i = 0; i < fileSystemList.length; i++) {
+                
+                FileSystem fs = fileSystemList[i];
+                
+                if (fs.getType() == FileSystem.TYPE_LOCAL_DISK){
+                    
+                    FileSystemUsage usage = this.sigar.getFileSystemUsage(fs.getDirName());
+                   
+                    
+                    obj = new StorageM(StorageM.SubType_m.read, StorageM.Unit_m.B, fs.getDevName(), fs.toString());
+            
+                    obj.setValue(usage.getDiskReadBytes());
+
+                    //FORMAT obj TO xml
+                    xmlobj=MessageFormatter.messageFromObject(obj);
+
+
+                }
+
+            }
+
+            
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return xmlobj;
+        
+    }   
+    
+ 
+    
+    
+    
+    public String getWriteBytesStorage(){
+        
+        String xmlobj=null;
+        StorageM obj = null;
+            
+            
+        try {
+
+            
+            SigarProxy proxy = SigarProxyCache.newInstance(this.sigar);
+        
+            FileSystem[] fileSystemList = proxy.getFileSystemList();
+            
+            for (int i = 0; i < fileSystemList.length; i++) {
+                
+                FileSystem fs = fileSystemList[i];
+                
+                if (fs.getType() == FileSystem.TYPE_LOCAL_DISK){
+                    
+                    FileSystemUsage usage = this.sigar.getFileSystemUsage(fs.getDirName());
+                   
+                    
+                    obj = new StorageM(StorageM.SubType_m.write, StorageM.Unit_m.B, fs.getDevName(), fs.toString());
+            
+                    obj.setValue(usage.getDiskWriteBytes());
+
+                    //FORMAT obj TO xml
+                    xmlobj=MessageFormatter.messageFromObject(obj);
+
+
+                }
+
+            }
+
+            
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return xmlobj;
+        
+    }      
+    
+    
+    
     
     
     

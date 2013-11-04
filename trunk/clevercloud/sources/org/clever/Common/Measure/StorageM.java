@@ -46,6 +46,10 @@ public class StorageM extends Measure{
         super.setType_m(Measure.Type_m.sto);
         
         this.filesystem=filesystem;
+        
+        this.stype_m=stype_m;
+        
+        this.partition=partition;
        
     }
     

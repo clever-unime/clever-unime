@@ -39,6 +39,8 @@ public class NetworkM extends Measure{
         super.setUnit_m(unit_m);
         
         super.setType_m(Measure.Type_m.net);
+        
+        this.stype_m=stype_m;
        
     }
     
