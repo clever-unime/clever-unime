@@ -23,9 +23,11 @@
  */
 package org.clever.Common.Measure;
 
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 
 /**
@@ -35,23 +37,57 @@ import java.util.Date;
 public abstract class Measure {
     
     private long date=0;
-    private String unit_m=null;
+
     private String source=null;
     
-    public enum Type_m {cpu, mem, hd, net};
+    public enum Type_m {cpu, mem, sto, net};
     private Type_m type_m=null;
     
-
+    public enum Unit_m {percent, B, MB, GB, s, ns, packet, unknown};
+    private Unit_m unit_m=null;
     
     private Object value=null;
-
-
-
+    
+    private String f_date=null;
+    
+    
     
     
     public Measure(){
         
     }
+    
+    
+    
+    
+
+    public String getF_date() {
+        return f_date.toString();
+    }
+
+    public void setF_date(String f_date) {
+        
+        this.f_date = f_date;
+    }
+    
+   
+    
+    
+    
+    
+    
+    
+    
+    
+
+    public Unit_m getUnit_m() {
+        return unit_m;
+    }
+
+    public void setUnit_m(Unit_m unit_m) {
+        this.unit_m = unit_m;
+    }
+
 
     public Type_m getType_m() {
         return type_m;
@@ -62,7 +98,7 @@ public abstract class Measure {
     }
     
 
-    public String getFormatDate() {
+    public String getFormatDate(long date) {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return dateFormat.format(date);
     }
@@ -73,14 +109,6 @@ public abstract class Measure {
 
     public void setDate(long date) {
         this.date = date;
-    }
-
-    public String getUnit_m() {
-        return unit_m;
-    }
-
-    public void setUnit_m(String unit_m) {
-        this.unit_m = unit_m;
     }
 
     public String getSource() {

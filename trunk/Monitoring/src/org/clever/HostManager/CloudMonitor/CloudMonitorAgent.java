@@ -15,6 +15,8 @@ import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 
+import org.clever.HostManager.CloudMonitor.ThSendMeasure;
+
 /**
  *
  * @author webwolf
@@ -30,6 +32,7 @@ public class CloudMonitorAgent extends Agent{
     public CloudMonitorAgent()  {
         
         super();
+
         logger=Logger.getLogger("CloudMonitorAgent");  
         
       
@@ -46,6 +49,7 @@ public class CloudMonitorAgent extends Agent{
 
         super.start();
         
+     
 
         FileStreamer fs = new FileStreamer();
 
@@ -67,6 +71,11 @@ public class CloudMonitorAgent extends Agent{
             monitorPlugin.setOwner(this);
 
             logger.info("CloudMonitorPlugin created ");
+            
+            
+            Thread Monitoring = new Thread(new ThSendMeasure(this, monitorPlugin, 1 ));
+            Monitoring.start();
+            
             
             
         } catch (ClassNotFoundException ex) {

@@ -38,15 +38,16 @@ public class CpuM extends Measure{
         
         
     
-    public CpuM(SubType_m stype_m, String unit){
+    public CpuM(CpuM.SubType_m stype_m, CpuM.Unit_m unit_m){
         
         super();
+
+        super.setUnit_m(unit_m);
+        
+        super.setType_m(Measure.Type_m.cpu);
         
         this.stype_m=stype_m;
-
-        super.setUnit_m(unit);
         
-        super.setType_m(Type_m.cpu);
 
        
     }

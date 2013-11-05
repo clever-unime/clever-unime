@@ -27,6 +27,30 @@ package org.clever.Common.Measure;
  *
  * @author webwolf
  */
-public class Network {
+public class MemoryM extends Measure{
+    
+    public enum SubType_m {total, used, free};
+    private SubType_m stype_m=null;
+    
+    
+    public MemoryM(MemoryM.SubType_m stype_m, MemoryM.Unit_m unit_m){
+        
+        super();
+
+        super.setUnit_m(unit_m);
+        
+        super.setType_m(Measure.Type_m.mem);
+        
+        this.stype_m=stype_m;
+
+       
+    }
+    
+    @Override
+    public String toString(){
+        String str=this.stype_m + " " + this.getValue().toString();
+        return str;
+    }
+
     
 }
