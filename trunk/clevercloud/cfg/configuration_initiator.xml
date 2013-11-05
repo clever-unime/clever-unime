@@ -24,7 +24,11 @@
   <!--imposto il numero di lanci max consentiti per un agente-->
   <timeReloadAgent>10</timeReloadAgent>
   <!-- imposto il max tempo x il rilancio di un agente -->
+  
+  
   <agents>
+      
+    <!--
     <agent>
       <class>org.clever.HostManager.HyperVisor.HyperVisorAgent</class>
       <name>HyperVisorAgent</name>
@@ -41,6 +45,7 @@
       <class>org.clever.HostManager.NetworkManager.NetworkManagerAgent</class>
       <name />
     </agent>
+    -->
     
     <agent>
       <class>org.clever.HostManager.CloudMonitor.CloudMonitorAgent</class>

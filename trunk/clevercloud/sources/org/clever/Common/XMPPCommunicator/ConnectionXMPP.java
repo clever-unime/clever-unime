@@ -681,6 +681,39 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     return collection;
   }
   
+  //NEWMONITOR
+  public Collection<Occupant> getProbesInRoom( final ROOM roomType ) 
+  {
+    MultiUserChat mucTemp = getMultiUserChat( roomType );
+
+    Collection<Occupant> collection = new LinkedList<Occupant>(); //collezione di uscita!
+    Iterator<String> it = mucTemp.getOccupants(); 
+    Occupant occupant = null;
+    Presence presence = null; 
+    String occupantJid = ""; 
+    String tmp = "";
+
+    /*devo effettuare ora una ricerca x status*/
+    while( it.hasNext() )
+    {
+      occupantJid = it.next();
+      presence = mucTemp.getOccupantPresence(occupantJid);
+      occupant = mucTemp.getOccupant(occupantJid);
+      tmp = presence.getStatus();
+      
+      if(tmp == null)
+          continue;
+      
+      if( (!tmp.isEmpty()) && (tmp.equals("HM/Probe")) )
+      
+      //if( (tmp!=null) && (tmp.equals("HM")) ) //controlla sempre tmp a null! che è importante
+          collection.add(occupant);
+    }
+    return collection;
+  }
+  
+  
+  
   /*QUESTA FUNZIONE CERCA UN PARTICOLARE HOSTNAME (PER NICK) ALL'INTERNO DELLA STANZA roomtype
    per il momento nessuno la usa!*/
   

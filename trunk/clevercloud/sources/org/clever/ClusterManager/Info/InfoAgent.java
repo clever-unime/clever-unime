@@ -105,7 +105,27 @@ public class InfoAgent extends CmAgent
         }
         return l2;
     }
+    
+    
+    public List listProbe(){
+        Collection <Occupant>  list_HC=connectionXMPP.getProbesInRoom(ConnectionXMPP.ROOM.CLEVER_MAIN);
+        Occupant occupant = null;
+        ArrayList l2 = new ArrayList();
+        HostEntityInfo hostManager;
 
+        for (Iterator i = list_HC.iterator(); i.hasNext();) {
+
+            occupant=(Occupant) i.next();
+            hostManager= new HostEntityInfo();
+            hostManager.setNick(occupant.getNick());
+            hostManager.setActive(true);
+            l2.add(hostManager);
+
+        }
+        return l2;
+    }
+    
+    
     public List listClusterManager(){
         Collection <Occupant>  list_HC=connectionXMPP.getCCsInRoom(ConnectionXMPP.ROOM.CLEVER_MAIN);
         Occupant occupant = null;
