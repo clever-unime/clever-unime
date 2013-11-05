@@ -41,6 +41,10 @@
             <class>org.clever.HostManager.NetworkManager.NetworkManagerAgent</class>
             <name/>
         </agent>
+        <agent>
+      <class>org.clever.HostManager.CloudMonitor.CloudMonitorAgent</class>
+      <name>CloudMonitorAgent</name>
+    </agent>
        
   </agents>
 </configuration>

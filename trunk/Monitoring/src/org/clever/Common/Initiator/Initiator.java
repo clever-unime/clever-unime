@@ -55,14 +55,14 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
      private final String cfgPath_Storage= "./cfg/configuration_StorageManager.xml";
      private final String cfgPath_DbManager= "./cfg/configuration_dbManagerPlugin.xml";
      private final String cfgPath_Dispatcher= "./cfg/configuration_dispatcher.xml";
-     private final String cfgPath_VirtManager= "./cfg/configuration_VirtualizationManager.xml";
+     //private final String cfgPath_VirtManager= "./cfg/configuration_VirtualizationManager.xml";
      private final String cfgPath_ModulFactory= "./cfg/configuration_module_factory.xml";
      private final String cfgPath_Communicator= "./cfg/configuration_communicator.xml";
-     private final String cfgPath_Hypervisor= "./cfg/configuration_hypervisor.xml";
-     private final String cfgPath_ImageManager= "./cfg/configuration_ImageManager.xml";
-     private final String cfgPath_NetworkManager= "./cfg/configuration_networkManager.xml";
-     private final String cfgPath_Monitor= "./cfg/configuration_monitor.xml";
-     private final String cfgPath_ServiceManager= "./cfg/configuration_ServiceManager.xml";
+     //private final String cfgPath_Hypervisor= "./cfg/configuration_hypervisor.xml";
+     //private final String cfgPath_ImageManager= "./cfg/configuration_ImageManager.xml";
+     //private final String cfgPath_NetworkManager= "./cfg/configuration_networkManager.xml";
+     //private final String cfgPath_Monitor= "./cfg/configuration_monitor.xml";
+     //private final String cfgPath_ServiceManager= "./cfg/configuration_ServiceManager.xml";
      
      private ConnectionXMPP conn; 
      
@@ -189,6 +189,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
          if(!fl2.exists())
              fl2.mkdir();
          
+         /*
          //IF THIS IS THE FIRST START OF CLEVER WE MAKE THE CONFIG FILE IN CFG FOLDER 
          cfgFile = new File( cfgPath_Hypervisor ); //apro il riferimento al file
          if( !cfgFile.exists() ) //se il file di configurazione non esiste: siamo alla prima esecuzione dell'initiator!                          
@@ -221,7 +222,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
                  System.exit( 1 );            	
              }            
          }
-         
+         */
          /*
          cfgFile = new File( this.cfgPath_Dispatcher); 
          if( !cfgFile.exists() ) 
@@ -284,6 +285,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
                  System.exit( 1 );            	
              }            
          }
+         /*
          cfgFile = new File( this.cfgPath_Monitor); 
          if( !cfgFile.exists() ) 
          {                
@@ -299,6 +301,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
                  System.exit( 1 );            	
              }            
          }
+         
          cfgFile = new File( this.cfgPath_NetworkManager); 
          if( !cfgFile.exists() ) 
          {                
@@ -314,6 +317,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
                  System.exit( 1 );            	
              }            
          }
+         
          cfgFile = new File( this.cfgPath_ServiceManager); 
          if( !cfgFile.exists() ) 
          {                
@@ -329,7 +333,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
                  System.exit( 1 );            	
              }            
          }
-         /*
+         
          cfgFile = new File( this.cfgPath_Storage); 
          if( !cfgFile.exists() ) 
          {                
