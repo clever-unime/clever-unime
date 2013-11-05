@@ -220,6 +220,10 @@
     	<string>getmeasure</string>
     	<class>org.clever.administration.commands.GetMeasureCommand</class>
     </command>
-  
+    
+    <command>
+    	<string>listprobe</string>
+    	<class>org.clever.administration.commands.ListProbeCommand</class>
+    </command>
 
 </commands>
