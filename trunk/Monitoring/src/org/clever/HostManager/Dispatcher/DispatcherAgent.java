@@ -229,48 +229,43 @@ public class DispatcherAgent extends Agent
         
     }
     
+
     
     
-    
-    
-    
-    
-        //NEWMONITOR
-        public void sendMeasure(String measure) {
+    //NEWMONITOR
+    public void sendMeasure(String measure) {
          
            
-         
-                CleverMessage cleverMsg = new CleverMessage();
-                
-                cleverMsg.setDst(this.connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN));
-                
-                cleverMsg.setSrc(this.connectionXMPP.getUsername());
-                
-                cleverMsg.setHasReply(false);
-                
-                cleverMsg.setType( CleverMessage.MessageType.MEASURE );
-      
-                cleverMsg.setBody(
-                                    "    <measure useAttachementId=\"true\">\n" +
-                                    "      <HM>"+this.connectionXMPP.getUsername()+"</HM>\n" +
-                                    "      <agentId>CloudMonitorAgent</agentId>\n" +
-                                    "      <measureId></measureId>\n" +
-                                    "      <timestamp></timestamp>\n" +
-                                    "    </measure>"
-                                    );
-                
-                
-                cleverMsg.addAttachment( measure );
 
-                        
-                logger.debug("ZZZ " + cleverMsg.getDst() +" "+cleverMsg.getSrc()+"\n");
+        CleverMessage cleverMsg = new CleverMessage();
+
+        cleverMsg.setDst(this.connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN));
+
+        cleverMsg.setSrc(this.connectionXMPP.getUsername());
+
+        cleverMsg.setHasReply(false);
+
+        cleverMsg.setType( CleverMessage.MessageType.MEASURE );
+
+        cleverMsg.setBody(
+                            "    <measure useAttachementId=\"true\">\n" +
+                            "      <HM>"+this.connectionXMPP.getUsername()+"</HM>\n" +
+                            "      <agentId>CloudMonitorAgent</agentId>\n" +
+                            "      <measureId></measureId>\n" +
+                            "      <timestamp></timestamp>\n" +
+                            "    </measure>"
+                            );
+
+
+        cleverMsg.addAttachment( measure );
+
                 
-                //cleverMsg.setReplyToMsg(message.getId());
-                
-                connectionXMPP.sendMessage(connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN), cleverMsg);
+        //cleverMsg.setReplyToMsg(message.getId());
+
+        connectionXMPP.sendMessage(connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN), cleverMsg);
                 
 
-     }
+    }
     
     
     
