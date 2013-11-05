@@ -366,7 +366,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
                             "handleNotification",
                             true,
                             params);
-                    //logger.debug("X?X 338 dispatcher clever, agent:"+(String) agent);
+                    logger.debug("X?X 338 dispatcher clever, agent:"+(String) agent);
                     mc.invoke(mi);
                 } catch (CleverException ex) {
                     logger.error("Error invoking agent handleNotification method " + ex);
@@ -386,20 +386,20 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
 
     @Override
     public void processPacket(Packet packet) {
-        String nameFrom=StringUtils.parseResource(packet.getFrom());
+        //String nameFrom=StringUtils.parseResource(packet.getFrom());
 
-        if(!nameFrom.startsWith("cm")){
+        //if(!nameFrom.startsWith("cm")){
             //HM Presence notification
-            logger.debug("HM "+nameFrom+" detected");
+          //  logger.debug("HM "+nameFrom+" detected");
             /*CleverMessage cleverMsg = new CleverMessage();
             cleverMsg.setType(CleverMessage.MessageType.NOTIFY);
             cleverMsg.setSrc(this.connectionXMPP.getUsername());*/
-            Notification notification=new Notification();
-            notification.setId("PRESENCE/HM");
-            notification.setHostId(nameFrom);
+          //  Notification notification=new Notification();
+          //  notification.setId("PRESENCE/HM");
+          //  notification.setHostId(nameFrom);
             //cleverMsg.setBody(MessageFormatter.messageFromObject(notification));
-            this.handleNotification(notification);
-        }
+          //  this.handleNotification(notification);
+        //}
     }
     
     public String receiveFile(String path){
