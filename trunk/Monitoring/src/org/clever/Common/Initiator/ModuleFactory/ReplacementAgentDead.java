@@ -70,7 +70,7 @@ public class ReplacementAgentDead implements Runnable
         this.monitorHash = monitorHash;
         this.monitor = monitorHash.get(agentName);
         
-        logger = Logger.getLogger("ReplacementAgentDeadOOO");
+        logger = Logger.getLogger("ReplacementAgentDead");
         
     }
     
@@ -132,7 +132,6 @@ public class ReplacementAgentDead implements Runnable
                     monitor.setTime(System.currentTimeMillis()); //setto il tempo della chiamata 
                     if(monitor.check())
                     {
-                        logger.error("sonoLI");
                         monitor.incrementNumLaunch();//incremento
                         mF.createAgent(agentClassName, agentName);
                     } 

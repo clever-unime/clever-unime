@@ -141,9 +141,6 @@ public class ModuleFactoryMultiTasking extends ModuleFactory
             th.setDaemon(true);
             th.start();
             
-            logger.error("sonoSU");
-            
-            
             if(ModuleFactory.getActiveReplaceAgent())
             {
 
