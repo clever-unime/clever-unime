@@ -37,7 +37,7 @@ import org.clever.administration.ClusterManagerAdministrationTools;
 
 /**
  *
- * @author sturi
+ * @author Nicola Peditto
  */
 public class ListProbeCommand extends CleverCommand{
 
