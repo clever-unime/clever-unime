@@ -395,6 +395,8 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
          conn.joinInRoom(room, ROOM.CLEVER_MAIN, nickname); // 28//11/2011: ho cambiato il valore dello status, quando si connette solo l'initiator lo status è vuoto!
          
          conn.addListener(ROOM.CLEVER_MAIN, new Initiator_Listener(this.conn, this, this.flag_abilityCM, this.flag_abilityHM)); //collego il listener all'initiator!                 
+    
+        
      } 
      
      
@@ -439,6 +441,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
     public void launchHostCoordinator(ConnectionXMPP conn)  throws CleverException
     {
         logger.info("Lancio host coordinator");
+        System.out.println("Lancio host coordinator");
         
         hc = new HostCoordinator(conn); //istanzio l'host coordinator nello stesso processo dell'initiator
         hc.start();

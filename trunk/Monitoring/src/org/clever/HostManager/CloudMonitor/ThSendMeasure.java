@@ -97,7 +97,7 @@ public class ThSendMeasure implements Runnable{
         
         logger.debug("Start sending measure...");
         System.out.println("Start sending measure...");
-        for(int i=0; i<2; i++){
+        for(int i=0; i<1; i++){
             
             
             
@@ -120,7 +120,7 @@ public class ThSendMeasure implements Runnable{
             dispatchMeasure(this.monitorPlugin.getInterfacePktRX());
             dispatchMeasure(this.monitorPlugin.getInterfacePktTX());
             
-            */
+            
             
             //Storage monitor
             dispatchMeasure(this.monitorPlugin.getTotalStorage());
@@ -128,6 +128,7 @@ public class ThSendMeasure implements Runnable{
             dispatchMeasure(this.monitorPlugin.getUsedStorage());
             dispatchMeasure(this.monitorPlugin.getUsedPercentStorage());
             dispatchMeasure(this.monitorPlugin.getReadBytesStorage());
+            */
             dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
             
         }

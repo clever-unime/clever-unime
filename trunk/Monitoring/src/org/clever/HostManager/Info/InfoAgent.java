@@ -77,6 +77,7 @@ public class InfoAgent extends Agent
     @Override
   public void initialization()
   {
+      
       super.setAgentName("InfoAgent");
       
       try 

@@ -24,7 +24,7 @@
 package org.clever.Common.Initiator;
 
 import org.apache.log4j.Logger;
-import org.clever.ClusterManager.ClusterCoordinator.ClusterCoordinator;
+//import org.clever.ClusterManager.ClusterCoordinator.ClusterCoordinator;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP.ROOM;
 import org.clever.HostManager.HostCoordinator.HostCoordinator;

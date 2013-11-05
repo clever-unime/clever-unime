@@ -138,7 +138,9 @@ public class HostCoordinator implements CleverMessageHandler {
     }
 
     public void changeStatus() {
-        this.conn.getMultiUserChat().changeAvailabilityStatus("HM", Mode.available); //se l'hm viene istanziato cambia lo status che torna ad essere HM!
+        
+        this.conn.getMultiUserChat().changeAvailabilityStatus("HM/Probe", Mode.available); //se l'hm viene istanziato cambia lo status che torna ad essere HM!
+        System.out.println("HM status changed");
     }
 
     // TODO add CC threshold checker!!!!
@@ -151,7 +153,10 @@ public class HostCoordinator implements CleverMessageHandler {
     public void launchAgents() throws CleverException {
         try {
             dispatcherAgent = new DispatcherAgent(conn, notificationsThreshold);
+     
             dispatcherAgent.initialization();
+ 
+            
             infoAgent = new InfoAgent(conn);
             infoAgent.initialization();
 
@@ -162,8 +167,6 @@ public class HostCoordinator implements CleverMessageHandler {
 
             //setto i valori x il monitor sul rilancio!
             moduleFactory.setReplacementVariable(this.timeReload, this.numReload);
-
-
 
 
             Element agents = pXML.getRootElement().getChild("agents");
@@ -218,6 +221,8 @@ public class HostCoordinator implements CleverMessageHandler {
         }
 
         this.conn.addChatManagerListener(this);
+                    
+
 
         //testAgent = new TestAgent(); //ma il testAgent viene cmq lanciato!! indipendentemente dal fatto di selezionarlo dentro il file di configurazione!!!
         //testAgent.startTest();
@@ -225,9 +230,9 @@ public class HostCoordinator implements CleverMessageHandler {
 
     public void start() throws CleverException {
         this.init();
-       
         this.changeStatus();
         this.launchAgents();
+        
     }
 
     @Override

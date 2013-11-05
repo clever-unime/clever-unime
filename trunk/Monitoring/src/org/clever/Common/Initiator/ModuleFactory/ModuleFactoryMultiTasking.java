@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
+import static org.clever.Common.Initiator.ModuleFactory.ModuleFactory.logger;
 
 /** This class is a Plug-in that is istantiate by the method of the abstract class ModuleFactory.
  *  This plugin launches agents in separate processes. 
@@ -140,8 +141,12 @@ public class ModuleFactoryMultiTasking extends ModuleFactory
             th.setDaemon(true);
             th.start();
             
+            logger.error("sonoSU");
+            
+            
             if(ModuleFactory.getActiveReplaceAgent())
             {
+
                 logger.info("Thread ReplacementAgentDead abilitated");
                 
                 Runnable r2 = new ReplacementAgentDead(ModuleFactory.getInstance(), process, this.monitorH, agentClassName, agentName); //attenzione quì dentro va passato l'elemento corrispondente alla chiave nell'hashMap!

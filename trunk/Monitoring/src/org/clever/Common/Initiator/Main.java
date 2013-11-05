@@ -38,8 +38,13 @@ public class Main { //Questo è IL MAIN PRINCIPALE DI TUTTO IL PROGETTO CLEVER!!
     
     public static void main(String[] args) throws CleverException
     {              
+        
+        System.out.println("Start Probe!");
+        
         in = Initiator.getInstance(); //creo un oggetto Initiator
         in.start(); //faccio partire l'initiator        
+        
+        System.out.println("End initialization Probe!");
         
         while ( true )
         {

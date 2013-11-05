@@ -25,6 +25,8 @@ package org.clever.Common.Initiator.ModuleFactory;
 
 import java.util.Map;
 import java.util.Random;
+import org.apache.log4j.Logger;
+import static org.clever.Common.Initiator.ModuleFactory.ModuleFactory.logger;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 
 /**This class is for recovery of the agents terminated prematurely. 
@@ -67,6 +69,9 @@ public class ReplacementAgentDead implements Runnable
         this.agentName = agentName;        
         this.monitorHash = monitorHash;
         this.monitor = monitorHash.get(agentName);
+        
+        logger = Logger.getLogger("ReplacementAgentDeadOOO");
+        
     }
     
     
@@ -83,6 +88,7 @@ public class ReplacementAgentDead implements Runnable
         } 
         if(!Thread.currentThread().isInterrupted()) //dentro questo if si deve anche controllare che il cm esista ancora!
         {
+            
             long milliseconds = Math.abs( ( new Random( System.currentTimeMillis() ) ).nextLong() % 10000 );
             
             try 
@@ -94,15 +100,21 @@ public class ReplacementAgentDead implements Runnable
                // Logger.getLogger(ReplacementAgentDead.class.getName()).log(Level.SEVERE, null, ex);
             }
             if(!Thread.currentThread().isInterrupted()) //dentro questo if si deve anche controllare che il cm esista ancora!
-            {                 
+            {       
+                
+                
+                
                 //se superiamo l'if il sistema è operativo!
                 if(this.agentName.isEmpty())
                 {
+                    
                     //prima di richiamare la create agent è necessario un controllo sugli errori riscontrati
                     //quì entra in gioco la classe MonitorReplaceAgentDead
                     monitor.setTime(System.currentTimeMillis()); //setto il tempo della chiamata 
                     if(monitor.check())
                     {
+                         
+                        
                         monitor.incrementNumLaunch(); //incremento
                         mF.createAgent(agentClassName);
                     }
@@ -120,6 +132,7 @@ public class ReplacementAgentDead implements Runnable
                     monitor.setTime(System.currentTimeMillis()); //setto il tempo della chiamata 
                     if(monitor.check())
                     {
+                        logger.error("sonoLI");
                         monitor.incrementNumLaunch();//incremento
                         mF.createAgent(agentClassName, agentName);
                     } 

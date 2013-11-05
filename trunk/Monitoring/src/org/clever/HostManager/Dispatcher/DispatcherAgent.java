@@ -80,6 +80,7 @@ class NotificationThread extends Thread implements PacketListener
 
     @Override
     public synchronized void run() {
+        System.out.println("Start NotificationThread run!");
         logger.debug("Start NotificationThread run!");
         String target = null;
         while (true) {
@@ -95,20 +96,35 @@ class NotificationThread extends Thread implements PacketListener
                 }
             }
             target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
+            
+            System.out.println("CM rilevato: "+target);
+            
             //no active cc
-            while(target.isEmpty()) {
+            while(target == null) {
+                
+                System.out.println("CM ancora non trovato...");
+                
                 try {
                     CMisPresent = false;
                     while (!CMisPresent) {
+                        
                         wait();
+                        
                     }
                     target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
+                    
+                    System.out.println("CM appena trovato: "+target);
+                    
                 } catch (InterruptedException ex) {
                     logger.error("InterruptedException: "+ex);
                 }
             }
+            
+            System.out.println("Final CM rilevato: "+target);
+            
             CleverMessage msg = queue.poll();
             msg.setDst(target);
+            
             logger.debug("X?X target="+target);
 
             connectionXMPP.sendMessage(target, msg);
@@ -157,11 +173,10 @@ public class DispatcherAgent extends Agent
 
         String hostid=this.connectionXMPP.getHostName();
         Notification notification=new Notification();
-        notification.setId("PRESENCE/HM");
+        notification.setId("PRESENCE/Probe");
         logger.debug("?=)** hostId= "+hostid);
         notification.setHostId(hostid);
-        
-        logger.debug("KK1");
+
         this.sendNotification(notification);
     }
 

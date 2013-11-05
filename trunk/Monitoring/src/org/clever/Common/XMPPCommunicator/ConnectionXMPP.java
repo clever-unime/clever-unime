@@ -45,6 +45,7 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.ParticipantStatusListener;
 import org.apache.log4j.*;
 import org.clever.Common.Exceptions.CleverException;
+import org.hyperic.sigar.NetConnection;
 import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -394,21 +395,44 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
    */
   public void sendMessage( String jid, final CleverMessage message )
   {
+      
+    System.out.println("\nSending message: \n" + message.toXML() );
+    
     logger.debug( "Sending message: " + message.toXML() );
     jid += "@" + this.getServer();
+    
+    System.out.println("jid destinazione: "+jid);
+    
+    //QUESTA PARTE È STATA COMMENTATA COL NUOVO MONITORING
+    /*
     // See if there is already a chat open
     Chat chat = cleverChatManagerListener.getChat( jid.toLowerCase() );
+    
+    System.out.println("Partecipanti: "+chat.getParticipant());
+    
+    
     if( chat == null )
     {
-        logger.debug("Chat toward "+jid +" not found");
+      logger.debug("Chat toward "+jid +" not found");
       chat = connection.getChatManager().createChat( jid, new CleverChatListener( msgHandler ) );
     }
-
+    */
+    
+    //NEWMONITOR-------------------------------------------------------------
+    CleverChatListener chatlist = new CleverChatListener( msgHandler );
+    Chat chat = connection.getChatManager().createChat( jid, chatlist );
+    //NEWMONITOR-------------------------------------------------------------
+       
     // Send a message
     try
     {
       logger.debug("sending message");
       chat.sendMessage( message.toXML() );
+      
+      //NEWMONITOR-------------------------------------------------------------
+      chat.removeMessageListener(chatlist);
+      //NEWMONITOR-------------------------------------------------------------
+      
       logger.debug("message sent");
     }
     catch( XMPPException ex )

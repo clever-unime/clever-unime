@@ -30,7 +30,7 @@
 package org.clever.Common.XMPPCommunicator;
 
 import org.apache.log4j.Logger;
-import org.clever.ClusterManager.ClusterCoordinator.ClusterCoordinator;
+//import org.clever.ClusterManager.ClusterCoordinator.ClusterCoordinator;
 import org.clever.Common.Exceptions.CleverException;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Message;
