@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<HyperVisor>org.clever.HostManager.HyperVisorPlugins.VirtualBox.HvVirtualBox</HyperVisor>
+	<HyperVisor>org.clever.HostManager.HyperVisorPlugins.Libvirt.HvlibVirt</HyperVisor>
 	<moduleName>HyperVisorAgent</moduleName>
         
         <pluginParams>
-                <librarypath>/usr/lib/virtualbox/</librarypath>
+                <librarypath>/usr/lib/</librarypath>
         </pluginParams>
 </configuration>
