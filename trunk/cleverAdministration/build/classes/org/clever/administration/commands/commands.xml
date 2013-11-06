@@ -225,5 +225,11 @@
     	<string>listprobe</string>
     	<class>org.clever.administration.commands.ListProbeCommand</class>
     </command>
+    
+    <command>
+    	<string>statusprocvm</string>
+    	<class>org.clever.administration.commands.GetProcStatus</class>
+    </command>    
+    
 
 </commands>
