@@ -24,40 +24,51 @@
 package org.clever.Common.Measure;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
 
 /**
  *
  * @author webwolf
  */
-
-
-public class CpuM extends Measure{
+/*
+class Credential{
     
+    String user=null;
+    String group=null;
     
-    public enum SubType_m {idle, total, sys, usr};
+    public Credential (String user, String group){
+        this.user=user;
+        this.group=group;
+    }
+    
+}   
+*/
+
+public class ProcessM extends Measure{
+    
+    public enum SubType_m {cpu, mem, user, group, state, time};
     private SubType_m stype_m=null;
+   
     
-
-        
+    //private List cpuperc =new ArrayList();
+    //private Credential cred =null;
     
-    public CpuM(CpuM.SubType_m stype_m, CpuM.Unit_m unit_m){
+    public ProcessM(ProcessM.SubType_m stype_m, Measure.Unit_m unit_m){
         
         super();
 
         super.setUnit_m(unit_m);
         
-        super.setType_m(Measure.Type_m.cpu);
-        
+        super.setType_m(Measure.Type_m.proc);
+       
         this.stype_m=stype_m;
         
 
-
-        
- 
-
+        /*
+        this.cpuperc.add("100");
+        this.cpuperc.add(unit_m); 
+        this.cred=new Credential("web","webgroup");  
+        * */
        
     }
     
@@ -65,7 +76,5 @@ public class CpuM extends Measure{
     public String toString(){
         String str=this.stype_m + " " + this.getValue().toString();
         return str;
-    }
-    
-    
+    }    
 }

@@ -156,6 +156,25 @@ public class MonitorManagerAgent extends CmAgent
     }
     
     
+    public String getProcStatus(String target, String procname) throws CleverException{ 
+        
+        List params = new ArrayList();
+        params.add(procname);
+        
+        String result = getMeasure(target, "getProcStatus", params); //Risultato serializzato proveniente dal HM
+        
+        result = "<sourceHM name=\""+target+"\" >\n"+result+"\n</sourceHM>";
+        
+        List params1 = new ArrayList();
+        params1.add(result);
+
+        this.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
+
+        
+        return result;
+    } 
+    
+    
     
     
     public String getMeasure(String target, String method, List params) throws CleverException{                        

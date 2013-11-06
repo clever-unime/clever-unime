@@ -40,10 +40,10 @@ public abstract class Measure {
 
     private String source=null;
     
-    public enum Type_m {cpu, mem, sto, net};
+    public enum Type_m {cpu, mem, sto, net, proc};
     private Type_m type_m=null;
     
-    public enum Unit_m {percent, B, MB, GB, s, ns, packet, unknown};
+    public enum Unit_m {percent, B, MB, GB, s, ns, timestamp, packet, text};
     private Unit_m unit_m=null;
     
     private Object value=null;
