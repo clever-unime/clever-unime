@@ -117,8 +117,6 @@ public class MonitorManagerAgent extends CmAgent
     public void handleNotification(Notification notification) throws CleverException {
         logger.debug("Received notification type: "+notification.getId());
         
-        
-        //COSA IMPLEMENTARE????
     }
 
     
@@ -128,9 +126,6 @@ public class MonitorManagerAgent extends CmAgent
         
     }
     
-        
-    //-----------------------------------------------------
-    //NECESSARIE????????????????
     public String getVersion() {
         return version;
     }
@@ -138,32 +133,22 @@ public class MonitorManagerAgent extends CmAgent
     public String getDescription() {
         return description;
     }
-    //-----------------------------------------------------
+
     
     
     
     
-    public String getCpuIdle() throws CleverException{ 
+    public String getCpuAll(String target) throws CleverException{ 
         
         List params = new ArrayList();
         
-        String result = null;   //Risultato serializzato proveniente dal HM
-        String xmldata = null;  //Xml con le misure deserializzato
+        String result = getMeasure(target, "getCpuSys", params); //Risultato serializzato proveniente dal HM
         
-        result = getMeasure("webuntu", "getCpuIdle", params);
+        result = "<sourceHM name=\""+target+"\" >\n"+result+"\n</sourceHM>";
         
-        //DESERIALIZZARE IL RISULTATO
-        
-        //SCRIVERE IL RISULTATO SU SEDNA (HUMAN READABLE)
-        //measure = (String) this.invoke("CloudMonitorAgent","getTotalUsedMemory", true, params);
         List params1 = new ArrayList();
         params1.add(result);
-        /*
-        params1.add("VirtualizationManagerAgent");
-        params1.add(" attribute {'created'}{'" + new Date().toString() + "'}");
-        params1.add("into");
-        params1.add("/Matching_VM_HM/VM[@name='" + nameVM + "']");
-        */
+
         this.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
 
         

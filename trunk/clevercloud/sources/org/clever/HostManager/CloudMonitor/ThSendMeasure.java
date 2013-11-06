@@ -117,7 +117,7 @@ public class ThSendMeasure implements Runnable{
             dispatchMeasure(this.monitorPlugin.getInterfaceTX());
             dispatchMeasure(this.monitorPlugin.getInterfacePktRX());
             dispatchMeasure(this.monitorPlugin.getInterfacePktTX());
-            */
+            
             
             
             //Storage monitor
@@ -127,6 +127,8 @@ public class ThSendMeasure implements Runnable{
             dispatchMeasure(this.monitorPlugin.getUsedPercentStorage());
             dispatchMeasure(this.monitorPlugin.getReadBytesStorage());
             dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
+            * */
+            
             
         }
         

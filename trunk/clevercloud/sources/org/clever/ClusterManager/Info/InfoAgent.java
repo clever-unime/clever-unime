@@ -106,7 +106,7 @@ public class InfoAgent extends CmAgent
         return l2;
     }
     
-    
+    //NEWMONITOR
     public List listProbe(){
         Collection <Occupant>  list_HC=connectionXMPP.getProbesInRoom(ConnectionXMPP.ROOM.CLEVER_MAIN);
         Occupant occupant = null;

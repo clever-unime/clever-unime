@@ -330,6 +330,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
         String result = message.getAttachment(0);
         String src=message.getSrc();
         result= "<sourceHM name=\""+src+"\" >\n"+result+"\n</sourceHM>";
+
         
         logger.debug("Measure Received: "+ result);
         
