@@ -14,12 +14,13 @@ import org.clever.administration.ClusterManagerAdministrationTools;
 
 
 
-public class GetMeasureCommand extends CleverCommand{
+public class GetMeasureCpu extends CleverCommand{
 
     @Override
     public Options getOptions() {
         Options options = new Options();
-        options.addOption( "h", false, "The name of the HostManager." );
+        options.addOption( "h", true, "The name of the HostManager/Probe." );
+        options.addOption( "debug", false, "Displays debug information." );
         
         
         return options;
@@ -28,29 +29,32 @@ public class GetMeasureCommand extends CleverCommand{
     @Override
     public void exec(CommandLine commandLine) {
         
-        String target = ClusterManagerAdministrationTools.instance().getConnectionXMPP().getActiveCC(ConnectionXMPP.ROOM.SHELL);
-        
-        ArrayList params = new ArrayList();
-        
-        if(commandLine.hasOption("h")){
-            
-            String hm=commandLine.getOptionValue("h");
-            params.add(hm);
-            
-        }
-
-        
         try{
+            String target = ClusterManagerAdministrationTools.instance().getConnectionXMPP().getActiveCC(ConnectionXMPP.ROOM.SHELL);
+
+            ArrayList params = new ArrayList();
+
+            //if(commandLine.hasOption("h")){
+
+                String hm=commandLine.getOptionValue("h");
+                params.add(hm);
+
+            //}
             
-            ClusterManagerAdministrationTools.instance().execAdminCommand(this, target, "MonitorManagerAgent", "getCpuIdle", params, commandLine.hasOption( "xml" ) );
+            ClusterManagerAdministrationTools.instance().execAdminCommand(this, target, "MonitorManagerAgent", "getCpuAll", params, commandLine.hasOption( "xml" ) );
 
         }
         catch (CleverException ex) {
             logger.error(ex);
-            ex.printStackTrace();
-        }
+            if(commandLine.hasOption("debug"))
+                 ex.printStackTrace();
+            else
+                System.out.println(ex);
+        } 
         
     }
+    
+    
 
     @Override
     public void handleMessage(Object response) {

@@ -70,7 +70,7 @@ public class ListProbeCommand extends CleverCommand{
                     System.out.println( hostEntityInfo.getNick() );
                 }
 
-                System.err.println("\n-------------------------");
+                System.err.println("\n-----------------------------");
             }
         } catch (CleverException ex) {
             logger.error(ex);

@@ -217,8 +217,8 @@
   </command>-->
   
     <command>
-    	<string>getmeasure</string>
-    	<class>org.clever.administration.commands.GetMeasureCommand</class>
+    	<string>getcpuall</string>
+    	<class>org.clever.administration.commands.GetMeasureCpu</class>
     </command>
     
     <command>
