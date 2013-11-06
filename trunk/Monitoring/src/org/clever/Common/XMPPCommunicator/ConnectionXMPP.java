@@ -430,7 +430,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
       chat.sendMessage( message.toXML() );
       
       //NEWMONITOR-------------------------------------------------------------
-      chat.removeMessageListener(chatlist);
+      //chat.removeMessageListener(chatlist);
       //NEWMONITOR-------------------------------------------------------------
       
       logger.debug("message sent");
