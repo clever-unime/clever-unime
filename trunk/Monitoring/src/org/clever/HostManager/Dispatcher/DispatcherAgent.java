@@ -268,6 +268,34 @@ public class DispatcherAgent extends Agent
     }
     
     
+    //NEWMONITOR
+    public void sendHandshake(String hello) {
+         
+
+        CleverMessage cleverMsg = new CleverMessage();
+        cleverMsg.setDst(this.connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN));
+        cleverMsg.setSrc(this.connectionXMPP.getUsername());
+        cleverMsg.setHasReply(false);
+        cleverMsg.setType( CleverMessage.MessageType.NOTIFY );
+
+        cleverMsg.setBody(
+                            "    <handshake useAttachementId=\"true\">\n" +
+                            "      <HM>"+this.connectionXMPP.getUsername()+"</HM>\n" +
+                            "      <agentId>CloudMonitorAgent</agentId>\n" +
+                            "    </handshake>"
+                            );
+
+
+        cleverMsg.addAttachment( hello );
+
+                
+        //cleverMsg.setReplyToMsg(message.getId());
+
+        connectionXMPP.sendMessage(connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN), cleverMsg);
+                
+
+    }
+    
     
     
     

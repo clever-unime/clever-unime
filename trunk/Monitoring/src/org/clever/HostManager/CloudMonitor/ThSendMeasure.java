@@ -81,6 +81,20 @@ public class ThSendMeasure implements Runnable{
         
     }
     
+    public void dispatchHandshake(String hello){
+        
+        try {
+                this.params.add(hello);
+                this.ma.invoke("DispatcherAgent","sendHandshake", false, this.params);
+                this.params.clear();
+
+        }catch (CleverException ex) {
+                logger.error("Error: "+ ex );
+        }
+        
+    }    
+    
+    
     @Override
     public void run() {
         
@@ -99,7 +113,7 @@ public class ThSendMeasure implements Runnable{
         
         
         
-        dispatchMeasure(this.monitorPlugin.handShaking());
+        dispatchHandshake(this.monitorPlugin.handShaking());
         
         
         for(int i=0; i<1; i++){
