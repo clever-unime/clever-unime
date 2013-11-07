@@ -42,6 +42,6 @@ public interface CloudMonitorPlugin extends RunnerPlugin{
     public String getWriteBytesStorage();
     
     public String getProcStatus(String procname);
-    
+    public String getStorageStatus();    
     
 }
