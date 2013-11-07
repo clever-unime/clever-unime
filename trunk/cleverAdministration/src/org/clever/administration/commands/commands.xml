@@ -229,6 +229,11 @@
     <command>
     	<string>statusprocvm</string>
     	<class>org.clever.administration.commands.GetProcStatus</class>
+    </command>  
+    
+    <command>
+    	<string>storagestatus</string>
+    	<class>org.clever.administration.commands.GetStorageStatus</class>
     </command>    
     
 
