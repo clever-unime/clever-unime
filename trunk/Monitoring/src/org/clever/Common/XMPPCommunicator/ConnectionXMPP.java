@@ -404,11 +404,11 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     System.out.println("jid destinazione: "+jid);
     
     //QUESTA PARTE È STATA COMMENTATA COL NUOVO MONITORING
-    /*
+    
     // See if there is already a chat open
     Chat chat = cleverChatManagerListener.getChat( jid.toLowerCase() );
     
-    System.out.println("Partecipanti: "+chat.getParticipant());
+    //System.out.println("Partecipanti: "+chat.getParticipant());
     
     
     if( chat == null )
@@ -416,11 +416,11 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
       logger.debug("Chat toward "+jid +" not found");
       chat = connection.getChatManager().createChat( jid, new CleverChatListener( msgHandler ) );
     }
-    */
+    
     
     //NEWMONITOR-------------------------------------------------------------
-    CleverChatListener chatlist = new CleverChatListener( msgHandler );
-    Chat chat = connection.getChatManager().createChat( jid, chatlist );
+    //CleverChatListener chatlist = new CleverChatListener( msgHandler );
+    //Chat chat = connection.getChatManager().createChat( jid, chatlist );
     //NEWMONITOR-------------------------------------------------------------
        
     // Send a message

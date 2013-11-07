@@ -113,7 +113,7 @@ public class ThSendMeasure implements Runnable{
         
         
         
-        dispatchHandshake(this.monitorPlugin.handShaking());
+        //dispatchHandshake(this.monitorPlugin.handShaking());
         
         
         for(int i=0; i<1; i++){
@@ -145,8 +145,9 @@ public class ThSendMeasure implements Runnable{
             dispatchMeasure(this.monitorPlugin.getUsedStorage());
             dispatchMeasure(this.monitorPlugin.getUsedPercentStorage());
             dispatchMeasure(this.monitorPlugin.getReadBytesStorage());
-            dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
             */
+            dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
+            
             
             
         }
