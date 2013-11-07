@@ -26,6 +26,7 @@ package org.clever.Common.Measure;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -37,6 +38,8 @@ import java.util.Date;
 public abstract class Measure {
     
     private long date=0;
+    
+    private String timestamp = null;
 
     private String source=null;
     
@@ -55,8 +58,23 @@ public abstract class Measure {
         
     }
     
-   
     
+    public String data_converter(long data){
+        DateFormat formatter = new SimpleDateFormat("E MM dd hh:mm:ss a z yyyy");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(data);
+        
+        return formatter.format(calendar.getTime());
+    }
+    
+    
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public Unit_m getUnit_m() {
         return unit_m;
@@ -76,10 +94,6 @@ public abstract class Measure {
     }
     
 
-    public String getFormatDate() {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        return dateFormat.format(date);
-    }
     
     public long getDate() {
         return date;
@@ -102,7 +116,12 @@ public abstract class Measure {
     }
 
     public void setValue(Object value) {
+        
+        
         this.setDate(System.currentTimeMillis());
+        
+        this.setTimestamp(new Date().toString());
+        
         this.value = value;
     }
     

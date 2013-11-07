@@ -70,7 +70,7 @@ public class CloudMonitorAgent extends Agent{
             monitorPlugin.init( null,this );
             monitorPlugin.setOwner(this);
 
-            logger.info("CloudMonitorPlugin created ");
+            logger.info("CloudMonitorPlugin created!");
             
             
             Thread Monitoring = new Thread(new ThSendMeasure(this, monitorPlugin, 1 ));

@@ -177,6 +177,34 @@ public class MonitorManagerAgent extends CmAgent
     
     
     
+    public String getStorageStatus(String target) throws CleverException{ 
+        
+        List params = new ArrayList();
+        
+        String result = getMeasure(target, "getStorageStatus", params); 
+        
+        //result = "<sourceHM name=\""+target+"\" >\n"+result+"\n</sourceHM>";
+        
+        List params1 = new ArrayList();
+        params1.add(result);
+
+        //this.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
+        
+        return result;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public String getMeasure(String target, String method, List params) throws CleverException{                        
 
         String measure = null;
@@ -210,45 +238,7 @@ public class MonitorManagerAgent extends CmAgent
         
      }
 
-    /*
-     public String getMeasure() throws CleverException{                        
-
-        List params = new ArrayList();
-        String measure = null;
-        boolean threadDone = false;
-        
-        
-        try{
-                
-            //INVOCARE IL THREAD
-            
-            Thread t = new Thread(new SendMeasureRequest(this, "webuntu", "CloudMonitorAgent", "getTotalUsedMemory", true, params));
-            //"webuntu","CloudMonitorAgent","getTotalUsedMemory", true, params
-            
-            t.start();
-            
-            measure = "NoThread --> " + (String) this.remoteInvocation("webuntu","CloudMonitorAgent","getTotalUsedMemory", true, params); 
-
-            //measure = (String) this.invoke("CloudMonitorAgent","getTotalUsedMemory", true, params);
-        
-            while(t.isAlive()){
-                logger.debug("Thread is working...");
-            }
-            t.interrupt();
-            logger.debug("Thread successfully stopped.");
-
-            
-
-        
-        } catch (Exception ex) {
-            logger.error("Errore: " + ex);
-        }
-        
-        return measure;
-        
-        
-     }
-     */
+  
     
     
     
