@@ -16,6 +16,8 @@ public interface CloudMonitorPlugin extends RunnerPlugin{
 
     public void setOwner(Agent owner);
     
+    public String handShaking();
+    
     //public void getInformationsAboutMemory();
     public String getTotalUsedMemory();
     public String getTotalMemory();

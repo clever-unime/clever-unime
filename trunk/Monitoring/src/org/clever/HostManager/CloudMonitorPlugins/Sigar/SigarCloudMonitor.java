@@ -65,7 +65,7 @@ import org.hyperic.sigar.ProcState;
 import org.hyperic.sigar.ProcTime;
 import org.hyperic.sigar.SigarProxy;
 import org.hyperic.sigar.SigarProxyCache;
-
+import org.hyperic.sigar.Uptime;
 
 public class SigarCloudMonitor implements CloudMonitorPlugin{
 
@@ -112,7 +112,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     
     
     
-     public String getProcStatus(String procname){
+    public String getProcStatus(String procname){
         
         
         MultiProcCpu mproc=null;
@@ -842,5 +842,46 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
 
     */
 
+     private static String formatUptime(double uptime) {
+        String retval = "";
+        int days = (int)uptime / (60*60*24);
+        int minutes, hours;
+        if (days != 0) {
+            retval += days + " " + ((days > 1) ? "days" : "day") + ", ";
+        }
+        minutes = (int)uptime / 60;
+        hours = minutes / 60;
+        hours %= 24;
+        minutes %= 60;
+        if (hours != 0) {
+            retval += hours + ":" + minutes + " [hh:mm]";
+        }
+        else {
+            retval += minutes + " min";
+        }
+        return retval;
+    }
+     
+     
+    public String handShaking(){
+        
+       
+        String xmlobj=null;
+       
+        Uptime uptime = null;
+        
+        try {
+            uptime=this.sigar.getUptime();
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        xmlobj="Chat created! VM uptime: " + formatUptime(uptime.getUptime());
+            
+  
+        
+        return xmlobj;
+        
+    }
 
 }

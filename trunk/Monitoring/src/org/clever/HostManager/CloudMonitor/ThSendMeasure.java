@@ -85,7 +85,6 @@ public class ThSendMeasure implements Runnable{
     public void run() {
         
         
-        
         logger.debug("ThSendMeasure start!");
         
         //Inizializzazione
@@ -97,9 +96,13 @@ public class ThSendMeasure implements Runnable{
         
         logger.debug("Start sending measure...");
         System.out.println("Start sending measure...");
+        
+        
+        
+        dispatchMeasure(this.monitorPlugin.handShaking());
+        
+        
         for(int i=0; i<1; i++){
-            
-            
             
             /*
             //CPU monitor
@@ -128,8 +131,8 @@ public class ThSendMeasure implements Runnable{
             dispatchMeasure(this.monitorPlugin.getUsedStorage());
             dispatchMeasure(this.monitorPlugin.getUsedPercentStorage());
             dispatchMeasure(this.monitorPlugin.getReadBytesStorage());
-            */
             dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
+            */
             
             
         }
