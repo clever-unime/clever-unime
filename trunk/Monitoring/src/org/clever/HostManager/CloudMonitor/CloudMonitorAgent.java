@@ -4,7 +4,9 @@
  */
 package org.clever.HostManager.CloudMonitor;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
@@ -25,6 +27,12 @@ public class CloudMonitorAgent extends Agent{
     
     private CloudMonitorPlugin monitorPlugin;
     private Class cl;
+    
+    private int freq_monitor;
+    private String cfgPath = "./cfg/configuration_initiator.xml";
+    private ParserXML pXML;
+    InputStream inxml;
+    File cfgFile;
     
     
     
@@ -49,13 +57,27 @@ public class CloudMonitorAgent extends Agent{
 
         super.start();
         
-     
-
+        //Estrapolo il valore di frequenza dal file xml
+        try {
+            inxml = new FileInputStream(cfgPath);
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(CloudMonitorAgent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        FileStreamer fs0 = new FileStreamer();
+        try {
+            pXML = new ParserXML(fs0.xmlToString(inxml));
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(CloudMonitorAgent.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        freq_monitor= Integer.parseInt( pXML.getElementContent( "freq_monitor" ) ); 
+        
+        //-------------------------------------------------------------------------------------------------------------
+        
+        
         FileStreamer fs = new FileStreamer();
 
         try {
-            //InputStream inxml = getClass().getResourceAsStream("./cfg/configuration_hypervisor.xml");//("/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");
-            //FileInputStream inxml = new FileInputStream("/org/clever/HostManager/CloudMonitor/configuration_cloudmonitor.xml");
             
             InputStream inxml=getClass().getResourceAsStream("/org/clever/HostManager/CloudMonitor/configuration_cloudmonitor.xml");
             
@@ -70,10 +92,12 @@ public class CloudMonitorAgent extends Agent{
             monitorPlugin.init( null,this );
             monitorPlugin.setOwner(this);
 
-            logger.info("CloudMonitorPlugin created ");
+            logger.info("CloudMonitorPlugin created!");
             
+
             
-            Thread Monitoring = new Thread(new ThSendMeasure(this, monitorPlugin, 1 ));
+            Thread Monitoring = new Thread(new ThSendMeasure(this, monitorPlugin, freq_monitor ));
+            Monitoring.setDaemon(true);
             Monitoring.start();
             
             

@@ -113,10 +113,12 @@ public class ThSendMeasure implements Runnable{
         
         
         
-        //dispatchHandshake(this.monitorPlugin.handShaking());
-        
-        
-        for(int i=0; i<1; i++){
+        dispatchHandshake(this.monitorPlugin.handShaking());
+        int i=0;
+        while(true){
+            
+            System.out.println("Numero: " + i);
+        //for(int i=0; i<1; i++){
             
             /*
             //CPU monitor
@@ -149,10 +151,23 @@ public class ThSendMeasure implements Runnable{
             dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
             
             
+            i++;
+            
+            try {
+                Thread.sleep(frequency*1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ThSendMeasure.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
             
         }
-        logger.debug("End sending measure!");
-        System.out.println("End sending measure!");
+    
+    
+        //logger.debug("End sending measure!");
+        //System.out.println("End sending measure!");
+        
+        
     }
     
     
