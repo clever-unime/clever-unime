@@ -23,19 +23,24 @@
  */
 package org.clever.Common.Measure;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 /**
  *
  * @author webwolf
  */
+
+
 public class CpuM extends Measure{
     
     
     public enum SubType_m {idle, total, sys, usr};
     private SubType_m stype_m=null;
-        
+    
+
         
     
     public CpuM(CpuM.SubType_m stype_m, CpuM.Unit_m unit_m){
@@ -48,6 +53,10 @@ public class CpuM extends Measure{
         
         this.stype_m=stype_m;
         
+
+
+        
+ 
 
        
     }

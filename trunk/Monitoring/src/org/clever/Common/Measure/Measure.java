@@ -40,15 +40,13 @@ public abstract class Measure {
 
     private String source=null;
     
-    public enum Type_m {cpu, mem, sto, net};
+    public enum Type_m {cpu, mem, sto, net, proc};
     private Type_m type_m=null;
     
-    public enum Unit_m {percent, B, MB, GB, s, ns, packet, unknown};
+    public enum Unit_m {percent, B, MB, GB, s, ns, timestamp, packet, text};
     private Unit_m unit_m=null;
     
     private Object value=null;
-    
-    private String f_date=null;
     
     
     
@@ -57,27 +55,7 @@ public abstract class Measure {
         
     }
     
-    
-    
-    
-
-    public String getF_date() {
-        return f_date.toString();
-    }
-
-    public void setF_date(String f_date) {
-        
-        this.f_date = f_date;
-    }
-    
    
-    
-    
-    
-    
-    
-    
-    
     
 
     public Unit_m getUnit_m() {
@@ -98,7 +76,7 @@ public abstract class Measure {
     }
     
 
-    public String getFormatDate(long date) {
+    public String getFormatDate() {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return dateFormat.format(date);
     }

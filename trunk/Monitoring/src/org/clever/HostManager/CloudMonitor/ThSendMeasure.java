@@ -95,11 +95,9 @@ public class ThSendMeasure implements Runnable{
             logger.debug("ThSendMeasure sleep failed: "+ex);
         }
         
-        logger.debug("Start sending measure...");
-        System.out.println("Start sending measure...");
-        for(int i=0; i<1; i++){
-            
-            
+        
+        
+        for(int i=0; i<10; i++){
             
             /*
             //CPU monitor
@@ -129,11 +127,11 @@ public class ThSendMeasure implements Runnable{
             dispatchMeasure(this.monitorPlugin.getUsedPercentStorage());
             dispatchMeasure(this.monitorPlugin.getReadBytesStorage());
             dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
-            */
+            * */
+            
             
         }
-        logger.debug("End sending measure!");
-        System.out.println("End sending measure!");
+        
     }
     
     

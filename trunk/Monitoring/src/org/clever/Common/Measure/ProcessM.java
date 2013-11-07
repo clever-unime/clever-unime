@@ -23,33 +23,52 @@
  */
 package org.clever.Common.Measure;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author webwolf
  */
+/*
+class Credential{
     
+    String user=null;
+    String group=null;
+    
+    public Credential (String user, String group){
+        this.user=user;
+        this.group=group;
+    }
+    
+}   
+*/
 
-public class StorageM extends Measure{
+public class ProcessM extends Measure{
     
-    public enum SubType_m {total, used, free, read, write};
+    public enum SubType_m {cpu, mem, user, group, state, time};
     private SubType_m stype_m=null;
+   
     
-    private String partition=null;
-    private String filesystem=null;
+    //private List cpuperc =new ArrayList();
+    //private Credential cred =null;
     
-    public StorageM(StorageM.SubType_m stype_m, Measure.Unit_m unit_m, String partition, String filesystem){
+    public ProcessM(ProcessM.SubType_m stype_m, Measure.Unit_m unit_m){
         
         super();
 
         super.setUnit_m(unit_m);
         
-        super.setType_m(Measure.Type_m.sto);
-        
-        this.filesystem=filesystem;
-        
+        super.setType_m(Measure.Type_m.proc);
+       
         this.stype_m=stype_m;
         
-        this.partition=partition;
+
+        /*
+        this.cpuperc.add("100");
+        this.cpuperc.add(unit_m); 
+        this.cred=new Credential("web","webgroup");  
+        * */
        
     }
     
