@@ -128,8 +128,9 @@ public class ThSendMeasure implements Runnable{
             dispatchMeasure(this.monitorPlugin.getUsedStorage());
             dispatchMeasure(this.monitorPlugin.getUsedPercentStorage());
             dispatchMeasure(this.monitorPlugin.getReadBytesStorage());
-            dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
             */
+            dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
+            
             
         }
         logger.debug("End sending measure!");
