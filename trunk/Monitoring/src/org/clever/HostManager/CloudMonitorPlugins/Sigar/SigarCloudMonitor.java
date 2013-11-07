@@ -47,22 +47,14 @@ import org.clever.Common.XMLTools.MessageFormatter;
 import org.hyperic.sigar.Cpu;
 
 import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.clever.Common.Communicator.Agent.logger;
 import org.hyperic.sigar.CpuPerc;
 import org.hyperic.sigar.FileSystem;
 import org.hyperic.sigar.FileSystemUsage;
-import org.hyperic.sigar.MultiProcCpu;
 import org.hyperic.sigar.NetInterfaceConfig;
 import org.hyperic.sigar.NetInterfaceStat;
-import org.hyperic.sigar.ProcCredName;
-import org.hyperic.sigar.ProcMem;
-import org.hyperic.sigar.ProcState;
-import org.hyperic.sigar.ProcTime;
 import org.hyperic.sigar.SigarProxy;
 import org.hyperic.sigar.SigarProxyCache;
 
@@ -105,87 +97,6 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     public void setOwner(Agent owner) {
         this.owner=owner;
     }
-    
-    
-    
-    
-    
-    
-    
-     public String getProcStatus(String procname){
-        
-        
-        MultiProcCpu mproc=null;
-        ProcCredName pcred=null;
-        ProcMem pmem=null;
-        ProcState pstate=null;
-        ProcTime ptime=null;
-
-        
-        String xmlobj=null;
-        
-        ProcessM obj = null;
-        
-        String query="State.Name.eq="+procname;
-        
-        try {
-            
-            mproc = this.sigar.getMultiProcCpu(query); 
-            obj = new ProcessM(ProcessM.SubType_m.cpu, ProcessM.Unit_m.percent);
-            obj.setValue(CpuPerc.format(mproc.getPercent()));
-            xmlobj=MessageFormatter.messageFromObject(obj)+"\n";
-            
-            pcred = this.sigar.getProcCredName(query);
-            obj = new ProcessM(ProcessM.SubType_m.user, ProcessM.Unit_m.text);
-            obj.setValue(pcred.getUser());
-            xmlobj=xmlobj+MessageFormatter.messageFromObject(obj)+"\n";
-            obj = new ProcessM(ProcessM.SubType_m.group, ProcessM.Unit_m.text);
-            obj.setValue(pcred.getGroup());
-            xmlobj=xmlobj+MessageFormatter.messageFromObject(obj)+"\n";
-            
-            pmem= this.sigar.getProcMem(query);
-            obj = new ProcessM(ProcessM.SubType_m.mem, ProcessM.Unit_m.MB);
-            obj.setValue(pmem.getResident()/1024/1024);
-            xmlobj=xmlobj+MessageFormatter.messageFromObject(obj)+"\n";
-            
-            pstate= this.sigar.getProcState(query);
-            obj = new ProcessM(ProcessM.SubType_m.state, ProcessM.Unit_m.text);
-            obj.setValue(pstate.getState());
-            xmlobj=xmlobj+MessageFormatter.messageFromObject(obj)+"\n";
-            
-            ptime= this.sigar.getProcTime(query);
-            DateFormat formatter = new SimpleDateFormat("E dd.MM.yyyy hh:mm:ss a z");
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(ptime.getStartTime());
-            obj = new ProcessM(ProcessM.SubType_m.state, ProcessM.Unit_m.text);
-            obj.setValue(formatter.format(calendar.getTime()));
-            xmlobj=xmlobj+MessageFormatter.messageFromObject(obj)+"\n";
-            
-            
-        } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-
-        
-
-        
-        return xmlobj;
-    }   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     

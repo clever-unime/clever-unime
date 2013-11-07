@@ -50,6 +50,9 @@ public class StorageM extends Measure{
         this.stype_m=stype_m;
         
         this.partition=partition;
+        
+        this.setF_date(super.getFormatDate(super.getDate()));
+            
        
     }
     
