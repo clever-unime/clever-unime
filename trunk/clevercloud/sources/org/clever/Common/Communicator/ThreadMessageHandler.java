@@ -90,8 +90,6 @@ class ThreadMessageHandler extends Thread{
                           
                       //NEWMONITOR
                       case MEASURE:
-                        //org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger("Dispatcher Measure");
-                        //logger.debug("CIAO");
                         dispatcher.handleMeasure( this.message );
                         break;
                           
