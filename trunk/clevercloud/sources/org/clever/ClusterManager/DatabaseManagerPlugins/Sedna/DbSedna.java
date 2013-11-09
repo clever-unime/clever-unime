@@ -225,8 +225,8 @@ public class DbSedna implements DatabaseManagerPlugin {
     
     
     
-    
-      public boolean checkMeasure() {
+    //NEWMONITOR
+    public boolean checkMeasure() {
         boolean existsMe = false;
         Collection collect = null;
         try {
@@ -254,7 +254,8 @@ public class DbSedna implements DatabaseManagerPlugin {
 
     }  
     
-      public void addMeasure() {
+    //NEWMONITOR
+    public void addMeasure() {
         Collection collect = null;
         try {
             collect = this.connect();
