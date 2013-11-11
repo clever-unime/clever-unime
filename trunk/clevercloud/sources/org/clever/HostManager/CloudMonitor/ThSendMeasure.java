@@ -23,7 +23,7 @@
  */
 package org.clever.HostManager.CloudMonitor;
 
-import org.clever.ClusterManager.MonitorManager.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -49,7 +49,7 @@ public class ThSendMeasure implements Runnable{
     
     //boolean done=false;
             
-    private int frequency = 10;
+    private int frequency = 0;
     private CloudMonitorPlugin monitorPlugin= null;
     private ConnectionXMPP conn=null;
     private CloudMonitorAgent ma=null;
@@ -80,10 +80,11 @@ public class ThSendMeasure implements Runnable{
         }
         
     }
+     
+    
     
     @Override
     public void run() {
-        
         
         
         logger.debug("ThSendMeasure start!");
@@ -95,9 +96,13 @@ public class ThSendMeasure implements Runnable{
             logger.debug("ThSendMeasure sleep failed: "+ex);
         }
         
+        logger.debug("Start sending measure...");
+        System.out.println("Start sending measure...");
         
         
-        for(int i=0; i<10; i++){
+        while(true){
+            
+        //for(int i=0; i<1; i++){
             
             /*
             //CPU monitor
@@ -126,11 +131,24 @@ public class ThSendMeasure implements Runnable{
             dispatchMeasure(this.monitorPlugin.getUsedStorage());
             dispatchMeasure(this.monitorPlugin.getUsedPercentStorage());
             dispatchMeasure(this.monitorPlugin.getReadBytesStorage());
+            */
             dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
-            * */
+
+            
+            try {
+                Thread.sleep(frequency*1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ThSendMeasure.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             
             
         }
+    
+    
+        //logger.debug("End sending measure!");
+        //System.out.println("End sending measure!");
+        
         
     }
     

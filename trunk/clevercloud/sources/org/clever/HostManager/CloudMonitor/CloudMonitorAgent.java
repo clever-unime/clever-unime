@@ -27,6 +27,8 @@ public class CloudMonitorAgent extends Agent{
     private Class cl;
     
     
+    private int freq_monitor;
+    
     
     
     public CloudMonitorAgent()  {
@@ -54,8 +56,6 @@ public class CloudMonitorAgent extends Agent{
         FileStreamer fs = new FileStreamer();
 
         try {
-            //InputStream inxml = getClass().getResourceAsStream("./cfg/configuration_hypervisor.xml");//("/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");
-            //FileInputStream inxml = new FileInputStream("/org/clever/HostManager/CloudMonitor/configuration_cloudmonitor.xml");
             
             InputStream inxml=getClass().getResourceAsStream("/org/clever/HostManager/CloudMonitor/configuration_cloudmonitor.xml");
             
@@ -72,8 +72,12 @@ public class CloudMonitorAgent extends Agent{
 
             logger.info("CloudMonitorPlugin created!");
             
+            freq_monitor= Integer.parseInt( pXML.getElementContent( "freq_monitor" ) ); 
             
-            Thread Monitoring = new Thread(new ThSendMeasure(this, monitorPlugin, 1 ));
+            logger.info("Sample frequency: "+freq_monitor+" sec");
+            
+            
+            Thread Monitoring = new Thread(new ThSendMeasure(this, monitorPlugin, freq_monitor ));
             Monitoring.start();
             
             

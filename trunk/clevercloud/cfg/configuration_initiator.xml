@@ -25,7 +25,6 @@
   <timeReloadAgent>10</timeReloadAgent>
   <!-- imposto il max tempo x il rilancio di un agente -->
   
-  
   <agents>
       
     <agent>

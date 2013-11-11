@@ -109,47 +109,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     
     
     
-    public String getStorageStatus(){
-        
-        String xmlobj=null;
-        
-        StorageM obj = null;
-            
-        try {
 
-            
-            SigarProxy proxy = SigarProxyCache.newInstance(this.sigar);
-        
-            FileSystem[] fileSystemList = proxy.getFileSystemList();
-            
-            for (int i = 0; i < fileSystemList.length; i++) {
-                
-                FileSystem fs = fileSystemList[i];
-                
-                if (fs.getType() == FileSystem.TYPE_LOCAL_DISK){
-                    
-                    FileSystemUsage usage = this.sigar.getFileSystemUsage(fs.getDirName());
-                    
-                    xmlobj="Total: " + usage.getTotal()/1024/1024 +" GB\n";
-                    xmlobj=xmlobj+"Availble: " + usage.getAvail()/1024/1024 +" GB\n";
-                    xmlobj=xmlobj+"Used: " + usage.getUsed()/1024/1024 +" GB\n";
-                    xmlobj=xmlobj+"Used: " + usage.getUsePercent()*100+" %\n";
-                 
-    
-                }
-
-            }
-
-            
-        } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-        return xmlobj;
-    }
-    
-    
     
     //----------------------------------------
     //PROCESS MONITOR
@@ -220,13 +180,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     
     
     
-    
-    
-    
-    
-    
-    
-    
+ 
     
     //----------------------------------------
     //CPU MONITOR
@@ -337,6 +291,52 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     //----------------------------------------
     //STORAGE MONITOR
     //----------------------------------------     
+    
+    public String getStorageStatus(){
+        
+        String xmlobj=null;
+        
+        StorageM obj = null;
+            
+        try {
+
+            
+            SigarProxy proxy = SigarProxyCache.newInstance(this.sigar);
+        
+            FileSystem[] fileSystemList = proxy.getFileSystemList();
+            
+            for (int i = 0; i < fileSystemList.length; i++) {
+                
+                FileSystem fs = fileSystemList[i];
+                
+                if (fs.getType() == FileSystem.TYPE_LOCAL_DISK){
+                    
+                    FileSystemUsage usage = this.sigar.getFileSystemUsage(fs.getDirName());
+                    
+                    xmlobj="Total: " + usage.getTotal()/1024/1024 +" GB\n";
+                    xmlobj=xmlobj+"Availble: " + usage.getAvail()/1024/1024 +" GB\n";
+                    xmlobj=xmlobj+"Used: " + usage.getUsed()/1024/1024 +" GB\n";
+                    xmlobj=xmlobj+"Used: " + usage.getUsePercent()*100+" %\n";
+                 
+    
+                }
+
+            }
+
+            
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        return xmlobj;
+    }
+    
+        
+    
+    
+    
+    
     public String getTotalStorage(){
         
         String xmlobj=null;
