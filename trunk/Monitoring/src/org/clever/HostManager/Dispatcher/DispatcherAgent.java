@@ -238,7 +238,7 @@ public class DispatcherAgent extends Agent
         CleverMessage cleverMsg = new CleverMessage();
         
         cleverMsg.setDst(this.connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN));
-        cleverMsg.setSrc(this.connectionXMPP.getUsername());
+        cleverMsg.setSrc("probe-"+this.connectionXMPP.getUsername());
         cleverMsg.setHasReply(false);
         cleverMsg.setType( CleverMessage.MessageType.MEASURE );
         cleverMsg.setBody(
