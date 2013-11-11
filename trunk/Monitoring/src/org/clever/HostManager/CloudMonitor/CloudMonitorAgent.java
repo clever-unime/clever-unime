@@ -29,13 +29,7 @@ public class CloudMonitorAgent extends Agent{
     private Class cl;
     
     private int freq_monitor;
-    
-    /*
-    private String cfgPath = "./cfg/configuration_initiator.xml";
-    private ParserXML pXML;
-    InputStream inxml;
-    File cfgFile;
-    */
+    private boolean flag_monitor; //se true viene attivato il monitoring continuo
     
     
     
@@ -44,6 +38,8 @@ public class CloudMonitorAgent extends Agent{
         super();
 
         logger=Logger.getLogger("CloudMonitorAgent");  
+        
+        flag_monitor = true;
         
       
     }
@@ -79,13 +75,24 @@ public class CloudMonitorAgent extends Agent{
 
             logger.info("CloudMonitorPlugin created!");
             
-            freq_monitor= Integer.parseInt( pXML.getElementContent( "freq_monitor" ) ); 
             
-            logger.info("Sample frequency: "+freq_monitor+" sec");
+            flag_monitor = Boolean.parseBoolean(pXML.getElementContent("active_monitor"));
             
-            Thread Monitoring = new Thread(new ThSendMeasure(this, monitorPlugin, freq_monitor ));
-            Monitoring.setDaemon(true);
-            Monitoring.start();
+            if(flag_monitor){
+                
+                logger.info("Monitoring active!");
+                
+                freq_monitor= Integer.parseInt( pXML.getElementContent( "freq_monitor" ) ); 
+
+                logger.info("Sample frequency: "+freq_monitor+" sec");
+
+                Thread Monitoring = new Thread(new ThSendMeasure(this, monitorPlugin, freq_monitor ));
+                Monitoring.setDaemon(true);
+                Monitoring.start();
+                
+            }
+            else
+                logger.info("Monitoring disabled!");
             
             
             
