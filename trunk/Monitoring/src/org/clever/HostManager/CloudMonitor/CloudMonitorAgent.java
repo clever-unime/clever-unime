@@ -29,11 +29,13 @@ public class CloudMonitorAgent extends Agent{
     private Class cl;
     
     private int freq_monitor;
+    
+    /*
     private String cfgPath = "./cfg/configuration_initiator.xml";
     private ParserXML pXML;
     InputStream inxml;
     File cfgFile;
-    
+    */
     
     
     
@@ -56,24 +58,7 @@ public class CloudMonitorAgent extends Agent{
         }
 
         super.start();
-        
-        //Estrapolo il valore di frequenza dal file xml
-        try {
-            inxml = new FileInputStream(cfgPath);
-        } catch (FileNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CloudMonitorAgent.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        FileStreamer fs0 = new FileStreamer();
-        try {
-            pXML = new ParserXML(fs0.xmlToString(inxml));
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(CloudMonitorAgent.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        freq_monitor= Integer.parseInt( pXML.getElementContent( "freq_monitor" ) ); 
-        
-        //-------------------------------------------------------------------------------------------------------------
-        
+      
         
         FileStreamer fs = new FileStreamer();
 
@@ -94,7 +79,9 @@ public class CloudMonitorAgent extends Agent{
 
             logger.info("CloudMonitorPlugin created!");
             
-
+            freq_monitor= Integer.parseInt( pXML.getElementContent( "freq_monitor" ) ); 
+            
+            logger.info("Sample frequency: "+freq_monitor+" sec");
             
             Thread Monitoring = new Thread(new ThSendMeasure(this, monitorPlugin, freq_monitor ));
             Monitoring.setDaemon(true);

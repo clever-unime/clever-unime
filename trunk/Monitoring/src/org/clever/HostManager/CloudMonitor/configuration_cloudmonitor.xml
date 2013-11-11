@@ -2,4 +2,5 @@
 <configuration>
         <PluginName>org.clever.HostManager.CloudMonitorPlugins.Sigar.SigarCloudMonitor</PluginName>
 	<moduleName>CloudMonitorAgent</moduleName>
+        <freq_monitor>5</freq_monitor> <!-- imposto la frequenza di campionamento delle misure in secondi -->
 </configuration>

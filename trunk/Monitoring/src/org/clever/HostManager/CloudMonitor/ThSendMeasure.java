@@ -49,7 +49,7 @@ public class ThSendMeasure implements Runnable{
     
     //boolean done=false;
             
-    private int frequency = 10;
+    private int frequency = 0;
     private CloudMonitorPlugin monitorPlugin= null;
     private ConnectionXMPP conn=null;
     private CloudMonitorAgent ma=null;
@@ -114,10 +114,10 @@ public class ThSendMeasure implements Runnable{
         
         
         dispatchHandshake(this.monitorPlugin.handShaking());
-        int i=0;
+
         while(true){
             
-            System.out.println("Numero: " + i);
+            
         //for(int i=0; i<1; i++){
             
             /*
@@ -151,7 +151,6 @@ public class ThSendMeasure implements Runnable{
             dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
             
             
-            i++;
             
             try {
                 Thread.sleep(frequency*1000);

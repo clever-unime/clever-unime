@@ -24,8 +24,7 @@
   <!--imposto il numero di lanci max consentiti per un agente-->
   <timeReloadAgent>10</timeReloadAgent>
   <!-- imposto il max tempo x il rilancio di un agente -->
-  <freq_monitor>5</freq_monitor>
-  <!-- imposto la frequenza di campionamento delle misure in secondi -->
+
   <agents>
 
     <agent>
