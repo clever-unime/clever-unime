@@ -142,14 +142,16 @@ public class MonitorManagerAgent extends CmAgent
         
         List params = new ArrayList();
         
-        String result = getMeasure(target, "getCpuSys", params); //Risultato serializzato proveniente dal HM
+        String result = getMeasure(target, "getCpuStatus", params); //Risultato serializzato proveniente dal HM
         
-        result = "<sourceHM name=\""+target+"\" >\n"+result+"\n</sourceHM>";
+        result = "Target: "+target+"\n"+result+"\n";
+        
+        //result = "<sourceHM name=\""+target+"\" >\n"+result+"\n</sourceHM>";
         
         List params1 = new ArrayList();
         params1.add(result);
 
-        this.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
+        //this.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
 
         
         return result;

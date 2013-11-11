@@ -185,6 +185,33 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     //----------------------------------------
     //CPU MONITOR
     //----------------------------------------
+    
+    public String getCpuStatus(){
+        
+        String xmlobj=null;
+
+        CpuPerc cpuperc=null;
+            
+        try {
+
+            cpuperc = this.sigar.getCpuPerc();
+            
+            xmlobj="Idle: " + CpuPerc.format(cpuperc.getIdle()) +" \n";
+            xmlobj=xmlobj+"System: " + CpuPerc.format(cpuperc.getSys()) +" \n";
+            xmlobj=xmlobj+"User: " + CpuPerc.format(cpuperc.getUser()) +" \n";
+
+            
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        return xmlobj;
+    }
+        
+    
+    
+    
     public String getCpuIdle(){
         
         
