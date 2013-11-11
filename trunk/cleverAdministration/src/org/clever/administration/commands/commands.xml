@@ -217,7 +217,7 @@
   </command>-->
   
     <command>
-    	<string>getcpuall</string>
+    	<string>cpustatus</string>
     	<class>org.clever.administration.commands.GetMeasureCpu</class>
     </command>
     
