@@ -395,7 +395,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
    */
   public void sendMessage( String jid, final CleverMessage message )
   {
-      
+    Chat chat = null;
     System.out.println("\nSending message: \n" + message.toXML() );
     
     logger.debug( "Sending message: " + message.toXML() );
@@ -403,9 +403,16 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     
     System.out.println("jid destinazione: "+jid);
     
-    // See if there is already a chat open
-    Chat chat = cleverChatManagerListener.getChat( jid.toLowerCase() );
-        
+    try
+    {
+        // See if there is already a chat open
+        chat = cleverChatManagerListener.getChat( jid.toLowerCase() );
+    }
+    catch (java.lang.NullPointerException e) {
+        logger.error("cleverChatManagerListener.getChat: "+e);
+        //System.out.println("cleverChatManagerListener.getChat: "+e);
+    }
+    
     if( chat == null )
     {
       logger.debug("Chat toward "+jid +" not found");
