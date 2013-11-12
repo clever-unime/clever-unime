@@ -2,6 +2,8 @@
  *  Copyright (c) 2010 Antonino Longo
  *  Copyright (c) 2011 Luca Ciarniello
  *  Copyright (c) 2011 Alessio Di Pietro
+ *  Copyright (c) 2013 Nicola Peditto
+ *  Copyright (c) 2013 Carmelo Romeo
  *
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation

@@ -1,7 +1,9 @@
  /*
  *  Copyright (c) 2010 Antonio Nastasi
  *  Copyright (c) 2011 Marco Sturiale
- *
+ *  Copyright (c) 2013 Nicola Peditto
+ *  Copyright (c) 2013 Carmelo Romeo
+ * 
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
  *  files (the "Software"), to deal in the Software without
@@ -324,6 +326,10 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
     
     
     //NEWMONITOR
+    /**
+    * Manage the arrive of the new CleverMessage type: MEASURE
+    * @param message CleverMessage type MEASURE
+    */  
     @Override
     public void handleMeasure(final CleverMessage message) {
         

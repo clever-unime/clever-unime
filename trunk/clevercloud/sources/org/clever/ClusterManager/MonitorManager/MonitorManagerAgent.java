@@ -1,7 +1,8 @@
 /*
- *  Copyright (c) 2011 Marco Sturiale
- *  Copyright (c) 2011 Alessio Di Pietro
- *  Copyright (c) 2012 Marco Carbone
+ *  The MIT License
+ * 
+ *  Copyright (c) 2013 Nicola Peditto
+ *  Copyright (c) 2013 Carmelo Romeo
  *
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
@@ -24,6 +25,7 @@
  *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
+
 package org.clever.ClusterManager.MonitorManager;
 
 import java.io.IOException;
@@ -137,7 +139,12 @@ public class MonitorManagerAgent extends CmAgent
     
     
     
-    
+   /**
+   * Return CPU statistics to Clever shell
+   * @param target name of HM or VM probe
+   * @return String statistics of CPU human readable format
+   * @throws CleverException
+   */
     public String getCpuAll(String target) throws CleverException{ 
         
         List params = new ArrayList();
@@ -158,6 +165,13 @@ public class MonitorManagerAgent extends CmAgent
     }
     
     
+   /**
+   * Return process statistics from HM and VM probe
+   * @param target name of HM or VM probe
+   * @param procname name of the process e.g. "java", "skype", etc.
+   * @return String statistics of the process in xml format
+   * @throws CleverException
+   */    
     public String getProcStatus(String target, String procname) throws CleverException{ 
         
         List params = new ArrayList();
@@ -178,7 +192,12 @@ public class MonitorManagerAgent extends CmAgent
     
     
     
-    
+   /**
+   * Return storage statistics to Clever shell of the main partition of the HM or VM probe
+   * @param target name of HM or VM probe
+   * @return String statistics of storage in human readable format
+   * @throws CleverException
+   */    
     public String getStorageStatus(String target) throws CleverException{ 
         
         List params = new ArrayList();
@@ -206,7 +225,14 @@ public class MonitorManagerAgent extends CmAgent
     
     
     
-    
+   /**
+   * Method used by the above methods to invoke the Sigar API into "CloudMonitorAgent" plugin.
+   * @param target name of HM or VM probe
+   * @param method name of the method into "CloudMonitorAgent" plugin
+   * @param params list of the parameters of the method into "CloudMonitorAgent" plugin
+   * @return return a string of the result of the method invoked
+   * @throws CleverException
+   */     
     public String getMeasure(String target, String method, List params) throws CleverException{                        
 
         String measure = null;

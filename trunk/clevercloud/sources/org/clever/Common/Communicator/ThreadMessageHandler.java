@@ -2,6 +2,8 @@
  *  The MIT License
  * 
  *  Copyright 2011 Maurizio Paone.
+ *  Copyright 2013 Nicola Peditto
+ *  Copyright 2013 Carmelo Romeo
  * 
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal

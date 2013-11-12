@@ -3,6 +3,8 @@
  *
  * Copyright 2011 Alessio Di Pietro.
  * Copyright 2013 Tricomi Giuseppe
+ * Copyright 2013 Nicola Peditto
+ * Copyright 2013 Carmelo Romeo
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -195,6 +197,10 @@ public class DbSedna implements DatabaseManagerPlugin {
     
     
     //NEWMONITOR
+    /**
+    * Insert a new measure under the <measure> xml node.
+    * @param measure xml of the new measure
+    */  
     public void insertMeasure(String measure){
         
         Collection collect = null;
@@ -226,6 +232,10 @@ public class DbSedna implements DatabaseManagerPlugin {
     
     
     //NEWMONITOR
+    /**
+    * Check if the <measure> xml node exists.
+    * @return boolean, if true the node exists
+    */  
     public boolean checkMeasure() {
         boolean existsMe = false;
         Collection collect = null;
@@ -255,6 +265,9 @@ public class DbSedna implements DatabaseManagerPlugin {
     }  
     
     //NEWMONITOR
+    /**
+    * Insert the <measure> xml node in the database structure, to collect the measures
+    */  
     public void addMeasure() {
         Collection collect = null;
         try {
