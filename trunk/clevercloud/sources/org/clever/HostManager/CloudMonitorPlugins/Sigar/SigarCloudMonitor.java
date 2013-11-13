@@ -129,11 +129,11 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         ProcTime ptime=null;
 
         
-        String xmlobj=null;
+        String xmlobj=null; //the final string to be sent (concat of strings)
         
-        ProcessM obj = null;
+        ProcessM obj = null; //temporary object to set values
         
-        String query="State.Name.eq="+procname;
+        String query="State.Name.eq="+procname;  //query to investigate about "procname" process
         
         try {
             
@@ -192,7 +192,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     //----------------------------------------
     /**
     * Return CPU statistics
-    * @return String statistics of CPU human readable format
+    * @return String statistics of CPU in human readable format
     */ 
     public String getCpuStatus(){
         
@@ -695,7 +695,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     //----------------------------------------   
     
     /**
-    * Return the number received bytes on the main network interface
+    * Return the number of received bytes on the main network interface
     * @return String of the measure in xml format
     */      
     public String getInterfaceRX() {
@@ -728,7 +728,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     }  
     
     /**
-    * Return the number transmitted bytes by the main network interface
+    * Return the number of transmitted bytes by the main network interface
     * @return String of the measure in xml format
     */    
     public String getInterfaceTX() {
@@ -761,7 +761,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     } 
    
     /**
-    * Return the number transmitted packets by the main network interface
+    * Return the number of transmitted packets by the main network interface
     * @return String of the measure in xml format
     */     
     public String getInterfacePktTX() {
@@ -794,7 +794,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     }  
     
     /**
-    * Return the number received packets on the main network interface
+    * Return the number of received packets on the main network interface
     * @return String of the measure in xml format
     */      
     public String getInterfacePktRX() {
