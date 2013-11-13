@@ -6,6 +6,8 @@
  *  Copyright (c) 2010 Antonio Celesti
  *  Copyright (c) 2010 Antonio Nastasi
  *  Copyright (c) 2011 Marco Carbone
+ *  Copyright (c) 2013 Nicola Peditto
+ *  Copyright (c) 2013 Carmelo Romeo
  *
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
@@ -137,6 +139,7 @@ public class HostCoordinator implements CleverMessageHandler {
         logger.info("\n\n valori nuovi caricati: " + numReload + " " + timeReload);
     }
 
+    //NEW MONITORING
     public void changeStatus() {
         
         this.conn.getMultiUserChat().changeAvailabilityStatus("HM/Probe", Mode.available); //se l'hm viene istanziato cambia lo status che torna ad essere HM!

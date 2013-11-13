@@ -3,6 +3,8 @@
  *
  * Copyright 2011 Alessio Di Pietro.
  * Copyright 2012 Marco Carbone
+ * Copyright 2013 Nicola Peditto
+ * Copyright 2013 Carmelo Romeo
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -233,6 +235,10 @@ public class DispatcherAgent extends Agent
     
     
     //NEWMONITOR
+    /**
+    * Send a CleverMessage of MEASURE type
+    * @param measure returned by Sigar methods
+    */ 
     public void sendMeasure(String measure) {
 
         CleverMessage cleverMsg = new CleverMessage();
@@ -261,6 +267,10 @@ public class DispatcherAgent extends Agent
     
     
     //NEWMONITOR
+    /**
+    * Send a CleverMessage as HANDSHAKE
+    * @param hello string for handshake
+    */ 
     public void sendHandshake(String hello) {
          
 

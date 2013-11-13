@@ -67,7 +67,10 @@ public class ThSendMeasure implements Runnable{
         
     }
     
-    
+    /**
+    * Method to send measure to the CM
+    * @param measure string of the measure returned by our Sigar wrapper plugins
+    */
     public void dispatchMeasure(String measure){
         
         try {
@@ -80,6 +83,11 @@ public class ThSendMeasure implements Runnable{
         }
         
     }
+
+    /**
+    * Method to start handshaking with the CM
+    * @param hello string of the measure returned by our Sigar wrapper plugins
+    */
     
     public void dispatchHandshake(String hello){
         

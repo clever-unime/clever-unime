@@ -113,7 +113,12 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     
     //----------------------------------------
     //PROCESS MONITOR
-    //----------------------------------------      
+    //----------------------------------------
+    /**
+    * Return the statistics of the process specified
+    * @param procname name of the process e.g. "java", "skype", etc.
+    * @return String statistics of the process in xml format
+    */  
     public String getProcStatus(String procname){
         
         
@@ -124,11 +129,11 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         ProcTime ptime=null;
 
         
-        String xmlobj=null;
+        String xmlobj=null; //the final string to be sent (concat of strings)
         
-        ProcessM obj = null;
+        ProcessM obj = null; //temporary object to set values
         
-        String query="State.Name.eq="+procname;
+        String query="State.Name.eq="+procname;  //query to investigate about "procname" process
         
         try {
             
@@ -167,26 +172,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         } catch (SigarException ex) {
             Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
 
-        
-
-        
         return xmlobj;
     }   
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     
     
     
@@ -194,6 +183,40 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     //----------------------------------------
     //CPU MONITOR
     //----------------------------------------
+    
+    /**
+    * Return CPU statistics
+    * @return String statistics of CPU in human readable format
+    */ 
+    /*
+    public String getCpuStatus(){
+        
+        String xmlobj=null;
+
+        CpuPerc cpuperc=null;
+            
+        try {
+
+            cpuperc = this.sigar.getCpuPerc();
+            
+            xmlobj="Idle: " + CpuPerc.format(cpuperc.getIdle()) +" \n";
+            xmlobj=xmlobj+"System: " + CpuPerc.format(cpuperc.getSys()) +" \n";
+            xmlobj=xmlobj+"User: " + CpuPerc.format(cpuperc.getUser()) +" \n";
+
+            
+        } catch (SigarException ex) {
+            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        return xmlobj;
+    }
+    */
+    
+    /**
+    * Return the CPU idle time in percent
+    * @return String of the measure in xml format
+    */
     public String getCpuIdle(){
         
         
@@ -238,7 +261,11 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         
         return xmlobj;
     }
-    
+
+    /**
+    * Return the CPU Sys time in percent
+    * @return String of the measure in xml format
+    */ 
     public String getCpuSys(){
         
         
@@ -267,7 +294,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         return xmlobj;
     }
 
-    
+    /**
+    * Return the CPU User time in percent
+    * @return String of the measure in xml format
+    */    
     public String getCpuUser(){
         
         
@@ -300,7 +330,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     //----------------------------------------
     //STORAGE MONITOR
     //----------------------------------------     
-    
+    /**
+    * Return the storage status: Total, free and used space of the main disk
+    * @return String of the measure in human readable format
+    */  
     public String getStorageStatus(){
         
         String xmlobj=null;
@@ -344,8 +377,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     
     
     
-    
-    
+    /**
+    * Return the total storage space of the main disk in GB
+    * @return String of the measure in xml format
+    */ 
     public String getTotalStorage(){
         
         String xmlobj=null;
@@ -396,7 +431,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     }
   
     
-    
+    /**
+    * Return the free storage space of the main disk in GB
+    * @return String of the measure in xml format
+    */ 
     public String getAvailStorage(){
         
         String xmlobj=null;
@@ -440,7 +478,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         
     }    
     
-    
+    /**
+    * Return the used storage space of the main disk in GB
+    * @return String of the measure in xml format
+    */        
     public String getUsedStorage(){
         
         String xmlobj=null;
@@ -486,7 +527,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     
     
     
-    
+    /**
+    * Return the used storage space of the main disk in percent
+    * @return String of the measure in xml format
+    */ 
     public String getUsedPercentStorage(){
         
         String xmlobj=null;
@@ -533,7 +577,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     
     
     
-       
+    /**
+    * Return the number of the read bytes of the main disk
+    * @return String of the measure in xml format
+    */    
     public String getReadBytesStorage(){
         
         String xmlobj=null;
@@ -580,7 +627,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
  
     
     
-    
+    /**
+    * Return the number of the written bytes of the main disk
+    * @return String of the measure in xml format
+    */ 
     public String getWriteBytesStorage(){
         
         String xmlobj=null;
@@ -633,7 +683,11 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     
     //----------------------------------------
     //NETWORKING MONITOR
-    //----------------------------------------   
+    //----------------------------------------
+    /**
+    * Return the number of received bytes on the main network interface
+    * @return String of the measure in xml format
+    */   
     public String getInterfaceRX() {
         
         NetInterfaceConfig netinterfaceconfig = null;
@@ -663,7 +717,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         
     }  
     
- 
+    /**
+    * Return the number of transmitted bytes by the main network interface
+    * @return String of the measure in xml format
+    */ 
     public String getInterfaceTX() {
         
         NetInterfaceConfig netinterfaceconfig = null;
@@ -693,7 +750,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         
     } 
    
-    
+    /**
+    * Return the number of transmitted packets by the main network interface
+    * @return String of the measure in xml format
+    */
     public String getInterfacePktTX() {
         
         NetInterfaceConfig netinterfaceconfig = null;
@@ -723,7 +783,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         
     }  
     
-    
+    /**
+    * Return the number of received packets on the main network interface
+    * @return String of the measure in xml format
+    */
     public String getInterfacePktRX() {
         
         NetInterfaceConfig netinterfaceconfig = null;
@@ -757,7 +820,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     //----------------------------------------
     //MEMORY MONITOR
     //----------------------------------------
-
+    /**
+    * Return the used memory
+    * @return String of the measure in xml format
+    */ 
     public String getTotalUsedMemory() {
         
         Mem mem = null;
@@ -788,6 +854,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         
     }
 
+    /**
+    * Return the total memory
+    * @return String of the measure in xml format
+    */  
     public String getTotalMemory() {
         
         Mem mem = null;
@@ -819,7 +889,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     }
  
     
-    
+    /**
+    * Return the free memory
+    * @return String of the measure in xml format
+    */
      public String getTotalFreeMemory() {
         
         Mem mem = null;
@@ -890,6 +963,11 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
 
     */
 
+    /**
+    * Return time conversion in hh:mm from the start of a specific process
+    * @param uptime time in which the process started
+    * @return String how long a process is running
+    */
      private static String formatUptime(double uptime) {
         String retval = "";
         int days = (int)uptime / (60*60*24);
@@ -910,7 +988,10 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
         return retval;
     }
      
-     
+    /**
+    * Start an handshake between Host Manager (or Probe) and Cluster Manager
+    * @return String for a simple handshake test
+    */
     public String handShaking(){
         
        
