@@ -28,7 +28,7 @@
 
 package org.clever.Common.Measure;
 
-
+//NEWMONITOR
 public class NetworkM extends Measure{
     
     public enum SubType_m {rx, tx, pkt_rx, pkt_tx};

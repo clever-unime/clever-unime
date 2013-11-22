@@ -34,7 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-
+//NEWMONITOR
 public abstract class Measure {
 
     public enum Unit_m {percent, B, MB, GB, s, ns, timestamp, packet, text};

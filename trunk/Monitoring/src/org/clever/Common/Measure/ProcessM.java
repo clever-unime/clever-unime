@@ -46,6 +46,7 @@ class Credential{
 }   
 */
 
+//NEWMONITOR
 public class ProcessM extends Measure{
     
     public enum SubType_m {cpu, mem, user, group, state, time};

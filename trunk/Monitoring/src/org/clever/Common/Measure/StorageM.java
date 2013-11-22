@@ -28,7 +28,7 @@
 package org.clever.Common.Measure;
 
 
-
+//NEWMONITOR
 public class StorageM extends Measure{
     
     public enum SubType_m {total, used, free, read, write};

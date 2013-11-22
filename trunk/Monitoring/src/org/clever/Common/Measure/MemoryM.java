@@ -29,7 +29,7 @@
 package org.clever.Common.Measure;
 
 
-
+//NEWMONITOR
 public class MemoryM extends Measure{
     
     public enum SubType_m {total, used, free};

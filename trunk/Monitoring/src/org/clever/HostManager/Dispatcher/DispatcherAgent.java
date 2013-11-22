@@ -175,7 +175,10 @@ public class DispatcherAgent extends Agent
 
         String hostid=this.connectionXMPP.getHostName();
         Notification notification=new Notification();
+        
+        //NEWMONITOR
         notification.setId("PRESENCE/Probe");
+        
         logger.debug("?=)** hostId= "+hostid);
         notification.setHostId(hostid);
 
@@ -297,12 +300,5 @@ public class DispatcherAgent extends Agent
 
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
+
 }

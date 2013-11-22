@@ -30,6 +30,7 @@ package org.clever.HostManager.CloudMonitor;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Plugins.RunnerPlugin;
 
+//NEWMONITOR
 public interface CloudMonitorPlugin extends RunnerPlugin{
     
 

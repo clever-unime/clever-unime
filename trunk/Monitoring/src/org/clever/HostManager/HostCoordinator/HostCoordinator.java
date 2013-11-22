@@ -139,9 +139,10 @@ public class HostCoordinator implements CleverMessageHandler {
         logger.info("\n\n valori nuovi caricati: " + numReload + " " + timeReload);
     }
 
-    //NEW MONITORING
+    //NEW MONITOR
     public void changeStatus() {
         
+        //NEW MONITOR
         this.conn.getMultiUserChat().changeAvailabilityStatus("HM/Probe", Mode.available); //se l'hm viene istanziato cambia lo status che torna ad essere HM!
         System.out.println("HM status changed");
     }

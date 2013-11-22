@@ -42,6 +42,7 @@ import org.clever.Common.XMLTools.ParserXML;
 
 import org.clever.HostManager.CloudMonitor.ThSendMeasure;
 
+//NEWMONITOR
 public class CloudMonitorAgent extends Agent{
     
     private CloudMonitorPlugin monitorPlugin;
@@ -82,7 +83,7 @@ public class CloudMonitorAgent extends Agent{
             InputStream inxml=getClass().getResourceAsStream("/org/clever/HostManager/CloudMonitor/configuration_cloudmonitor.xml");
             
             if(inxml==null)
-                logger.debug("The variable inxml is null check configursarion file");
+                logger.debug("The variable inxml is null check configuration file");
             
             ParserXML pXML = new ParserXML(fs.xmlToString(inxml));
             

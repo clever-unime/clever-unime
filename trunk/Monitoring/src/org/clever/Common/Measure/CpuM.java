@@ -30,7 +30,7 @@ package org.clever.Common.Measure;
 import java.util.Date;
 
 
-
+//NEWMONITOR
 public class CpuM extends Measure{
     
     public enum SubType_m {idle, total, sys, usr};
