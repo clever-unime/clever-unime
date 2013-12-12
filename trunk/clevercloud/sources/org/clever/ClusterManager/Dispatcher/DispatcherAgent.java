@@ -44,10 +44,10 @@ import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
 {
     private CLusterManagerDispatcherPlugin dispatcherPlugin = null;
-    private Class cl = null;
+    //private Class cl = null;
     private BrainInterface brainInterface;
     private ThreadMessageDispatcher threadMessageDispatcher;
-    private ConnectionXMPP connectionXMPP = null;
+    public ConnectionXMPP connectionXMPP = null;
     
     public DispatcherAgent( ConnectionXMPP connectionXMPP ) throws CleverException 
     {   
@@ -68,17 +68,23 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
         
         try
         {
+            
+            dispatcherPlugin = ( CLusterManagerDispatcherPlugin )super.startPlugin("./cfg/configuration_dispatcher.xml","/org/clever/ClusterManager/Dispatcher/configuration_dispatcher.xml");
+            /*
             InputStream inxml = getClass().getResourceAsStream( "/org/clever/ClusterManager/Dispatcher/configuration_dispatcher.xml" );
             FileStreamer fs = new FileStreamer();
             ParserXML pars = new ParserXML( fs.xmlToString( inxml ) );
+            * 
             cl = Class.forName( pars.getElementContent( "Dispatcher" ) );
             dispatcherPlugin = ( CLusterManagerDispatcherPlugin ) cl.newInstance();
-            dispatcherPlugin.setConnectionXMMP( this.connectionXMPP );
             dispatcherPlugin.init( null,this );
-            logger.info( "Dispatcher created" );
             //agentName=pars.getElementContent( "moduleName" );
             
+            dispatcherPlugin.setOwner(this);*/
             dispatcherPlugin.setOwner(this);
+            dispatcherPlugin.setConnectionXMMP( this.connectionXMPP );
+            logger.info( "Dispatcher created" );
+            
             this.threadMessageDispatcher = new ThreadMessageDispatcher(dispatcherPlugin,2000, 20); //TODO: retrieve parameters from configuration file
             this.threadMessageDispatcher.start();
         }
@@ -86,10 +92,12 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
         {
             throw new CleverException( e, "Missing logger.properties or configuration not found" );
         }
+        /*
         catch( java.io.IOException e )
         {
             throw new CleverException( e, "Error on reading logger.properties" );
         }
+         
         catch( ClassNotFoundException e )
         {
             throw new CleverException( e, "Plugin Class not found" );
@@ -101,9 +109,10 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
         catch( IllegalAccessException e )
         {
             throw new CleverException( e, "Error Access" );
-        }
+        }*/
         catch( Exception e )
         {
+            logger.error("errore generico dispatcherAgent CC");
             throw new CleverException( e );
         }
     }
@@ -125,7 +134,7 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
   @Override
   public Object getPlugin()
   {
-    return dispatcherPlugin;
+    return this.pluginInstantiation;
   }
 
     @Override

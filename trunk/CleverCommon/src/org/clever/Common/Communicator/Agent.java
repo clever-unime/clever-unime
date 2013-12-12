@@ -1,11 +1,5 @@
 /*
- *  Copyright (c) 2010 Filippo Bua
- *  Copyright (c) 2010 Maurizio Paone
- *  Copyright (c) 2010 Francesco Tusa
- *  Copyright (c) 2010 Massimo Villari
- *  Copyright (c) 2010 Antonio Celesti
- *  Copyright (c) 2010 Antonio Nastasi
- *  Copyright (c) 2012 Marco Carbone
+ *  Copyright (c) 2010 Universita' degli studi di Messina
  *
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
@@ -30,6 +24,20 @@
  */
 package org.clever.Common.Communicator;
 
+/**
+ * @author 2010 Filippo Bua
+ * @author 2010-2013 Maurizio Paone
+ * @author 2010 Francesco Tusa
+ * @author 2010 Massimo Villari
+ * @author 2010 Antonio Celesti
+ * @author 2010 Antonio Nastasi
+ * @author 2012 Marco Carbone
+ * @author 2013 Giuseppe Tricomi
+ */
+
+import org.clever.Common.Plugins.RunnerPlugin;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -42,22 +50,38 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.LoggerInstantiator;
+import org.clever.Common.XMLTools.ParserXML;
+import org.clever.Common.Shared.Support;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
-/**
- * @autor marco carbone
- *
- */
 public abstract class Agent implements MethodInvokerHandler {
+//TODO : aggiungere lo stato di errore
+    private boolean pluginState;
 
-    
+  
     final public  Logger logger ;
     final protected ModuleCommunicator mc ;
     private String agentName = "";
     public static Runnable r; //this handle of kind Runnable is used to instantiate the thread for shutdown
     protected String group = null; //gruppo per le comunicazioni HM per hostmanager CM per Clustermanager
+    public RunnerPlugin pluginInstantiation=null;
+    protected Class cl;
+    public String cfgfilepath=null;
+    public String errorStr;
+    
+      public boolean isPluginState() {
+        return pluginState;
+    }
 
+    public void setPluginState(boolean pluginState) {
+        this.pluginState = pluginState;
+    }
+    
     public Agent() throws CleverException {
         logger = Logger.getLogger(this.getClass());
+        logger.debug("start Agent constructor");
+
         try {
             Properties prop = new Properties();
             InputStream in = getClass().getResourceAsStream("/org/clever/Common/Shared/logger.properties");
@@ -70,6 +94,7 @@ public abstract class Agent implements MethodInvokerHandler {
 
             logger.error("Missing logger.properties");
         }
+
         try {
             
             mc = new ModuleCommunicator(); // N.B. the module communicator was istantiated here!. 
@@ -97,7 +122,7 @@ public abstract class Agent implements MethodInvokerHandler {
         
         
         
-        
+
     }
 
     /*
@@ -109,7 +134,158 @@ public abstract class Agent implements MethodInvokerHandler {
      *
      */
     public abstract void initialization() throws Exception;
-
+    
+    //TODO: mettere stato di errore
+    
+     public RunnerPlugin startPlugin(String cfgFile,String classpath)throws CleverException, IOException{
+        this.cfgfilepath=cfgFile;
+        try
+        {
+            ParserXML pXML = getconfiguration(cfgFile,classpath);
+            this.pluginInstantiation=this.startPlugin(pXML);
+            this.setPluginState(true);
+        }
+        catch( Exception e )
+        {
+            this.setPluginState(false);
+            this.errorStr=e.getLocalizedMessage();
+            throw new CleverException( "Start Plugin on Agent Throw: "+e.getLocalizedMessage());
+        }
+        return this.pluginInstantiation;
+    }
+    public RunnerPlugin startPlugin(ParserXML pXML)throws CleverException, IOException{
+        try
+        {
+            pXML.printElementContentText();
+            String al= pXML.getElementContent( "ClassPlugin" );
+            cl = Class.forName(al );
+            this.pluginInstantiation= ( RunnerPlugin ) cl.newInstance();
+            this.pluginInstantiation.setOwner(this);
+            this.pluginInstantiation.init( pXML.getRootElement().getChild( "pluginParams" ),this );
+            setAgentName(pXML.getElementContent("moduleName"));
+        }
+        catch( java.lang.NullPointerException e )
+        { 
+            this.setPluginState(false);
+            this.errorStr=e.getLocalizedMessage();
+            throw new CleverException( e, "Missing logger.properties or bad configuration " );       
+            
+        }
+        catch( ClassNotFoundException e )      
+        {
+            this.setPluginState(false);
+            this.errorStr=e.getLocalizedMessage();
+            throw new CleverException( e, "Plugin Class not found" );
+        }
+        catch( InstantiationException e )
+        {
+            this.setPluginState(false);
+            this.errorStr=e.getLocalizedMessage();
+            throw new CleverException( e, "Plugin Instantiation error" );
+        }
+        catch( IllegalAccessException e )
+        {
+            this.setPluginState(false);
+            this.errorStr=e.getLocalizedMessage();
+            throw new CleverException( e, "Error Access" );
+        }
+        catch( Exception e )
+        {
+            this.setPluginState(false);
+            this.errorStr=e.getLocalizedMessage();
+            throw new CleverException( e,e.getLocalizedMessage() );
+        }
+        
+        return this.pluginInstantiation;
+    }
+     
+    public ParserXML getconfiguration(String cfgFile,String classpath)throws CleverException{
+        logger.debug("cfgfile:"+cfgFile);
+        logger.debug("classpath:"+classpath);
+        File cfgLocalFile = new File(cfgFile);
+        ParserXML pXML=null;
+        try {
+            InputStream inxml = null;
+            
+            if(cfgLocalFile.exists())
+            {
+                //A configuration file exists on cfg/...
+                inxml = new FileInputStream(cfgLocalFile);
+                logger.debug("Configuration from localfile");
+            }
+            else
+            {
+                //retrieve configuration from classpath
+                inxml = getClass().getResourceAsStream(classpath);
+                InputStream inxmlTest=getClass().getResourceAsStream(classpath);
+                logger.debug("Configuration from classpath");
+                //TODO: verify if element "writeOnCfgFolder" have value "yes", in this case we can make a copy of this file on cfg folder
+                pXML= new ParserXML(inxmlTest);
+                boolean canCopy=((String)pXML.getElementContent("writeOnCfgFolder","yes").substring(0)).equals("yes");
+                if(canCopy)
+                {
+                    try                
+                    {   
+                        
+                        Support.copy( inxml, cfgLocalFile );                
+                    }                
+                    catch( IOException ex ) //se entriamo qui dentro significa che si è verificato un errore con la copia del file!
+                    {               
+                        this.logger.error( "The copy of the file 'configuration_template.xml' is failed; " + ex  );                    
+                        throw new CleverException("The copy of the file 'configuration_template.xml' is failed; " + ex.getMessage() );     	
+                    }
+                }
+            }
+            if(inxml==null){
+                logger.error("No configuration available");
+                throw new CleverException("No configuration available");
+            }
+            else
+            {
+                pXML= new ParserXML(inxml);
+            }    
+        } catch (IOException ex) {
+            logger.error("Error: " + ex);
+        }
+        
+        return pXML;
+    }
+    //TODO: make test method for this function
+    public void restartPlugin(String configfile,Boolean write) throws CleverException{
+        ParserXML pXML=new ParserXML(configfile);
+        logger.debug("restartplug0");
+        if(write){
+            try{
+                if(this.cfgfilepath!=null)
+                {
+                    File f=new File(this.cfgfilepath);
+                    f.delete();
+                    InputStream is = new ByteArrayInputStream(configfile.getBytes());
+                    f=new File(this.cfgfilepath);
+                    Support.copy(is, f);
+        
+                }
+            }catch(SecurityException e)
+            {
+                logger.error("Cannot delete configuration file for restart operation of the plugin");
+            }catch(Exception e)
+            {
+                logger.error("An exception is occourred in delete configuration file phase in the plugin restart"+ this.getAgentName());
+            }
+        }
+        try{
+             logger.debug("restartplug3");
+             this.pluginInstantiation=this.startPlugin(pXML);
+             this.setPluginState(true);
+        }
+        catch( Exception e )
+        {
+            this.setPluginState(false);
+            this.errorStr=e.getMessage();
+            throw new CleverException( e );
+        }
+        
+    }
     public void start() throws CleverException {
         try {
             logger.debug("\nistanzio ModuleCommunicator(agentName), dove agentName: " + this.getAgentName());
@@ -146,13 +322,13 @@ public abstract class Agent implements MethodInvokerHandler {
             par = null;
         }
         try {
+            //logger.debug("%%%&handleinvocation");
             //agent method
             mthd = this.getClass().getMethod(method.getMethodName(), par);
-
+            
             if (method.getHasReturn()) {
                 output = (Object) mthd.invoke(this, input);
-
-
+                
             } else {
                 mthd.invoke(this, input);
                 output = null;
@@ -170,20 +346,27 @@ public abstract class Agent implements MethodInvokerHandler {
             throw new CleverException(ex.getTargetException(), "Error on plugin method invocation: " + ex.getTargetException().getMessage());
         } catch (NoSuchMethodException ex) {
             try {
+                //logger.debug("%%%&handleinvocationNoMethod");
                 //plugin method
-                mthd = getPluginClass().getMethod(method.getMethodName(), par);
-                if (method.getHasReturn()) {
-
-                    output = (Object) mthd.invoke(getPlugin(), input);
-                } else {
-                    mthd.invoke(getPlugin(), input);
-                    output = null;
+                if(this.isPluginState()){
+                    mthd = getPluginClass().getMethod(method.getMethodName(), par);
+                    if (method.getHasReturn()) {
+                        output = (Object) mthd.invoke(getPlugin(), input);
+                    } else {
+                        mthd.invoke(getPlugin(), input);
+                        output = null;
+                    }
+                }
+               else{
+                    CleverException e=new CleverException("The Plugin is not corrected Started: An error is occurred in initialization process!\nThe error is: "+this.errorStr);
+                    throw new CleverException(e.getMessage());
                 }
 
             } catch (IllegalAccessException ex1) {
                 logger.error("Error: " + ex1);
                 throw new CleverException("Illegal Argument Exception: " + ex.getMessage());
             } catch (IllegalArgumentException ex1) {
+                logger.error("%%%&handleinvocation IllegalArgumentException");
             } catch (InvocationTargetException ex1) {
                 logger.error("Error: " + ex1);
                 Throwable exception = ex1.getTargetException();
@@ -196,7 +379,7 @@ public abstract class Agent implements MethodInvokerHandler {
                 logger.error("Error: " + ex);
                 throw new CleverException("Security Exception: " + ex.getMessage());
             }
-            logger.debug("Method invoked: " + method.getMethodName());
+           logger.debug("Method invoked: " + method.getMethodName());
             return (output);
 
 
@@ -284,7 +467,6 @@ public abstract class Agent implements MethodInvokerHandler {
      */
     public Object invoke(MethodInvoker mi) throws CleverException {
 
-        
         return mc.invoke(mi);
 
 

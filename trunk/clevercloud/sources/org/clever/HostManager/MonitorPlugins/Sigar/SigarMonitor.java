@@ -34,9 +34,11 @@ import org.clever.HostManager.Monitor.MonitorPlugin;
 import java.util.List;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.ModuleCommunicator;
+import org.clever.Common.Exceptions.CleverException;
 import org.clever.HostManager.Monitor.MemoryInfo;
 import org.clever.HostManager.Monitor.OSInfo;
 import org.clever.HostManager.Monitor.ResourceState;
+import org.jdom.Element;
 
 
 public class SigarMonitor implements MonitorPlugin{
@@ -47,9 +49,12 @@ public class SigarMonitor implements MonitorPlugin{
 
 
     //public void init() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-    public void init() {
+    @Override
+    public void init(Element params, Agent owner) throws CleverException {
+        this.owner=owner;
         HwMonitorFactory HwMonitorFactory = new HwMonitorFactory();
         this.setHwMonitor(HwMonitorFactory.getHwMonitor());
+        
     }
 
     private void setHwMonitor(HWMonitor hwMonitor) {
@@ -150,6 +155,8 @@ public class SigarMonitor implements MonitorPlugin{
     public void setOwner(Agent owner) {
         this.owner=owner;
     }
-
+    public void shutdownPluginInstance(){
+        
+    }
 
 }

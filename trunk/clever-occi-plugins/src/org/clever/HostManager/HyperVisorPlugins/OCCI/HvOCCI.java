@@ -924,6 +924,10 @@ public class HvOCCI implements HyperVisorPlugin {
                 logger.error("Error in configuration parameters (authorization)" + ex.getMessage());
                 throw new CleverException(ex);
             }
+            catch (Exception ex) {
+                logger.error("Error generic" + ex.getMessage(),ex);
+                throw new CleverException(ex);
+            }
             
 
             Element auth = params.getChild("auth");
@@ -1401,7 +1405,6 @@ public class HvOCCI implements HyperVisorPlugin {
     }
     @Override
     public String getName() {
-
         return ("HvOcci");
 
     }
@@ -1414,6 +1417,10 @@ public class HvOCCI implements HyperVisorPlugin {
     @Override
     public String getDescription() {
         return "HM OCCI Plugin ";
+    }
+    
+    public void shutdownPluginInstance(){
+        
     }
     
 }

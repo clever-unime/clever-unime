@@ -4,3 +4,12 @@
 *.jar
 *.war
 *.ear
+/trunk/CleverCommon/nbproject/private/
+/trunk/cleverAdministration/src/org/clever/administration/test/Cli2.java
+/trunk/CleverCommon/build/
+/trunk/CleverCommon/dist/
+/trunk/cleverAdministration/dist/
+/trunk/clevercloud/build/
+/trunk/clevercloud/dist/
+/trunk/clever-occi-plugins/build/
+/trunk/clever-occi-plugins/dist/

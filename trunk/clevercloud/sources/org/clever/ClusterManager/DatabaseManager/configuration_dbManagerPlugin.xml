@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-  <DbManagerPlugin>org.clever.ClusterManager.DatabaseManagerPlugins.Sedna.DbSedna</DbManagerPlugin>
+  <ClassPlugin>org.clever.ClusterManager.DatabaseManagerPlugins.Sedna.DbSedna</ClassPlugin>
+  <writeOnCfgFolder>yes</writeOnCfgFolder> 
   <moduleName>DatabaseManagerAgent</moduleName>
   <pluginParams>
     <serverURL>localhost</serverURL>

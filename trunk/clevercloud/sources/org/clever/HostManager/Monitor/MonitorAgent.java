@@ -45,7 +45,7 @@ import org.clever.Common.Communicator.Agent;
 public class MonitorAgent extends Agent
 {
     private MonitorPlugin monitorPlugin;
-    private Class cl;
+    //private Class cl;
     
    
 
@@ -64,25 +64,15 @@ public class MonitorAgent extends Agent
         try 
         {
             super.start();
-            
-            InputStream inxml = getClass().getResourceAsStream( "/org/clever/HostManager/Monitor/configuration_monitor.xml" );
-            FileStreamer fs = new FileStreamer();
-            ParserXML pars = new ParserXML( fs.xmlToString( inxml ) );
-            
-            cl = Class.forName( pars.getElementContent( "PluginName" ) );
-            monitorPlugin = ( MonitorPlugin ) cl.newInstance();
-            
-            monitorPlugin.init();
-         //   mc.setMethodInvokerHandler( this );
-            
+            logger.debug( "MonitorPlugin start creation" );
+            monitorPlugin = ( MonitorPlugin )super.startPlugin("./cfg/configuration_monitor.xml","/org/clever/HostManager/Monitor/configuration_monitor.xml");
             monitorPlugin.setOwner(this);
             logger.info( "MonitorPlugin Created" );
             
-            //agentName=pars.getElementContent( "moduleName" );
         }
         catch (CleverException ex) 
         {
-            java.util.logging.Logger.getLogger(MonitorAgent.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("CleverException is occurred in Monitor Agent initialization.Message"+ex.getMessage());
         }
         catch( Exception e )
         {
@@ -100,7 +90,7 @@ public class MonitorAgent extends Agent
   @Override
   public Object getPlugin()
   {
-    return monitorPlugin;
+    return this.pluginInstantiation;
   }
   
   @Override

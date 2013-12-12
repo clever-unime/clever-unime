@@ -66,7 +66,7 @@ public abstract class CmAgent extends Agent implements NotificationHandler  {
     public Object remoteInvocation( String hostTarget, String agentTarget, String methodTarget, boolean hasReply , List params) throws CleverException
     {
 
-        MethodInvoker targetMethod = new MethodInvoker(agentTarget, methodTarget, hasReply, params);
+        MethodInvoker targetMethod= new MethodInvoker(agentTarget, methodTarget, hasReply, params);
         List dispatchParams = new ArrayList();
         dispatchParams.add(targetMethod);
         dispatchParams.add(hostTarget);

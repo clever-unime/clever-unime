@@ -56,7 +56,7 @@ public class ImageManagerAgent extends Agent {
     
     
 
-    @Override
+   /* @Override
     public void initialization()
     {
         if(super.getAgentName().equals("NoName"))
@@ -74,7 +74,7 @@ public class ImageManagerAgent extends Agent {
         
          
     
-        logger.debug("\n\n||||||!!!========££$$$$$$$$ Provo se il logger funziona ImageManagerAgent di HM!!!!\n\n"); 
+        logger.info("\n\nImageManagerAgent started! \n\n"); 
          
 
     //Load properties from XML file
@@ -88,13 +88,13 @@ public class ImageManagerAgent extends Agent {
     } catch (IOException e) {
       logger.error("Missing logger.properties");
     }
-*/
+
     try
     {
       //Load configuration_imagemanager.XMl
-        logger.info("\n\n||||||!!!========££$$$$$$$$ Provo se il logger funziona ImageManagerAgent di HM!!!!\n\n"); 
-     
-      InputStream inxml=getClass().getResourceAsStream(
+        //logger.debug("\n\n||||||!!!========££$$$$$$$$ Provo se il logger funziona ImageManagerAgent di HM!!!!\n\n"); 
+      ParserXML pars = super.getconfiguration("./cfg/configuration_ImageManager.xml","/org/clever/HostManager/ImageManager/configuration_ImageManager.xml");
+      /*InputStream inxml=getClass().getResourceAsStream(
               "/org/clever/HostManager/ImageManager/configuration_ImageManager.xml");
       FileStreamer fs = new FileStreamer();
       ParserXML pars = new ParserXML(fs.xmlToString(inxml));
@@ -118,16 +118,17 @@ public class ImageManagerAgent extends Agent {
       cl = Class.forName(pars.getElementContent("ImageManagerPlugin"));
        logger.info("ImageManager created!");
 
-    } catch (IOException io_ex) {
+    }/* catch (IOException io_ex) {
       logger.error("ImageManager Error: " + io_ex);
 
-    } catch (Exception ex) {
+    } 
+    catch (Exception ex) {
       logger.error("ImageManage Error: " + ex);
     }
-    }
+    }*/
   
-  private Class cl;
- 
+  //private Class cl;
+  private ImageManagerPlugin ip;
   private ImageManager imgManager;
   //rob
   
@@ -142,80 +143,38 @@ public class ImageManagerAgent extends Agent {
 
  
 
-  
+
+  public void initialization() { 
+    //&&logger = Logger.getLogger("ImageManagerAgent");
+    logger.info("\n\nImageManagerAgent Started!\n\n"); 
+    if(super.getAgentName().equals("NoName"))
+    {
+        super.setAgentName("ImageManagerAgent");
+    }
+    try 
+    {
+        super.start();
+    } catch (CleverException ex) 
+    {
+        logger.error("Error in start procedure of Image Manager Agent. Message:"+ex.getMessage());
+    }
+    try
+    {
+        this.ip=(ImageManagerPlugin)super.startPlugin("./cfg/configuration_ImageManager.xml","/org/clever/HostManager/ImageManager/configuration_ImageManager.xml");
+        this.ip.setOwner(this);
+        logger.info("ImageManager created!");
+
+    }catch (Exception ex) {
+        logger.error("ImageManage Error: " + ex);
+    }
+  }
+
 
   public ImageManager getImgManager() {
     return this.imgManager;
   }
 
 
-  @Override
-  public Object handleInvocation(MethodInvoker method) {
-    int i = 0;
-    Method mthd;
-    Class[] par;
-    Object output;
-    Object[] input = null;
-    List params = method.getParams();
-    if (params != null)
-    {
-      par = new Class[params.size()];
-      input = new Object[params.size()];
-
-      for (i = 0; i < params.size(); i++)
-      {
-        par[i] = params.get(i).getClass();
-        input[i] = params.get(i);
-      }
-    }
-    else
-      par = null;
-
-    try
-    {
-      mthd = cl.getMethod(method.getMethodName(), par);
-      if (method.getHasReturn())
-      {
-        logger.debug("getHasReturn TRUE");
-        output = (Object) mthd.invoke(this.imgManager, input);
-      }
-      else
-      {
-        logger.debug("getHasReturn FALSE");
-        mthd.invoke(this.imgManager, input);
-        output = null;
-      }
-
-      if (output != null)
-      {
-        logger.debug("ImageManagerAgent " + method.getMethodName() + "Result: " + output.toString());
-        return output;
-      }
-
-      logger.debug("Out NULL");
-      return output;
-
-    } catch (IllegalAccessException ex) {
-      logger.debug(ex.getMessage());
-      return false;
-
-    } catch (IllegalArgumentException ex) {
-      logger.debug(ex.getMessage());
-      return false;
-
-    } catch (InvocationTargetException ex) {
-      logger.debug(ex.getMessage());
-      return false;
-
-    } catch (NoSuchMethodException ex) {
-      logger.debug(ex.getMessage());
-      return false;
-
-    } catch (SecurityException ex) {
-      logger.debug(ex.getMessage());
-      return false;
-    }
-  }
 
   @Override
   public Class getPluginClass() {
@@ -224,7 +183,7 @@ public class ImageManagerAgent extends Agent {
 
   @Override
   public Object getPlugin() {
-    return imgManager;
+    return this.pluginInstantiation;
   }
   
    @Override

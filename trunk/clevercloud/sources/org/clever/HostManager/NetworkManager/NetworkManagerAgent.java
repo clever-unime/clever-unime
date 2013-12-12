@@ -42,7 +42,7 @@ import org.clever.Common.Communicator.ModuleCommunicator;
 public class NetworkManagerAgent extends Agent
 {
     private NetworkManagerPlugin networkManager;  
-    private Class cl;
+    //private Class cl;
     
     
     
@@ -57,47 +57,17 @@ public class NetworkManagerAgent extends Agent
     {
         if(super.getAgentName().equals("NoName"))
             super.setAgentName("NetworkManagerAgent");
-       
+        logger.info( "NetworkManagerPlugin Started" );
         try 
         {
             super.start();
-            
-            FileStreamer fs = new FileStreamer();
-            InputStream inxml = getClass().getResourceAsStream( "/org/clever/HostManager/NetworkManager/configuration_networkManager.xml" );
-            ParserXML pXML = new ParserXML( fs.xmlToString( inxml ) );
-            
-            logger.info( "NetworkManagerPlugin creating " );
-            
-            cl = Class.forName( pXML.getElementContent( "NetworkManager" ) );
-            networkManager = ( NetworkManagerPlugin ) cl.newInstance();
-            
-            logger.debug( "called init of " + pXML.getElementContent( "NetworkManager" ) );
+            networkManager = ( NetworkManagerPlugin )super.startPlugin("./cfg/configuration_networkManager.xml","/org/clever/HostManager/NetworkManager/configuration_networkManager.xml");
             networkManager.setOwner(this);
-            //agentName=pXML.getElementContent( "moduleName" );
-            //mc = new ModuleCommunicator(agentName);
-            //mc.setMethodInvokerHandler( this );
-            
             logger.info( "NetworkManagerPlugin created " );
         }
         catch (CleverException ex) 
         {
-            java.util.logging.Logger.getLogger(NetworkManagerAgent.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch( ClassNotFoundException ex )
-        {
-            logger.error( "Error: " + ex );
-        }
-        catch( IOException ex )
-        {
-            logger.error( "Error: " + ex );
-        }
-        catch( InstantiationException ex )
-        {
-            logger.error( "Error: " + ex );
-        }
-        catch( IllegalAccessException ex )
-        {
-            logger.error( "Error: " + ex );
+            logger.error("CleverException in Network Agent initialization"+ex);
         }
         catch( Exception ex )
         {
@@ -118,7 +88,7 @@ public class NetworkManagerAgent extends Agent
   @Override
   public Object getPlugin()
   {
-    return networkManager;
+    return this.pluginInstantiation;
   }
   
   @Override

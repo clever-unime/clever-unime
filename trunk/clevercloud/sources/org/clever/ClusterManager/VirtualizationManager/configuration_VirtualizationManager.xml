@@ -9,7 +9,8 @@
 -->
 
 <configuration>
-    <VirtualizationManager>org.clever.ClusterManager.VirtualizationManagerPlugin.VirtualizationManagerClever</VirtualizationManager>
+    <ClassPlugin>org.clever.ClusterManager.VirtualizationManagerPlugin.VirtualizationManagerClever</ClassPlugin>
+    <writeOnCfgFolder>yes</writeOnCfgFolder>
     <moduleName>VirtualizationManagerAgent</moduleName>
     <pluginParams>
         <HostManagerServiceGuacaTarget>brady-desktop</HostManagerServiceGuacaTarget>

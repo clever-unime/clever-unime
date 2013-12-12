@@ -12,7 +12,7 @@ import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.VEInfo.StorageSettings;
 import org.clever.Common.VEInfo.VEDescription;
 import org.clever.Common.VEInfo.VEState;
-import org.clever.Common.XMPPCommunicator.UUIDProvider;
+import org.clever.Common.UUIDProvider.UUIDProvider;
 
 import org.clever.administration.api.SessionFactory;
 import org.clever.administration.api.modules.VMAdministrationModule;

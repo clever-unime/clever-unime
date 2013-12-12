@@ -39,7 +39,7 @@ import org.jdom.Element;
 public class ServiceManagerAgent extends Agent {
 
     private ServiceManagerPlugin service_manager;
-    private Class cl;
+    //private Class cl;
 
     public ServiceManagerAgent() throws CleverException {
         super();
@@ -53,36 +53,16 @@ public class ServiceManagerAgent extends Agent {
 
     @Override
     public Object getPlugin() {
-        return this.service_manager;
+        return this.pluginInstantiation;
     }
 
     @Override
     public void initialization() throws Exception {
-        //TODO: implement initialization
-         FileStreamer fs = new FileStreamer();
+          
        try {
-            InputStream inxml = getClass().getResourceAsStream("/org/clever/HostManager/ServiceManager/configuration_ServiceManager.xml");
-            ParserXML pXML = new ParserXML(fs.xmlToString(inxml));
-            cl = Class.forName(pXML.getElementContent("ServiceManager"));
-            service_manager = (ServiceManagerPlugin) cl.newInstance();
-            service_manager.setOwner(this);
-            Element pp = pXML.getRootElement().getChild("pluginParams");
-            if (pp != null) {
-                service_manager.init(pp, this);
-            } else {
-                service_manager.init(null, this);
-            }
-
-            logger.debug("called init of " + pXML.getElementContent("ServiceManager"));
-            logger.info("ServiceManagerAgent created ");
-        } catch (ClassNotFoundException ex) {
-            logger.error("Error: " + ex);
-        } catch (IOException ex) {
-            logger.error("Error: " + ex);
-        } catch (InstantiationException ex) {
-            logger.error("Error: " + ex);
-        } catch (IllegalAccessException ex) {
-            logger.error("Error: " + ex);
+           service_manager = (ServiceManagerPlugin) super.startPlugin("./cfg/configuration_ServiceManager.xml","/org/clever/HostManager/ServiceManager/configuration_ServiceManager.xml");
+           service_manager.setOwner(this);
+           logger.info("ServiceManagerAgent created ");
         } catch (Exception ex) {
             logger.error("ServiceManagerPlugin creation failed: " + ex);
         }

@@ -48,10 +48,10 @@ import org.jdom.Element;
  */
 public class VirtualizationManagerAgent extends CmAgent {
     
-    private Logger logger;
-    private Class cl;
+    //private Logger logger;
+    //private Class cl;
     private VirtualizationManagerPlugin VirtualizationManager;
-    private String agentName;
+    private String agentName="VirtualizationManagerAgent";
     private String notificationIdRegisterVirtualDeskHTML5 = "Virtualization/RegisterVirtualDesktopHTML5";
     private String notificationIdUnRegisterVirtualDeskHTML5 = "Virtualization/UnRegisterVirtualDesktopHTML5";
     private String notificationStartedVm = "Virtualization/VmStarted";
@@ -82,10 +82,13 @@ public class VirtualizationManagerAgent extends CmAgent {
             
             try {
                 this.logger.info("Read Configuration VirtualManager!");
+                VirtualizationManager=(VirtualizationManagerPlugin)super.startPlugin("./cfg/configuration_VirtualizationManager.xml","/org/clever/ClusterManager/VirtualizationManager/configuration_VirtualizationManager.xml");
+                this.VirtualizationManager.setOwner(this);
+                /*
                 FileStreamer fs = new FileStreamer();
                 InputStream inxml = getClass().getResourceAsStream("/org/clever/ClusterManager/VirtualizationManager/configuration_VirtualizationManager.xml");
                 ParserXML pXML = new ParserXML(fs.xmlToString(inxml));
-        
+                
                 this.cl = Class.forName(pXML.getElementContent("VirtualizationManager"));
                 VirtualizationManager=(VirtualizationManagerPlugin)this.cl.newInstance();
                 this.agentName=pXML.getElementContent( "moduleName" );
@@ -97,13 +100,11 @@ public class VirtualizationManagerAgent extends CmAgent {
                  
               
                 logger.debug("called init of " + pXML.getElementContent("VirtualizationManager"));
-        
-                 
+                * */ 
                 params= new ArrayList();
                 params.add(this.agentName);
                 params.add(this.notificatioPresenceHM);
                 this.invoke("DispatcherAgent", "subscribeNotification", true, params);
-                
                 
                 params = new ArrayList();
                 params.add(this.agentName);
@@ -111,7 +112,7 @@ public class VirtualizationManagerAgent extends CmAgent {
                // mi = new MethodInvoker("DispatcherAgent","subscribeNotification", true, params);
               //  this.mc.invoke(mi);
                 this.invoke("DispatcherAgent", "subscribeNotification", true, params);
-       
+                
                 params = new ArrayList();
                 params.add(this.agentName);
                 params.add(this.notificationIdUnRegisterVirtualDeskHTML5);
@@ -125,7 +126,6 @@ public class VirtualizationManagerAgent extends CmAgent {
             //    mi = new MethodInvoker("DispatcherAgent","subscribeNotification", true, params);
             //    this.mc.invoke(mi);
                  this.invoke("DispatcherAgent", "subscribeNotification", true, params);
-                
                 params = new ArrayList();
                 params.add(this.agentName);
                 params.add(this.notificationCreatedVm);
@@ -133,25 +133,25 @@ public class VirtualizationManagerAgent extends CmAgent {
              //   this.mc.invoke(mi);
                  this.invoke("DispatcherAgent", "subscribeNotification", true, params);
                 
-                params = new ArrayList();
+                 params = new ArrayList();
                 params.add(this.agentName);
                 params.add(this.notificationImportedVm);
               //  mi = new MethodInvoker("DispatcherAgent","subscribeNotification", true, params);
              //   this.mc.invoke(mi);
                 this.invoke("DispatcherAgent", "subscribeNotification", true, params);
-               
-                logger.info("VirtualizationManager Agent created ");
-                
+               logger.info("VirtualizationManager Agent created ");
+            /*    
             } catch (ClassNotFoundException ex) {
                 logger.error("Error: " + ex);
             } catch (IOException ex) {
                 logger.error("Error: " + ex);
+             
             } catch (InstantiationException ex) {
                 logger.error("Error: " + ex);
             } catch (IllegalAccessException ex) {
-                logger.error("Error: " + ex);
+                logger.error("Error: " + ex);*/
             } catch (Exception ex) {
-                logger.error("VirtualizationManager creation failed: " + ex);
+                logger.error("VirtualizationManager creation failed: " + ex.getMessage());
             }
             
         } catch (CleverException ex) {
@@ -167,7 +167,7 @@ public class VirtualizationManagerAgent extends CmAgent {
     
     @Override
     public Object getPlugin() {
-        return this.VirtualizationManager;
+        return this.pluginInstantiation;
     }
     
     @Override

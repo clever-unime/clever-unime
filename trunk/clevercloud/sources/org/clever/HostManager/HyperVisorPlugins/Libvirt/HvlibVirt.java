@@ -1035,4 +1035,7 @@ public long snapshotCount(String id) throws CleverException{
     public boolean shutDownVm(String[] ids, Boolean poweroff) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    public void shutdownPluginInstance(){
+        
+    }
  }

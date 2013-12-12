@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
-    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
-        <file>file:/home/maurizio/git/cleverApi/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/ConnectionXMPP.java</file>
-        <file>file:/home/maurizio/git/cleverApi/trunk/clevercloud/sources/org/clever/ClusterManager/ClusterCoordinator/configuration_template_clustercoordinator.xml</file>
-        <file>file:/home/maurizio/git/cleverApi/trunk/clevercloud/sources/org/clever/Common/Initiator/configuration_template_initiator.xml</file>
-        <file>file:/home/maurizio/git/cleverApi/trunk/clevercloud/sources/org/clever/Common/Communicator/CmAgent.java</file>
-        <file>file:/home/maurizio/git/cleverApi/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/CleverChatManagerListener.java</file>
-        <file>file:/home/maurizio/git/cleverApi/trunk/clevercloud/sources/org/clever/HostManager/HyperVisor/HyperVisorAgent.java</file>
-        <file>file:/home/maurizio/git/cleverApi/trunk/clevercloud/sources/org/clever/ClusterManager/DispatcherPlugins/DispatcherClever/DispatcherClever.java</file>
-        <file>file:/home/maurizio/git/cleverApi/trunk/clevercloud/sources/org/clever/ClusterManager/ClusterCoordinator/ClusterCoordinator.java</file>
-        <file>file:/home/maurizio/git/cleverApi/trunk/clevercloud/sources/org/clever/Common/XMPPCommunicator/RoomListener.java</file>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/HostManager/Monitor/MonitorAgent.java</file>
+            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/ClusterManager/StorageManagerPlugins/StorageManagerClever/StorageManager.java</file>
+            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/HostManager/ImageManager/ImageManagerAgent.java</file>
+            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/HostManager/HyperVisor/HyperVisorAgent.java</file>
+            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/Common/CommunicatorPlugins/Dbus/CommunicatorDbus.java</file>
+        </group>
     </open-files>
 </project-private>

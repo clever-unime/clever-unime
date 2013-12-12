@@ -27,6 +27,7 @@ package org.clever.HostManager.ImageManager;
 import java.util.HashMap;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.ModuleCommunicator;
+import org.clever.Common.Plugins.RunnerPlugin;
 import org.clever.Common.Shared.ImageFileInfo;
 import org.clever.Common.Storage.VFSDescription;
 
@@ -35,7 +36,7 @@ import org.clever.Common.Storage.VFSDescription;
  * @author Valerio Barbera & Luca Ciarniello
  */
 
-public interface ImageManagerPlugin {
+public interface ImageManagerPlugin  extends RunnerPlugin{
 
   /**
    * Sets the mount point for the VM image files on the host

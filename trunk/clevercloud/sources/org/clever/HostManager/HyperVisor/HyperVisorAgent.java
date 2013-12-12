@@ -38,11 +38,12 @@ import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.ParserXML;
 import java.io.FileInputStream;
+import org.apache.log4j.Logger;
 
 public class HyperVisorAgent extends Agent {
 
     private HyperVisorPlugin hypervisor;
-    private Class cl;
+    //private Class cl;
     
     
     public HyperVisorAgent() throws CleverException  {
@@ -51,61 +52,22 @@ public class HyperVisorAgent extends Agent {
       
     }
 
-    
-    
-    
-    //TODO: portare tutto in Agent e mettere stato di errore
     @Override
     public void initialization() throws CleverException {
         if (super.getAgentName().equals("NoName")) {
             super.setAgentName("HyperVisorAgent");
         }
-
         super.start();
-
-        File cfgLocalFile = new File("./cfg/configuration_hypervisor.xml");
-
-        try {
-            InputStream inxml = null;
+        try 
+        {
             
-            if(cfgLocalFile.exists())
-            {
-                //A configuration file exists on cfg/...
-                inxml = new FileInputStream(cfgLocalFile);
-                logger.info("Configuration from localfile");
-                
-            }
-            else
-            {
-                //retrieve configuration from classpath
-                inxml = getClass().getResourceAsStream("/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");
-                logger.info("Configuration from classpath");
-            }
-            
-            
-            
-            if(inxml==null)
-                logger.debug("No configuration available");
-            
-            ParserXML pXML = new ParserXML(inxml);
-            cl = Class.forName(pXML.getElementContent("HyperVisor"));
-            hypervisor = (HyperVisorPlugin) cl.newInstance();
-            hypervisor.init(pXML.getRootElement().getChild("pluginParams"), this); 
+            hypervisor = (HyperVisorPlugin) super.startPlugin("./cfg/configuration_hypervisor.xml","/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");        
             hypervisor.setOwner(this);
-            logger.debug("called init of " + pXML.getElementContent("HyperVisor"));
-
-            // agentName=pXML.getElementContent( "moduleName" );          
             logger.info("HyperVisorPlugin created ");
-        } catch (ClassNotFoundException ex) {
-            logger.error("Error: " + ex);
-        } catch (IOException ex) {
-            logger.error("Error: " + ex);
-        } catch (InstantiationException ex) {
-            logger.error("Error: " + ex);
-        } catch (IllegalAccessException ex) {
-            logger.error("Error: " + ex);
+            
         } catch (Exception ex) {
-            logger.error("HyperVisorPlugin creation failed: " + ex);
+            logger.error("HyperVisorPlugin creation failed: " + ex.getMessage());
+            this.errorStr=ex.getMessage();
         }
     }
 
@@ -116,7 +78,8 @@ public class HyperVisorAgent extends Agent {
 
     @Override
     public Object getPlugin() {
-        return hypervisor;
+         
+        return this.pluginInstantiation;
     }
 
     @Override

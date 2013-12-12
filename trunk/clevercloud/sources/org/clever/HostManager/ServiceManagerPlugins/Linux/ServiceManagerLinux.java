@@ -116,6 +116,8 @@ public class ServiceManagerLinux implements ServiceManagerPlugin{
         this.owner=owner;
     }
 
-    
+    public void shutdownPluginInstance(){
+        
+    }
 
 }

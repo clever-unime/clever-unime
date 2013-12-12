@@ -192,26 +192,23 @@ public class ClusterCoordinator implements CleverMessageHandler
       }
       
       
-      try
-       {  
-      server = pXML.getElementContent( "server" );
-      room = pXML.getElementContent( "room" );
-      roomclients = pXML.getElementContent( "roomclients" );
-      port = Integer.parseInt( pXML.getElementContent( "port" ) );
-      username = pXML.getElementContent( "username" );
-      password = pXML.getElementContent( "password" );
-      nickname = pXML.getElementContent( "nickname" );
-      this.activeAgents = Boolean.parseBoolean(pXML.getElementContent("activeAgents"));
-      this.replaceAgents = Boolean.parseBoolean(pXML.getElementContent("replaceAgents"));
-      this.numReload = Integer.parseInt(pXML.getElementContent("numReloadAgent"));
-      this.timeReload = Integer.parseInt(pXML.getElementContent("timeReloadAgent"));
-       }
-      catch (Exception e)
-          { 
-              logger.error("Error parsing configuration: "+e);
-              System.exit(1);
-              
-          }
+      try {
+          server = pXML.getElementContent("server");
+          room = pXML.getElementContent("room");
+          roomclients = pXML.getElementContent("roomclients");
+          port = Integer.parseInt(pXML.getElementContent("port"));
+          username = pXML.getElementContent("username");
+          password = pXML.getElementContent("password");
+          nickname = pXML.getElementContent("nickname");
+          this.activeAgents = Boolean.parseBoolean(pXML.getElementContent("activeAgents"));
+          this.replaceAgents = Boolean.parseBoolean(pXML.getElementContent("replaceAgents"));
+          this.numReload = Integer.parseInt(pXML.getElementContent("numReloadAgent"));
+          this.timeReload = Integer.parseInt(pXML.getElementContent("timeReloadAgent"));
+      } catch (Exception e) {
+          logger.error("Error parsing configuration: " + e);
+          System.exit(1);
+
+      }
       logger.debug("\n\n&&&&& i nuovi valori caricati sono: " +numReload  +" "+timeReload);     
       logger.debug("\n\nREPLACEAGENTS NEL CC: "+replaceAgents);
       tls = Boolean.parseBoolean( pXML.getElementContent( "tls" ) );  
@@ -290,7 +287,6 @@ public class ClusterCoordinator implements CleverMessageHandler
     logger.info("DispatcherAgent created");
     dispatcherAgent = new DispatcherAgent(conn);
     dispatcherAgent.initialization();
-    
     dispatcherPlugin = dispatcherAgent.getDispatcherPlugin();
     logger.info("Dispatcher Plugin created");
     

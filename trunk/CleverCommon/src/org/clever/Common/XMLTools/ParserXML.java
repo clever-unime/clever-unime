@@ -103,6 +103,7 @@ public class ParserXML
             SAXBuilder builder = new SAXBuilder();
             document = (Document) builder.build( is );
             rootElement = document.getRootElement();
+            
         } catch (JDOMException ex) {
             logger.error( "Error while opening the file xml: " + ex );
         } catch (IOException ex) {
@@ -132,13 +133,14 @@ public class ParserXML
     }
     
   }
-
+  
   public String getElementContent( String element )
   {
     return rootElement.getChildText( element );
 
   }
-
+  
+  
   public String getElementContent( String element, int istanceNumber )
   {
     List listOfTags = rootElement.getChildren( element );
@@ -146,6 +148,8 @@ public class ParserXML
     return target.getText();
 
   }
+  
+ 
 
   public String getElementAttributeContent( String element, String attribute )
   {
@@ -214,4 +218,56 @@ public class ParserXML
   public Document getDocument(){
       return this.document;
   }
+    //OVERLOADS
+    public String getElementContent(String element, String defaultValue) {
+        String returnV = "";
+        returnV = rootElement.getChildText(element);
+        if (returnV == null) {
+            returnV = defaultValue;
+        }
+        return returnV;
+    }
+
+    public String getElementContent(String element, int istanceNumber, String defaultValue) {
+        String returnV = "";
+        List listOfTags = rootElement.getChildren(element);
+        Element target = (Element) listOfTags.get(istanceNumber);
+        returnV = target.getText();
+        if (returnV == null) {
+            returnV = defaultValue;
+        }
+        return returnV;
+    }
+
+    public String getElementAttributeContent(String element, String attribute, String defaultValue) {
+        if (element.compareTo(rootElement.getName()) == 0) {
+            return rootElement.getAttributeValue(attribute);
+        } else {
+            Element elem = rootElement.getChild(element);
+            if (elem == null) {
+                return defaultValue;
+            }
+            return elem.getAttributeValue(attribute);
+        }
+    }
+
+    public String getElementAttributeContent(String element, String attribute, int istanceNumber, String defaultValue) {
+        String returnV = "";
+        List listOfTags = rootElement.getChildren(element);
+        Element target = (Element) listOfTags.get(istanceNumber);
+        returnV = target.getAttributeValue(attribute);
+        if (returnV == null) {
+            returnV = defaultValue;
+        }
+        return returnV;
+    }
+    
+    
+    public void printElementContentText(){
+        for(int i =0;i<this.rootElement.getChildren().size();i++)
+        {
+            logger.debug("name "+((Element)this.rootElement.getChildren().get(i)).getName());
+            logger.debug("text "+((Element)this.rootElement.getChildren().get(i)).getText());
+        }
+    }
 }
