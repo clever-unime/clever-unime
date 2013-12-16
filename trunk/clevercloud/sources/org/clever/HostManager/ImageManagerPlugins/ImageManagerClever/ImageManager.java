@@ -226,6 +226,7 @@ public class ImageManager implements ImageManagerPlugin {
                  }
                 else{
                         //b = (ArrayList) map.get(file_s.getName());
+                        //b = (ArrayList) map.get(file_s.getName());
                 // scorre la prima HasMap
 
                 // Set keySet = map.keySet( );  
@@ -291,14 +292,14 @@ public class ImageManager implements ImageManagerPlugin {
                     } 
                     else{
                     
-                    response=this.localRepository+id+"."+file_s.getName().getExtension();
-                    logger.debug("Image4");
-                    this.sqlite.insertElementAtMap(file_s.getName().getURI(), response,new Long(content.getSize()).toString() ,lastMod,LockFile.getLockType(lock));
-                     params.add("insert");
-                    params.add(response);       
-                    params.add(lastMod);
-                    params.add(content.getSize());
-                    params.add(lock);
+                        response=this.localRepository+id+"."+file_s.getName().getExtension();
+                        logger.debug("Image4");
+                        this.sqlite.insertElementAtMap(file_s.getName().getURI(), response,new Long(content.getSize()).toString() ,lastMod,LockFile.getLockType(lock));
+                        params.add("insert");
+                        params.add(response);       
+                        params.add(lastMod);
+                        params.add(content.getSize());
+                        params.add(lock);
                     }
                     
                     FileSystemManager mgr = VFS.getManager();

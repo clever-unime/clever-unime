@@ -1,0 +1,190 @@
+listhostmanager 
+ls
+listhostmanager 
+registervm -tn
+registervm -d
+help
+registervm -d
+help
+listGlobalvms 
+listclustermanager 
+listvms 
+registervm -d
+registervm -tn VEDescription.xml
+help
+registervm -d -debug
+registervm -debug
+registervm -d
+listhostmanager 
+registervm -d
+mount ing-clever-05
+mount -wizard ing-clever-05
+help
+mount -p /root/ubuQCOW.qcow
+mount -p /root/
+mount -p /root/vmimages
+help
+mount -p /root/vmimages
+mount -debug -p /root/vmimages
+mount -p /root/vmimages/
+mount -p /
+mount -wizard
+help
+mount nodo -wizard
+mount -debug -wizard
+ls
+mount -p nodo -wizard
+mount -debug -p nodo -wizard
+help
+mount -p /nodo -wizard
+mount -p nodo -wizard
+ls
+cd nodo
+help
+ls -p nodo
+registervm -d
+ls -p nodo
+registervm -d
+help
+listhostmanger
+listhostmanager 
+createvm -n UbuVirt -h ing-clever-05
+help
+createvm UbuVirt -h ing-clever-05
+listvms 
+help
+listvms -h ing-clever-05
+listGlobalvms -h ing-clever-05
+listvms -h ing-clever-05
+startvm -n UbuVirt
+registervm -d
+createvm -h ing-clever-05 -tn UbuVirt
+ls -p nodo
+listGlobalvms -h ing-clever-05
+network -h ing-clever-05
+unregistervm -n UbuVirt
+ls -p nodo
+registervm -d
+unregistervm -n UbuVirt
+registervm -d
+tree
+createvm UbuVirt -h ing-clever-05
+ls -p nodo
+listvms -h ing-clever-05
+listGlobalvms 
+ls -p nodo
+listmacaddress 
+startvm -n UbuVirt
+ls -p nodo
+createvm -debug-h ing-clever-05
+createvm -debug -h ing-clever-05
+createvm -h ing-clever-05 -tn UbuVirt
+createvm -tn UbuVirt -h ing-clever-05
+unregistervm -n UbuVirt
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+ls -p nodo
+unregistervm -n UbuVirt
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+unregistervm -n UbuVirt
+registervm -d
+unregistervm -n UbuVirt
+registervm -d
+unregistervm -n UbuVirt
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05 -exclusive
+createvm -n UbuVirt -h ing-clever-05
+clearUbuVirt -h ing-clever-05 -e
+createvm -tn UbuVirt -h ing-clever-05
+ls -p nodo
+createvm -tn UbuVirt -h ing-clever-05
+unregistervm -n UbuVirt
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+ls -p nodo
+createvm -tn UbuVirt -h ing-clever-05
+ls -p nodo
+unregistervm -n UbuVirt
+mount -p nodo -wizard
+mount -p nodo_clever -wizard
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+unregistervm -n UbuVirt
+mount -p clever_node -wizard
+ls -p clever_node
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+unregistervm -n UbuVirt
+mount -p clever05 -wizard
+ls -p clever05
+unregistervm -n UbuVirt
+mount -p clever05node -wizard
+ls -p clever05node
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+ls -p clever05node
+unregistervm -n UbuVirt
+mount -p nodo -wizard
+ls -p nodo
+unregistervm -n UbuVirt
+mount -p nodoC -wizard
+ls -p nodoC
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+ls -p nodoC
+createvm -tn UbuVirt -h ing-clever-05
+ls -p nodoC
+ls -p nodoC/dir
+unregistervm -n UbuVirt
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+unregistervm -n UbuVirt
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+mount -p peppe -wizard
+ls -p peppe
+registervm -d
+unregistervm -n UbuVirt
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+ls -p nodoC
+unregistervm -n UbuVirt
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+unregistervm -n UbuVirt
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+unregistervm -n UbuVirt
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+ls -p nodeC
+ls -p node
+mount 
+ls -p nodoC
+ls -p nodoC/dir
+createvm -tn UbuVirt -h ing-clever-05
+help
+createvm -tn UbuVirt -h ing-clever-05
+unregistervm -n UbuVirt
+registervm -d
+createvm -tn UbuVirt -h ing-clever-05
+unregistervm -n UbuVirt
+registervm -d
+createvm -tn UbuVirt -h giusimone
+startvm -n 48bdc4090b7f409ba76d397d981c3e93
+stopvm -n 48bdc4090b7f409ba76d397d981c3e93
+deletevm -n 48bdc4090b7f409ba76d397d981c3e93
+sosgetcapabilities -f /home/giuseppe/XML/getCapabilitiesRequest.xml -h giuseppe-HP-620
+sasgetcapabilities -s Contents
+sosgetcapabilities -f /home/giusimone/XML/getObservationRequest.xml -h giusimone
+SOSGetObservation -h giusimone -f /home/giusimone/Scrivania/tesi_manera/XML/getObservationRequest.xmlSOSGetObservation -h giusimone -f /home/giusimone/XML/getObservationRequest.xml
+SOSGetObservation -h giusimone -f /home/iusimone -f /home/giusimone/XML/getObservationRequest.xml
+SOSGetObservation -h giusimone -f /home/giusimone/XML/getObservationRequest.xml
+sosgetobservation -h giusimone -f /home/giusimone/XML/getObservationRequest.xml
+sassubscribe -f/home/giusimone/XML/subscribeRequest.xml
+sosgetobservation -h giusimone -f /home/giusimone/XML/getObservationRequest.xml
+createvm -tn UbuVirt -h giusimone
+startvm -n 8ec411424d2a4b3eb4f22d44a7266994
+stopvm -n 8ec411424d2a4b3eb4f22d44a7266994
+deletevm -n 8ec411424d2a4b3eb4f22d44a7266994

@@ -215,5 +215,54 @@
     <string>storage1</string>
     <class>org.clever.administration.commands.StorageCommand</class>
   </command>-->
-
+  <!--SAS e SOS COMMANDS -->
+  
+    <command>
+    	<string>sasgetcapabilities</string>
+    	<class>org.clever.administration.commands.SASGetCapabilitiesCommand</class>
+    </command>
+    <command>
+    	<string>sosdescribesensor</string>
+    	<class>org.clever.administration.commands.SOSDescribeSensorCommand</class>
+    </command>
+    <command>
+    	<string>sasadvertise</string>
+    	<class>org.clever.administration.commands.SASAdvertiseCommand</class>
+    </command>
+    <command>
+    	<string>sascanceladvertisement</string>
+    	<class>org.clever.administration.commands.SASCancelAdvertisementCommand</class>
+    </command>
+    <command>
+    	<string>sascancelsubscription</string>
+    	<class>org.clever.administration.commands.SASCancelSubscriptionCommand</class>
+    </command>
+    <command>
+    	<string>sasrenewsubscription</string>
+    	<class>org.clever.administration.commands.SASRenewSubscriptionCommand</class>
+    </command>
+    <command>
+    	<string>sassendsensoralertmessage</string>
+    	<class>org.clever.administration.commands.SASSendSensorAlertMessageCommand</class>
+    </command>
+    <command>
+    	<string>sassubscribe</string>
+    	<class>org.clever.administration.commands.SASSubscribeCommand</class>
+    </command>
+    <command>
+    	<string>sosgetobservation</string>
+    	<class>org.clever.administration.commands.SOSGetObservationCommand</class>
+    </command>
+    <command>
+    	<string>sosgetcapabilities</string>
+    	<class>org.clever.administration.commands.SOSGetCapabilitiesCommand</class>
+    </command>
+    <command>
+    	<string>sosservicecommand</string>
+    	<class>org.clever.administration.commands.SOSServiceCommand</class>
+    </command>
+     <command>
+    <string>sasservicecommand</string>
+    <class>org.clever.administration.commands.SASServiceCommand</class>
+  </command>
 </commands>

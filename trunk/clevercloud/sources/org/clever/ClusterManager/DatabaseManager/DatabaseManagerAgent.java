@@ -48,7 +48,6 @@ public class DatabaseManagerAgent extends CmAgent
     private DatabaseManagerPlugin DbManagerPlugin;
     private Class cl;
     private String configPath="./cfg/configuration_dbManagerPlugin.xml";
-    
     public DatabaseManagerAgent() 
     {
             super();

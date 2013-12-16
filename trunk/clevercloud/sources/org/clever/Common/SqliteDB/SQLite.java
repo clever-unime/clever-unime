@@ -37,7 +37,7 @@ import java.sql.ResultSet;
 
 public class SQLite{
 
-    private Connection SQLiteConnection;
+    private Connection SQLiteConnection=null;
     private String SQLiteDB;
     private Logger logger;
     private Statement statement;
@@ -94,7 +94,8 @@ public class SQLite{
  * 
  */
     public boolean openCon(){
-        boolean res=true;
+        boolean res=false;
+        logger.debug("openCon");
         try
         {
             Class.forName("org.sqlite.JDBC");
@@ -102,6 +103,7 @@ public class SQLite{
             this.SQLiteConnection = DriverManager.getConnection("jdbc:sqlite:"+"WorkingData/StorageVM/MappingDB.db");
             this.SQLiteConnection.setAutoCommit(false);
             this.statement=this.SQLiteConnection.createStatement();//(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_READ_ONLY);
+            res=true;
         }
         catch(SQLException e)
         {

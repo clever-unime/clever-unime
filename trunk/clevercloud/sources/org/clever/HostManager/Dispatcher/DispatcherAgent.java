@@ -87,7 +87,7 @@ class NotificationThread extends Thread implements PacketListener
             }
             target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
             //no active cc
-            while(target.isEmpty()) {
+            if (target == null) {
                 try {
                     CMisPresent = false;
                     while (!CMisPresent) {
@@ -100,7 +100,6 @@ class NotificationThread extends Thread implements PacketListener
             }
             CleverMessage msg = queue.poll();
             msg.setDst(target);
-            logger.debug("X?X target="+target);
             connectionXMPP.sendMessage(target, msg);
 
         }

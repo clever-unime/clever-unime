@@ -31,7 +31,7 @@ import org.apache.commons.cli.Options;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.administration.ClusterManagerAdministrationTools;
 import org.clever.Common.XMLTools.MessageFormatter;
-
+import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 
 public class ListVMsCommand extends CleverCommand
 {
@@ -57,12 +57,12 @@ public class ListVMsCommand extends CleverCommand
   {
     try
     {
-          String target = commandLine.getOptionValue( "h" );
+          String target = ClusterManagerAdministrationTools.instance().getConnectionXMPP().getActiveCC(ConnectionXMPP.ROOM.SHELL);
           String listing = "listVms";
           //invoke Hypervisor Plugin method for testing exception management
           if(commandLine.hasOption("doexception"))
           {
-              boolean ris = (Boolean) ClusterManagerAdministrationTools.instance().execSyncAdminCommand( this, target, "HyperVisorAgent", "testException", new ArrayList(), commandLine.hasOption( "xml" ) );
+              boolean ris = (Boolean) ClusterManagerAdministrationTools.instance().execSyncAdminCommand( this, commandLine.getOptionValue( "h" ), "HyperVisorAgent", "testException", new ArrayList(), commandLine.hasOption( "xml" ) );
 
               return;
           }

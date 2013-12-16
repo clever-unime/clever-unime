@@ -507,10 +507,11 @@ public class ClusterCoordinator implements CleverMessageHandler
   public synchronized void setAsActiveCC( final boolean active, boolean activeAgents)throws CleverException
   {
     if( active )
-    {       
+    {   
+        logger.debug("devo settare il cm come active cc");
         conn.getMultiUserChat().changeAvailabilityStatus("CM_ACTIVE", Mode.chat ); //set the status of this Cluster Coordinator active
         conn.joinInRoom(roomclients, ROOM.SHELL, conn.getUsername(), "CM_ACTIVE"); //join in the room shell with statu "CM_ACTIVE"
-        
+        logger.debug("settato il cm come active cc");
         //If this cluster coordinator has enabled the launch of the agents only if active 
         //(this is dictated by the state of the Boolean variable to true activeAgents)
         //launch it!
