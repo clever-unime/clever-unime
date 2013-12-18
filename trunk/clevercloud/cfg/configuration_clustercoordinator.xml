@@ -52,6 +52,12 @@
       <class>org.clever.ClusterManager.ESOSAgent.ESOSAgent</class>
       <name />
     </agent>
+    
+    <agent>
+      <class>org.clever.ClusterManager.MonitorManager.MonitorManagerAgent</class>
+      <name />
+    </agent>
+    
   </agents>
   <brain>
     <class>org.clever.ClusterManager.Brain.SensorBrain</class>

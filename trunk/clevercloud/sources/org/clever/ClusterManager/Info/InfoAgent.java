@@ -2,7 +2,9 @@
  *  Copyright (c) 2011 Marco Sturiale
  *  Copyright (c) 2011 Alessio Di Pietro
  *  Copyright (c) 2012 Marco Carbone
- *
+ *  Copyright (c) 2013 Nicola Peditto
+ *  Copyright (c) 2013 Carmelo Romeo
+ * 
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
  *  files (the "Software"), to deal in the Software without
@@ -105,7 +107,31 @@ public class InfoAgent extends CmAgent
         }
         return l2;
     }
+    
+    //NEWMONITOR
+    /**
+    * Return the list of the active VM probe
+    * @return a list of HostEntityInfo object (VM probes)
+    */      
+    public List listProbe(){
+        Collection <Occupant>  list_HC=connectionXMPP.getProbesInRoom(ConnectionXMPP.ROOM.CLEVER_MAIN);
+        Occupant occupant = null;
+        ArrayList l2 = new ArrayList();
+        HostEntityInfo hostManager;
 
+        for (Iterator i = list_HC.iterator(); i.hasNext();) {
+
+            occupant=(Occupant) i.next();
+            hostManager= new HostEntityInfo();
+            hostManager.setNick(occupant.getNick());
+            hostManager.setActive(true);
+            l2.add(hostManager);
+
+        }
+        return l2;
+    }
+    
+    
     public List listClusterManager(){
         Collection <Occupant>  list_HC=connectionXMPP.getCCsInRoom(ConnectionXMPP.ROOM.CLEVER_MAIN);
         Occupant occupant = null;

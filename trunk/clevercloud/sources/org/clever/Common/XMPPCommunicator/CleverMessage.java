@@ -5,6 +5,8 @@
  *  Copyright (c) 2010 Massimo Villari
  *  Copyright (c) 2010 Antonio Celesti
  *  Copyright (c) 2010 Antonio Nastasi
+ *  Copyright (c) 2013 Nicola Peditto
+ *  Copyright (c) 2013 Carmelo Romeo
  *
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
@@ -61,13 +63,15 @@ import org.xml.sax.SAXException;
 
 public class CleverMessage
 {
+  //NEWMONITOR
   public enum MessageType
   {
     REQUEST,
     NOTIFY,
     REPLY,
     ERROR,
-    UNKNOWN
+    UNKNOWN,
+    MEASURE
   }
 
   private Schema xsd = null;
@@ -143,6 +147,11 @@ public class CleverMessage
     else if( pars.getElementAttributeContent( "message", "type" ).equalsIgnoreCase( "Error" ) )
     {
       type = CleverMessage.MessageType.ERROR;
+    }
+    else if( pars.getElementAttributeContent( "message", "type" ).equalsIgnoreCase( "Measure" ) )
+    {
+      //NEWMONITOR
+      type = CleverMessage.MessageType.MEASURE;
     }
     else
     {
@@ -379,6 +388,8 @@ public class CleverMessage
 
   public String toXML()
   {
+      
+      
     Element root = new Element( "message" );
     
 
@@ -399,6 +410,10 @@ public class CleverMessage
     Element reply = new Element( "replyToMsg" );
     reply.addContent( String.valueOf( replyToMsg ) );
     root.addContent( reply );
+    
+    
+    
+    
     if( hasReply )
     {
       Element hreply = new Element( "hasReply" );
@@ -414,9 +429,12 @@ public class CleverMessage
     Element b = new Element( "body" );
     SAXBuilder builder = new SAXBuilder();
     Document document = null;
+   
+    
     try
     {
       document = builder.build( new StringReader( this.getBody() ) );
+      
     }
     catch( JDOMException ex )
     {

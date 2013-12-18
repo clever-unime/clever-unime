@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <org.clever.Common.VEInfo.VEDescription>
     <os_guest_id>ubuntuGuest</os_guest_id>
-    <name>libvirt35</name> 
+    <name>UbuVirt</name> 
     <storage>
         <org.clever.Common.VEInfo.StorageSettings>
-            <diskPath>/nodo/home/roberto/Scrivania/prova.qcow2</diskPath>
+            <diskPath>nodo/ubuQCOW.qcow</diskPath>
         </org.clever.Common.VEInfo.StorageSettings>
     </storage>
     <cpu>
@@ -14,7 +14,7 @@
         <architecture>X86_64</architecture>
     </cpu>
     <mem>
-        <size>1024288</size>
+        <size>512</size>
     </mem>
     <network>
         <org.clever.Common.VEInfo.NetworkSettings></org.clever.Common.VEInfo.NetworkSettings>

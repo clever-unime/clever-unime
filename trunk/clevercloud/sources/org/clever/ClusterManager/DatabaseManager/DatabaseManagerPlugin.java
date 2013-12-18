@@ -2,6 +2,8 @@
  *  Copyright (c) 2010 Antonino Longo
  *  Copyright (c) 2011 Luca Ciarniello
  *  Copyright (c) 2011 Alessio Di Pietro
+ *  Copyright (c) 2013 Nicola Peditto
+ *  Copyright (c) 2013 Carmelo Romeo
  *
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
@@ -79,4 +81,11 @@ public interface DatabaseManagerPlugin extends RunnerPlugin {
   public void setOwner(Agent owner);
   List getNameAttributes(String agentId,String location,String condition);
   //String getFatherAttributeNode(String agentId,String location,String sonCondition,String tipo) throws XMLDBException;
+  
+  //NEWMONITOR
+  boolean checkMeasure();
+  void addMeasure();
+  void insertMeasure(String measure);
+  //NEWMONITOR
+  
 }

@@ -5,7 +5,9 @@
  *  Copyright (c) 2010 Massimo Villari
  *  Copyright (c) 2010 Antonio Celesti
  *  Copyright (c) 2010 Antonio Nastasi
- *
+ *  Copyright (c) 2013 Nicola Peditto
+ *  Copyright (c) 2013 Carmelo Romeo
+ * 
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
  *  files (the "Software"), to deal in the Software without
@@ -44,6 +46,7 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.muc.ParticipantStatusListener;
 import org.apache.log4j.*;
+import static org.clever.Common.Communicator.Agent.logger;
 import org.clever.Common.Exceptions.CleverException;
 import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.Chat;
@@ -418,7 +421,14 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
    */
   public void sendMessage( String jid, final CleverMessage message )
   {
+      
+      
+      
     logger.debug( "Sending message: " + message.toXML() );
+    
+    
+    
+    
     jid += "@" + this.getServer();
     // See if there is already a chat open
     Chat chat = cleverChatManagerListener.getChat( jid.toLowerCase() );
@@ -696,6 +706,43 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     }
     return collection;
   }
+  
+  //NEWMONITOR
+  /**
+  * Return the Collection of the active VM probe
+  * @return the Collection of probes
+  */    
+  public Collection<Occupant> getProbesInRoom( final ROOM roomType ) 
+  {
+    MultiUserChat mucTemp = getMultiUserChat( roomType );
+
+    Collection<Occupant> collection = new LinkedList<Occupant>(); //collezione di uscita!
+    Iterator<String> it = mucTemp.getOccupants(); 
+    Occupant occupant = null;
+    Presence presence = null; 
+    String occupantJid = ""; 
+    String tmp = "";
+
+    /*devo effettuare ora una ricerca x status*/
+    while( it.hasNext() )
+    {
+      occupantJid = it.next();
+      presence = mucTemp.getOccupantPresence(occupantJid);
+      occupant = mucTemp.getOccupant(occupantJid);
+      tmp = presence.getStatus();
+      
+      if(tmp == null)
+          continue;
+      
+      if( (!tmp.isEmpty()) && (tmp.equals("HM/Probe")) )
+      
+      //if( (tmp!=null) && (tmp.equals("HM")) ) //controlla sempre tmp a null! che è importante
+          collection.add(occupant);
+    }
+    return collection;
+  }
+  
+  
   
   /*QUESTA FUNZIONE CERCA UN PARTICOLARE HOSTNAME (PER NICK) ALL'INTERNO DELLA STANZA roomtype
    per il momento nessuno la usa!*/

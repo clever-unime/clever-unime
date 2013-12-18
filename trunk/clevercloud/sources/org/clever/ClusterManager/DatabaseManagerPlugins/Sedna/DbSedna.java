@@ -3,6 +3,8 @@
  *
  * Copyright 2011 Alessio Di Pietro.
  * Copyright 2013 Tricomi Giuseppe
+ * Copyright 2013 Nicola Peditto
+ * Copyright 2013 Carmelo Romeo
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +31,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
 import net.cfoster.sedna.SednaUpdateService;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -188,6 +191,116 @@ public class DbSedna implements DatabaseManagerPlugin {
             }
         }
     }
+    
+    
+    
+    
+    
+    //NEWMONITOR
+    /**
+    * Insert a new measure under the <measure> xml node.
+    * @param measure xml of the new measure
+    */  
+    public void insertMeasure(String measure){
+        
+        Collection collect = null;
+        try {
+
+            
+            collect = this.connect();
+            SednaUpdateService serviceUpdate = (SednaUpdateService) collect.getService("SednaUpdateService", "1.0");
+            
+            //String xpath = "/clever/cluster[@id='clustermain']";
+            
+            String xpathMe = xpath + "/measure";
+            //String xpathAgent = xpathCm + "/agent[@name='" + agentId + "']";
+            String updateStr ="update insert "+measure+" into document(\"" + this.document + "\")/" + xpathMe;
+            
+                        
+            serviceUpdate.update(updateStr);
+            
+            
+            
+            collect.close();
+            
+            
+        } catch (XMLDBException ex) {
+            logger.error("Insert measure failed: " + ex.getMessage());
+        }
+    }
+    
+    
+    
+    //NEWMONITOR
+    /**
+    * Check if the <measure> xml node exists.
+    * @return boolean, if true the node exists
+    */  
+    public boolean checkMeasure() {
+        boolean existsMe = false;
+        Collection collect = null;
+        try {
+            collect = this.connect();
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+
+            //check HM node
+            ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/measure");
+            ResourceIterator results = resultSet.getIterator();
+            existsMe = results.hasMoreResources();
+
+        } catch (XMLDBException ex) {
+            logger.error("Check ME node failed: " + ex.getMessage());
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+            }
+        }
+
+        return existsMe;
+
+    }  
+    
+    //NEWMONITOR
+    /**
+    * Insert the <measure> xml node in the database structure, to collect the measures
+    */  
+    public void addMeasure() {
+        Collection collect = null;
+        try {
+            collect = this.connect();
+            SednaUpdateService serviceUpdate = (SednaUpdateService) collect.getService("SednaUpdateService", "1.0");
+            String updateStr = "update insert <measure></measure>"
+                    + " into document(\"" + this.document + "\")/" + xpath;
+            serviceUpdate.update(updateStr);
+        } catch (XMLDBException ex) {
+            logger.error("Insert ME node failed: " + ex.getMessage());
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+            }
+
+        }
+
+    }  
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     @Override
     synchronized public void addHm(String hostId) {

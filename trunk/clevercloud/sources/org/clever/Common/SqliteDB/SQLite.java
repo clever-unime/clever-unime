@@ -53,11 +53,14 @@ public class SQLite{
         {
             workdir.mkdirs();
         }
+        logger.debug("init 0");
         File db=new File(this.SQLiteDB+"MappingDB.db");
+        logger.debug("init 1");
         if(!db.exists())
         {
             if(this.openCon())
             {
+                logger.debug("init 2");
                 try{
                     //non appena verrà stabilito con precisione cosa fanno queste mappe si potrà creare un db decente 
                     statement = this.SQLiteConnection.createStatement();

@@ -265,4 +265,23 @@
     <string>sasservicecommand</string>
     <class>org.clever.administration.commands.SASServiceCommand</class>
   </command>
+   <command>
+    	<string>cpustatus</string>
+    	<class>org.clever.administration.commands.GetMeasureCpu</class>
+    </command>
+    
+    <command>
+    	<string>listprobe</string>
+    	<class>org.clever.administration.commands.ListProbeCommand</class>
+    </command>
+    
+    <command>
+    	<string>statusprocvm</string>
+    	<class>org.clever.administration.commands.GetProcStatus</class>
+    </command>  
+    
+    <command>
+    	<string>storagestatus</string>
+    	<class>org.clever.administration.commands.GetStorageStatus</class>
+    </command>
 </commands>

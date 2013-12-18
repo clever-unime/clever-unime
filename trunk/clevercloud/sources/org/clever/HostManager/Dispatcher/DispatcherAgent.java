@@ -3,6 +3,8 @@
  *
  * Copyright 2011 Alessio Di Pietro.
  * Copyright 2012 Marco Carbone
+ * Copyright 2013 Nicola Peditto
+ * Copyright 2013 Carmelo Romeo
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,14 +32,22 @@ import java.util.List;
 import java.util.Queue;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
+import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.XMLTools.MessageFormatter;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
+import org.clever.Common.XMPPCommunicator.ErrorResult;
+import org.clever.Common.XMPPCommunicator.MethodConfiguration;
 import org.clever.Common.XMPPCommunicator.NotificationOperation;
+import org.clever.Common.XMPPCommunicator.OperationResult;
+import org.clever.Common.XMPPCommunicator.Result;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Packet;
 
+
+import org.clever.Common.Measure.*;
 /**
  *
  * @author alessiodipietro
@@ -136,21 +146,21 @@ public class DispatcherAgent extends Agent
     }
     
      @Override
-public void initialization() throws CleverException
-{
+    public void initialization() throws CleverException
+    {
     super.setAgentName("DispatcherAgentHm");    
-    super.start();
-    
-    notificationThread = new NotificationThread(connectionXMPP, notificationsThreshold);
-    notificationThread.start();    
-    
-    String hostid=this.connectionXMPP.getHostName();
-    Notification notification=new Notification();
-    notification.setId("PRESENCE/HM");
-    logger.debug("?=)** hostId= "+hostid);
-    notification.setHostId(hostid);
-    this.sendNotification(notification);
-}
+        super.start();
+
+        notificationThread = new NotificationThread(connectionXMPP, notificationsThreshold);
+        notificationThread.start();    
+
+        String hostid=this.connectionXMPP.getHostName();
+        Notification notification=new Notification();
+        notification.setId("PRESENCE/HM");
+        logger.debug("?=)** hostId= "+hostid);
+        notification.setHostId(hostid);
+        this.sendNotification(notification);
+    }
 
     @Override
     public void sendNotification(Notification notification) {
@@ -174,6 +184,9 @@ public void initialization() throws CleverException
 
 
     }
+    
+     
+    
 
     @Override
     public Class getPluginClass() {
@@ -197,4 +210,54 @@ public void initialization() throws CleverException
     {
         
     }
+    
+    
+    
+    
+    
+    
+    
+    //NEWMONITOR
+    /**
+    * Send a CleverMessage of MEASURE type
+    * @param measure returned by Sigar methods
+    */      
+    public void sendMeasure(String measure) {
+         
+        CleverMessage cleverMsg = new CleverMessage();
+
+        cleverMsg.setDst(this.connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN));
+        cleverMsg.setSrc(this.connectionXMPP.getUsername());
+        cleverMsg.setHasReply(false);
+        cleverMsg.setType( CleverMessage.MessageType.MEASURE );
+
+        cleverMsg.setBody(
+                            "    <measure useAttachementId=\"true\">\n" +
+                            "      <HM>"+this.connectionXMPP.getUsername()+"</HM>\n" +
+                            "      <agentId>CloudMonitorAgent</agentId>\n" +
+                            "      <measureId></measureId>\n" +
+                            "      <timestamp></timestamp>\n" +
+                            "    </measure>"
+                            );
+
+        cleverMsg.addAttachment( measure );
+
+        //logger.debug("ZZZ " + cleverMsg.getDst() +" "+cleverMsg.getSrc()+"\n");
+
+        //cleverMsg.setReplyToMsg(message.getId());
+
+        connectionXMPP.sendMessage(connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN), cleverMsg);
+                
+
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 }

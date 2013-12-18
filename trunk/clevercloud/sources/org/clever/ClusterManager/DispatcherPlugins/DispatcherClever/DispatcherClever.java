@@ -2,7 +2,9 @@
  *  Copyright (c) 2010 Antonio Nastasi
  *  Copyright (c) 2011 Marco Sturiale
  *  Copyright (c) 2013 Giuseppe Tricomi
- *
+ *  Copyright (c) 2013 Nicola Peditto
+ *  Copyright (c) 2013 Carmelo Romeo
+ * 
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
  *  files (the "Software"), to deal in the Software without
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
 import org.clever.Common.Communicator.Agent;
@@ -84,6 +87,9 @@ class RequestThread implements Runnable {
 
                     dispatcher.dispatch( this.message );
                     break;
+                      
+
+                   
         }
        }
 
@@ -322,6 +328,38 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
 
 
     }*/
+    
+    
+    //NEWMONITOR
+    /**
+    * Manage the arrive of the new CleverMessage type: MEASURE
+    * @param message CleverMessage type MEASURE
+    */  
+    @Override
+    public void handleMeasure(final CleverMessage message) {
+        
+        String result = message.getAttachment(0);
+        String src=message.getSrc();
+        result= "<sourceHM name=\""+src+"\" >\n"+result+"\n</sourceHM>";
+
+        
+        logger.debug("Measure Received: "+ result);
+        
+        List params1 = new ArrayList();
+        params1.add(result);
+        
+        try {
+            owner.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
+        } catch (CleverException ex) {
+            logger.error("Send Measure to DatabaseManagerAgent failed: "+ ex);
+        }
+        
+        
+    }
+    
+    
+    
+    
 
     @Override
     public void handleNotification(Notification notification) {
@@ -340,7 +378,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
                             "handleNotification",
                             true,
                             params);
-                    //logger.debug("X?X 338 dispatcher clever, agent:"+(String) agent);
+                    logger.debug("X?X 338 dispatcher clever, agent:"+(String) agent);
                     mc.invoke(mi);
                 } catch (CleverException ex) {
                     logger.error("Error invoking agent handleNotification method " + ex);
@@ -362,20 +400,20 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
 
     @Override
     public void processPacket(Packet packet) {
- /*     String nameFrom=StringUtils.parseResource(packet.getFrom());
+        //String nameFrom=StringUtils.parseResource(packet.getFrom());
 
-        if(!nameFrom.startsWith("cm")){
+        //if(!nameFrom.startsWith("cm")){
             //HM Presence notification
-           logger.debug("HM "+nameFrom+" detected");
+          //  logger.debug("HM "+nameFrom+" detected");
  */         /*CleverMessage cleverMsg = new CleverMessage();
             cleverMsg.setType(CleverMessage.MessageType.NOTIFY);
             cleverMsg.setSrc(this.connectionXMPP.getUsername());*/
-/*          Notification notification=new Notification();
-            notification.setId("PRESENCE/HM");
-            notification.setHostId(nameFrom);
+          //  Notification notification=new Notification();
+          //  notification.setId("PRESENCE/HM");
+          //  notification.setHostId(nameFrom);
             //cleverMsg.setBody(MessageFormatter.messageFromObject(notification));
-            this.handleNotification(notification);
-       }*/
+          //  this.handleNotification(notification);
+        //}
    }
     
     public String receiveFile(String path){
@@ -384,6 +422,16 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
     public void setOwner(Agent owner){
         this.owner=owner;
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
      // METODI AGGIUNTI PER SOS E SAS
     

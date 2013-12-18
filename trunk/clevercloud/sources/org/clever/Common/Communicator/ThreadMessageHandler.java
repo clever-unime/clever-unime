@@ -2,6 +2,8 @@
  *  The MIT License
  * 
  *  Copyright 2011 Maurizio Paone.
+ *  Copyright 2013 Nicola Peditto
+ *  Copyright 2013 Carmelo Romeo
  * 
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +29,7 @@ package org.clever.Common.Communicator;
 import java.util.logging.Logger;
 import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
+import static org.clever.Common.XMPPCommunicator.CleverMessage.MessageType.MEASURE;
 
 /**
  *
@@ -68,26 +71,32 @@ class ThreadMessageHandler extends Thread{
           while(true)
           {
              switch( this.message.getType() )
-
             {
 
                       case NOTIFY:
                           Notification notification=this.message.getNotificationFromMessage();
-
-
                           //Pass notification to dispatcher
                           dispatcher.handleNotification(notification);
-
                         break;
+                          
                       case ERROR:
+                          
                       case REPLY:
                         dispatcher.handleMessage( this.message );
                         break;
+                          
                       case REQUEST:
 
                         dispatcher.dispatch( this.message );
                         break;
+                          
+                      //NEWMONITOR
+                      case MEASURE:
+                        dispatcher.handleMeasure( this.message );
+                        break;
+                          
             }
+             
             this.threadDispatcher.threadTerminated(this);
             try {
                 this.wait();
