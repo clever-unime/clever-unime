@@ -4,3 +4,7 @@
 *.jar
 *.war
 *.ear
+/trunk/Monitoring/nbproject/private/
+
+*.xml
+*.properties
