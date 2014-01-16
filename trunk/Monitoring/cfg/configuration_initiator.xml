@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <server>nicolaubuntu</server>
+  <server>webuntu</server>
   <port>5222</port>
   <tls>false</tls>
   <caJks />
   <caJksPassword />
   <certPkcs12 />
   <certPkcs12Password />
-  <username>webuntu</username>
-  <password>vpyopol</password>
-  <nickname>webuntu</nickname>
-  <room>room@conference.nicolaubuntu</room>
+  <username>nicolaubuntu</username>
+  <password>ivciwcx</password>
+  <nickname>nicolaubuntu</nickname>
+  <room>room@conference.webuntu</room>
   <threshold>1</threshold>
   <!-- la threshold effettivamnte usata x istanziare i CC è questa!! -->
   <activatedCM>false</activatedCM>
@@ -24,9 +24,7 @@
   <!--imposto il numero di lanci max consentiti per un agente-->
   <timeReloadAgent>10</timeReloadAgent>
   <!-- imposto il max tempo x il rilancio di un agente -->
-
   <agents>
-
     <agent>
       <class>org.clever.HostManager.CloudMonitor.CloudMonitorAgent</class>
       <name>CloudMonitorAgent</name>

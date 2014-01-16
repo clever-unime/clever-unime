@@ -3,5 +3,5 @@
         <PluginName>org.clever.HostManager.CloudMonitorPlugins.Sigar.SigarCloudMonitor</PluginName>
 	<moduleName>CloudMonitorAgent</moduleName>
         <freq_monitor>5</freq_monitor> <!-- imposto la frequenza di campionamento delle misure in secondi -->
-        <active_monitor>true</active_monitor> <!-- attiva/disattiva il monitoring continuo -->        
+        <active_monitor>false</active_monitor> <!-- attiva/disattiva il monitoring continuo -->        
 </configuration>
