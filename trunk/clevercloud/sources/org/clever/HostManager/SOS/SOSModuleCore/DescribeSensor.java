@@ -1,6 +1,25 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2012 Università di Messina.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package org.clever.HostManager.SOS.SOSModuleCore;
 
@@ -163,7 +182,6 @@ public class DescribeSensor {
         if (rs.next()) {
             //i campi della classe sensorDescription vengono riempite con le informazioni sul sensore 
             sensor_id = rs.getString(1);
-            //System.out.println("\nDescribe sensor id :"+this.sensor_id);
             sensorDescription.setSensor_id(rs.getString(2));
             sensorDescription.setDescription_type(rs.getString(3));
             sensorDescription.setStatus(Integer.parseInt(rs.getString(4)));
@@ -185,7 +203,6 @@ public class DescribeSensor {
         //in base all'id del sensore, si trovano i phenomena che il sensore è in grado di misurare. La relazione tra id del sensore e id del phenomeno è contenuta nella tabella sens_phen
         String query_phen = "SELECT `phenomenon`.`phenomenon_id`, `phenomenon`.`unique_id`, `phenomenon`.`phenomenon_description`, `phenomenon`.`unit`, `phenomenon`.`valuetype`,`offering`.`unique_id`,  `offering`.`offering_name` FROM `phenomenon`,`sens_phen`,`offering`,`sens_off`,`phen_off` WHERE `phenomenon`.`phenomenon_id`=`sens_phen`.`phenomenon_id` AND`sens_off`.`offering_id`=`offering`.`offering_id` AND `phen_off`.`offering_id`= `offering`.`offering_id` AND `phen_off`.`phenomenon_id`=`phenomenon`.`phenomenon_id` AND `sens_off`.`sensor_id`=`sens_phen`.`sensor_id` AND`sens_phen`.`sensor_id`='" + sensor_id + "'";
         rs = db.exQuery(query_phen);
-        // System.out.println(query_phen);
         while (rs.next()) {
             PhenomenonDescription phentemp = new PhenomenonDescription();
             phentemp.setOffering_id(rs.getString(6));
@@ -199,8 +216,7 @@ public class DescribeSensor {
         //in base all'id del sensore, si trovano i classifier che lo descrivono. La relazione tra id del sensore e id del classifier è contenuta nella tabella sens_class
         String query_class = "SELECT `classifier`.`unique_id`, `classifier_value`, `classifier_description` FROM `sens_class`,`classifier` WHERE `sens_class`.`sensor_id`='" + sensor_id + "' AND `sens_class`.`classifier_id`=`classifier`.`classifier_id`";
         db.exQuery(query_class);
-        //System.out.println(query_class);
-
+        
         while (rs.next()) {
             ClassifierDescription classtemp = new ClassifierDescription();
             classtemp.setClassifier_description(rs.getString(3));
@@ -210,8 +226,7 @@ public class DescribeSensor {
         } //in base all'id del sensore, si trovano gli identifier corrispondenti. La relazione tra id del sensore e id del identifier è contenuta nella tabella sens_ident
         String query_ident = "SELECT `identifier`.`unique_id`, `identifier_value`, `identifier_description` FROM `sens_ident`,`identifier` WHERE `sens_ident`.`sensor_id`='" + sensor_id + "' AND `sens_ident`.`identifier_id`=`identifier`.`identifier_id`";
         rs = db.exQuery(query_ident);
-        //System.out.println(query_ident);
-
+        
         while (rs.next()) {
             IdentifierDescription identtemp = new IdentifierDescription();
             identtemp.setidentifier_description(rs.getString(3));
@@ -224,16 +239,13 @@ public class DescribeSensor {
         Vector<String> comp_id = new Vector<String>(1);
         String query_comp = "SELECT `component`.`component_id` FROM  `component`,`sens_comp` WHERE `sens_comp`.`component_id`= `component`.`component_id` AND `sens_comp`.`sensor_id`='" + sensor_id + "'";
         db.exQuery(query_comp);
-        //System.out.println(query_comp);
         while (rs.next()) {
             comp_id.add(rs.getString(1));
         }
         for (int i = 0; i < comp_id.size(); i++) {
-            //System.out.println("\n component id:"+comp_id.elementAt(i));
             ComponentSensor comp_temp = new ComponentSensor();
             String query_comp_des = " SELECT `component`.`component_id`, `unique_id`, `description`, `status`, `mobile`, `crs`, `longitude`, `long_uom`, `latitude`, `lat_uom`, `altitude`, `alt_uom` FROM `component`  WHERE `component`.`component_id`= '" + comp_id.elementAt(i) + "'";
             db.exQuery(query_comp_des);
-            //System.out.println(query_comp_des);
             if (rs.next()) {
                 comp_temp.getsensorDescription().setSensor_id(rs.getString(2));
                 comp_temp.getsensorDescription().setDescription_type(rs.getString(3));
@@ -250,7 +262,6 @@ public class DescribeSensor {
             }
             String comp_phen = "SELECT `phenomenon`.`phenomenon_id`, `phenomenon`.`unique_id`, `phenomenon`.`phenomenon_description`, `phenomenon`.`unit`, `phenomenon`.`valuetype`,`offering`.`unique_id`,  `offering`.`offering_name` FROM `comp_phen`,`phen_off`,`phenomenon`,`offering` WHERE  `comp_phen`.`phenomenon_id`=`phen_off`.`phenomenon_id` AND `comp_phen`.`phenomenon_id`=`phenomenon`.`phenomenon_id` AND `phen_off`.`offering_id`=`offering`.`offering_id` AND `comp_phen`.`component_id`='" + comp_id.elementAt(i) + "'";
             rs = db.exQuery(comp_phen);
-            //System.out.println(comp_phen);
             while (rs.next()) {
                 PhenomenonDescription phentemp = new PhenomenonDescription();
                 phentemp.setOffering_id(rs.getString(6));
@@ -264,7 +275,6 @@ public class DescribeSensor {
 
             String comp_class = "SELECT `unique_id`, `classifier_value`, `classifier_description` FROM `comp_class`,`classifier` WHERE `comp_class`.`component_id`='" + comp_id.elementAt(i) + "' AND `comp_class`.`classifier_id`=`classifier`.`classifier_id`";
             rs = db.exQuery(comp_class);
-            //System.out.println(comp_class);
             while (rs.next()) {
                 ClassifierDescription classtemp = new ClassifierDescription();
                 classtemp.setClassifier_description(rs.getString(3));
@@ -274,7 +284,6 @@ public class DescribeSensor {
             }
             String comp_ident = "SELECT `unique_id`, `identifier_value`, `identifier_description` FROM `comp_ident`,`identifier` WHERE `comp_ident`.`component_id`='" + comp_id.elementAt(i) + "' AND `comp_ident`.`identifier_id`=`identifier`.`identifier_id`";
             rs = db.exQuery(comp_ident);
-            //System.out.println(comp_ident);
             while (rs.next()) {
                 IdentifierDescription identtemp = new IdentifierDescription();
                 identtemp.setidentifier_description(rs.getString(3));
@@ -526,7 +535,6 @@ public class DescribeSensor {
             root.appendChild(sensorml);
         }
         doc.appendChild(root);
-        //File file = new File(this.filename_output);
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer transformer = tFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -733,7 +741,7 @@ public class DescribeSensor {
     }
 //Stampa informazioni sul sensore 
     void print_info() {
-        System.out.println("Sensor id da attributo: " + sensorDescription.getSensor_id());
+       /* System.out.println("Sensor id da attributo: " + sensorDescription.getSensor_id());
         System.out.println("Sensor description da attributo: " + sensorDescription.getDescription_type());
         System.out.println("Sensor mobile da attributo: " + sensorDescription.getMobile());
         System.out.println("Sensor status da attributo: " + sensorDescription.getStatus());
@@ -824,6 +832,6 @@ public class DescribeSensor {
 
 
             }
-        }
+        }*/
     }
 }

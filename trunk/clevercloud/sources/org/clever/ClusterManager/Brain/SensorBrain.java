@@ -2,6 +2,7 @@
  * The MIT License
  *
  * Copyright 2011 Alessio Di Pietro.
+ * Copyright 2013-14 Giuseppe Tricomi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,14 +29,14 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
+//import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.ClusterManager.Dispatcher.DispatcherAgent;
 import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.MessageFormatter;
-import org.jdom.CDATA;
+//import org.jdom.CDATA;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -43,21 +44,60 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.Format.TextMode;
 import org.jdom.output.XMLOutputter;
-
+import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
 /**
  *
  * @author alessiodipietro
+ * @author Giuseppe Tricomi
  */
 public class SensorBrain implements BrainInterface {
-
+   
     Logger logger;
-    DispatcherAgent dispatcherAgent;
-
-    public SensorBrain(DispatcherAgent dispatcherAgent) {
+    //DispatcherAgent dispatcherAgent;
+    DispatcherPlugin dispatcherPlugin;
+    
+    public SensorBrain(DispatcherPlugin dispatcherPlugin) {
         logger = Logger.getLogger("SensorBrain");
-        this.dispatcherAgent = dispatcherAgent;
+        this.dispatcherPlugin = dispatcherPlugin;
     }
-
+  /**
+     * This method is used to invoke the correct method of DB.
+     * @param methodName
+     * @param Host
+     * @param Agent
+     * @param notify
+     * @param location
+     * @return
+     * @throws CleverException 
+     */
+    private boolean invokeDBMethod(String methodName,String Host,String Agent,String notify,String location) throws CleverException{
+        try {
+        List<String> params2 = new ArrayList();
+        if(Host!=null)
+            params2.add(Host);
+        params2.add(Agent);
+        if(notify!=null)
+            params2.add(notify);
+        if(methodName=="insertNode")
+            params2.add("into");
+        params2.add(location);
+        MethodInvoker mi = new MethodInvoker("DatabaseManagerAgent",
+                    methodName,
+                    true,
+                    params2);
+        Integer n = (Integer) dispatcherPlugin.dispatchToIntern(mi);
+        } catch (CleverException ex) {
+            logger.error("Error invoking database agent method: " + ex);
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     * This method handle the notification received from cluster manager.It write the notification on 
+     * DB in HM element.
+     * @param notification 
+     */
     @Override
     public void handleNotification(Notification notification) {
         logger.debug("Received notification " + notification.getId());
@@ -97,15 +137,15 @@ public class SensorBrain implements BrainInterface {
             params.add(notification.getAgentId());
             params.add(xmlNotificationString);
             params.add("into");
-            params.add("");
-
-
-            MethodInvoker mi = new MethodInvoker("DatabaseManagerAgent",
-                    "insertNode",
-                    true,
-                    params);
-            Integer n = (Integer) dispatcherAgent.getDispatcherPlugin().dispatchToIntern(mi);
-        } catch (CleverException ex) {
+            if(notification.getId().equals("SAS/Publish")){
+                params.add("/SASPublicationHistory");
+                this.invokeDBMethod("PrepareNode4Sens", notification.getHostId(), notification.getAgentId(),null,"/SASPubblicationHistory");
+                this.invokeDBMethod("insertNode", notification.getHostId(), notification.getAgentId(),xmlNotificationString,"/SASPubblicationHistory");
+            }
+            else{
+                this.invokeDBMethod("insertNode", notification.getHostId(), notification.getAgentId(),xmlNotificationString,"");
+            }
+           } catch (CleverException ex) {
             logger.error("Error invoking database agent method: " + ex);
         }
 

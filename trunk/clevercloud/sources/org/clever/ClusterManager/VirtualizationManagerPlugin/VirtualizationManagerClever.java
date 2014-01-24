@@ -860,11 +860,12 @@ public String listMac_address(String id) throws CleverException{
                 return null;
             }
         }
-        //logger.debug("X?XN list returned");
         return result;
        }
+    
     /*HANDLE RETURN ONLINE HOST*/
     public void manageReUpHost(String HmName){
+        //TODO: This function need some fixes. It doesn't work properly.
         try{
             List vmsHost=(List)this.listVm(HmName, Boolean.FALSE, Boolean.TRUE);
             List vmsClever=(List)this.listVm(HmName, Boolean.FALSE, Boolean.FALSE);
@@ -878,7 +879,7 @@ public String listMac_address(String id) throws CleverException{
                  }
             }
         }catch(Exception e){
-            logger.error("An exception has verified in function <manageReUpHost> step 1:"+e.getMessage());
+           // logger.error("An exception has verified in function <manageReUpHost> step 1:"+e.getMessage());
         }
         try{
             //Step 2:Verify VMs running
@@ -897,7 +898,7 @@ public String listMac_address(String id) throws CleverException{
             }
         }
         catch(Exception e){
-            logger.error("An exception has verified in function <manageReUpHost> :"+e.getMessage());
+            //logger.error("An exception has verified in function <manageReUpHost> :"+e.getMessage());
         }
     }
 /*FUNCTION FOR INTERATION WITH DB*/

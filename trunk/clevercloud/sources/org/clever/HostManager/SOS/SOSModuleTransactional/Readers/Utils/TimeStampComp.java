@@ -52,7 +52,7 @@ public class TimeStampComp
             java.sql.Timestamp timestamp1 = new java.sql.Timestamp(parsedDate.getTime());
             parsedDate = dateFormat.parse(this.sterm);
             java.sql.Timestamp timestamp2 = new java.sql.Timestamp(parsedDate.getTime());
-            logger.debug("/&//&/"+timestamp1.toString()+timestamp2.toString());
+            //logger.debug("/&//&/"+timestamp1.toString()+timestamp2.toString());
             if(timestamp1.after(timestamp2))
                 return 1;
             else

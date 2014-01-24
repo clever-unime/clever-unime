@@ -105,7 +105,7 @@ public class ThSendMeasure implements Runnable{
         logger.debug("Start sending measure...");
         System.out.println("Start sending measure...");
         
-        
+        //TODO: It is necessary realize a mechanism to select a series of functionality from the configuration file, to trasform this static algoritm in a dinamic algoritm.
         while(true){
             
         //for(int i=0; i<1; i++){
@@ -134,12 +134,13 @@ public class ThSendMeasure implements Runnable{
             //Storage monitor
             dispatchMeasure(this.monitorPlugin.getTotalStorage());
             dispatchMeasure(this.monitorPlugin.getAvailStorage());
+            */
             dispatchMeasure(this.monitorPlugin.getUsedStorage());
+            /*
             dispatchMeasure(this.monitorPlugin.getUsedPercentStorage());
             dispatchMeasure(this.monitorPlugin.getReadBytesStorage());
-            */
             dispatchMeasure(this.monitorPlugin.getWriteBytesStorage());
-
+            */
             
             try {
                 Thread.sleep(frequency*1000);

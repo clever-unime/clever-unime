@@ -114,7 +114,7 @@ public class ConnectorDB {
         this.timestampCol=timestampCol;
         this.sBoardCol=sBoardCol;
      }
-        
+/////////////////////FUNCTION///////////////////////////////////////////////////
     /**
      * This function is used to connect with DB.
      * @return boolean. False if an exception is generated.
@@ -261,44 +261,40 @@ public class ConnectorDB {
         {
             index=this.arlistResultMap.size();
             this.resultsetMap.put(tabella, index);
-            //logger.debug("put "+tabella+" in "+index);
+            //logger.debug("put @"+tabella+" in "+index);
         }
         
     }
     
     /**
      * This function is used to remove a resultset from Hash Map.
-     * @param tabella 
+     * @param tabella String :name of the table that will be deleted 
      */
     public void remove_EL_RSMap(String tabella){
+        //this.printrsMap();
         if(this.resultsetMap.containsKey(tabella))
         {
             int i=this.resultsetMap.get(tabella);
-            this.arlistResultMap.remove(i);
+            this.arlistResultMap.remove(i-1);
         }
     }
     
     /**
      * This function is used to retrieve the text rapresentation of the misure.
-     * @param misura String
-     * @param idmisure String
-     * @param tab String
+     * @param misura String : Coloumn label of table whose value we want.
+     * @param idmisure String : Index value of row.
+     * @param tab String : table name.
      * @return 
      */
     public String getMisure (String misura, String idmisure,String tab,String idcolname)
     {
-        //logger.debug("getmisure :"+misura+" "+idcolname+" "+ tab);
-        
         try
         {
             
         ResultSet rs=this.arlistResultMap.get(this.resultsetMap.get(tab)-1);
-        //logger.debug("getmisure X4:tab index"+(this.resultsetMap.get(tab)-1));
         
             rs.first();
             String v = "";
-            String e;
-            int i=0;
             do
             {
                 
@@ -323,16 +319,15 @@ public class ConnectorDB {
    
     /**
      * This function is used to take all sensor board or all sensor network present on Database.
-     * @param col String :
-     * @param tab String :
+     * @param col String : name of the column whose values set we want.
+     * @param tab String : table name
      * @return 
      */
     public Vector<String> getSensorBoard(String col,String tab)
     {
-        // TODO: verificare se con il nuovo schema di DB funziona questo sistema di ritrovamento degli impianti, in alternativa sistemare 
+         
          try
         {
-            //this.conn =  (Connection) DriverManager.getConnection("jdbc:mysql://simone.merimp.com/simone?user=simone&password=S1mone");
             if(this.makeConnection())
             {
                 Statement stmt =  (Statement) conn.createStatement();
@@ -343,7 +338,6 @@ public class ConnectorDB {
                 ResultSet rs =  stmt.getResultSet ();
                 while (rs.next())
                 {
-                  //TODO verifica se funziona
                   e=rs.getString("id");
                   v.add(e);
 
@@ -377,10 +371,10 @@ public class ConnectorDB {
         try
         {
             ResultSet rs=this.arlistResultMap.get(this.resultsetMap.get(tab)-1);
-            logger.debug("valore della mappa"+(this.resultsetMap.get(tab)-1));
-        
+            //logger.debug("valore della mappa"+(this.resultsetMap.get(tab)-1));
+            //this.printrsMap();
             if(rs==null)
-                logger.debug("null");
+                logger.error("null");
             else
             {
                 rs.first();
@@ -394,19 +388,18 @@ public class ConnectorDB {
                 {    
                     do
                     {
-                      //logger.debug("dbg"+misura+":"+rs.getMetaData().getColumnLabel(1)+" "+rs.getMetaData().getColumnLabel(2)+rs.getMetaData().getTableName(1));
                       e=rs.getString(misura);
                       v.add(e);
                     }
                     while (rs.next());
-                    logger.debug("lunghezza array:"+v.size());
+                    //logger.debug("lunghezza array: "+v.size());
                     return v;
                 }
             }
         }
         catch (Exception ex)
         {        
-            logger.error(ex.getMessage());
+            logger.error(ex.getMessage(),ex);
             logger.error(ex.getStackTrace()[0]);
         }
         
@@ -420,7 +413,7 @@ public class ConnectorDB {
             while(i.hasNext())
             {
                 Entry e =(Entry)i.next();
-                logger.debug("Entry element"+e.getKey()+" "+e.getValue());
+                logger.debug("Entry element "+e.getKey()+"| |"+e.getValue());
             }
         }catch(Exception e){
             logger.error("errore nella stampa della mappa");

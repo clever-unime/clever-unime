@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <server>nicolaubuntu</server>
+  <server>localhost</server>
   <port>5222</port>
   <tls>false</tls>
   <caJks />
   <caJksPassword />
   <certPkcs12 />
   <certPkcs12Password />
-  <username>webuntu</username>
-  <password>vpyopol</password>
-  <nickname>webuntu</nickname>
-  <room>room@conference.nicolaubuntu</room>
+  <username>probe</username>
+  <password>probe</password>
+  <nickname>probe</nickname>
+  <room>vision@conference.localhost</room>
   <threshold>1</threshold>
   <!-- la threshold effettivamnte usata x istanziare i CC è questa!! -->
   <activatedCM>false</activatedCM>

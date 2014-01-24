@@ -1,6 +1,25 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2012 Università di Messina.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package org.clever.HostManager.SOS.SOSModuleTransactional;
 
@@ -40,28 +59,7 @@ public class InsertObservation {
     private insertObsDomCleanParser iic;
     private ParameterContainer parameterContainer = null;
     private Logger logger;
-    /* InsertObservation(String filename){
-    try {
-    iic = new insertObsDomCleanParser();
-    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-    DocumentBuilder builder = dbf.newDocumentBuilder();
-    File xmlFile = new File(filename);
-    Document document = builder.parse(xmlFile);
-    iic.insertObsInfo(document);
-    db= new DataBase();
-    this.filename_output="/home/user/file_insert_response.xml";
     
-    } catch (SAXException ex) {
-    Logger.getLogger(InsertObservation.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (IOException ex) {
-    Logger.getLogger(InsertObservation.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (ParserConfigurationException ex) {
-    Logger.getLogger(InsertObservation.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    
-    
-    
-    }*/
 
     InsertObservation(String insertObservationRequest) {
         try {
@@ -91,10 +89,6 @@ public class InsertObservation {
 
     public String insertObsdb() throws SQLException, ParseException, ParserConfigurationException, TransformerException {
         try{
-        //DataBase db=new DataBase();
-        //db.openDB(this.parameterContainer.getDbServer(),this.parameterContainer.getDbDriver(),this.parameterContainer.getDbName(),
-        //this.parameterContainer.getDbUsername(),this.parameterContainer.getDbPassword());
-
         int sensidtemp = 0;
         int[] phenidtemp = new int[iic.getinfo().getObsPhenomena().size()];
         DateFormat df = DateFormat.getDateInstance(DateFormat.LONG, Locale.FRANCE);
@@ -110,11 +104,9 @@ public class InsertObservation {
         ResultSet rs = db.exQuery(checksens);
         if (rs.next() == true) {
             sensidtemp = rs.getInt(1);
-            //System.out.println("id del sensore associato alla misura: "+sensidtemp);
             int countphen = 0;
             //posso inserire un phenomeno composto solo se i phenomena da cui è formato sono presenti, in quanto vuol dire che vi è registrato un sensore per poterli misurare. se ciò non avviene allora c'è stato un errore. vedi manuale  di sos dove si esplicita che per inserire un osservazione ci deve essere il sensore i phenomeni già presenti nel db
             for (int i = 0; i < iic.getinfo().getObsPhenomena().size(); i++) {
-                //System.out.println("unique id del phenomeno:"+iic.getinfo().getObsPhenomena().elementAt(i).getPhenomena_id().split(";")[0]);
                 String querycheckphen = "SELECT `phenomenon_id` FROM `phenomenon` WHERE `unique_id` LIKE '" + iic.getinfo().getObsPhenomena().elementAt(i).getPhenomena_id().split(";")[0] + "'";
                 rs = db.exQuery(querycheckphen);
                 if (rs.next() == true) {
@@ -123,7 +115,6 @@ public class InsertObservation {
                 }
             }
             for (int i = 0; i < iic.getinfo().getObsPhenomena().size(); i++) {
-                //System.out.println("id del phenomeno: "+phenidtemp[i]);
                 String possibility = "SELECT * FROM `sens_phen` WHERE `phenomenon_id`LIKE '" + phenidtemp[i] + "' AND `sensor_id`LIKE '" + sensidtemp + "'";
                 rs = db.exQuery(possibility);
                 if (rs.next() == false) {
@@ -143,7 +134,7 @@ public class InsertObservation {
                         
                     }
                 } else {
-                    //System.out.println("phenomeno non composito");
+                    logger.debug("phenomeno non composito");
                 }
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss");
                 Date insertDate = new Date();
@@ -151,7 +142,6 @@ public class InsertObservation {
 
                 for (int i = 0; i < iic.getinfo().getObsPhenomena().size(); i++) {
                     //iic.getinfo().getTime_stamp()
-                    //System.out.println("SENSORID="+sensidtemp+" PHENID="+phenidtemp[i]+" TIMESTAMP="+iic.getinfo().getTime_stamp());
                     String queryinsobs = "INSERT INTO `sensorml`.`observation`(`sensor_id`, `phenomenon_id`, `time_stamp`, `coordinate`, `uom_code`, `value`, `time_definition`, `lat_definition`, `long_definition`, `long_def_uom`, `lat_def_uom`) VALUES('" + sensidtemp + "','" + phenidtemp[i] + "',TIMESTAMP('" + iic.getinfo().getTime_stamp() + "'),GeomFromText('Point(" + iic.getinfo().getLongitude() + " " + iic.getinfo().getLatitude() + ")'),'" + iic.getinfo().getObsPhenomena().elementAt(i).getUom().split("=")[1].split(";")[0] + "','" + iic.getinfo().getObsPhenomena().elementAt(i).getValue() + "', '" + iic.getinfo().gettime_definition().split(";")[0] + "', '" + iic.getinfo().getlat_definition().split(";")[0] + "', '" + iic.getinfo().getlong_definition().split(";")[0] + "','" + iic.getinfo().getlong_uom().split("=")[1].split(";")[0] + "','" + iic.getinfo().getlat_uom().split("=")[1].split(";")[0] + "');";
                     db.exUpdate(queryinsobs);
                     String assigned_id = "SELECT `observation_id` FROM `observation` WHERE `sensor_id`LIKE'" + sensidtemp + "' AND `phenomenon_id` LIKE'" + phenidtemp[i] + "' AND `time_stamp` LIKE TIMESTAMP('" + sdf.format(insertDate).replace("T", " ") + "')";

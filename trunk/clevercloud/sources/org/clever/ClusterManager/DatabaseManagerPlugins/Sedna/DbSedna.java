@@ -161,6 +161,7 @@ public class DbSedna implements DatabaseManagerPlugin {
         Collection collect = null;
         String xpathCm = xpath + "/cm";
         String xpathAgent = xpathCm + "/agent[@name='" + agentId + "']";
+        
         if (!checkCm()) {
             this.addCm();
         }
@@ -177,6 +178,7 @@ public class DbSedna implements DatabaseManagerPlugin {
             serviceUpdate.update(updateStr);
             //System.out.println(updateStr);
             collect.close();
+            logger.debug("HO INSERITO IL NODO DELL'AGENTE :"+agentId);
         } catch (XMLDBException ex) {
             logger.error("Insert node failed: " + ex.getMessage());
             throw new CleverException("CM database update failed! " + ex);

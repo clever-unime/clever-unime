@@ -78,7 +78,7 @@ public class GetObservationThread extends Thread {
         
         //build getObservationRequest from phenomenonAdvertise
         this.getObservationDocument=this.buildGetObservationRequest(this.phenomenonAdvertise);
-        this.milliseconds = (long) (alertFrequency * 2000);
+        this.milliseconds = (long) (alertFrequency * 4000);
         
         parameterContainer=ParameterContainer.getInstance();
         this.dbServer=this.parameterContainer.getDbDriver();
@@ -198,10 +198,12 @@ public class GetObservationThread extends Thread {
         String values="";
         String[] rawObservations=null;
         String[] splittedObservation=null;
-        
+        logger.debug("!|_|!sendObservations1");
         
         List memberElementList=getObservationResponse.getChildren("member", om);
+        logger.debug("!|_|!sendObservations2");
         Iterator memberIterator=memberElementList.iterator();
+        logger.debug("!|_|!sendObservations3");
         if (memberIterator.hasNext()) {
             logger.debug("!|_|!sendObservations"+memberElementList.size());
         
@@ -342,7 +344,6 @@ public class GetObservationThread extends Thread {
         boolean holdBeginPosition=false;
         long interval=0;
         Date startTime=new Date();
-        
         Date beginPosition=startTime;
         while (true) {
             try {
@@ -350,7 +351,6 @@ public class GetObservationThread extends Thread {
                 //sleep(milliseconds);
                 logger.debug("GetObservationThread enter in sleep for:"+milliseconds);
                  sleep(milliseconds);
-                 //System.out.println("sleep finito");
                 Date endPosition=new Date(); 
                 if(getObservationDocument==null){
                     break;
@@ -364,9 +364,9 @@ public class GetObservationThread extends Thread {
                  
                  
                  if(holdBeginPosition){
-                    interval+=(long)(alertFrequency*2000);
+                    interval+=(long)(alertFrequency*4000);
                  }else{
-                    interval=(long)(alertFrequency*2000); 
+                    interval=(long)(alertFrequency*4000); 
                  }
                  
                
@@ -379,11 +379,9 @@ public class GetObservationThread extends Thread {
                  //now.setTime(interval);
                  timePeriod.getChild("beginPosition",gml).setText(this.sdf.format(beginPosition));
                                   
-                 ////System.out.println("GetObservationthread run getObservationDocument:\n"+sasAgent.outputter.outputString(getObservationDocument));
                 //invoke SOS getObservation
-                //System.out.println("GetObservationthread run NOW: "+sdf.format(new Date()));
-                logger.debug("!|_|! Sto per richiedere l'osservazione inizio:"+beginPosition+" fine:"+endPosition);
-                logger.debug("!|*_*|!"+sasAgent.outputter.outputString(getObservationDocument));
+                logger.debug("Sto per richiedere l'osservazione inizio:"+beginPosition+" fine:"+endPosition);
+                logger.debug(sasAgent.outputter.outputString(getObservationDocument));
                 Element getObservationResponse = sasAgent.getObservation(sasAgent.outputter.outputString(getObservationDocument)).detachRootElement();
                 
                 //beginPosition.setTime(endPosition.getTime()+1000);
@@ -391,17 +389,15 @@ public class GetObservationThread extends Thread {
                 ////System.out.println("GetObservationthread run getobsResponse:\n"+sasAgent.outputter.outputString(getObservationResponse));
                 //parse Observations from getObservationResponse end send to SASAgent on Cluster Manager
                 
-                logger.debug("!|_|! Richiamo sendObservations");
+                //logger.debug("Richiamo sendObservations");
                  
                 Date lastObservationDate=this.sendObservations(getObservationResponse);
-                org.apache.log4j.Logger.getLogger("GetObservationThread-Thread").debug("!|_|! Richiamato sendObservations:"+lastObservationDate.toString());
+                org.apache.log4j.Logger.getLogger("GetObservationThread-Thread").debug("Richiamato sendObservations:"+lastObservationDate.toString());
                 if(lastObservationDate!=null){
-                    //beginPosition.setTime(lastObservationDate.getTime()/*+1000*/);
                     holdBeginPosition=false;
                 }else{
                     //no observations hold begin position and increase interval
                     holdBeginPosition=true;
-                    //System.out.println("no observations");
                     
                 } 
                     
@@ -414,7 +410,6 @@ public class GetObservationThread extends Thread {
                 Thread.currentThread().interrupt();
                 break;
             }
-            //System.out.println("fine while");
         }
     }
 }

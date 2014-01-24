@@ -33,7 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.logging.Level;
+//import java.util.logging.Level;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -64,6 +64,7 @@ public class SOSAgent extends Agent{
     private FileStreamer fs = new FileStreamer();
     private XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
     String cfgPath="./cfg/configuration_sosagent.xml";
+    private boolean readerstarted=false;
 //    public SOSAgent() throws CleverException{
 //    logger = Logger.getLogger(agentName);
 //    logger.info("SOSAgent() avviato!!!!");
@@ -173,7 +174,7 @@ public class SOSAgent extends Agent{
             ArrayList params=new ArrayList();
             params.add(advertisementRequest);
             advertisementResponse=(String)this.invoke("SASAgentHm", "provadvertise", true, params);
-            logger.info("?=)% sendSASAdvertise response=\n"+advertisementResponse);
+            logger.info(" sendSASAdvertise response=\n"+advertisementResponse);
         
         } catch (CleverException ex) {
             logger.error("Error sending advertisement to SASAgent");
@@ -183,12 +184,22 @@ public class SOSAgent extends Agent{
     }
     
     public void startReader(){
-        SOSmodule sos=new SOSmodule();
-        sos.init();
+        try{
+            if(!this.readerstarted)
+            {
+                SOSmodule sos=new SOSmodule();
+                sos.init(); 
+                this.readerstarted=true;
+            }
+        }
+        catch(Exception e){
+            logger.error("It's occurred some problem in SOSmodule initialization! ");
+            this.readerstarted=false;
+        }
     }
     
     public ArrayList<String> getAdvertisements() throws CleverException{
-        logger.debug("?=) getAdvertisements inizio");
+        logger.debug(" getAdvertisements inizio");
         ArrayList<String> advertisements = new ArrayList<String>();
         //build empty expirationAdvertiseRequest
         Element expirationAdvertiseRequest = new Element("ExpirationAdvertiseRequest");
@@ -208,7 +219,7 @@ public class SOSAgent extends Agent{
         //get all advertisements
         advertisements = this.sosService(outputter.outputString(expirationAdvertiseRequestDoc));
         
-        logger.debug("?=) getAdvertisements fine");
+        logger.debug(" getAdvertisements fine");
         return advertisements;
     }
     
@@ -256,6 +267,7 @@ public class SOSAgent extends Agent{
             gobs.printInfo();
             
             gobs.getObsDb();
+            logger.debug("gobsfine");
             getObservationResponse=gobs.write_getobs_xml();
             logger.debug("SOSAgent trasmette:");
             logger.debug(getObservationResponse);

@@ -60,12 +60,6 @@ public class ExpirationAdvertiseRequest {
 
     public ExpirationAdvertiseRequest(String expirationAdvertiseRequest) throws ParserConfigurationException, SAXException, IOException {
         parameterContainer = ParameterContainer.getInstance();
-        //db=new DataBase();
-
-        //db.openDB(this.parameterContainer.getDbServer(),this.parameterContainer.getDbDriver(),this.parameterContainer.getDbName(),
-        //         this.parameterContainer.getDbUsername(),this.parameterContainer.getDbPassword());
-
-
         this.phen_id = "error";
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = dbf.newDocumentBuilder();
@@ -99,7 +93,6 @@ public class ExpirationAdvertiseRequest {
         } else {
             if (phen_id.equals("error")) {
                 System.out.println("ExpirationAdvertiseRequest error in parsing arguments");
-                //return;
             } else {
                 phenomenonAdvertisements.add(phenomenonAdvertiseXml(phen_id));
             }
@@ -115,10 +108,6 @@ public class ExpirationAdvertiseRequest {
         DocumentBuilderFactory dbf2 = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder2 = dbf2.newDocumentBuilder();
         Document doc = builder2.newDocument();
-        //db.openDB(this.parameterContainer.getDbServer(),this.parameterContainer.getDbDriver(),this.parameterContainer.getDbName(),
-        //           this.parameterContainer.getDbUsername(),this.parameterContainer.getDbPassword());
-
-        //File file = new File(this.filename_output);
         Element root = doc.createElement("PhenomenonAdvertise");
         //root.setAttribute("xmlns","http://www.opengis.net/sas");
         root.setAttribute("xsi:schemaLocation", "http://www.opengis.net/sas ../sasAll.xsd");
@@ -148,7 +137,6 @@ public class ExpirationAdvertiseRequest {
         Element area = doc.createElement("OperationArea");
         Element geo = doc.createElement("swe:GeoLocation");
         String sel_area = "SELECT max(`longitude`), max(`latitude`), max(`altitude`),min(`longitude`), min(`latitude`), min(`altitude`) FROM `sensor`, `phenomenon`,`sens_phen` WHERE `sens_phen`.`sensor_id`=`sensor`.`sensor_id` AND `sens_phen`.`phenomenon_id`=`phenomenon`.`phenomenon_id` AND `phenomenon`.`unique_id` LIKE '" + phen_unique_id + "'";
-        //System.out.println(sel_area);
         rs = db.exQuery(sel_area);
 
         if (rs.next()) {
@@ -246,14 +234,12 @@ public class ExpirationAdvertiseRequest {
             //per ogni componente 
             if (sNodeName.equals("Content")) {
                 NamedNodeMap nnmAttributes = currentNode.getAttributes();
-                //System.out.println("Content:"+utils.printAttributes(nnmAttributes));
                 if (utils.printAttributes(nnmAttributes).indexOf("definition=; uom=;") != -1) {
                     this.phen_id = "";
                 } else {
                     this.phen_id = utils.printAttributes(nnmAttributes).split(";")[0].split("=")[1];
                 }
 
-                //System.out.println("phen:"+this.phen_id);
                 currentNode = currentNode.getNextSibling();
             }
         }

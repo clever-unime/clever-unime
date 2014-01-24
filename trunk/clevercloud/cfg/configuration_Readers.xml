@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <readers>
-        <!--<reader>
+  <readers>
+    <!--<reader>
                        			<className>org.clever.HostManager.SOS.SOSModuleContiki.Usb_reader</className>
                         		<moduleName>Usb_reader</moduleName>
                         		<pluginParams>
@@ -11,20 +11,21 @@
                         		</pluginParams>
                 		</reader>
         *********************************************************************-->
-        <reader>
-            <className>org.clever.HostManager.SOS.SOSModuleTransactional.Readers.DBGenericReader</className>
-            <moduleName>DBGenericReader</moduleName>
-            <pluginParams>
-                <port>3306</port>
-                <hostname></hostname>
-                <DBName></DBName>
-                <UserName></UserName>
-                <Password></Password>
-                <resettimeMillisec>150000</resettimeMillisec>
-                <sensorNumber>1</sensorNumber>
-                <firstvalue>2013-10-15 08:38:54.0</firstvalue>
-	    </pluginParams>                
-	</reader>
-	
-    </readers>
+    <reader>
+      <className>org.clever.HostManager.SOS.SOSModuleTransactional.Readers.DBGenericReader</className>
+      <moduleName>DBGenericReader</moduleName>
+      <pluginParams>
+        <port>3306</port>
+        <hostname>localhost</hostname>
+        <DBName>sensordb</DBName>
+        <UserName>root</UserName>
+        <Password></Password><!--insert your sql password -->
+        <resettimeMillisec>150000</resettimeMillisec>
+        <sensorNumber>1</sensorNumber>
+        <firstvalue>2014-01-22 12:47:23</firstvalue>
+      </pluginParams>
+    </reader>
+    <!--*********************************************************************-->
+  </readers>
 </configuration>
+

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <server>212.189.207.118</server>
+  <server>localhost</server>
   <port>5222</port>
   <tls>false</tls>
   <caJks />
@@ -10,8 +10,8 @@
   <username></username>
   <password></password>
   <nickname></nickname>
-  <room>room@conference.212.189.207.118</room>
-  <roomclients>SHELL-room@conference.212.189.207.118</roomclients>
+  <room>room@conference.localhost</room>
+  <roomclients>SHELL-room@conference.localhost</roomclients>
   <threshold>1</threshold> <!-- questa threshold non viene più usata, ne uso una dentro configuration_initiator -->
     <activeAgents>true</activeAgents> <!--Questo tag se settato a true istanzia cmq gli agenti x il CC anche se non è in stato attivo, altrimenti se a false gli agenti verranno istanziati solo se il CM è nello status CM_ACTIVE-->
     <replaceAgents>true</replaceAgents>
@@ -37,6 +37,14 @@
     <agent>
 	  <class>org.clever.ClusterManager.VirtualizationManager.VirtualizationManagerAgent</class>
           <name></name>
+    </agent>
+    <agent>
+      <class>org.clever.ClusterManager.SAS.SASAgent</class>
+      <name />
+    </agent>
+    <agent>
+      <class>org.clever.ClusterManager.WebAgent.WebAgent</class>
+      <name />
     </agent>
   </agents>
   <brain>

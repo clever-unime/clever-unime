@@ -127,7 +127,7 @@ public class CloudMonitorAgent extends Agent{
         } catch (IllegalAccessException ex) {
             logger.error("Error: " + ex);
         } catch (Exception ex) {
-            logger.error("CloudMonitorPlugin creation failed: " + ex);
+            logger.error("CloudMonitorPlugin creation failed: " + ex,ex);
         }
         
     }

@@ -117,7 +117,7 @@ public class SASAgent extends CmAgent {
         try {
             super.setAgentName("SASAgent");
             agentName="SASAgent";
-            this.agentName = agentName;
+            
             logger = Logger.getLogger(agentName);
             logger.info("SASAgent CM !!!!");
             mc = new ModuleCommunicator(agentName,"CM");
@@ -128,7 +128,33 @@ public class SASAgent extends CmAgent {
             xr = sp.getXMLReader();
 
             init();
-            List params = new ArrayList();
+            initCleverResouces();
+            this.threadMessageDispatcher = new ThreadMessageDispatcher(this, 100, 10); //TODO: retrieve parameters from configuration file
+            this.threadMessageDispatcher.start();
+        } catch (ParserConfigurationException ex) {
+            throw new CleverException(ex, "Parser Configuration Exception: " + ex);
+        } catch (SAXException ex) {
+            throw new CleverException(ex, "SAX Exception: " + ex);
+        } catch (InstantiationException ex) {
+            throw new CleverException(ex, "Missing logger.properties or configuration not found");
+        } catch (IllegalAccessException ex) {
+            throw new CleverException(ex, "Access Error");
+        } catch (ClassNotFoundException ex) {
+            throw new CleverException(ex, "Plugin Class not found");
+        } catch (IOException ex) {
+            throw new CleverException(ex, "Error on reading logger.properties");
+        }
+
+    }
+
+   
+    
+    
+    private void init() throws CleverException {
+        initDb();
+        initSoiPublications();
+        initPublishDelivery();
+        List params = new ArrayList();
             params.add(agentName);
             params.add("SAS/Presence");
             this.invoke("DispatcherAgent", "subscribeNotification", true, params);
@@ -153,86 +179,7 @@ public class SASAgent extends CmAgent {
             params.add(agentName);
             params.add("SAS/RenewAdvertisement");
             this.invoke("DispatcherAgent", "subscribeNotification", true, params);
-            
-            
-           
-            
-           
-            
-            
-            
-            initCleverResouces();
-            this.threadMessageDispatcher = new ThreadMessageDispatcher(this, 100, 10); //TODO: retrieve parameters from configuration file
-            this.threadMessageDispatcher.start();
-            
-
-            
-            
-        } catch (ParserConfigurationException ex) {
-            throw new CleverException(ex, "Parser Configuration Exception: " + ex);
-        } catch (SAXException ex) {
-            throw new CleverException(ex, "SAX Exception: " + ex);
-        } catch (InstantiationException ex) {
-            throw new CleverException(ex, "Missing logger.properties or configuration not found");
-        } catch (IllegalAccessException ex) {
-            throw new CleverException(ex, "Access Error");
-        } catch (ClassNotFoundException ex) {
-            throw new CleverException(ex, "Plugin Class not found");
-        } catch (IOException ex) {
-            throw new CleverException(ex, "Error on reading logger.properties");
-        }
-
-    }
-
-   
-    
-    
-    private void init() {
-        initDb();
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-1648777780</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-2128992545</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-757795074</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-547553889</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-2077942796</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-1794127170</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-168423560</SubscriptionID></CancelSubscription>");        
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-304103328</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-235374172</SubscriptionID></CancelSubscription>");
-//        
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-392268243</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-352686936</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-190348214</SubscriptionID></CancelSubscription>");        
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-106875507</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-457564371</SubscriptionID></CancelSubscription>");
-//        
-//        
-//        
-        
-//        
-//        removeSubscriptionFromTables("Sub-203567417");
-//        removeSubscriptionFromTables("Sub-272804805");
-//        removeSubscriptionFromTables("Sub-422980964");
-//        removeSubscriptionFromTables("Sub-453526871");
-//        removeSubscriptionFromTables("Sub-439376199");
-//        removeSubscriptionFromTables("Sub-509709515");
-//        removeSubscriptionFromTables("Sub-477867218");
-////        removeSubscriptionFromTables("Sub-453526871");
-////        removeSubscriptionFromTables("Sub-453526871");
-////        removeSubscriptionFromTables("Sub-453526871");
-////        removeSubscriptionFromTables("Sub-453526871");
-        
-        
-        initSoiPublications();
-        initPublishDelivery();
-        //logger.info("getCapabilities return="+getCapabilities("<GetCapabilities><Sections><Section>Contents</Section></Sections></GetCapabilities>"));
-    
-        
-    
-    
-    
-    
-    
-    }
+     }
     
     public String testMethod(String value){
         logger.debug("testMethod value is: "+value);
@@ -523,7 +470,7 @@ public class SASAgent extends CmAgent {
     @Override
     public void handleNotification(Notification notification) throws CleverException {
         String notificationType = notification.getId();
-        logger.debug("?=) handlenotification: "+notificationType);
+        logger.debug(" handlenotification: "+notificationType);
         
         if (notificationType.equals("SAS/Advertise")) {
             this.handleAdvertiseRequest(notification);
@@ -876,26 +823,26 @@ public class SASAgent extends CmAgent {
         
         Document doc = stringToDom(getCapabilitiesRequest); //TODO: validate document
         Element getCapabilitiesElement = doc.detachRootElement();
-        String prova="";
+        
         Element sectionsElement = getCapabilitiesElement.getChild("Sections");
         Document getCapabilitiesResponseDoc = new Document();
         String getCapabilitiesResponse = "";
         Element capabilitiesElement = new Element("Capabilities");
-        prova=prova+"sono prima dell'if \n";
+        
         if (sectionsElement != null) {
             List children = sectionsElement.getChildren();
             Iterator iterator = children.iterator();
             Element element = null;
             String parameterName = "";
             String section = "";
-            prova=prova+"sono prima del while \n";
+            
             while (iterator.hasNext()) {
                 try {
                     element = (Element) iterator.next();
                     parameterName = element.getText();
-                    prova=prova+"prima della query \n";
+                    
                     section = this.query("/capabilities/" + parameterName);
-                    prova=prova+"ho fatto la query \n";
+                    
                     capabilitiesElement.addContent(this.stringToDom(section).detachRootElement());
                 } catch (CleverException ex) {
                     logger.error("Error getting capabilities: " + ex);
@@ -909,7 +856,7 @@ public class SASAgent extends CmAgent {
         }
 
         return getCapabilitiesResponse;
-            //return prova;//prova francesco
+            
     }
 
     public String renewSubscription(String renewSubscriptionRequest) {
@@ -932,10 +879,6 @@ public class SASAgent extends CmAgent {
                     Element subscriptionElement = this.stringToDom(subscription).detachRootElement();
                     String actualSubscriptionExpiration = subscriptionElement.getAttributeValue("expires");
                     newExpiration = actualSubscriptionExpiration;
-                    //System.out.println("renew");
-                    //System.out.println(actualSubscriptionExpiration);
-
-                    //System.out.println(soiExpiration);
                     Date actualSubscriptionExpirationDate = sdf.parse(actualSubscriptionExpiration);
                     Date soiExpirationDate = sdf.parse(soiExpiration);
                     //renew it's possible
@@ -1489,13 +1432,13 @@ public class SASAgent extends CmAgent {
    }
    if (command.startsWith("addsub")){
        String value = command.split("#")[1];
-       logger.debug("?=) "+value);
+       //logger.debug("?=) "+value);
        addsub(value);
        ret="addsub done";
    }    
    if (command.startsWith("ondemand")){
        String value = command.split("#")[1];
-       logger.debug("?=) "+value);
+       //logger.debug("?=) "+value);
        onDemand(value);
        ret="addsub done";
    }    
@@ -1544,7 +1487,7 @@ public class SASAgent extends CmAgent {
             }
            
             
-           logger.debug("?=)%* Publication Id: "+pubId+" host: "+hostId);
+           logger.debug(" Publication Id: "+pubId+" host: "+hostId);
            
            //INSerisco un finto sensore
            
@@ -1631,7 +1574,7 @@ public class SASAgent extends CmAgent {
             String mis="INSERT INTO `CleverResources`.`Misurazione` (`Sensore`, `Fenomeno`, `Dato`) VALUES ('"+idSens+"', '"+idFen+"', '"+idDat+"');";
             db.exUpdate(mis);
             
-            logger.debug("?=)%*Misuraz:"+idSens+"/"+idFen+"/"+idDat+"-"+dato+"-"+tmp);
+            logger.debug("Misuraz:"+idSens+"/"+idFen+"/"+idDat+"-"+dato+"-"+tmp);
             }
             }
             
@@ -1743,7 +1686,7 @@ public class SASAgent extends CmAgent {
                      }else{
                      
                      String prop="INSERT INTO `CleverResources`.`ProprietaSottoscrizione` (`ID`, `Nome`, `Tipo`, `Valore`, `Uom`, `Descrizione`) VALUES (NULL, 'AlertMessageStructure', 'Capabilities',NULL, '"+uom+"','"+definition+"');";
-                     logger.debug("?=) query: "+prop);
+                     logger.debug(" query: "+prop);
                      idprop = db.exInsert(prop);
                      //db.exUpdate(prop);
                      }
@@ -1827,12 +1770,12 @@ public class SASAgent extends CmAgent {
             String verysoi="SELECT * FROM `SottoscrizioneOfferta` WHERE `SoId`='"+SoId+"'";
             ResultSet rvsoi = db.exQuery(verysoi);
             if(rvsoi.next()){
-                logger.debug("?=) SubscriptionOfferingId presente: "+rvsoi.getInt(1));
+                logger.debug(" SubscriptionOfferingId presente: "+rvsoi.getInt(1));
             }else{
             
             String querySoi="INSERT INTO `CleverResources`.`SottoscrizioneOfferta` (`ID`, `SoId`, `Nome`, `Descrizione`) VALUES (NULL, '"+SoId+"', '"+name+"', '"+desc+"');";
             int idSoi=db.exInsert(querySoi);
-            logger.debug("?=) return id: "+idSoi);
+            logger.debug("return id: "+idSoi);
             
             String querycar="INSERT INTO `CleverResources`.`CaratteristicheSottoscrizione` (`SottoscrizioneOff`, `ProprietaSottoscrizione`) VALUES ('"+idSoi+"', '"+idprop+"');";
             db.exUpdate(querycar);
@@ -1944,7 +1887,7 @@ public class SASAgent extends CmAgent {
                 String verprop2="SELECT ID FROM `ProprietaSottoscrizione` WHERE `Nome`='Expiration' AND `Tipo`='Advertise' AND `Valore`='"+vAdv+"' AND `Descrizione`='"+nAdv+"'";
                 ResultSet rprop2 = db.exQuery(verprop2);
                 if (rprop2.next()){
-                    logger.debug("?=) Advertise gia esistente id: "+rprop2.getInt(1));
+                    logger.debug(" Advertise gia' esistente id: "+rprop2.getInt(1));
                     idprop2=rprop2.getInt(1);
                 }else{
                  //inserisco la proprietà   

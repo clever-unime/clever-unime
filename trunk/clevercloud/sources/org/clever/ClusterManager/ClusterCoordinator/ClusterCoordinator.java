@@ -464,7 +464,7 @@ public class ClusterCoordinator implements CleverMessageHandler
    */
   public void start() throws CleverException
   {
-      logger.info("\nSTART DI CC\n");
+      logger.info("START DI CC");
       
           this.init();
         try {
@@ -527,7 +527,7 @@ public class ClusterCoordinator implements CleverMessageHandler
         }
         
         int tmp = conn.getNum_CCsInRoom(ROOM.CLEVER_MAIN);
-        logger.info("The number of CM in room CLEVER_MAIN is now: "+tmp);
+        logger.debug("The number of CM in room CLEVER_MAIN is now: "+tmp);
     }
     else //this condition will never occur but for reasons of backward compatibility we let it
     {
@@ -542,43 +542,9 @@ public class ClusterCoordinator implements CleverMessageHandler
     logger.debug( "Message: " + msg.toXML() );
 
     dispatcherAgent.handleCleverMessage(msg);
-    
-    /*
-    switch( msg.getType() )
-
-    {
-
-      case NOTIFY:
-        this.handleNotification(msg);
-        break;
-      case ERROR:
-      case REPLY:
-        dispatcherPlugin.handleMessage( msg );
-        break;
-      case REQUEST:
-        logger.debug("request received"+ msg.getBody());
-        dispatcherPlugin.dispatch( msg );
-        break;
-    }
-    *
-    * */
+   
   }
 
- /* public void handleNotification(CleverMessage msg){
-
-      Notification notification=msg.getNotificationFromMessage();
-      //Pass notification to dispatcher
-      logger.debug("Passing notification to dispatcher");
-      dispatcherPlugin.handleNotification(notification);
-
-      //Pass notification to brain
-      logger.debug("Passing notification to brain");
-      //Notification notification=(Notification)MessageFormatter.objectFromMessage(msg.getBody());
-      
-      this.brainInterface.handleNotification(notification);
-  }
-*/
-  
   public Iterator getHosts() 
   { //torna la lista di tutti gli host connessi alla stanza CLEVER_MAIN
     return conn.getMembers(ROOM.CLEVER_MAIN);

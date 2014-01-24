@@ -1,14 +1,27 @@
 <agent name="StorageManagerAgent">
+  <node name="nodo1" type="mount">
+    <org.clever.Common.Storage.VFSDescription>
+      <auth>
+        <username>giusimone</username>
+        <password>mandrake</password>
+      </auth>
+      <typevfs>file</typevfs>
+      <hostname>localhost</hostname>
+      <port/>
+      <path>/media/dati</path>
+      <path1/>
+    </org.clever.Common.Storage.VFSDescription>
+  </node>
   <node name="nodo" type="mount">
     <org.clever.Common.Storage.VFSDescription>
       <auth>
-        <username>s89</username>
-        <password>s89</password>
+        <username>giusimone</username>
+        <password>mandrake</password>
       </auth>
       <typevfs>ftp</typevfs>
-      <hostname>ing-clever-05</hostname>
+      <hostname>localhost</hostname>
       <port>21</port>
-      <path>/</path>
+      <path>/home</path>
       <path1/>
     </org.clever.Common.Storage.VFSDescription>
   </node>

@@ -103,8 +103,6 @@ public class DatabaseManagerAgent extends CmAgent
             params.add(super.getAgentName());
             params.add("PRESENCE/HM");
             this.invoke("DispatcherAgent", "subscribeNotification", true, params);
-        //    MethodInvoker mi = new MethodInvoker("DispatcherAgent", "subscribeNotification", true, params);
-        //    this.mc.invoke(mi);
         }
         catch( java.lang.NullPointerException e )
         { 

@@ -1,3 +1,27 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2012 Università di Messina.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 package org.clever.HostManager.SOS.SOSModuleTransactional;
 
 import java.util.Vector;
@@ -40,18 +64,15 @@ public class insertObsDomCleanParser {
                     NamedNodeMap nnmAttributes = currentNode.getAttributes();
                     String dimension = "";
 
-                    // System.out.println("node name: "+sNodeName+ " attibute: "+utils.printAttributes(nnmAttributes)+" value: "+sNodeValue);
                     if (sNodeName.equals("AssignedSensorId")) {
                         info.setSensor_id(sNodeValue);
                     }
                     if (sNodeName.equals("gml:timePosition")) {
                         String dataprova = sNodeValue.replace("T", " ").replace("Z", "");
-                        // System.out.println("nuovo timestamp"+dataprova);
                         info.setTime_stamp(dataprova);
                     }
                     if (sNodeName.equals("swe:Time")) {
                         String[] id_tim = utils.printAttributes(nnmAttributes).split("=");
-                        // System.out.println("nuovo timestamp"+dataprova);
                         info.settime_definition(id_tim[1]);
                     }
                     if (sNodeName.equals("om:observedProperty") && currentNode.hasChildNodes() == false) {
@@ -65,25 +86,19 @@ public class insertObsDomCleanParser {
                         dimension = utils.printAttributes(nnmAttributes);
                         String[] dimension2 = dimension.split(";");
                         dimension2 = dimension2[0].split("=");
-                        //System.out.println("dimensione: "+dimension2[1]);
                         phen_length = Integer.parseInt(dimension2[1]);
-                        //     System.out.println("dimensione: "+phen_length);
                     }
                     if (sNodeName.equals("gml:name") && currentNode.getParentNode().getNodeName().equals("swe:CompositePhenomenon")) {
                         info.setPhenomenon_composite(sNodeValue);
                     }
-                    //System.out.println("id phen: "+sNodeValue);}
                     if (sNodeName.equals("swe:component")) {
                         String[] id_phen = utils.printAttributes(nnmAttributes).split("=");
-                        //  System.out.println("id phen: "+id_phen[1]);
                         if (count_phen < phen_length) {
                             ObsPhenomenaValue phen_temp = new ObsPhenomenaValue();
                             phen_temp.setPhenomena_id(id_phen[1]);
                             count_phen++;
                             info.getObsPhenomena().add(phen_temp);
                         }
-                        //System.out.println("phen length: "+info.getObsPhenomena().size());
-
                     }
                     if (sNodeName.equals("swe:uom")) {
                         String[] id_quan = utils.printAttributes(currentNode.getParentNode().getAttributes()).split("=");
@@ -129,9 +144,6 @@ public class insertObsDomCleanParser {
 
                             }
                         }
-                        /* for(int i=0; i<info.getObsPhenomena().size();i++)
-                        //System.out.println("phen: "+info.getObsPhenomena().elementAt(i).getPhenomena_id()+" uom " +info.getObsPhenomena().elementAt(i).getUom()+" value: "+info.getObsPhenomena().elementAt(i).getValue());
-                         */
                     }
 
 

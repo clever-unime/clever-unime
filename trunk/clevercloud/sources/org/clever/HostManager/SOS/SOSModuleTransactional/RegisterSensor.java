@@ -1,6 +1,25 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2012 Università di Messina.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package org.clever.HostManager.SOS.SOSModuleTransactional;
 
@@ -66,15 +85,12 @@ public class RegisterSensor {
             logger.debug("RegisterSensor");
             logger.debug(registerSensorRequest);
             ddp = new RegisterDomCleanParser();
-            logger.debug("RegisterSensorA");
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = dbf.newDocumentBuilder();
             Document documentreg = builder.parse(new ByteArrayInputStream(registerSensorRequest.getBytes()));
-            logger.debug("RegisterSensorB");
             ddp.sensorNodeInfo(documentreg);
-            logger.debug("RegisterSensorC");
             db = Database.getInstance();
-            logger.debug("RegisterSensorD");
+            
 
         } catch (SAXException ex) {
             logger.error("RegisterSensor: SASException " + ex);
@@ -94,8 +110,7 @@ public class RegisterSensor {
     void insertSensor() throws SQLException, ParserConfigurationException, TransformerConfigurationException, TransformerException {
         SOSAgent sosAgent = this.parameterContainer.getSosAgent();
        String query_checksensorid = "SELECT `sensor_id` FROM `sensor` WHERE `unique_id` LIKE '" + ddp.registerNodeDomParser.sensorDescription.getSensor_id() + "'";
-       // logger.info(query_checksensorid);
-        ResultSet rs = db.exQuery(query_checksensorid);
+       ResultSet rs = db.exQuery(query_checksensorid);
         if (rs.next() == false) {
 
             String querysensor = "INSERT INTO `sensorml`.`sensor` (`unique_id` ,`description_type` ,`status` ,`mobile` ,`srs` , `fixed`,`longitude` , `long_uom` , `latitude` , `lat_uom` , `altitude` , `alt_uom` , `coordinate`,`frequency`,`frequency_uom` ) VALUES ( '" + ddp.registerNodeDomParser.sensorDescription.getSensor_id() + "','" + ddp.registerNodeDomParser.sensorDescription.getDescription_type() + "','" + ddp.registerNodeDomParser.sensorDescription.getStatus() + "','" + ddp.registerNodeDomParser.sensorDescription.getMobile() + "','" + ddp.registerNodeDomParser.sensorDescription.getCrs() + "','" + ddp.registerNodeDomParser.sensorDescription.getFixed() + "','" + ddp.registerNodeDomParser.sensorDescription.getLongitude() + "','" + ddp.registerNodeDomParser.sensorDescription.getlong_uom() + "','" + ddp.registerNodeDomParser.sensorDescription.getLatitude() + "','" + ddp.registerNodeDomParser.sensorDescription.getlat_uom() + "','" + ddp.registerNodeDomParser.sensorDescription.getAltitude() + "','" + ddp.registerNodeDomParser.sensorDescription.getalt_uom() + "', GeomFromText('Point(" + ddp.registerNodeDomParser.sensorDescription.getLongitude() + " " + ddp.registerNodeDomParser.sensorDescription.getLatitude() + ")'), '" + ddp.registerNodeDomParser.sensorDescription.getFrequency() + "','" + ddp.registerNodeDomParser.sensorDescription.getFrequencyUom().split(";")[0] + "');";
@@ -103,15 +118,14 @@ public class RegisterSensor {
             for (int i = 0; i < ddp.registerNodeDomParser.phenomenonDescription.size(); i++) {
                 int flag_phen = 0;
                 String query_checkphenid = "SELECT `phenomenon_id` FROM `phenomenon` WHERE `unique_id` LIKE '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id().split(";")[0] + "'";
-               // logger.info(query_checkphenid);
-                rs = db.exQuery(query_checkphenid);
+               rs = db.exQuery(query_checkphenid);
                 //se il fenomeno non è già presente
                 if (rs.next() == false) {
                     String queryphenomena = "INSERT INTO `sensorml`.`phenomenon` (`unique_id`, `phenomenon_description`, `unit`, `valuetype`) VALUES ('" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id().split(";")[0] + "', '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_description() + "', '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_unit() + "', '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_valuetype() + "');";
                     db.exUpdate(queryphenomena);
                     flag_phen = 1;
                 } else {
-                    //System.out.println("\n phenomena già prensente con id "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id());
+                    logger.debug("\n phenomena già prensente con id "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id());
                 }
                 String query_checkoffid = "SELECT `offering_id` FROM `offering` WHERE `unique_id` LIKE '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id().split(";")[0] + "'";
                 rs = db.exQuery(query_checkoffid);
@@ -119,7 +133,7 @@ public class RegisterSensor {
                     String queryoffering = "INSERT INTO `sensorml`.`offering` (`unique_id`, `offering_name`) VALUES ( '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id() + "', '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_name() + "');";
                     db.exUpdate(queryoffering);
                 } else {
-                    //System.out.println("\n offering già prensente con id "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id());
+                    logger.debug("\n offering già prensente con id "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id());
                 }
                 String checkphenoff = "SELECT `phen_off`.`offering_id`, `phen_off`.`phenomenon_id` FROM `phen_off`, `offering`, `phenomenon` WHERE `phen_off`.`offering_id` = `offering`.`offering_id` AND `phen_off`.`phenomenon_id`= `phenomenon`.`phenomenon_id` AND `offering`.`unique_id` LIKE '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id() + "' AND `phenomenon`.`unique_id` LIKE '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id().split(";")[0] + "'";
                 rs = db.exQuery(checkphenoff);
@@ -127,7 +141,7 @@ public class RegisterSensor {
                     String queryphenoff = "INSERT INTO `sensorml`.`phen_off`(`offering_id`, `phenomenon_id`) SELECT `offering_id` ,`phenomenon_id` FROM `sensorml`.`offering`,`sensorml`.`phenomenon` WHERE `sensorml`.`offering`.`unique_id` LIKE '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id() + "' AND `sensorml`.`phenomenon`.`unique_id` LIKE '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id().split(";")[0] + "'";
                     db.exUpdate(queryphenoff);
                 } else {
-                    //System.out.println("\n phen off già prensente con id "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id()+"- "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id().split(";")[0]);
+                    logger.debug("\n phen off già prensente con id "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id()+"- "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id().split(";")[0]);
                 }
                 String checksensoff = "SELECT `sens_off`.`sensor_id`, `sens_off`.`offering_id` FROM `sens_off`, `offering`, `sensor` WHERE `sens_off`.`sensor_id` = `sensor`.`sensor_id` AND `sens_off`.`offering_id`= `offering`.`offering_id` AND `sensor`.`unique_id` LIKE '" + ddp.registerNodeDomParser.sensorDescription.getSensor_id() + "' AND `offering`.`unique_id` LIKE '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id() + "';";
                 rs = db.exQuery(checksensoff);
@@ -135,7 +149,7 @@ public class RegisterSensor {
                     String querysensoff = "INSERT INTO `sensorml`.`sens_off`(`sensor_id`,`offering_id`) SELECT `sensor_id`,`offering_id`  FROM `sensorml`.`sensor`,`sensorml`.`offering` WHERE `sensorml`.`sensor`.`unique_id` LIKE '" + ddp.registerNodeDomParser.sensorDescription.getSensor_id() + "' AND `sensorml`.`offering`.`unique_id` LIKE '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id() + "'";
                     db.exUpdate(querysensoff);
                 } else {
-                    //System.out.println("\n sens off già prensente con id "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id()+" per sensore "+ddp.registerNodeDomParser.sensorDescription.getSensor_id());
+                    logger.debug("\n sens off già prensente con id "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id()+" per sensore "+ddp.registerNodeDomParser.sensorDescription.getSensor_id());
                 }
 
                 String checksensphen = "SELECT `sens_phen`.`sensor_id`, `sens_phen`.`phenomenon_id` FROM `sens_phen`, `sensor`, `phenomenon` WHERE `sens_phen`.`sensor_id` = `sensor`.`sensor_id` AND `sens_phen`.`phenomenon_id`= `phenomenon`.`phenomenon_id` AND `sensor`.`unique_id` LIKE '" + ddp.registerNodeDomParser.sensorDescription.getSensor_id() + "' AND `phenomenon`.`unique_id` LIKE '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id().split(";")[0] + "';";
@@ -144,7 +158,7 @@ public class RegisterSensor {
                     String querysensphen = "INSERT INTO `sensorml`.`sens_phen`(`sensor_id`, `phenomenon_id`) SELECT `sensor_id` ,`phenomenon_id` FROM `sensorml`.`sensor`,`sensorml`.`phenomenon` WHERE `sensorml`.`sensor`.`unique_id` LIKE '" + ddp.registerNodeDomParser.sensorDescription.getSensor_id() + "' AND `sensorml`.`phenomenon`.`unique_id` LIKE '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id().split(";")[0] + "'";
                     db.exUpdate(querysensphen);
                 } else {
-                    //System.out.println("\n sens phen già prensente con id "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id()+" per sensore "+ddp.registerNodeDomParser.sensorDescription.getSensor_id());
+                    logger.debug("\n sens phen già prensente con id "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id()+" per sensore "+ddp.registerNodeDomParser.sensorDescription.getSensor_id());
                 }
                 if (flag_phen == 1) {
                     //invio di un Phenomenon Advertise al SAS
@@ -163,10 +177,9 @@ public class RegisterSensor {
                 if (rs.next() == false) {
 
                     String queryclass = "INSERT INTO `sensorml`.`classifier` ( `unique_id`, `classifier_description`,`classifier_value`) VALUES ( '" + ddp.registerNodeDomParser.classifierDescription.elementAt(i).getClassifier_id() + "', '" + ddp.registerNodeDomParser.classifierDescription.elementAt(i).getClassifier_description() + "','" + ddp.registerNodeDomParser.classifierDescription.elementAt(i).classifier_value + "' );";
-                    //   System.out.println(queryclass);
                     db.exUpdate(queryclass);
                 } else {
-                    //System.out.println("\n classifier già presente con id "+ddp.registerNodeDomParser.classifierDescription.elementAt(i).getClassifier_id());
+                    logger.debug("\n classifier già presente con id "+ddp.registerNodeDomParser.classifierDescription.elementAt(i).getClassifier_id());
                 }
                 String checksenclass = "SELECT `sens_class`.`sensor_id`, `sens_class`.`classifier_id` FROM `sens_class`, `sensor`, `classifier` WHERE `sens_class`.`sensor_id` = `sensor`.`sensor_id` AND `sens_class`.`classifier_id`= `classifier`.`classifier_id` AND `sensor`.`unique_id` LIKE '" + ddp.registerNodeDomParser.sensorDescription.getSensor_id() + "' AND `classifier`.`unique_id` LIKE '" + ddp.registerNodeDomParser.classifierDescription.elementAt(i).classifier_id + "' AND `classifier`.`classifier_value` LIKE '" + ddp.registerNodeDomParser.classifierDescription.elementAt(i).getClassifier_value() + "';";
                 rs = db.exQuery(checksenclass);
@@ -174,7 +187,7 @@ public class RegisterSensor {
                     String querysensclass = "INSERT INTO `sensorml`.`sens_class`(`sensor_id`, `classifier_id`) SELECT `sensor_id` ,`classifier_id` FROM `sensorml`.`sensor`,`sensorml`.`classifier` WHERE `sensorml`.`sensor`.`unique_id` LIKE '" + ddp.registerNodeDomParser.sensorDescription.getSensor_id() + "' AND `sensorml`.`classifier`.`unique_id` LIKE '" + ddp.registerNodeDomParser.classifierDescription.elementAt(i).classifier_id + "'AND `sensorml`.`classifier`.`classifier_value` LIKE '" + ddp.registerNodeDomParser.classifierDescription.elementAt(i).getClassifier_value() + "';";
                     db.exUpdate(querysensclass);
                 } else {
-                    //   System.out.println("\n sens class già prensente con id "+ddp.registerNodeDomParser.classifierDescription.elementAt(i).classifier_id+" per sensore "+ddp.registerNodeDomParser.sensorDescription.getSensor_id());
+                    logger.debug("\n sens class già prensente con id "+ddp.registerNodeDomParser.classifierDescription.elementAt(i).classifier_id+" per sensore "+ddp.registerNodeDomParser.sensorDescription.getSensor_id());
                 }
             }
 
@@ -186,7 +199,7 @@ public class RegisterSensor {
 
                     db.exUpdate(queryident);
                 } else {
-                    //System.out.println("\n identifier già presente con id "+ddp.registerNodeDomParser.identifierDescription.elementAt(i).getidentifier_id());
+                    logger.debug("\n identifier già presente con id "+ddp.registerNodeDomParser.identifierDescription.elementAt(i).getidentifier_id());
                 }
                 String checksenident = "SELECT `sens_ident`.`sensor_id`, `sens_ident`.`identifier_id` FROM `sens_ident`, `sensor`, `identifier` WHERE `sens_ident`.`sensor_id` = `sensor`.`sensor_id` AND `sens_ident`.`identifier_id`= `identifier`.`identifier_id` AND `sensor`.`unique_id` LIKE '" + ddp.registerNodeDomParser.sensorDescription.getSensor_id() + "' AND `identifier`.`unique_id` LIKE '" + ddp.registerNodeDomParser.identifierDescription.elementAt(i).getidentifier_id() + "';";
                 rs = db.exQuery(checksenident);
@@ -194,7 +207,7 @@ public class RegisterSensor {
                     String querysensident = "INSERT INTO `sensorml`.`sens_ident`(`sensor_id`, `identifier_id`) SELECT `sensor_id` ,`identifier_id` FROM `sensorml`.`sensor`,`sensorml`.`identifier` WHERE `sensorml`.`sensor`.`unique_id` LIKE '" + ddp.registerNodeDomParser.sensorDescription.getSensor_id() + "' AND `sensorml`.`identifier`.`unique_id` LIKE '" + ddp.registerNodeDomParser.identifierDescription.elementAt(i).getidentifier_id() + "'AND `sensorml`.`identifier`.`identifier_value` LIKE '" + ddp.registerNodeDomParser.identifierDescription.elementAt(i).getidentifier_value() + "';";
                     db.exUpdate(querysensident);
                 } else {
-                    // System.out.println("\n sens ident già prensente con id "+ddp.registerNodeDomParser.identifierDescription.elementAt(i).getidentifier_id()+" per sensore "+ddp.registerNodeDomParser.sensorDescription.getSensor_id());
+                    logger.debug("\n sens ident già prensente con id "+ddp.registerNodeDomParser.identifierDescription.elementAt(i).getidentifier_id()+" per sensore "+ddp.registerNodeDomParser.sensorDescription.getSensor_id());
                 }
             }
 
@@ -206,7 +219,7 @@ public class RegisterSensor {
                     String querycomp = "INSERT INTO `sensorml`.`component` (`unique_id` ,`description` ,`status` ,`mobile` ,`crs` , `longitude` , `long_uom` , `latitude` , `lat_uom` , `altitude` , `alt_uom` ) VALUES ( '" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() + "','" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getDescription_type() + "','" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getStatus() + "','" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getMobile() + "','" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getCrs() + "','" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getLongitude() + "','" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getlong_uom() + "','" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getLatitude() + "','" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getlat_uom() + "','" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getAltitude() + "','" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getalt_uom() + "');";
                     db.exUpdate(querycomp);
                 } else {
-                    //System.out.println("\n componente già presente con id"+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() +" per sensore "+ddp.registerNodeDomParser.sensorDescription.getSensor_id());
+                    logger.debug("\n componente già presente con id"+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() +" per sensore "+ddp.registerNodeDomParser.sensorDescription.getSensor_id());
                 }
                 String querysenscompcheck = "SELECT `sens_comp`.`component_id`, `sens_comp`.`sensor_id` FROM `sens_comp`, `sensor`, `component` WHERE `sens_comp`.`component_id` = `component`.`component_id` AND `sens_comp`.`sensor_id`= `sensor`.`sensor_id` AND `component`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() + "' AND `sensor`.`unique_id` LIKE '" + ddp.registerNodeDomParser.sensorDescription.getSensor_id() + "'";
                 rs = db.exQuery(querysenscompcheck);
@@ -214,7 +227,7 @@ public class RegisterSensor {
                     String querysenscomp = "INSERT INTO `sensorml`.`sens_comp`(`sensor_id`, `component_id`) SELECT `sensor_id` ,`component_id` FROM `sensorml`.`sensor`,`sensorml`.`component` WHERE `sensorml`.`sensor`.`unique_id` LIKE '" + ddp.registerNodeDomParser.sensorDescription.getSensor_id() + "' AND `sensorml`.`component`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() + "'";
                     db.exUpdate(querysenscomp);
                 } else {
-                    //   System.out.println("\n coppia sensore componente già presente con id"+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() +" per sensore "+ddp.registerNodeDomParser.sensorDescription.getSensor_id()+" e "+ddp.registerNodeDomParser.sensorDescription.getSensor_id());
+                    logger.debug("\n coppia sensore componente già presente con id"+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() +" per sensore "+ddp.registerNodeDomParser.sensorDescription.getSensor_id()+" e "+ddp.registerNodeDomParser.sensorDescription.getSensor_id());
                 }
                 for (int j = 0; j < ddp.registerComponentDescription.elementAt(i).phenomenonDescription.size(); j++) {
                     String checkcompoff = "SELECT `offering`.`offering_id` FROM `offering` WHERE `offering`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).phenomenonDescription.elementAt(j).getOffering_id() + "';";
@@ -226,10 +239,10 @@ public class RegisterSensor {
                             String querycompoff = "INSERT INTO `sensorml`.`comp_off`(`component_id`, `offering_id`) SELECT`component_id`, `offering_id`  FROM `sensorml`.`component`,`sensorml`.`offering` WHERE `sensorml`.`offering`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).phenomenonDescription.elementAt(j).getOffering_id() + "' AND `sensorml`.`component`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() + "'";
                             db.exUpdate(querycompoff);
                         } else {
-                            //   System.out.println("coppia offering "+ddp.registerComponentDescription.elementAt(i).phenomenonDescription.elementAt(j).getOffering_id()+" e componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id()+" già presente");
+                            logger.debug("coppia offering "+ddp.registerComponentDescription.elementAt(i).phenomenonDescription.elementAt(j).getOffering_id()+" e componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id()+" già presente");
                         }
                     } else {
-                        //  System.out.println("offering "+ddp.registerComponentDescription.elementAt(i).phenomenonDescription.elementAt(j).getOffering_id()+" da misurare col componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id());
+                        logger.debug("offering "+ddp.registerComponentDescription.elementAt(i).phenomenonDescription.elementAt(j).getOffering_id()+" da misurare col componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id());
                     }
                     String checkcompphen = "SELECT `comp_phen`.`component_id`, `comp_phen`.`phenomenon_id` FROM `comp_phen`, `component`, `phenomenon` WHERE `comp_phen`.`component_id` = `component`.`component_id` AND `comp_phen`.`phenomenon_id`= `phenomenon`.`phenomenon_id` AND `component`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() + "' AND `phenomenon`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).phenomenonDescription.elementAt(j).getPhenomenon_id().split(";")[0] + "';";
                     rs = db.exQuery(checkcompphen);
@@ -237,7 +250,7 @@ public class RegisterSensor {
                         String querycompphen = "INSERT INTO `sensorml`.`comp_phen`(`component_id`, `phenomenon_id`) SELECT `component_id` ,`phenomenon_id` FROM `sensorml`.`component`,`sensorml`.`phenomenon` WHERE `sensorml`.`component`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() + "' AND `sensorml`.`phenomenon`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).phenomenonDescription.elementAt(j).getPhenomenon_id().split(";")[0] + "'";
                         db.exUpdate(querycompphen);
                     } else {
-                        //   System.out.println("\n comp phen già prensente con id "+ddp.registerComponentDescription.elementAt(i).phenomenonDescription.elementAt(j).getPhenomenon_id()+" per componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id());
+                        logger.debug("\n comp phen già prensente con id "+ddp.registerComponentDescription.elementAt(i).phenomenonDescription.elementAt(j).getPhenomenon_id()+" per componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id());
                     }
 
                 }
@@ -249,7 +262,7 @@ public class RegisterSensor {
                         String queryclasscom = "INSERT INTO `sensorml`.`classifier` ( `unique_id`,  `classifier_description`,`classifier_value`) VALUES ( '" + ddp.registerComponentDescription.elementAt(i).classifierDescription.elementAt(j).getClassifier_id() + "', '" + ddp.registerComponentDescription.elementAt(i).classifierDescription.elementAt(j).getClassifier_description() + "','" + ddp.registerComponentDescription.elementAt(i).classifierDescription.elementAt(j).classifier_value + "' );";
                         db.exUpdate(queryclasscom);
                     } else {
-                        // System.out.println("nella tabella classifier,presente classifier "+ddp.registerComponentDescription.elementAt(i).classifierDescription.elementAt(j).getClassifier_id()+" del componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id());
+                        logger.debug("nella tabella classifier,presente classifier "+ddp.registerComponentDescription.elementAt(i).classifierDescription.elementAt(j).getClassifier_id()+" del componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id());
                     }
                     String checkcomclassrel = "SELECT `comp_class`.`component_id`, `comp_class`.`classifier_id` FROM `comp_class`, `component`, `classifier` WHERE `comp_class`.`component_id` = `component`.`component_id` AND `comp_class`.`classifier_id`= `classifier`.`classifier_id` AND `component`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() + "' AND `classifier`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).classifierDescription.elementAt(j) + "';";
                     rs = db.exQuery(checkcomclassrel);
@@ -257,7 +270,7 @@ public class RegisterSensor {
                         String insclasscomp = "INSERT INTO `sensorml`.`comp_class`(`component_id`, `classifier_id`) SELECT `component_id` ,`classifier_id` FROM `sensorml`.`component`,`sensorml`.`classifier` WHERE `sensorml`.`component`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() + "' AND `sensorml`.`classifier`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).classifierDescription.elementAt(j).getClassifier_id() + "' AND `sensorml`.`classifier`.`classifier_value` LIKE '" + ddp.registerComponentDescription.elementAt(i).classifierDescription.elementAt(j).getClassifier_value() + "' ";
                         db.exUpdate(insclasscomp);
                     } else {
-                        // System.out.println("nella tabella comp_class,coppia presente classifier "+ddp.registerComponentDescription.elementAt(i).classifierDescription.elementAt(j).getClassifier_id()+" del componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id());
+                        logger.debug("nella tabella comp_class,coppia presente classifier "+ddp.registerComponentDescription.elementAt(i).classifierDescription.elementAt(j).getClassifier_id()+" del componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id());
                     }
                 }
                 for (int j = 0; j < ddp.registerComponentDescription.elementAt(i).identifierDescription.size(); j++) {
@@ -267,7 +280,7 @@ public class RegisterSensor {
                         String queryidentcom = "INSERT INTO `sensorml`.`identifier` ( `unique_id`,  `identifier_description`,`identifier_value`) VALUES ( '" + ddp.registerComponentDescription.elementAt(i).identifierDescription.elementAt(j).getidentifier_id() + "', '" + ddp.registerComponentDescription.elementAt(i).identifierDescription.elementAt(j).getidentifier_description() + "','" + ddp.registerComponentDescription.elementAt(i).identifierDescription.elementAt(j).getidentifier_value() + "' );";
                         db.exUpdate(queryidentcom);
                     } else {
-                        // System.out.println("nella tabella identifier,presente identifier "+ddp.registerComponentDescription.elementAt(i).identifierDescription.elementAt(j).getidentifier_id()+" del componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id());
+                        logger.debug("nella tabella identifier,presente identifier "+ddp.registerComponentDescription.elementAt(i).identifierDescription.elementAt(j).getidentifier_id()+" del componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id());
                     }
                     String checkcomidentrel = "SELECT `comp_ident`.`component_id`, `comp_ident`.`identifier_id` FROM `comp_ident`, `component`, `identifier` WHERE `comp_ident`.`component_id` = `component`.`component_id` AND `comp_ident`.`identifier_id`= `identifier`.`identifier_id` AND `component`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() + "' AND `identifier`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).identifierDescription.elementAt(j) + "';";
                     rs = db.exQuery(checkcomidentrel);
@@ -275,7 +288,7 @@ public class RegisterSensor {
                         String insidentcomp = "INSERT INTO `sensorml`.`comp_ident`(`component_id`, `identifier_id`) SELECT `component_id` ,`identifier_id` FROM `sensorml`.`component`,`sensorml`.`identifier` WHERE `sensorml`.`component`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id() + "' AND `sensorml`.`identifier`.`unique_id` LIKE '" + ddp.registerComponentDescription.elementAt(i).identifierDescription.elementAt(j).getidentifier_id() + "' AND `sensorml`.`identifier`.`identifier_value` LIKE '" + ddp.registerComponentDescription.elementAt(i).identifierDescription.elementAt(j).getidentifier_value() + "' ";
                         db.exUpdate(insidentcomp);
                     } else {
-                        // System.out.println("nella tabella comp_ident,coppia presente identifier "+ddp.registerComponentDescription.elementAt(i).identifierDescription.elementAt(j).getidentifier_id()+" del componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id());
+                        logger.debug("nella tabella comp_ident,coppia presente identifier "+ddp.registerComponentDescription.elementAt(i).identifierDescription.elementAt(j).getidentifier_id()+" del componente "+ddp.registerComponentDescription.elementAt(i).sensorDescription.getSensor_id());
                     }
                 }
 
@@ -284,7 +297,7 @@ public class RegisterSensor {
             }
 
         } else {
-            //System.out.println("\n elemento già prensente");
+            logger.debug("\n elemento già prensente");
         }
 
 
@@ -293,7 +306,7 @@ public class RegisterSensor {
 
     void printInfo() {
         //dalla classe sensorDescription:
-        System.out.println("Sensor id da attributo: " + ddp.registerNodeDomParser.sensorDescription.getSensor_id());
+        /*System.out.println("Sensor id da attributo: " + ddp.registerNodeDomParser.sensorDescription.getSensor_id());
         System.out.println("Sensor description da attributo: " + ddp.registerNodeDomParser.sensorDescription.getDescription_type());
         System.out.println("Sensor mobile da attributo: " + ddp.registerNodeDomParser.sensorDescription.getMobile());
         System.out.println("Sensor status da attributo: " + ddp.registerNodeDomParser.sensorDescription.getStatus());
@@ -384,7 +397,7 @@ public class RegisterSensor {
 
 
             }
-        }
+        }*/
     }
 
     public String write_register_xml() throws ParserConfigurationException, TransformerException, SQLException {
@@ -453,7 +466,6 @@ public class RegisterSensor {
         Element area = doc.createElement("OperationArea");
         Element geo = doc.createElement("swe:GeoLocation");
         String sel_area = "SELECT max(`longitude`), max(`latitude`), max(`altitude`),min(`longitude`), min(`latitude`), min(`altitude`) FROM `sensor`, `phenomenon`,`sens_phen` WHERE `sens_phen`.`sensor_id`=`sensor`.`sensor_id` AND `sens_phen`.`phenomenon_id`=`phenomenon`.`phenomenon_id` AND `phenomenon`.`unique_id` LIKE '" + phen_unique_id + "'";
-        //System.out.println(sel_area);
         rs = db.exQuery(sel_area);
 
         if (rs.next()) {

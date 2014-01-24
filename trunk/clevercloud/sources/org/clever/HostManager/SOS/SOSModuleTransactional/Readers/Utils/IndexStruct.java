@@ -24,7 +24,7 @@
  */
 package org.clever.HostManager.SOS.SOSModuleTransactional.Readers.Utils; 
 /**
- * Contenitor class for 
+ *  
  * @author Giuseppe Tricomi 
  */
 public class IndexStruct{

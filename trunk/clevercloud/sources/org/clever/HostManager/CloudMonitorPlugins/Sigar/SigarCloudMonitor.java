@@ -50,7 +50,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import static org.clever.Common.Communicator.Agent.logger;
 import org.hyperic.sigar.CpuPerc;
 import org.hyperic.sigar.FileSystem;
@@ -170,7 +170,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
             
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
        
         
@@ -210,7 +210,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
 
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(),ex);
         }
         
         
@@ -232,7 +232,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
             //cpu = this.sigar.getCpu();
             cpuperc = this.sigar.getCpuPerc();
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         String xmlobj=null;
         
@@ -284,7 +284,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
             cpuperc = this.sigar.getCpuPerc();
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         
@@ -315,7 +315,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
             cpuperc = this.sigar.getCpuPerc();
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         
@@ -374,7 +374,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
 
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         
@@ -430,7 +430,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
 
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         return xmlobj;
@@ -478,7 +478,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
 
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         return xmlobj;
@@ -527,7 +527,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
 
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         return xmlobj;
@@ -576,7 +576,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
 
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         return xmlobj;
@@ -626,7 +626,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
 
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(),ex);
         }
         
         return xmlobj;
@@ -676,7 +676,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
 
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error(ex.getMessage(),ex);
         }
         
         return xmlobj;
@@ -713,7 +713,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
             
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         
@@ -746,7 +746,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
             
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         
@@ -779,7 +779,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
             
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         
@@ -812,7 +812,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
             
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         
@@ -846,7 +846,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
             mem = this.sigar.getMem();
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         
@@ -880,7 +880,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
             mem = this.sigar.getMem();
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         
@@ -915,7 +915,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
             mem = this.sigar.getMem();
             
         } catch (SigarException ex) {
-            Logger.getLogger(SigarCloudMonitor.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error(ex.getMessage(),ex);
         }
         
         

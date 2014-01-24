@@ -12,21 +12,21 @@
 <configuration>
     <sosConfigurationFile>cfg/configuration_Readers.xml</sosConfigurationFile>
     <dbParams>
-        <server>127.0.0.1</server>
+        <server>localhost</server>
         <driver>com.mysql.jdbc.Driver</driver>
         <name>sensorml</name>
         <username>root</username>
-        <password></password>
+        <password></password><!--insert your sql password -->
     </dbParams>
     
     <test>
         <status>1</status>
         <dbParams>
-            <server>127.0.0.1</server>
+            <server>localhost</server>
             <driver>com.mysql.jdbc.Driver</driver>
             <name>observation</name>
             <username>root</username>
-            <password></password>
+            <password></password><!--insert your sql password -->
         </dbParams>
     </test>
 </configuration>

@@ -4,7 +4,7 @@
     <name>UbuVirt</name> 
     <storage>
         <org.clever.Common.VEInfo.StorageSettings>
-            <diskPath>nodo/ubuQCOW.qcow</diskPath>
+            <diskPath>nodo2/HDDxHypvr/ubuntuVBOX.vdi</diskPath>
         </org.clever.Common.VEInfo.StorageSettings>
     </storage>
     <cpu>

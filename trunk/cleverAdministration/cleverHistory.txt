@@ -188,3 +188,50 @@ createvm -tn UbuVirt -h giusimone
 startvm -n 8ec411424d2a4b3eb4f22d44a7266994
 stopvm -n 8ec411424d2a4b3eb4f22d44a7266994
 deletevm -n 8ec411424d2a4b3eb4f22d44a7266994
+cpustatus -h giusimone
+listhostmanager 
+cpustatus -h giusimone
+listhostmanager 
+createvm -tn UbuVirt -h giusimone
+registervm -d
+ls
+ls nodo
+tree
+mount -p nodo1 -wizard
+tree
+registervm -d
+ls nodo1
+ls nodo
+mount -p nodo2 -wizard
+registervm -d
+createvm -tn UbuVirt -h giusimone
+startvm -n cc05f09f0f0c4ec9958bcb97a26094c5
+stopvm -n cc05f09f0f0c4ec9958bcb97a26094c5
+deletevm -n cc05f09f0f0c4ec9958bcb97a26094c5
+listvms 
+listvms -h giusimone 
+createvm -tn UbuVirt -h giusimone
+listvms -h giusimone 
+startvm -n 23da0069e52b427fbb008750ce8a98b0
+stopvm -n 23da0069e52b427fbb008750ce8a98b0 -poweroff
+deletevm -n 23da0069e52b427fbb008750ce8a98b0
+createvm -tn UbuVirt -h giusimone -clonable
+startvm -n ceac80d69298478faa177b60920a6d96
+stopvm -n ceac80d69298478faa177b60920a6d96 -poweroff
+startvm -n ceac80d69298478faa177b60920a6d96
+stopvm -n ceac80d69298478faa177b60920a6d96 -poweroff
+sosgetobservation -h giusimone -f /media/dati/XML/getObservationRequest.xml
+sassubscribe -f /media/dati/XML/subscribeRequest.xml
+storagestatus -h giusimone
+help
+statusprocvm -h giusimone -p gnome-screensaver
+statusprocvm -h giusimone -p chrome
+cpustatus -h giusimone
+cpustatus -h webuntu
+storagestatus -h webuntu
+cpustatus -h webuntu
+listprobe
+cpustatus -h webuntu
+storagestatus -h webuntu
+cpustatus -h webuntu
+sassubscribe -f /media/dati/XML/subscribeRequest.xml

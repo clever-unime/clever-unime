@@ -1,6 +1,25 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * The MIT License
+ *
+ * Copyright 2012 Università di Messina.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 package org.clever.HostManager.SOS.SOSModuleTransactional;
 
@@ -45,7 +64,6 @@ public class RegisterNodeDomParser {
                         String sNodeValueChild = utils.searchTextInElement(currentNode);
                         if (!sNodeValueChild.trim().equalsIgnoreCase("")) {
 
-                            //   System.out.println("sensor_id: " + sNodeValueChild);
                             sensorDescription.setSensor_id(sNodeValueChild.trim());
                         }
                     }
@@ -150,21 +168,15 @@ public class RegisterNodeDomParser {
                     String sNodeValue = utils.searchTextInElement(currentNode).trim();
                     NamedNodeMap nnmAttributes = currentNode.getAttributes();
                     if (sNodeName.equals("swe:field")) {
-                        //  //System.out.println("in field ");
                         if (utils.printAttributes(nnmAttributes).indexOf("mobile") != -1) {
-                            //System.out.println("mobile: ");
                             printCapability(currentNode, 1);
 
                         }
                         if (utils.printAttributes(nnmAttributes).indexOf("status") != -1) {
-                            //System.out.println("in mobile ");
-                            //System.out.println("status: ");
                             printCapability(currentNode, 0);
 
                         }
                         if (utils.printAttributes(nnmAttributes).indexOf("transmissionFrequency") != -1) {
-                            //System.out.println("in mobile ");
-                            //System.out.println("status: ");
                             printCapability(currentNode, 2);
 
                         }
@@ -214,14 +226,12 @@ public class RegisterNodeDomParser {
                     String sNodeValue = utils.searchTextInElement(currentNode).trim();
                     NamedNodeMap nnmAttributes = currentNode.getAttributes();
                     if (sNodeName.equals("sml:output")) {
-                        //System.out.println("Phenomena description: " + utils.printAttributes(nnmAttributes)); 
-
+                        
                         phenomenonTemp.setPhenomenon_description(utils.printAttributes(nnmAttributes).split("=")[1].split(";")[0].trim());
                     }
 
 
                     if (sNodeName.equals("swe:Quantity")) {
-                        //  System.out.println("Phenomena id: " + utils.printAttributes(nnmAttributes).split("=")[1]); 
                         phenomenonTemp.setPhenomenon_id(utils.printAttributes(nnmAttributes).split("=")[1].trim());
 
                     }
@@ -229,7 +239,6 @@ public class RegisterNodeDomParser {
                         String sNodeValueChild = utils.searchTextInElement(currentNode);
                         if (!sNodeValueChild.trim().equalsIgnoreCase("")) {
 
-                            //System.out.println("Offering id: " + sNodeValueChild);
                             phenomenonTemp.setOffering_id(sNodeValueChild.trim());
                         }
                     }
@@ -237,12 +246,10 @@ public class RegisterNodeDomParser {
                         String sNodeValueChild = utils.searchTextInElement(currentNode);
                         if (!sNodeValueChild.trim().equalsIgnoreCase("")) {
 
-                            //System.out.println("Offering description: " + sNodeValueChild);
                             phenomenonTemp.setOffering_name(sNodeValueChild.trim());
                         }
                     }
                     if (sNodeName.equals("swe:uom")) {
-                        // System.out.println("Phenomena unit: " + utils.printAttributes(nnmAttributes).split(";")[0].split("=")[1]); 
                         phenomenonTemp.setPhenomenon_unit(utils.printAttributes(nnmAttributes).split(";")[0].split("=")[1].trim());
                     }
                 }
@@ -279,14 +286,11 @@ public class RegisterNodeDomParser {
                     String sNodeValue = utils.searchTextInElement(currentNode).trim();
                     NamedNodeMap nnmAttributes = currentNode.getAttributes();
                     if (sNodeName.equals("sml:classifier")) {
-                        //System.out.println("Phenomena description: " + utils.printAttributes(nnmAttributes)); 
-
                         classifierTemp.setClassifier_description(utils.printAttributes(nnmAttributes).split("=")[1].split(";")[0].trim());
                     }
 
 
                     if (sNodeName.equals("sml:Term")) {
-                        //System.out.println("Phenomena id: " + utils.printAttributes(nnmAttributes)); 
                         classifierTemp.setClassifier_id(utils.printAttributes(nnmAttributes).split("=")[1].split(";")[0].trim());
 
                     }
@@ -294,7 +298,6 @@ public class RegisterNodeDomParser {
                         String sNodeValueChild = utils.searchTextInElement(currentNode);
                         if (!sNodeValueChild.trim().equalsIgnoreCase("")) {
 
-                            //System.out.println("Offering id: " + sNodeValueChild);
                             classifierTemp.setClassifier_value(sNodeValueChild.trim());
                         }
                     }
@@ -391,22 +394,17 @@ public class RegisterNodeDomParser {
                         if (flag == 2) {
                             sensorDescription.setalt_uom(utils.printAttributes(nnmAttributes).split(";")[0].split("=")[1]);
                         }
-                        //System.out.println("uom: " + utils.printAttributes(nnmAttributes));
-
+                        
                     }
                     if (sNodeName.equals("swe:value")) {
-                        //System.out.println("value: " + sNodeValue);
                         if (flag == 0) {
                             sensorDescription.setLongitude(Float.valueOf(sNodeValue.trim()).floatValue());
-                            //System.out.println("value  x: " + sNodeValue);
                         }
                         if (flag == 1) {
                             sensorDescription.setLatitude(Float.valueOf(sNodeValue.trim()).floatValue());
-                            //System.out.println("value  y: " + sNodeValue);
                         }
                         if (flag == 2) {
                             sensorDescription.setAltitude(Float.valueOf(sNodeValue.trim()).floatValue());
-                            //System.out.println("value  z: " + sNodeValue);
                         }
                     }
 
@@ -444,9 +442,7 @@ public class RegisterNodeDomParser {
                     String sNodeName = currentNode.getNodeName();
                     String sNodeValue = utils.searchTextInElement(currentNode).trim();
                     NamedNodeMap nnmAttributes = currentNode.getAttributes();
-                    // flags 0 x, 1 y, 2 z.
                     if (sNodeName.equals("swe:Position")) {
-                        //System.out.println("Position crs: " + utils.printAttributes(nnmAttributes).split("Frame=")[1]);
                         if (utils.printAttributes(nnmAttributes).contains("fixed=") == true) {
                             sensorDescription.setCrs(utils.printAttributes(nnmAttributes).split("=")[2].split(";")[0]);
                             if (utils.printAttributes(nnmAttributes).split("=")[1].contains("false")) {
@@ -466,15 +462,12 @@ public class RegisterNodeDomParser {
                         }
                     }
                     if (sNodeName.equals("swe:coordinate") && (utils.printAttributes(nnmAttributes).indexOf("easting") != -1 || utils.printAttributes(nnmAttributes).indexOf("longitude") != -1)) {
-                        //System.out.println("longitude: ");
                         printCoordinate(currentNode, 0);
                     }
                     if (sNodeName.equals("swe:coordinate") && (utils.printAttributes(nnmAttributes).indexOf("northing") != -1 || utils.printAttributes(nnmAttributes).indexOf("latitude") != -1)) {
-                        //System.out.println("latitude: ");
                         printCoordinate(currentNode, 1);
                     }
                     if (sNodeName.equals("swe:coordinate") && utils.printAttributes(nnmAttributes).indexOf("altitude") != -1) {
-                        //System.out.println("altitude: ");
                         printCoordinate(currentNode, 2);
                     }
 
@@ -513,14 +506,12 @@ public class RegisterNodeDomParser {
                     String sNodeValue = utils.searchTextInElement(currentNode).trim();
 
                     if (sNodeName.equals("sml:capabilities")) {
-                        // System.out.println("capab");
                         printNodeSensorCapabilities(currentNode);
                         //if(visited.contains(currentNode.getNextSibling())==false)
                         //  tovisit.add(currentNode.getNextSibling());
                         //currentNode=currentNode.getNextSibling();
                     }
                     if (sNodeName.equals("sml:identifier")) {
-                        //  System.out.println("in identifier");
                         int iChildNumber2 = currentNode.getChildNodes().getLength();
                         //Se non si tratta di una foglia continua l'esplorazione
                         if (currentNode.hasChildNodes()) {
@@ -531,9 +522,7 @@ public class RegisterNodeDomParser {
                                 if (sNodeType2 == Node.ELEMENT_NODE) {
                                     String sNodeName2 = currentnode2.getNodeName();
                                     NamedNodeMap nnmAttributes = currentnode2.getAttributes();
-                                    //     System.out.println("identifier attributo: "+utils.printAttributes(nnmAttributes) + "di " +sNodeName2);
                                     if (sNodeName2.equals("sml:Term") && utils.printAttributes(nnmAttributes).indexOf("uniqueID") != -1) {
-                                        //         System.out.println("identifier if ");
                                         printNodeSensorIdentifier(currentnode2);
                                         //currentnode2=currentNode.getNextSibling();
                                     } else {
@@ -548,7 +537,6 @@ public class RegisterNodeDomParser {
                     }
 
                     if (sNodeName.equals("swe:Position")) {
-                        // System.out.println("position");
                         printNodeSensorPosition(currentNode);
                         //currentNode=currentNode.getNextSibling();
                     }
@@ -581,34 +569,28 @@ public class RegisterNodeDomParser {
         Vector<Node> tovisit = new Vector<Node>(1);
         Vector<Node> visited = new Vector<Node>(1);
         tovisit.add(node);
-        //logger.debug("sensorNodeInfoA");
         while (tovisit.isEmpty() == false) {
 
             Node currentNode = tovisit.firstElement();
-            //logger.debug("sensorNodeInfoB"+tovisit.size());
             if (visited.contains(currentNode) == false) {
-            //logger.debug("sensorNodeInfoC:"+currentNode.getNodeName());
                 short sNodeType = currentNode.getNodeType();
                 if (sNodeType == Node.ELEMENT_NODE) {
                     String sNodeName = currentNode.getNodeName();
                     String sNodeValue = utils.searchTextInElement(currentNode).trim();
                     NamedNodeMap nnmAttributes = currentNode.getAttributes();
                     if (sNodeName.equals("sml:output")) {
-                        // System.out.println("phenn");
                         PhenomenonDescription phenomenonTemp = new PhenomenonDescription();
                         printNodeSensorPhenomena(currentNode, phenomenonTemp);
                         phenomenonDescription.add(phenomenonTemp);
                         //currentNode=currentNode.getNextSibling();
                     }
                     if (sNodeName.equals("sml:classifier")) {
-                        //   System.out.println("class");
                         ClassifierDescription classifierTemp = new ClassifierDescription();
                         printNodeSensorClassifier(currentNode, classifierTemp);
                         classifierDescription.add(classifierTemp);
                         //currentNode=currentNode.getNextSibling();
                     }
                     if (sNodeName.equals("sml:components")) {
-                        //logger.debug("sensorNodeInfoD");
                         node.removeChild(currentNode);
                         //logger.debug("sensorNodeInfoE");
                         // if(visited.contains(currentNode.getNextSibling())==false)
@@ -616,7 +598,6 @@ public class RegisterNodeDomParser {
                         //currentNode=currentNode.getNextSibling();
                     }
                     if (sNodeName.equals("sml:capabilities") || sNodeName.equals("sml:identifier") || sNodeName.equals("swe:Position")) {
-                        //  System.out.println("capab ident position");
                         printNodeSensor(currentNode);
                         //currentNode=currentNode.getNextSibling();
                     }
@@ -627,7 +608,6 @@ public class RegisterNodeDomParser {
 
                 if (currentNode.hasChildNodes()) {
                     NodeList nlChilds = currentNode.getChildNodes();
-                    //logger.debug("sensorNodeInfoF");
                     for (int iChild = 0; iChild < iChildNumber; iChild++) {
                         tovisit.add(nlChilds.item(iChild));
 
@@ -636,7 +616,6 @@ public class RegisterNodeDomParser {
                 }
                 visited.add(currentNode);
                 tovisit.remove(currentNode);
-                //logger.debug("sensorNodeInfoG:"+currentNode.getNodeName());
             }
         }
 
@@ -661,7 +640,6 @@ public class RegisterNodeDomParser {
                     String sNodeValue = utils.searchTextInElement(currentNode).trim();
                     NamedNodeMap nnmAttributes = currentNode.getAttributes();
                     if (sNodeName.equals("sml:identifier")) {
-                        //System.out.println(" description: " + utils.printAttributes(nnmAttributes)); 
                         if (utils.printAttributes(nnmAttributes).equals("assenti")) {
                             identifierTemp.setidentifier_description(utils.printAttributes(nnmAttributes));
                         } else {
@@ -672,7 +650,6 @@ public class RegisterNodeDomParser {
 
 
                     if (sNodeName.equals("sml:Term")) {
-                        //System.out.println("Phenomena id: " + utils.printAttributes(nnmAttributes)); 
                         if (utils.printAttributes(nnmAttributes).equals("assenti")) {
                             identifierTemp.setidentifier_id(utils.printAttributes(nnmAttributes));
                         } else {
@@ -684,7 +661,6 @@ public class RegisterNodeDomParser {
                         String sNodeValueChild = utils.searchTextInElement(currentNode);
                         if (!sNodeValueChild.trim().equalsIgnoreCase("")) {
 
-                            //System.out.println("Offering id: " + sNodeValueChild);
                             identifierTemp.setidentifier_value(sNodeValueChild);
                         }
                     }

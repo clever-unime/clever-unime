@@ -43,14 +43,14 @@ public final class Database {
         
         try {
             //Class.forName(driver);
-            //logger.debug("jdbc:mysql://localhost/" + db+"?user=root&password=mandrake");
-            this.con = (Connection)DriverManager.getConnection("jdbc:mysql://"+ip+"/" + db+"?user="+username+"&password="+password);
-
+            String connectionString="jdbc:mysql://"+ip+"/" + db+"?user="+username+"&password="+password;
+            this.con = (Connection)DriverManager.getConnection(connectionString);
+            //logger.debug("DB& "+connectionString);
         //} catch (ClassNotFoundException cnfe) {
             //System.out.println("openDB: Attenzione classe non trovata, " + cnfe.getMessage());
 
         } catch (SQLException sqle) {
-            logger.error("openDB: Errore sql, " + sqle.getMessage());
+            logger.error("openDB: Errore sql, " + sqle.getMessage(),sqle);
 
         }
 
@@ -58,6 +58,8 @@ public final class Database {
     
   public static Database getNewInstance(){
       ParameterContainer parameterContainer=ParameterContainer.getInstance();
+      Logger logger= Logger.getLogger("verifica");
+      //logger.debug("db da istanziare: "+parameterContainer.getDbServer()+parameterContainer.getDbDriver()+parameterContainer.getDbName()+parameterContainer.getDbUsername()+parameterContainer.getDbPassword());
       return new Database(parameterContainer.getDbServer(),parameterContainer.getDbDriver(),
                                                           parameterContainer.getDbName(),
                                                           parameterContainer.getDbUsername(),parameterContainer.getDbPassword());
@@ -100,7 +102,7 @@ public final class Database {
             this.ST =getCon().createStatement();
             rs= this.ST.executeQuery(query);
         } catch (SQLException e) {
-           // System.out.println("exQuery: "+query+"\n Errore query" + e.getMessage());
+           logger.error("exQuery: "+query+"\n Errore query" + e.getMessage(),e);
         }
         return rs;
     }
@@ -110,7 +112,7 @@ public final class Database {
             this.ST =getCon().createStatement();
             this.ST.executeUpdate(query);
         } catch (SQLException e) {
-           // System.out.println("exUpdate: "+query+" Errore query" + e.getMessage());
+           logger.error("exUpdate: "+query+" Errore query" + e.getMessage(),e);
         }
     }
 

@@ -1,6 +1,7 @@
 /*
  * The MIT License
  *
+ * Copyright 2012 Università di Messina.
  * Copyright 2012 alessiodipietro.
  * Copyright 2012 user.
  *
@@ -59,7 +60,7 @@ public class GetObservation {
     private DocumentBuilder builder2 = dbf2.newDocumentBuilder();
     private Document doc = builder2.newDocument();
     private ParameterContainer parameterContainer = null;
-    private Logger logger=Logger.getLogger("getObesrvation");
+    private Logger logger=Logger.getLogger("getObservation");
     //private String filename_output;
 /*GetObservation(String filename) throws ParserConfigurationException, SAXException, IOException {
     iod=new getObsDomCleanParser();
@@ -88,17 +89,17 @@ public class GetObservation {
     }
 
     public void printResult() {
-        System.out.println("\n risultatio interrogazione");
+       logger.debug("\n risultatio interrogazione");
 
         for (int i = 0; i < gobd_all.size(); i++) {
-            System.out.println("\n phenomena " + i);
+            logger.debug("\n phenomena " + i);
 
             for (int k = 0; k < gobd_all.elementAt(i).getvalues().size(); k++) {
-                System.out.println("\n sensore: " + gobd_all.elementAt(i).getvalues().elementAt(k).getsens_id());
-                System.out.println("\n values: " + gobd_all.elementAt(i).getvalues().elementAt(k).gettime() + "," + gobd_all.elementAt(i).getvalues().elementAt(k).getlong() + "," + gobd_all.elementAt(i).getvalues().elementAt(k).getlat() + "," + gobd_all.elementAt(i).getvalues().elementAt(k).getvalue());
-                System.out.println("\n phen: " + gobd_all.elementAt(i).getvalues().elementAt(k).getphen_id());
+                logger.debug("\n sensore: " + gobd_all.elementAt(i).getvalues().elementAt(k).getsens_id());
+                logger.debug("\n values: " + gobd_all.elementAt(i).getvalues().elementAt(k).gettime() + "," + gobd_all.elementAt(i).getvalues().elementAt(k).getlong() + "," + gobd_all.elementAt(i).getvalues().elementAt(k).getlat() + "," + gobd_all.elementAt(i).getvalues().elementAt(k).getvalue());
+                logger.debug("\n phen: " + gobd_all.elementAt(i).getvalues().elementAt(k).getphen_id());
                 for (int j = 0; j < gobd_all.elementAt(i).getvalues().elementAt(k).getfield().size(); j++) {
-                    System.out.println("\n campo nome: " + gobd_all.elementAt(i).getvalues().elementAt(k).getfield().elementAt(j).getname() + " def: " + gobd_all.elementAt(i).getvalues().elementAt(k).getfield().elementAt(j).getdef() + " uom: " + gobd_all.elementAt(i).getvalues().elementAt(k).getfield().elementAt(j).getuom());
+                    logger.debug("\n campo nome: " + gobd_all.elementAt(i).getvalues().elementAt(k).getfield().elementAt(j).getname() + " def: " + gobd_all.elementAt(i).getvalues().elementAt(k).getfield().elementAt(j).getdef() + " uom: " + gobd_all.elementAt(i).getvalues().elementAt(k).getfield().elementAt(j).getuom());
                 }
             }
 
@@ -106,7 +107,7 @@ public class GetObservation {
     }
 
     public String write_getobs_xml() throws ParserConfigurationException, TransformerConfigurationException, TransformerException {
-
+        logger.debug("write_getobs_xml");
         //Elemento radice
         Element root = doc.createElement("om:ObservationCollection");
 
@@ -315,17 +316,12 @@ public class GetObservation {
 
     public void getObsDb() throws SQLException {
 
-        //db=new DataBase();
-        //db.openDB(this.parameterContainer.getDbServer(),this.parameterContainer.getDbDriver(),this.parameterContainer.getDbName(),
-        //             this.parameterContainer.getDbUsername(),this.parameterContainer.getDbPassword());
         gobd_all = new Vector<GetObservationBufferData>(1);
         Vector<String> query = new Vector<String>(1);
         if (iod.getInfo().getObsPhenomena().isEmpty() == true) {
-            //System.out.println("\n insert observable property");
         } else {
             //ricerca per tempo, spazio, id del sensore e phenomena
             if (iod.getInfo().getTime_stamp_min().equals("") == false && iod.getInfo().getSensor_id().isEmpty() == false && iod.getInfo().getCoordinate().isEmpty() == false) {
-                //System.out.println("parametri di ricerca: tempo, spazio, id sensore");
                 if (iod.getInfo().getTime_stamp_max().equals("") == false) {
                     GetObservationBufferData gobd = new GetObservationBufferData();
                     for (int i = 0; i < iod.getInfo().getObsPhenomena().size(); i++) {
@@ -351,7 +347,6 @@ public class GetObservation {
             }
             //ricerca per tempo e sensore
             if (iod.getInfo().getTime_stamp_min().equals("") == false && iod.getInfo().getSensor_id().isEmpty() == false && iod.getInfo().getCoordinate().isEmpty()) {
-                //System.out.println("parametri di ricerca: tempo, id sensore");
                 if (iod.getInfo().getTime_stamp_max().equals("") == false) {
                     GetObservationBufferData gobd = new GetObservationBufferData();
                     for (int i = 0; i < iod.getInfo().getObsPhenomena().size(); i++) {
@@ -372,7 +367,6 @@ public class GetObservation {
             }
             //ricerca per tempo e luogo
             if (iod.getInfo().getTime_stamp_min().equals("") == false && iod.getInfo().getSensor_id().isEmpty() && iod.getInfo().getCoordinate().isEmpty() == false) {
-                //System.out.println("parametri di ricerca: tempo, luogo");
                 if (iod.getInfo().getTime_stamp_max().equals("") == false) {
                     GetObservationBufferData gobd = new GetObservationBufferData();
                     for (int i = 0; i < iod.getInfo().getObsPhenomena().size(); i++) {
@@ -389,7 +383,6 @@ public class GetObservation {
 
             //rcerca per luogo e sensore
             if (iod.getInfo().getTime_stamp_min().equals("") == true && iod.getInfo().getSensor_id().isEmpty() == false && iod.getInfo().getCoordinate().isEmpty() == false) {
-                //System.out.println("parametri di ricerca: luogo, sensore");
                 GetObservationBufferData gobd = new GetObservationBufferData();
                 for (int i = 0; i < iod.getInfo().getObsPhenomena().size(); i++) {
                     for (int j = 0; j < iod.getInfo().getSensor_id().size(); j++) {
@@ -400,7 +393,6 @@ public class GetObservation {
             //ricerca per tempo
             if (iod.getInfo().getTime_stamp_min().equals("") == false && iod.getInfo().getSensor_id().isEmpty() && iod.getInfo().getCoordinate().isEmpty() == true) {
                 logger.debug("gobs");
-                //System.out.println("parametri di ricerca: tempo");
                 if (iod.getInfo().getTime_stamp_max().equals("") == false) {
                 logger.debug("gobs: tmin:"+iod.getInfo().getTime_stamp_min()+" tmax:"+iod.getInfo().getTime_stamp_max());
                     GetObservationBufferData gobd = new GetObservationBufferData();
@@ -420,37 +412,30 @@ public class GetObservation {
             //ricerca per luogo
             if (iod.getInfo().getTime_stamp_min().equals("") == true && iod.getInfo().getSensor_id().isEmpty() && iod.getInfo().getCoordinate().isEmpty() == false) {
                 logger.debug("gobs");
-                //System.out.println("parametri di ricerca: luogo");
                 GetObservationBufferData gobd = new GetObservationBufferData();
                 for (int i = 0; i < iod.getInfo().getObsPhenomena().size(); i++) {
-                    //    for(int j=0;j<iod.getInfo().getSensor_id().size();j++){
                     query.add("SELECT `sensor`.`unique_id`, `phenomenon`.`unique_id`, `observation`.`time_stamp`, AsText(`observation`.`coordinate`) , `observation`.`uom_code`, `observation`.`value`, `time_definition`,`lat_definition`, `long_definition` , `phenomenon_description`,`long_def_uom`, `lat_def_uom` FROM `observation`,`sensor`,`phenomenon` WHERE MBRContains(GeomFromText(AsText( Envelope( GeomFromText( 'LineString(" + iod.getInfo().getCoordinate().elementAt(0) + " " + iod.getInfo().getCoordinate().elementAt(1) + "," + iod.getInfo().getCoordinate().elementAt(2) + " " + iod.getInfo().getCoordinate().elementAt(3) + ")')))),`observation`.`coordinate`)='1' AND `observation`.`sensor_id`=`sensor`.`sensor_id` AND `observation`.`phenomenon_id`=`phenomenon`.`phenomenon_id` AND `phenomenon`.`unique_id` LIKE '" + iod.getInfo().getObsPhenomena().elementAt(i) + "' ");
-                    //System.out.println("\n "+query);
-
+                    
 
                 }
             }
             // ricerca per sensore
             if (iod.getInfo().getTime_stamp_min().equals("") == true && iod.getInfo().getSensor_id().isEmpty() == false && iod.getInfo().getCoordinate().isEmpty() == true) {
                 logger.debug("gobs");
-                //System.out.println("parametri di ricerca: sensore");
                 GetObservationBufferData gobd = new GetObservationBufferData();
                 for (int i = 0; i < iod.getInfo().getObsPhenomena().size(); i++) {
                     for (int j = 0; j < iod.getInfo().getSensor_id().size(); j++) {
                         query.add("SELECT `sensor`.`unique_id`, `phenomenon`.`unique_id`, `observation`.`time_stamp`, AsText(`observation`.`coordinate`) , `observation`.`uom_code`, `observation`.`value`, `time_definition`,`lat_definition`, `long_definition` , `phenomenon_description`,`long_def_uom`, `lat_def_uom` FROM `observation`,`sensor`,`phenomenon` WHERE `observation`.`sensor_id`=`sensor`.`sensor_id` AND `observation`.`phenomenon_id`=`phenomenon`.`phenomenon_id` AND `phenomenon`.`unique_id` LIKE '" + iod.getInfo().getObsPhenomena().elementAt(i) + "' AND `sensor`.`unique_id` LIKE '" + iod.getInfo().getSensor_id().elementAt(j) + "'");
-                        //System.out.println(query);
                     }
                 }
             }
             // ricerca per phenomena
             if (iod.getInfo().getTime_stamp_min().equals("") == true && iod.getInfo().getSensor_id().isEmpty() == true && iod.getInfo().getCoordinate().isEmpty() == true) {
                 logger.debug("gobs");
-                //System.out.println("parametri di ricerca: phenomena");
                 GetObservationBufferData gobd = new GetObservationBufferData();
                 for (int i = 0; i < iod.getInfo().getObsPhenomena().size(); i++) {
 
                     query.add("SELECT `sensor`.`unique_id`, `phenomenon`.`unique_id`, `observation`.`time_stamp`, AsText(`observation`.`coordinate`) , `observation`.`uom_code`, `observation`.`value`, `time_definition`,`lat_definition`, `long_definition` , `phenomenon_description`,`long_def_uom`, `lat_def_uom` FROM `observation`,`sensor`,`phenomenon` WHERE `observation`.`sensor_id`=`sensor`.`sensor_id` AND `observation`.`phenomenon_id`=`phenomenon`.`phenomenon_id` AND `phenomenon`.`unique_id` LIKE '" + iod.getInfo().getObsPhenomena().elementAt(i) + "'");
-                    //System.out.println(query);
                 }
             }
             db = Database.getNewInstance();
@@ -458,12 +443,14 @@ public class GetObservation {
             for (int i = 0; i < query.size(); i++) {
                 rsconsistent=true;
                 logger.debug("gobs query:"+query.elementAt(i));
+                if (db==null)
+                    logger.debug("dbvuoto");
                 ResultSet rs = db.exQuery(query.elementAt(i));
                 GetObservationBufferData gobd = new GetObservationBufferData();
                 try{
                     logger.debug("gobs:"+(rs.isBeforeFirst()?"prima della prima":"non è prima della prima"));
                     logger.debug("gobs:"+(rs.isAfterLast()?"dopo dell' ultima":"non è dopo dell' ultima"));
-                    //logger.debug("gobs:"+(rs.getString("phenomenon_description")));
+                    
                 }
                 catch(SQLException e){
                     logger.debug("si è generata un eccezione nella gestione del resultset:"+e.getSQLState()+"|"+e.getErrorCode()+"|"+e.getMessage()+"|"+e.getStackTrace()[e.getStackTrace().length-1].toString());
@@ -476,14 +463,18 @@ public class GetObservation {
                     }
                     catch(Exception ex)
                     {
+                        logger.error("eccezione getobservation",ex);
                         rsconsistent=false;
                     }
                     
                 }
-                while (rs.next()&&rsconsistent) {
+                boolean testval=rs.next();
+                //logger.debug("gobspostexception "+rsconsistent+" "+testval);
+                
+                while (testval&&rsconsistent) {
                     //System.out.println("\n "+rs.getString(1)+","+rs.getString(2)+","+rs.getString(3)+","+rs.getString(4)+","+rs.getString(5)+","+rs.getString(6)+","+rs.getString(7)+","+rs.getString(8)+","+rs.getString(9)+";");
                     //aggiunta sensor id campo 1
-                    logger.debug("gobs:qui entro");
+                    //logger.debug("gobs:qui entro");
                     GetObservationValueBufferData valtemp = new GetObservationValueBufferData();
                     GetObservationFieldBufferData gofd = new GetObservationFieldBufferData();
                     gofd.setdef(rs.getString("long_definition"));
@@ -512,27 +503,26 @@ public class GetObservation {
                     valtemp.setlat(rs.getString(4).split("\\)")[0].split("\\(")[1].split(" ")[0]);
                     valtemp.settime(rs.getString(3));
                     gobd.getvalues().add(valtemp);
-                    logger.debug("gobs valtemp:"+valtemp);
+                    //logger.debug("gobs valtemp:"+valtemp);
+                    testval=rs.next();
                 }
                 gobd_all.add(gobd);
             }
 
 
             for (int i = 0; i < gobd_all.size(); i++) {
-                //System.out.println("\n phenomena "+i);
-            
                 for (int k = 0; k < gobd_all.elementAt(i).getvalues().size(); k++) {
                     String query_time = "SELECT max( `observation`.`time_stamp` ) , min( `observation`.`time_stamp` ) FROM `observation` , `sensor` , `phenomenon` WHERE  `observation`.`sensor_id` = `sensor`.`sensor_id` AND `observation`.`phenomenon_id` = `phenomenon`.`phenomenon_id` AND `phenomenon`.`unique_id` LIKE '" + gobd_all.elementAt(i).getvalues().elementAt(k).getphen_id() + "' AND `sensor`.`unique_id`LIKE '" + gobd_all.elementAt(i).getvalues().elementAt(k).getsens_id() + "'";
                     ResultSet rs = db.exQuery(query_time);
-                    //  System.out.println(query_time);
+                    logger.debug(query_time);
                     if (rs.next()) {
                         gobd_all.elementAt(i).getvalues().elementAt(k).setmaxtime(rs.getString(1));
                         gobd_all.elementAt(i).getvalues().elementAt(k).setmintime(rs.getString(2));
-
+                        //logger.debug("gobsiteration");
                     }
                 }
             }
-            logger.debug("gobs");
+            //logger.debug("gobs");
             db.getCon().close();
         }
 
@@ -541,18 +531,18 @@ public class GetObservation {
     }
 
     public void printInfo() {
-        //System.out.print("\noffering: "+iod.getInfo().getOffering());
-        //System.out.println("intervallo di tempo inizio: "+iod.getInfo().getTime_stamp_min());
-        //System.out.println("intervallo di tempo fine: "+iod.getInfo().getTime_stamp_max());
-        /*System.out.print("\nproprietà geometrica: "+iod.getInfo().getGeom_property());
-        System.out.print("\ntipo geometrico area: "+iod.getInfo().getGeom_type());
-        System.out.print("\ncoordinate: ");        
+        logger.debug("\noffering: "+iod.getInfo().getOffering());
+        logger.debug("intervallo di tempo inizio: "+iod.getInfo().getTime_stamp_min());
+        logger.debug("intervallo di tempo fine: "+iod.getInfo().getTime_stamp_max());
+        logger.debug("\nproprietà geometrica: "+iod.getInfo().getGeom_property());
+        logger.debug("\ntipo geometrico area: "+iod.getInfo().getGeom_type());
+        logger.debug("\ncoordinate: ");        
         for (int i=0; i<iod.getInfo().getCoordinate().size();i++)
-        System.out.print(" "+iod.getInfo().getCoordinate().elementAt(i));
+            logger.debug(" "+iod.getInfo().getCoordinate().elementAt(i));
         for (int i=0; i<iod.getInfo().getSensor_id().size();i++)
-        System.out.print("\nsensore: "+iod.getInfo().getSensor_id().elementAt(i));
+            logger.debug("\nsensore: "+iod.getInfo().getSensor_id().elementAt(i));
         for (int i=0; i<iod.getInfo().getObsPhenomena().size();i++)
-        System.out.print("\nphenomena da misurare: "+iod.getInfo().getObsPhenomena().elementAt(i));
-         */
+            logger.debug("\nphenomena da misurare: "+iod.getInfo().getObsPhenomena().elementAt(i));
+         
     }
 }

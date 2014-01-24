@@ -130,16 +130,7 @@ public class SASAgent extends Agent {
             
             mc = new ModuleCommunicator(this.getAgentName(),"HM");
             mc.setMethodInvokerHandler(this);
-            
-            /*
-            try{
-                this.wait(30000);
-            }
-            catch(Exception e){
-                logger.error("error in SaS Hm wait");
-            }
-            // */
-            Notification presenceNotification = new Notification();
+           Notification presenceNotification = new Notification();
             presenceNotification.setId("SAS/Presence");
             presenceNotification.setAgentId("SASAgentHm");
             this.sendNotification(presenceNotification);
@@ -206,7 +197,7 @@ public class SASAgent extends Agent {
 
     }
     
-    public void provaNotifica(String IdNot){
+ /*   public void provaNotifica(String IdNot){
         logger.info("*********** funzionaaaaaaa: "+IdNot);
 //        Notification notification = new Notification();
 //        notification.setId(IdNot);
@@ -217,7 +208,7 @@ public class SASAgent extends Agent {
     public String provadvertise(String advertiseRequest){
         advertise(advertiseRequest);
         return "OK";
-    }
+    }*/
     
     public void advertise(String advertiseRequest) {
        // logger.debug("SASAgentHm_advertiseRequest= "+advertiseRequest);
@@ -257,9 +248,6 @@ public class SASAgent extends Agent {
         } else {
             //execute diff (if the area changed)
             Diff advertiseDiff = null;
-            /*System.out.println(outputter.outputString(advertiseRequestElement));
-            System.out.println("-------------------------------");
-            System.out.println(advertiseRequestEntry.advertiseRequest);*/
             Element advertiseRequestElementCopy=(Element)advertiseRequestElement.clone();
             advertiseRequestElementCopy.getChild("DesiredPublicationExpiration").setText("");
             Element advertiseRequestEntryElement=this.stringToDom(advertiseRequestEntry.advertiseRequest).detachRootElement();
@@ -464,7 +452,7 @@ public class SASAgent extends Agent {
             advertiseRequestEntry.getObservationThread=getObservationThread;
             advertiseRequestEntry.getObservationThread.start();
             logger.info("GetObservationThread start....sincronization done!");
-            logger.info("advertise request document:\n!"+advertiseRequest.toString());
+            logger.debug("advertise request document:\n!"+advertiseRequest.toString());
             this.completedRequests.put(requestId, advertiseRequestEntry);
             
             
@@ -475,7 +463,7 @@ public class SASAgent extends Agent {
     }
 
     public void publicationsRecovery(String queryResult) throws CleverException{
-        logger.info("?=) publication rcovery start");
+        logger.debug(" publication recovery start");
         Document queryResultDocument=this.stringToDom("<queryResult>"+queryResult+"</queryResult>");
         Element queryResultElement=queryResultDocument.detachRootElement();
         
@@ -522,7 +510,7 @@ public class SASAgent extends Agent {
                 GetObservationThread getObservationThread=new GetObservationThread(outputter.outputString(advertiseRequestDocument),this);
                 advertiseRequestEntry.getObservationThread=getObservationThread;
                 advertiseRequestEntry.getObservationThread.start();
-                logger.info("GetObservationThread start....sincronization done!");
+                logger.debug("GetObservationThread start....sincronization done!");
                 //logger.info("advertise request document:\n!"+advertiseRequestDocument.toString());
                 this.completedRequests.put(requestId, advertiseRequestEntry);
             }
@@ -551,7 +539,7 @@ public class SASAgent extends Agent {
         while(iterator.hasNext()){
             
             advertiseRequest=(String) iterator.next();
-            logger.debug("?=) advertiseRequest");
+            logger.debug(" advertiseRequest");
             this.advertise(advertiseRequest);  
         }
         //System.out.println("SASAgent:get advertisement");
@@ -625,12 +613,12 @@ public class SASAgent extends Agent {
             requestId=requestId.replaceAll(Pattern.quote(":"),"_");
             AdvertiseRequestEntry advertiseRequestEntry = this.completedRequests.get(requestId);
             sensorAlert.setPublicationId(advertiseRequestEntry.publicationId);
-            logger.debug("?=) send sensor alert message");
+            logger.debug("send sensor alert message");
             Notification notification = new Notification();
             notification.setId("SAS/Publish");
             notification.setAgentId("SASAgentHm");
             notification.setBody(sensorAlert);
-            logger.debug("?=) notification agentId: "+notification.getAgentId());
+            logger.debug(" notification agentId: "+notification.getAgentId());
             this.sendNotification(notification);
             
         } catch (ParseException ex) {

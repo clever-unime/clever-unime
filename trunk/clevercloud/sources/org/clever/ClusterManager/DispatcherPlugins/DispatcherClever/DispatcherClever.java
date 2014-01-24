@@ -107,7 +107,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
     private Map<String, List<String>> notificationDelivery = new HashMap<String, List<String>>();
     private Map<String, MultiUserChat> agentMucs=new HashMap<String, MultiUserChat>();
     private UUIDGenerator uuidGenerator = UUIDGenerator.getInstance();
-    
+    private org.clever.ClusterManager.Brain.BrainInterface brain;
     /**
      * This method manage a received clevermessage launching a separate thread
      *
@@ -142,6 +142,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
         requestsManager = new RequestsManager();
         logger = Logger.getLogger("DispatcherClever");
         this.connectionXMPP.addPresenceListener(ConnectionXMPP.ROOM.CLEVER_MAIN, this);
+        this.brain= new org.clever.ClusterManager.Brain.SensorBrain(this);
     }
 
     @Override
@@ -378,14 +379,14 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
                             "handleNotification",
                             true,
                             params);
-                    logger.debug("X?X 338 dispatcher clever, agent:"+(String) agent);
+                    logger.debug("dispatcher clever, agent:"+(String) agent);
                     mc.invoke(mi);
                 } catch (CleverException ex) {
                     logger.error("Error invoking agent handleNotification method " + ex);
                 }
             }
         }
-
+        this.brain.handleNotification(notification);
 
     }
 
@@ -400,21 +401,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
 
     @Override
     public void processPacket(Packet packet) {
-        //String nameFrom=StringUtils.parseResource(packet.getFrom());
-
-        //if(!nameFrom.startsWith("cm")){
-            //HM Presence notification
-          //  logger.debug("HM "+nameFrom+" detected");
- */         /*CleverMessage cleverMsg = new CleverMessage();
-            cleverMsg.setType(CleverMessage.MessageType.NOTIFY);
-            cleverMsg.setSrc(this.connectionXMPP.getUsername());*/
-          //  Notification notification=new Notification();
-          //  notification.setId("PRESENCE/HM");
-          //  notification.setHostId(nameFrom);
-            //cleverMsg.setBody(MessageFormatter.messageFromObject(notification));
-          //  this.handleNotification(notification);
-        //}
-   }
+    }
     
     public String receiveFile(String path){
         return connectionXMPP.receiveFile(path);
@@ -422,18 +409,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
     public void setOwner(Agent owner){
         this.owner=owner;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-     // METODI AGGIUNTI PER SOS E SAS
+ // METODI AGGIUNTI PER SOS E SAS///////////////////////////////////////////////
     
     public String joinAgentRoom(String agentName,String roomName,String roomPassword){
        // String nickName="SAS"+Math.abs(uuidGenerator.generateTimeBasedUUID().hashCode());

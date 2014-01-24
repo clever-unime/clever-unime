@@ -148,6 +148,7 @@ public class DBMeridionaleReader2 implements ReaderInterface{
                     }
                       logger.debug("inserimento osservazioni line terminata");
                       tsc=new TimeStampComp(times,times2);
+                      logger.debug("tsc " +tsc);
                       if(tsc.compare()>0)
                         setLastAcquireTime(times2);
                     }

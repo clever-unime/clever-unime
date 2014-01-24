@@ -397,6 +397,8 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
    */
   public void sendMessage( String jid, final CleverMessage message )
   {
+      
+      /*
     Chat chat = null;
     System.out.println("\nSending message: \n" + message.toXML() );
     
@@ -433,6 +435,35 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
       logger.debug("sending message");
       chat.sendMessage( message.toXML() );
       
+      logger.debug("message sent");
+    }
+    catch( XMPPException ex )
+    {
+      logger.error( "Error while sending message: " + message.toXML() + " " + ex.getMessage() );
+    }
+    
+    */
+
+    System.out.println("\nSending message: \n" + message.toXML() );
+
+    logger.debug( "Sending message: " + message.toXML() );
+    
+    jid += "@" + this.getServer();
+    
+    // See if there is already a chat open
+    Chat chat = cleverChatManagerListener.getChat( jid.toLowerCase() );
+    
+    if( chat == null )
+    {
+        logger.debug("Chat toward "+jid +" not found");
+      chat = connection.getChatManager().createChat( jid, new CleverChatListener( msgHandler ) );
+    }
+
+    // Send a message
+    try
+    {
+      logger.debug("sending message");
+      chat.sendMessage( message.toXML() );
       logger.debug("message sent");
     }
     catch( XMPPException ex )
@@ -766,7 +797,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
       // Create the file transfer manager
       logger.debug("Creating file transfer manager");
       FileTransferManager manager = new FileTransferManager(connection);
-		
+                
       // Create the outgoing file transfer
       logger.debug("Creating outgoing file transfer");
       OutgoingFileTransfer transfer = manager.createOutgoingFileTransfer(jid);

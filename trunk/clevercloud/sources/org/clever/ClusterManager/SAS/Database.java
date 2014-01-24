@@ -1,4 +1,26 @@
-
+/*
+ * The MIT License
+ *
+ * Copyright 2012 Università di Messina.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 package org.clever.ClusterManager.SAS;
 
 
@@ -20,20 +42,17 @@ public final class Database {
     private Database(String ip, String driver, String db, String username, String password) {
         try {
             logger=logger.getLogger("Dbmysql");
-            logger.debug("driver: "+driver);
             Class.forName(driver);
-            logger.debug("jdbc:mysql://localhost/" + db+"?user=root&password=mandrake");
+            
         
-            this.con = (Connection)DriverManager.getConnection("jdbc:mysql://localhost/" + db+"?user=root&password=mandrake");
+            this.con = (Connection)DriverManager.getConnection("jdbc:mysql://"+ip+"/"+ db+"?user="+username+"&password="+password);
         } catch (ClassNotFoundException cnfe) {
             logger.error("openDB: Attenzione classe non trovata, " + cnfe.getMessage());
-            System.out.println("openDB: Attenzione classe non trovata, " + cnfe.getMessage());
-
+            
         } catch (SQLException sqle) {
             logger.error("openDB: Errore sql, " + sqle.getMessage());
                 
-            System.out.println("openDB: Errore sql, " + sqle.getMessage());
-
+            
         }
 
     }
@@ -91,7 +110,7 @@ public final class Database {
             this.ST =getCon().createStatement();
             rs= this.ST.executeQuery(query);
         } catch (SQLException e) {
-            System.out.println("exQuery: Errore query" + e.getMessage());
+            logger.error("exQuery: Errore query" + e.getMessage(),e);
         }
         return rs;
     }
@@ -102,7 +121,7 @@ public final class Database {
             this.ST.executeUpdate(query);
 
         } catch (SQLException e) {
-            System.out.println("exUpdate: Errore query" + e.getMessage());
+            logger.error("exUpdate: Errore query" + e.getMessage(),e);
         }
     }
 
@@ -121,8 +140,7 @@ public final class Database {
             
         } catch (SQLException e) {
            logger.error("exUpdate: Errore query" + e.getMessage());
-            System.out.println("exUpdate: Errore query" + e.getMessage());
-            return autoIncKeyFromApi;
+           return autoIncKeyFromApi;
         }
         
     }

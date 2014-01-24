@@ -67,11 +67,11 @@ public class SendMeasureRequest implements Runnable{
         try{
 
                 
-                logger.debug("THREAD PARAMS: "+ this.source + " - " + this.AgentName + " - " + this.AgentMethod + " - " + this.getReturn + " - " + this.params);
+                //logger.debug("THREAD PARAMS: "+ this.source + " - " + this.AgentName + " - " + this.AgentMethod + " - " + this.getReturn + " - " + this.params);
 
                 measure = "Thread --> " + (String) this.MA.remoteInvocation(this.source,this.AgentName,this.AgentMethod, this.getReturn, this.params);
 
-                logger.debug("MEASURE: "+measure);
+                //logger.debug("MEASURE: "+measure);
                 
                 /*
                 try{

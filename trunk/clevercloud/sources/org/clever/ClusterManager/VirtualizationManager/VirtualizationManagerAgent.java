@@ -71,10 +71,7 @@ public class VirtualizationManagerAgent extends CmAgent {
     public void initialization()throws CleverException,IOException {
         try {
             List params = null;
-           // MethodInvoker mi = null;
-            
-         //   this.logger = Logger.getLogger("VirtualizationManager");
-            //Load properties from XML file
+           //Load properties from XML file
             if(super.getAgentName().equals("NoName"))
                super.setAgentName("VirtualizationManagerAgent");
             
@@ -90,7 +87,6 @@ public class VirtualizationManagerAgent extends CmAgent {
                 VirtualizationManager=(VirtualizationManagerPlugin)this.cl.newInstance();
                 this.agentName=pXML.getElementContent( "moduleName" );
                 this.VirtualizationManager.setModuleCommunicator(mc);
-             //   this.mc.setMethodInvokerHandler(this);
                 this.VirtualizationManager.setOwner(this);
                 
                 VirtualizationManager.init(pXML.getRootElement().getChild("pluginParams"), this);   

@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+//import java.util.logging.Level;
+//import java.util.logging.Logger;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.w3c.dom.*;
@@ -19,7 +19,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
-
+import org.apache.log4j.Logger;
 /**
  *
  * @author user
@@ -27,7 +27,7 @@ import org.xml.sax.SAXException;
 public class SOSmodule implements SOSinterface {
 
     private String service;
-
+    private Logger logger=Logger.getLogger("SOSAGENT-SOSmodule");
     @Override
     public void init() {
         this.service = "";
@@ -39,19 +39,19 @@ public class SOSmodule implements SOSinterface {
         try {
             response = SOSserviceSelection(request);
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("ParserConfigurationException",ex);
         } catch (SAXException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error("SAXException",ex);
         } catch (IOException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("IOException",ex);
         } catch (TransformerConfigurationException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("TransformerConfigurationException",ex);
         } catch (TransformerException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("TransformerException",ex);
         } catch (SQLException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("SQLException",ex);
         } catch (ParseException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("ParseException",ex);
         }
         return response;
     }
@@ -61,19 +61,19 @@ public class SOSmodule implements SOSinterface {
         try {
             SOSserviceSelection(filename_input);
         } catch (ParserConfigurationException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+             logger.error("ParserConfigurationException",ex);
         } catch (SAXException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+           logger.error("SAXException",ex);
         } catch (IOException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("IOException",ex);
         } catch (TransformerConfigurationException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("TransformerConfigurationException",ex);
         } catch (TransformerException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("TransformerException",ex);
         } catch (SQLException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("SQLException",ex);
         } catch (ParseException ex) {
-            Logger.getLogger(SOSmodule.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("ParseException",ex);
         }
     }
 
@@ -121,10 +121,10 @@ public class SOSmodule implements SOSinterface {
                 ExpirationAdvertiseRequest ea = new ExpirationAdvertiseRequest(request);
                 response = ea.sendAdvertise();
             } else {
-                System.out.println("funzione non riconosciuta");
+                logger.debug("funzione non riconosciuta");
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+           logger.error("funzione non riconosciuta",e);
         }
         return response;
         //  controllo il nodo radice del file di input, in cui è decritto il tipo di operazione invocata

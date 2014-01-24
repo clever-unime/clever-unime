@@ -1,4 +1,5 @@
 *.class
+*.log
 
 # Package Files #
 *.jar
@@ -6,3 +7,6 @@
 *.ear
 /trunk/clevercloud/build/
 /trunk/clevercloud/dist/
+/trunk/cleverAdministration/dist/
+/trunk/Monitoring/dist/
+/trunk/Monitoring/build/

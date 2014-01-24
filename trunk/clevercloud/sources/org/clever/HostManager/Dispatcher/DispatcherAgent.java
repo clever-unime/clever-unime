@@ -81,7 +81,7 @@ class NotificationThread extends Thread implements PacketListener
 
     @Override
     public synchronized void run() {
-        logger.debug("Start NotificationThread run!");
+        logger.info("Start NotificationThread run!");
         String target = null;
         while (true) {
             //no messages
@@ -96,14 +96,17 @@ class NotificationThread extends Thread implements PacketListener
                 }
             }
             target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
+            logger.debug("dispatcherHM"+target);
             //no active cc
             if (target == null) {
                 try {
                     CMisPresent = false;
                     while (!CMisPresent) {
-                        wait();
+                        wait(5000);
+                        this.processPacket(null);
                     }
                     target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
+                    logger.debug("dispatcherHM"+target);
                 } catch (InterruptedException ex) {
                     logger.error("InterruptedException: "+ex);
                 }
@@ -148,7 +151,7 @@ public class DispatcherAgent extends Agent
      @Override
     public void initialization() throws CleverException
     {
-    super.setAgentName("DispatcherAgentHm");    
+    super.setAgentName("DispatcherAgent");    
         super.start();
 
         notificationThread = new NotificationThread(connectionXMPP, notificationsThreshold);
@@ -157,7 +160,7 @@ public class DispatcherAgent extends Agent
         String hostid=this.connectionXMPP.getHostName();
         Notification notification=new Notification();
         notification.setId("PRESENCE/HM");
-        logger.debug("?=)** hostId= "+hostid);
+        logger.debug("hostId= "+hostid);
         notification.setHostId(hostid);
         this.sendNotification(notification);
     }
@@ -210,14 +213,9 @@ public class DispatcherAgent extends Agent
     {
         
     }
-    
-    
-    
-    
-    
-    
-    
-    //NEWMONITOR
+//******************************************************************************    
+//NEWMONITOR
+//******************************************************************************
     /**
     * Send a CleverMessage of MEASURE type
     * @param measure returned by Sigar methods

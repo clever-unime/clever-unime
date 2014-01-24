@@ -12,12 +12,12 @@
                 		</reader>
         *********************************************************************-->
         <reader>
-            <className>org.clever.HostManager.SOS.SOSModuleTransactional.Readers.dbMeridionaleReader</className>
-            <moduleName>dbMeridionaleReader</moduleName>
+            <className>org.clever.HostManager.SOS.SOSModuleTransactional.Readers.DBGenericReader</className>
+            <moduleName>DBGenericReader</moduleName>
             <pluginParams>
                 <port>3306</port>
                 <hostname></hostname>
-                <DBName>simone</DBName>
+                <DBName>sensordb</DBName>
                 <UserName></UserName>
                 <Password></Password>
                 <resettimeMillisec>150000</resettimeMillisec>

@@ -7,7 +7,7 @@
   <nickname>test-giancarlo</nickname>-->
   <username></username>
   <password></password>
-  <nickname></nickname>
+  <nickname></nickname><!--Actually username e nickname  -->
   <room>SHELL-vision@conference.localhost</room>
   
 </configuration>
