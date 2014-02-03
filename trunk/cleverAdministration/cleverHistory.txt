@@ -235,3 +235,6 @@ cpustatus -h webuntu
 storagestatus -h webuntu
 cpustatus -h webuntu
 sassubscribe -f /media/dati/XML/subscribeRequest.xml
+statusprocvm -h giusimone -p java
+statusprocvm -h giusimone -p chrome
+createvm -tn UbuVirt -h giusimone -clonable

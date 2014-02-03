@@ -5,9 +5,9 @@
   <!--<username>test-giancarlo</username>
   <password>storage</password>
   <nickname>test-giancarlo</nickname>-->
-  <username></username>
-  <password></password>
-  <nickname></nickname><!--Actually username e nickname  -->
+  <username>peppe</username>
+  <password>peppe</password>
+  <nickname>peppe</nickname><!--Actually username e nickname  -->
   <room>SHELL-vision@conference.localhost</room>
   
 </configuration>

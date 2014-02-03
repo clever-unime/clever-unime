@@ -164,7 +164,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
             DateFormat formatter = new SimpleDateFormat("E dd.MM.yyyy hh:mm:ss a z");
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(ptime.getStartTime());
-            obj = new ProcessM(ProcessM.SubType_m.state, ProcessM.Unit_m.text);
+            obj = new ProcessM(ProcessM.SubType_m.time, ProcessM.Unit_m.text);
             obj.setValue(formatter.format(calendar.getTime()));
             xmlobj=xmlobj+MessageFormatter.messageFromObject(obj)+"\n";
             

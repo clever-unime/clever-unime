@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <dbParams>
+        <server>localhost</server>
+        <password>mandrake</password>
+        <username>root</username>
+    </dbParams>
+    <sensGenParams>
+        <sensName>Virtualsensortest</sensName>
+        <compName>comprova</compName>
+        <phenName>Voltagefentest</phenName>
+        <genInterval>5000</genInterval>
+        <sensid>4</sensid>
+        <phenid>4</phenid>
+        <sensorstatgeneration>false</sensorstatgeneration><!--if this field is true the Sensor acquisition generator software create a new sensor and phenomena entry in DB-->
+    </sensGenParams>
+</configuration>

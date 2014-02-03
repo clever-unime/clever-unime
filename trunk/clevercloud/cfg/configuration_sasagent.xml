@@ -17,7 +17,7 @@
         <driver>com.mysql.jdbc.Driver</driver>
         <name>observation</name>
         <username>root</username>
-        <password>mandrake</password>
+        <password></password>
     </dbParams>
 </test>
 
