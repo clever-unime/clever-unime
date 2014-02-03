@@ -819,6 +819,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     /**
    * Receive file from an user
    * @param path
+     * @return 
    */
 
   public String receiveFile(String path){

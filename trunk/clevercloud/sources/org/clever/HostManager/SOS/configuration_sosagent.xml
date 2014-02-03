@@ -16,7 +16,7 @@
         <driver>com.mysql.jdbc.Driver</driver>
         <name>sensorml</name>
         <username>root</username>
-        <password>mandrake</password>
+        <password>sigma</password>
     </dbParams>
     
     <test>
@@ -26,7 +26,7 @@
             <driver>com.mysql.jdbc.Driver</driver>
             <name>observation</name>
             <username>root</username>
-            <password>mandrake</password>
+            <password>sigma</password>
         </dbParams>
     </test>
 </configuration>

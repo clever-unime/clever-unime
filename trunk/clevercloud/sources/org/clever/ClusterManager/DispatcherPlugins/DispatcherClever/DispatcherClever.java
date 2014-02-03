@@ -2,6 +2,7 @@
  *  Copyright (c) 2010 Antonio Nastasi
  *  Copyright (c) 2011 Marco Sturiale
  *  Copyright (c) 2013 Giuseppe Tricomi
+ *  Copyright (c) 2013 Antonio Galletta
  *
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
@@ -32,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import org.apache.log4j.Logger;
 import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
+import org.clever.ClusterManager.Brain.SensorBrain;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.ModuleCommunicator;
@@ -51,7 +53,6 @@ import org.jdom.Element;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Packet;
-import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.safehaus.uuid.UUIDGenerator;
 
@@ -101,7 +102,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
     private Map<String, List<String>> notificationDelivery = new HashMap<String, List<String>>();
     private Map<String, MultiUserChat> agentMucs=new HashMap<String, MultiUserChat>();
     private UUIDGenerator uuidGenerator = UUIDGenerator.getInstance();
-    
+    private SensorBrain brain;
     /**
      * This method manage a received clevermessage launching a separate thread
      *
@@ -136,6 +137,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
         requestsManager = new RequestsManager();
         logger = Logger.getLogger("DispatcherClever");
         this.connectionXMPP.addPresenceListener(ConnectionXMPP.ROOM.CLEVER_MAIN, this);
+       
     }
 
     @Override
@@ -281,14 +283,18 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
     }
 
     @Override
-    public void subscribeNotification(String agentName, String notificationId) {
+    public void  subscribeNotification(String agentName, String notificationId) {
         //check for existent notification id
+        logger.debug("dentro subscribe notification");
         List<String> agents = notificationDelivery.get(notificationId);
+   //     logger.debug("agente= "+agents);
         if (agents == null) {
             agents = new ArrayList();
         }
+        logger.debug("Parametro agentname, passato alla suscribe:"+agentName);
         agents.add(agentName);
         this.notificationDelivery.put(notificationId, agents);
+        
     }
 
 
@@ -325,12 +331,16 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
 
     @Override
     public void handleNotification(Notification notification) {
+        boolean subscripted=true;
         //Send notification to corresponding agents using notificationId
         logger.debug("Start handle notification");
         List<String> agentsNameList = notificationDelivery.get(notification.getId());
 
         if (agentsNameList == null) {
             logger.info("No agents associated to notificationId " + notification.getId());
+            logger.info("dentro dispatcher clever");
+            subscripted=false;
+            
         } else {
             for (Object agent : agentsNameList) {
                 try {
@@ -347,7 +357,8 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
                 }
             }
         }
-
+         brain=new SensorBrain(this, subscripted);
+        brain.handleNotification(notification);
 
     }
 

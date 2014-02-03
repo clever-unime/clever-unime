@@ -31,11 +31,13 @@ import org.clever.Common.XMPPCommunicator.CleverMessage;
 /**
  *
  * @author Maurizio Paone
+ * @author Antonio Galletta 2014
  */
 class ThreadMessageHandler extends Thread{
     private DispatcherPlugin dispatcher;
     private ThreadMessageDispatcher threadDispatcher;
     private CleverMessage message;
+    private org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger( "ThreadMessageHandler" );
     
     ThreadMessageHandler(DispatcherPlugin dispatcher, ThreadMessageDispatcher aThis, CleverMessage msg) {
         this.dispatcher = dispatcher;
@@ -80,6 +82,9 @@ class ThreadMessageHandler extends Thread{
 
                         break;
                       case ERROR:
+                                //TODO: da controllare
+                                logger.debug("ricevuto messaggio contrassegnato come errore!!");
+                                break;
                       case REPLY:
                         dispatcher.handleMessage( this.message );
                         break;

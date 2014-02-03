@@ -29,6 +29,9 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
+/**
+ * @author Antonio Galletta 2013
+ */
 
 package org.clever.ClusterManager.ClusterCoordinator;
 
@@ -582,6 +585,15 @@ public class ClusterCoordinator implements CleverMessageHandler
   public Iterator getHosts() 
   { //torna la lista di tutti gli host connessi alla stanza CLEVER_MAIN
     return conn.getMembers(ROOM.CLEVER_MAIN);
+  }
+  
+  
+ 
+  public String getUserName(){
+      
+      logger.info("metodo getUserName");
+  
+     return this.username; 
   }
   
   

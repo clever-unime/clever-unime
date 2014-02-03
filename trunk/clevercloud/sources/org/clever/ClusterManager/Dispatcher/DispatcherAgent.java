@@ -130,6 +130,7 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
     @Override
     public synchronized void handleNotification(Notification notification) throws CleverException {
         this.brainInterface.handleNotification(notification);
+        logger.debug("dentro handleNotification del dispatcherAgent");
         this.dispatcherPlugin.handleNotification(notification);
     }
 

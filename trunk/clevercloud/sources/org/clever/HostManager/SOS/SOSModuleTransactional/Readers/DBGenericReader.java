@@ -52,7 +52,9 @@ import org.clever.HostManager.SOS.SOSModuleTransactional.Readers.Utils.IndexStru
 //import org.clever.Common.XMLTools.ParserXML;
 import com.google.common.collect.Maps;
 import com.google.common.collect.HashMultimap;
+import org.clever.Common.XMLTools.ParserXML;
 import org.clever.HostManager.SOS.SOSModuleTransactional.Readers.Utils.TimeStampComp;
+
 /**
  * 
  * This class is the generic reader class used to acquire observation from db. 
@@ -68,7 +70,8 @@ public class DBGenericReader implements ReaderInterface{
     private String DBName;
     private String user;
     private String pass;
-    private boolean read=true;
+    
+
     private boolean debug=true;
     private boolean init=true;
     Vector<Sensor_Struct> sens_nodeid;
@@ -81,7 +84,7 @@ public class DBGenericReader implements ReaderInterface{
     private HashMultimap<String,HashMap> sensor_registered_table;
     
     ConnectorDB db;
-    
+   
     
     public void init(Node Params,SOSmodule sosModule){
         
@@ -98,16 +101,16 @@ public class DBGenericReader implements ReaderInterface{
         
         /////////////////////////////////////////////////////////////////
         //FOR TESTING WE WILL USE A LOCALHOST TEST DB
-        db=new ConnectorDB("localhost","SensorDB","root","mandrake","timestamp_osservazione","sensore_anagrafica_idsensore_anagrafica");
-        //db=new ConnectorDB(this.Hostname,this.DBName,this.user,this.pass,"timestamp_osservazione","sensore_anagrafica_idsensore_anagrafica");
+        //db=new ConnectorDB("localhost","sensordb","root","mandrake","timestamp_osservazione","sensore_anagrafica_idsensore_anagrafica");
+        db=new ConnectorDB(this.Hostname,this.DBName,this.user,this.pass,"timestamp_osservazione","sensore_anagrafica_idsensore_anagrafica");
         /////////////////////////////////////////////////////////////////
         Thread readInput = new Thread(new Runnable() {
         public void run() {
             //ConnectorDB db=new ConnectorDB("localhost","sensordb","root","mandrake","timestamp_osservazione","sensore_anagrafica_idsensore_anagrafica");
-        
+            boolean read=true;
             TimeStampComp tsc=null;
             Vector<String> line;
-              
+            String timeobs=null;
             logger.debug("Sensors Start procedure "+db.toString());
             try {
                 //fase di conoscenza della rete - acquisizione dei nodi
@@ -116,49 +119,65 @@ public class DBGenericReader implements ReaderInterface{
                 {
                     try
                     {
-                        
+                        logger.debug(read);
                         Thread.sleep(resettime);
                         if (read) {
                             RegisterInfo();
                             logger.debug("Sensors Struct created");
-                            read = false;
+                            read=false;
+                            logger.debug(read);
                         }
                         else
                         {
+                            logger.debug("discovery");
                            // DBGenericReader.this.Discovery_nodes();
                         }
                         //**********************************************************************
                         //START ACQUISITION
-                        //logger.debug("Read observation started");
+                        logger.debug("Read observation started");
                         db.remove_EL_RSMap("osservazioni");
                         db.createRSMap(times, "osservazioni", null);
                         line=db.getMisure("idosservazioni","osservazioni");
-                        //logger.debug("element in line"+line.size());
-                       
                         //**********************************************************************
-                        if (!line.isEmpty()) 
-                        {
-                             
-                             Enumeration e=line.elements();
-                             while (e.hasMoreElements()){
-                                 //logger.debug("ciclo lettura osservazioni passo 1");
-                                 String entry=(String)e.nextElement();
-                                 //logger.debug("ciclo lettura osservazioni passo 2. valore id osservazioni:"+entry);
-                                 String sens=db.getMisure("sensore_anagrafica_idsensore_anagrafica",entry,"osservazioni","idosservazioni");
-                                 //logger.debug("ciclo lettura osservazioni passo 3.collegamento con il sensore che ha realizzato osservazione:"+sens);
-                                 parseIncomingLine(entry,sens,"osservazioni",null);
-                             }
+                        if (line != null) {
+                            if (!line.isEmpty()) {
+                                logger.debug("element in line"+line.size());
+                                Enumeration e = line.elements();
+                                db.remove_EL_RSMap("misura_anagrafica");
+                                db.createRSMap(null, "misura_anagrafica", null);
+                                //logger.debug("Passo2:" + line.size());
+                                while (e.hasMoreElements()) {
+                                    logger.debug("ciclo lettura osservazioni passo 1");
+                                    String entry = (String) e.nextElement();
+                                    timeobs = (String) db.getMisure("timestamp_osservazione", entry, "osservazioni", "idosservazioni");
+                                    //logger.debug("ciclo lettura osservazioni passo 2. valore id osservazioni:" + entry);
+                                    String sens = db.getMisure("sensore_anagrafica_idsensore_anagrafica", entry, "osservazioni", "idosservazioni");
+                                    logger.debug("ciclo lettura osservazioni passo 3.collegamento con il sensore che ha realizzato osservazione:" + sens);
+                                    parseIncomingLine(entry, sens, "osservazioni", null);
+
+                                }
+                                logger.debug("inserimento osservazioni line terminata");
+                                if (timeobs != null) {
+                                    tsc = new TimeStampComp(timeobs, times);
+                                    if (tsc.compare() > 0) {
+                                        times = timeobs;
+                                        logger.debug("Sto modificando l'ultimo tempo acquisito con: \"" + times + "\"");
+                                        setLastAcquireTime(times);
+                                        line=null;
+                                    }
+                                }
+                            }
                         }
                     }
                     catch(Exception e)
                     {
-                        logger.debug("iterate stop");
-                        logger.error(e.getMessage()+"||"+e.getLocalizedMessage());
+                        logger.debug("iterate stop"+e.getMessage());
                         iterate=false;
                     }
-                      logger.debug("inserimento osservazioni line terminata");
+                      
                       
                     }
+                logger.debug("uscita dal while");
                 } 
                 catch (Exception ex){
                     logger.error(""+ ex);
@@ -179,14 +198,18 @@ public class DBGenericReader implements ReaderInterface{
             logger.debug("Register info start");
             Sensor_Struct sensorStruct;
             this.db.createRSMap(null, "sensore_anagrafica", null);
+            logger.debug("Register info start1");
             Vector<String> sVector=this.db.getMisure("idsensore_anagrafica", "sensore_anagrafica");
+            logger.debug("Register info start2");
             if (!sVector.isEmpty()) 
             {
                 int sensorBoardindex=0;
                 Enumeration eSens=sVector.elements();
+                logger.debug("Register info start3");
                 while (eSens.hasMoreElements()) 
                 {
                     sensorStruct=new Sensor_Struct();
+                    logger.debug("Register info start4");
                     String eSensid=(String)eSens.nextElement();
                     logger.debug("eSensid"+eSensid);
                     this.register_newSensorBoard(sensorStruct, eSensid,sensorBoardindex);
@@ -343,13 +366,13 @@ public class DBGenericReader implements ReaderInterface{
      */
     private Sensor_Struct register_sensorInfo(String idsens_toregister,Sensor_Struct sensorStruct){
         //SensorInfo
-        //logger.debug("reginfo1");
+        logger.debug("reginfo1");
         sensorStruct.getSensor_info().setid(idsens_toregister);
-        //logger.debug("reginfo2");
+        logger.debug("reginfo2");
         sensorStruct.getSensor_info().settype_id("urn:ogc:object:feature:"+this.db.getMisure("id_tipo",idsens_toregister, "sensore_anagrafica","idsensore_anagrafica"));            
-        //logger.debug(this.db.getMisure("id_tipo",idsens_toregister, "sensore_anagrafica","idsensore_anagrafica"));
+        logger.debug(this.db.getMisure("id_tipo",idsens_toregister, "sensore_anagrafica","idsensore_anagrafica"));
         sensorStruct.getSensor_info().setproduct_description(this.db.getMisure("descrizione",idsens_toregister,"sensore_anagrafica","idsensore_anagrafica"));
-        //logger.debug(this.db.getMisure("descrizione",idsens_toregister,"sensore_anagrafica","idsensore_anagrafica"));
+        logger.debug(this.db.getMisure("descrizione",idsens_toregister,"sensore_anagrafica","idsensore_anagrafica"));
         sensorStruct.getSensor_info().setmanufacturer(this.db.getMisure("costruttore",idsens_toregister,"sensore_anagrafica","idsensore_anagrafica"));
         sensorStruct.getSensor_info().setmodel(this.db.getMisure("modello",idsens_toregister, "sensore_anagrafica","idsensore_anagrafica"));
         sensorStruct.getSensor_info().setoperator_area(this.db.getMisure("operatorArea",idsens_toregister, "sensore_anagrafica","idsensore_anagrafica"));
@@ -366,7 +389,7 @@ public class DBGenericReader implements ReaderInterface{
         sensorStruct.getSensor_info().setpacket(this.db.getMisure("packet",idsens_toregister, "sensore_anagrafica","idsensore_anagrafica"));
         sensorStruct.getSensor_info().setactive(this.db.getMisure("active",idsens_toregister, "sensore_anagrafica","idsensore_anagrafica"));
         sensorStruct.getSensor_info().setmobile(this.db.getMisure("mobile",idsens_toregister, "sensore_anagrafica","idsensore_anagrafica"));
-        logger.info("end registerInfo.sensorinfo");
+        logger.debug("start registerInfo.sensorcomponent");
         return sensorStruct;
         //Identifyng sensors ended
     }
@@ -380,11 +403,11 @@ public class DBGenericReader implements ReaderInterface{
         Sensor_Component sensorComponent = new Sensor_Component();
         sensorComponent.setcomp_id(idcomponent);
         sensorComponent.setcomp_descr(idsens_toregister+this.db.getMisure("tipo_misura",idcomponent,"misura_anagrafica","idmisura_anagrafica"));
-        //logger.debug(idsens_toregister+this.db.getMisure("tipo_misura",idcomponent,"misura_anagrafica","idmisura_anagrafica"));
+        logger.debug(idsens_toregister+this.db.getMisure("tipo_misura",idcomponent,"misura_anagrafica","idmisura_anagrafica"));
         sensorComponent.setcomp_phenomena(this.db.getMisure("tipo_misura",idcomponent,"misura_anagrafica","idmisura_anagrafica"));
-        //logger.debug(this.db.getMisure("tipo_misura",idcomponent,"misura_anagrafica","idmisura_anagrafica"));
+        logger.debug(this.db.getMisure("tipo_misura",idcomponent,"misura_anagrafica","idmisura_anagrafica"));
         sensorComponent.setcomp_status(this.db.getMisure("status",idcomponent,"misura_anagrafica","idmisura_anagrafica"));
-        //logger.debug(this.db.getMisure("status",idcomponent,"misura_anagrafica","idmisura_anagrafica"));
+        logger.debug(this.db.getMisure("status",idcomponent,"misura_anagrafica","idmisura_anagrafica"));
         sensorComponentVector.add(sensorComponent);
         
         this.structure_index.put(idcomponent, new IndexStruct(sensorBoardindex,componentindex));
@@ -417,7 +440,7 @@ public class DBGenericReader implements ReaderInterface{
     {
         //sensorStruct = new Sensor_Struct();
         String idsens_toregister=eSensid;
-        logger.debug("\n\n\n\n\n\nstart registerInfo.sensorinfo"+eSensid);
+        logger.debug("start registerInfo.sensorinfo"+eSensid);
         sensorStruct=this.register_sensorInfo(idsens_toregister, sensorStruct);
                     //Sensor Components
         Vector<Sensor_Component> sensorComponentVector = sensorStruct.getSensor_Component();
@@ -553,5 +576,17 @@ public class DBGenericReader implements ReaderInterface{
             logger.debug("cparse incoming passo 2:sensboardIndex"+sensboardIndex+" i"+i+" id"+sens_nodeid.elementAt(i).getSensor_info().getid());
             if(sens_nodeid.elementAt(i).getSensor_info().getid()
     }*/
+    
+    private void setLastAcquireTime(String time){
+        //logger.debug("modifica partita");
+        ParserXML p=new ParserXML(new java.io.File("./cfg/configuration_Readers.xml"));
+        org.jdom.Document doc=p.getDocument();
+        org.jdom.Element d=doc.getRootElement().getChild("readers").getChild("reader").getChild("pluginParams").getChild("firstvalue");
+        d.setText(time.toString());   
+        //logger.debug("modifica eseguita");
+        p.saveXML("./cfg/configuration_Readers.xml");
+        
+        
+    }
 }
 

@@ -5,6 +5,7 @@
  *  Copyright (c) 2010 Massimo Villari
  *  Copyright (c) 2010 Antonio Celesti
  *  Copyright (c) 2010 Antonio Nastasi
+ *  Copyright (c) 2013 Antonio Galletta
  *
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
@@ -28,6 +29,14 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.clever.Common.XMLTools;
+
+/**
+ * 
+ * 
+ * @author Antonio Galletta (2013)
+ * 
+ * 
+ */
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -105,6 +114,7 @@ public class ParserXML
     {
       document = builder.build( new StringReader( XMLString ) );
       rootElement = document.getRootElement();
+      
     }
     catch ( JDOMException ex )
     {
@@ -198,4 +208,30 @@ public class ParserXML
   public Document getDocument(){
       return this.document;
   }
+  
+  public static Element getElementByAttribute(Document document, String attributeId,String attributeValue){
+   Element root, elemento;
+   List listaElementi;
+  
+   
+   root=document.getRootElement();
+   listaElementi=root.getChildren();
+
+   
+   for(int i=0;i<listaElementi.size();i++){
+       
+        elemento=(Element)listaElementi.get(i);
+        try{
+            if(elemento.getAttributeValue(attributeId).equals(attributeValue)){
+       
+                return elemento;
+            }
+        }
+        catch(NullPointerException ex){
+        return null;
+        }
+   }
+  return null;
+  }
+  
 }

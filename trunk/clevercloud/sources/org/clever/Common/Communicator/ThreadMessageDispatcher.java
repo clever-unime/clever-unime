@@ -62,6 +62,7 @@ public class ThreadMessageDispatcher extends Thread {
 
     /**
      * Method invoked for insert a CleverMessage in Queue
+     * @param msg
      */
     public  void pushMessage(CleverMessage msg)
     {

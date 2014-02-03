@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -50,6 +51,7 @@ import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.Shared.Support;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
@@ -60,6 +62,7 @@ import org.jdom.CDATA;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.jdom.input.JDOMParseException;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
@@ -67,6 +70,12 @@ import org.safehaus.uuid.UUIDGenerator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+
+/**
+ *
+ * @author alessiodipietro
+ * @author Antonio Galletta 2013
+ */
 
 class PublishDeliveryEntry {
 
@@ -87,10 +96,7 @@ class AssignedSoi {
     public String minExpirationDate;
 }
 
-/**
- *
- * @author alessiodipietro
- */
+
 public class SASAgent extends CmAgent {
 
     private Logger logger = null;
@@ -110,14 +116,15 @@ public class SASAgent extends CmAgent {
     private Database db;
     private ParameterDbContainer parameterContainer;
     private org.w3c.dom.Document doc;
+    private Timestamp ts;
      
      
      
     public SASAgent(/*String agentName*/) throws CleverException {
+        
         try {
             super.setAgentName("SASAgent");
             agentName="SASAgent";
-            this.agentName = agentName;
             logger = Logger.getLogger(agentName);
             logger.info("SASAgent CM !!!!");
             mc = new ModuleCommunicator(agentName,"CM");
@@ -126,47 +133,11 @@ public class SASAgent extends CmAgent {
             spf = SAXParserFactory.newInstance();
             sp = spf.newSAXParser();
             xr = sp.getXMLReader();
-
             init();
-            List params = new ArrayList();
-            params.add(agentName);
-            params.add("SAS/Presence");
-            this.invoke("DispatcherAgent", "subscribeNotification", true, params);
-
-            params.clear();
-            params.add(agentName);
-            params.add("SAS/Advertise");
-            this.invoke("DispatcherAgent", "subscribeNotification", true, params);
-
-            params.clear();
-            params.add(agentName);
-            params.add("SAS/Publish");
-            this.invoke("DispatcherAgent", "subscribeNotification", true, params);
-            
-
-            params.clear();
-            params.add(agentName);
-            params.add("SAS/CancelAdvertisement");
-            this.invoke("DispatcherAgent", "subscribeNotification", true, params);
-
-            params.clear();
-            params.add(agentName);
-            params.add("SAS/RenewAdvertisement");
-            this.invoke("DispatcherAgent", "subscribeNotification", true, params);
-            
-            
-           
-            
-           
-            
-            
-            
+            ts=new Timestamp(System.currentTimeMillis());
             initCleverResouces();
             this.threadMessageDispatcher = new ThreadMessageDispatcher(this, 100, 10); //TODO: retrieve parameters from configuration file
             this.threadMessageDispatcher.start();
-            
-
-            
             
         } catch (ParserConfigurationException ex) {
             throw new CleverException(ex, "Parser Configuration Exception: " + ex);
@@ -184,54 +155,37 @@ public class SASAgent extends CmAgent {
 
     }
 
-   
-    
-    
-    private void init() {
+    private void init() throws CleverException{
         initDb();
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-1648777780</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-2128992545</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-757795074</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-547553889</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-2077942796</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-1794127170</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-168423560</SubscriptionID></CancelSubscription>");        
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-304103328</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-235374172</SubscriptionID></CancelSubscription>");
-//        
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-392268243</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-352686936</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-190348214</SubscriptionID></CancelSubscription>");        
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-106875507</SubscriptionID></CancelSubscription>");
-//        cancelSubscription("<?xml version=\"1.0\" encoding=\"UTF-8\"?><CancelSubscription><SubscriptionID>Sub-457564371</SubscriptionID></CancelSubscription>");
-//        
-//        
-//        
-        
-//        
-//        removeSubscriptionFromTables("Sub-203567417");
-//        removeSubscriptionFromTables("Sub-272804805");
-//        removeSubscriptionFromTables("Sub-422980964");
-//        removeSubscriptionFromTables("Sub-453526871");
-//        removeSubscriptionFromTables("Sub-439376199");
-//        removeSubscriptionFromTables("Sub-509709515");
-//        removeSubscriptionFromTables("Sub-477867218");
-////        removeSubscriptionFromTables("Sub-453526871");
-////        removeSubscriptionFromTables("Sub-453526871");
-////        removeSubscriptionFromTables("Sub-453526871");
-////        removeSubscriptionFromTables("Sub-453526871");
-        
-        
         initSoiPublications();
         initPublishDelivery();
+        List params = new ArrayList();
+            params.add(agentName);
+            params.add("SAS/Presence");
+            this.invoke("DispatcherAgent", "subscribeNotification", true, params);
+            params.clear();
+            params.add(agentName);
+            params.add("SAS/Advertise");
+            this.invoke("DispatcherAgent", "subscribeNotification", true, params);
+
+            params.clear();
+            params.add(agentName);
+            params.add("SAS/Publish");
+            this.invoke("DispatcherAgent", "subscribeNotification", true, params);
+            params.clear();
+            params.add(agentName);
+            params.add("SAS/CancelAdvertisement");
+            this.invoke("DispatcherAgent", "subscribeNotification", true, params);
+
+            params.clear();
+            params.add(agentName);
+            params.add("SAS/RenewAdvertisement");
+            this.invoke("DispatcherAgent", "subscribeNotification", true, params);
+            
+            this.respawn();
+            
+            
         //logger.info("getCapabilities return="+getCapabilities("<GetCapabilities><Sections><Section>Contents</Section></Sections></GetCapabilities>"));
-    
-        
-    
-    
-    
-    
-    
     }
     
     public String testMethod(String value){
@@ -300,11 +254,7 @@ public class SASAgent extends CmAgent {
                         publishDeliveryEntry.mucPassword = xmppUri.getAttributeValue("password");
                         publishDeliveryEntry.resultFilter = this.createFilterHashMap(element.getChildren("ResultFilter"));
                         assignedSoiList = element.getChild("AssignedSoiList").getChildren();
-
-
-
-
-                        //join the room
+                    //join the room
                         try {
                             List<String> joinParameters = new ArrayList();
                             joinParameters.add(agentName);
@@ -351,7 +301,12 @@ public class SASAgent extends CmAgent {
             //init hashtable
             List<String> params = new ArrayList();
             logger.debug("***Agent Name= "+this.agentName);
+            if(location.equalsIgnoreCase("/SASAgentActiveList")){
+                params.add("SASAgentHm");
+            }
+            else{
             params.add(this.agentName);
+            }
             params.add(location);
             result = (String) this.invoke("DatabaseManagerAgent", "query", true, params);
         } catch (CleverException ex) {
@@ -606,10 +561,15 @@ public class SASAgent extends CmAgent {
             String queryResult = this.queryJoin("/advertisements/advertise[@hm='" + notification.getHostId() + "']",
                     "/capabilities//SubscriptionOfferingList"
                     + "/SubscriptionOffering[./SubscriptionOfferingID=../../../..//advertise[@hm='" + notification.getHostId() + "']/SubscriptionOfferingID/text()]");
-                    
+             String IDString;       
                 List params = new ArrayList();
+                logger.debug("Query results="+queryResult);
                 params.add(queryResult);
-                logger.debug("?=) Query result= "+queryResult);
+                IDString=this.createIDString();
+         //       logger.debug("Stringa univoca del cm "+IDString);
+                params.add(IDString);
+                
+         //       logger.debug("?=) Query result= "+queryResult);
                 if(!queryResult.equals(""))
                     this.remoteInvocation(notification.getHostId(), "SASAgentHm", "publicationsRecovery", true, params);
 
@@ -1472,13 +1432,7 @@ public class SASAgent extends CmAgent {
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(SASAgent.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        
-        
-        
-        
-    }
-    
+     }
     
     public String servicecommand(String command){
     String ret="service command not found" ;  
@@ -1498,10 +1452,8 @@ public class SASAgent extends CmAgent {
        logger.debug("?=) "+value);
        onDemand(value);
        ret="addsub done";
-   }    
-        
-        
-       return ret; 
+        }    
+    return ret; 
     }
     
     public void onDemand(String soi){
@@ -1570,9 +1522,6 @@ public class SASAgent extends CmAgent {
            
            String qpub="//org.clever.HostManager.SAS.SensorAlertMessage[publicationId=\""+pubId+"\"]";
      
-         
-          
-           
             List<String> params = new ArrayList();
           
             params.add(hostId);
@@ -1647,9 +1596,6 @@ public class SASAgent extends CmAgent {
         
         
     }
-    
-    
-    
     
     public void checkCapabilities(){
         String SoId = null;
@@ -1845,24 +1791,9 @@ public class SASAgent extends CmAgent {
             
             
             }
-            
-            
-            
-            
-            
-            
-            
-            
-            }
-            
-            } 
-            
-            
-            
-            
-            
-            
-        } catch (SQLException ex) {
+       }
+     } 
+   }      catch (SQLException ex) {
             logger.error(ex);
         } catch (CleverException ex) {
             logger.error(ex);
@@ -1957,55 +1888,14 @@ public class SASAgent extends CmAgent {
                  //collego la proprieta con la sottoscrizione offerta
                  String carp2="INSERT INTO `CleverResources`.`CaratteristicheSottoscrizione` (`SottoscrizioneOff`, `ProprietaSottoscrizione`) VALUES ('"+idsub+"', '"+idprop2+"');";
                  db.exUpdate(carp2);  
-                 
-                 
-                 }
-                 
-                 
-                 
-                
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                 
-                                
-                
-                
-                
-            }  
-                         
-                
-                
-                
-            }
-            
-            
-            
-            
-            
-        
-        
-        
-        
-        } catch (SQLException ex) {
+                 }   
+           }  
+      }
+ }      catch (SQLException ex) {
             logger.error("SQLException"+ex);
         } catch (CleverException ex) {
             logger.error("CleverException"+ex);
         }
-        
-        
-        
     }  
   
     public void addsub(String value){
@@ -2040,9 +1930,101 @@ public class SASAgent extends CmAgent {
         
     }
     
+    private String createIDString(){
+        
+            String cmUserName=null, IDString = " ";
+            Iterator itrCmList;
+            List cmList;
+            HostEntityInfo elemCm;
+           
+            
+           try { 
+               logger.info("inizio metodo createIDString");
+                cmList=(List)this.invoke("InfoAgent", "listClusterManager", true, new ArrayList());
+                logger.info("lista CM ottenuta ");
+                itrCmList=cmList.iterator();
+                while(itrCmList.hasNext()){
+                         elemCm=(HostEntityInfo)itrCmList.next();
+                        if(elemCm.isActive()){
+                            cmUserName=elemCm.getNick();
+                            logger.debug("nome CM attivo: "+ cmUserName);
+                            break;
+                        }
+                    }
+                
+                IDString=cmUserName+ts.toString();
+         //       logger.info("stringa id: "+IDString);
+        } catch (CleverException ex) {
+            logger.debug("Error createIDString method"+ex);
+        }catch(Exception ex){
+            logger.debug("Error createIDString method"+ex);
+        }
+           finally{
+               return IDString;
+           }
+    }
     
-    
-    
-    
-    
+    private void respawn(){
+        
+            String lista, hostID,IDcm, Xpath="/SASAgentActiveList/HM_SASAGENT[@name='";
+            Document documento;
+            SAXBuilder builder = new SAXBuilder();
+            Element elemento;
+            Iterator itr,itrHostList;
+            List hostList, params = new ArrayList(), paramsDelete= new ArrayList();
+            HostEntityInfo host;
+            
+           try {
+           
+               logger.info("inizio metodo respawn");
+                lista=this.query("/SASAgentActiveList");
+          //      logger.info("risposta query"+lista);    
+            if(!lista.equalsIgnoreCase("")){
+                    documento=builder.build(new StringReader( lista ));
+                    itr= documento.getRootElement().getChildren().iterator();
+                    IDcm=this.createIDString();
+                    params.add(IDcm);
+                    paramsDelete.add("SASAgentHm");
+                    paramsDelete.add(" ");
+                    
+                 while(itr.hasNext()){
+                    elemento=(Element) itr.next();
+                    hostID=elemento.getAttributeValue("name");
+          //          logger.info("valore host_id  "+hostID);
+                   
+                    
+                    hostList=(List)this.invoke("InfoAgent", "listHostManager", true, new ArrayList());
+          //      logger.info("lista host ottenuta ");
+                itrHostList=hostList.iterator();
+                while(itrHostList.hasNext()){
+                         host=(HostEntityInfo)itrHostList.next();
+          //               logger.debug("nome host: "+host.getNick());
+                        if(hostID.equals(host.getNick())){
+                                     this.remoteInvocation(hostID, "SASAgentHm", "controllaIDcm", false, params);
+               
+                        }
+                        else{
+                            paramsDelete.set(1,Xpath + hostID + "']");
+                            
+            //                logger.debug("prima della delete");
+                           logger.debug("elem lista indice 1: "+(String)paramsDelete.get(1));
+                            
+                           this.invoke("DatabaseManagerAgent","deleteNode",false,paramsDelete);
+            //               logger.debug("dopo la deleteNode");
+                        }
+                    }
+                 }
+            }
+                
+   
+        } catch (CleverException ex) {
+            logger.debug("Error respawn method"+ex);
+        } catch (JDOMException ex) {
+            logger.debug("Error respawn method"+ex);
+        } catch (IOException ex) {
+            logger.debug("Error respawn method"+ex);
+        }catch(Exception ex){
+            logger.debug("Error respawn method"+ex);
+        }
+    }
 }

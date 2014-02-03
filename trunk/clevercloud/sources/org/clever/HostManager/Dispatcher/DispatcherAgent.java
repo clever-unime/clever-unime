@@ -41,6 +41,7 @@ import org.jivesoftware.smack.packet.Packet;
 /**
  *
  * @author alessiodipietro
+ * @author Antonio Galletta 2013
  */
 class NotificationThread extends Thread implements PacketListener 
 {
@@ -85,30 +86,34 @@ class NotificationThread extends Thread implements PacketListener
                     logger.error("InterruptedException: "+ex);
                 }
             }
-            logger.debug("£$£ target4");
+           // logger.debug("£$£ target4");
             target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
-            logger.debug("?=) target="+target);
-            //no active cc
+         //   logger.debug("?=) target="+target);
+            
             while(target == null) {
                 try {
-                    logger.debug("£$£ target5");
+            //        logger.debug("£$£ target5");
                     CMisPresent = false;
                     while (!CMisPresent) {
-                        wait();
-                        logger.debug("£$£ target6");
+                        wait(5000);
+                        this.processPacket(null);
+              //          logger.debug("£$£ target6");
+                        logger.debug("CMisPresent:"+CMisPresent);
                     }
-                    logger.debug("£$£ target6A");
+                //    logger.debug("£$£ target6A");
                     target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
-                    logger.debug("£$£ target7");
+                //    logger.debug("£$£ target7");
                 } catch (InterruptedException ex) {
                     logger.error("InterruptedException: "+ex);
+                } catch(Exception ex){
+                    logger.error("eccezione disp agent: "+ex);
                 }
             }
-            logger.debug("£$£ target8");
+       //     logger.debug("£$£ target8");
             CleverMessage msg = queue.poll();
-            logger.debug("£$£ target9");
+       //     logger.debug("£$£ target9");
             msg.setDst(target);
-            logger.debug("X?X target="+target);
+       //     logger.debug("X?X target="+target);
             connectionXMPP.sendMessage(target, msg);
 
         }
@@ -116,8 +121,9 @@ class NotificationThread extends Thread implements PacketListener
 
     @Override
     public synchronized void processPacket(Packet packet) {
+       logger.info("processpacket!!");
         if (connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN) != null) {
-            //logger.debug("£$£ un cm è entrato nella room ");
+            logger.debug("£$£ un cm è entrato nella room ");
             CMisPresent = true;
             this.notifyAll();
         }
@@ -196,7 +202,7 @@ public void initialization() throws CleverException
     }
 
     /**
-     * @param notificationThreshold the notificationThreshold to set
+     * @param notificationsThreshold the notificationThreshold to set
      */
     public void setNotificationThreshold(int notificationsThreshold) {
         this.notificationsThreshold = notificationsThreshold;

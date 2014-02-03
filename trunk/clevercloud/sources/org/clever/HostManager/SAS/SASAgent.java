@@ -62,6 +62,7 @@ import org.xml.sax.SAXException;
 /**
  *
  * @author alessiodipietro
+ * @author Antonio Galletta 2013
  */
 public class SASAgent extends Agent {
 
@@ -74,14 +75,14 @@ public class SASAgent extends Agent {
     protected SimpleDateFormat sdfSos = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     private FileStreamer fs = new FileStreamer();
     private Long alertExpirationMinutes;
-    String cfgPath="./cfg/configuration_sasagent.xml";
-
+    private String cfgPath="./cfg/configuration_sasagent.xml";
+    private String IDcm;
     
     public SASAgent() throws CleverException {
             super();
         try {
             super.setAgentName("SASAgentHm");
-           
+           //TODO: spostare questo codice nel metodo di inizializzazione
             logger = Logger.getLogger("SASAgentHm");
             logger.debug("SASAgentHm start");
             Properties prop = new Properties();
@@ -139,11 +140,18 @@ public class SASAgent extends Agent {
                 logger.error("error in SaS Hm wait");
             }
             // */
+         
+            
+            /* codice commentato da Antonio Galletta
+               creo la notifica tramite costruttore
+            
             Notification presenceNotification = new Notification();
             presenceNotification.setId("SAS/Presence");
             presenceNotification.setAgentId("SASAgentHm");
-            this.sendNotification(presenceNotification);
-            
+          */
+            logger.debug("creazione notifica ed invio presence");
+            this.sendNotification(new Notification("SAS/Presence",null, null,"SASAgentHm"));
+           
             
             
         } catch (InstantiationException ex) {
@@ -158,7 +166,7 @@ public class SASAgent extends Agent {
 
     }
 
-    public Document sendExpirationAdvertiseRequest(Element expirationAdvertiseRequestElement){
+   public Document sendExpirationAdvertiseRequest(Element expirationAdvertiseRequestElement){
         ArrayList<String> advertisements=new ArrayList<String>();
         String phenomenonAdvertise="";
         try {
@@ -199,6 +207,7 @@ public class SASAgent extends Agent {
         Notification notification = new Notification();
         notification.setId("SAS/Advertise");
         notification.setBody(outputter.outputString(advertiseRequestElement));
+        notification.setAgentId("SASAgentHm");
         this.sendNotification(notification);
 
         //add advertise to pendingRequests
@@ -473,7 +482,22 @@ public class SASAgent extends Agent {
             logger.equals("Error starting expiration timer: "+ex);
         }
     }
-
+/**
+ * 
+ * @param IDcm Stringa univoca che identifica il CM
+ * 
+ * Questo metodo serve per controllare se il CM a cui è sottoscritto è quello attivo
+ * e reinviare la presence se si era persa la sottoscrizione
+ */
+    public void controllaIDcm(String IDcm){
+        logger.debug("inizio metodo controllaIDCM");
+        
+        if(!IDcm.equals(this.IDcm)){
+           logger.debug("reinvio della sas/presence");
+            this.sendNotification(new Notification("SAS/Presence",null, null,"SASAgentHm"));
+            }
+        }
+    
     public void publicationsRecovery(String queryResult) throws CleverException{
         logger.info("?=) publication rcovery start");
         Document queryResultDocument=this.stringToDom("<queryResult>"+queryResult+"</queryResult>");
@@ -564,6 +588,97 @@ public class SASAgent extends Agent {
         
         
 
+    }
+    /**
+     * 
+     * @param queryResult
+     * @param cmIDString unique string used to identify which cm has been subscribed to the agent 
+     * @throws CleverException 
+     */
+     public void publicationsRecovery(String queryResult, String cmIDString) throws CleverException{
+        logger.info("?=) publication recovery start");
+        Document queryResultDocument=this.stringToDom("<queryResult>"+queryResult+"</queryResult>");
+        Element queryResultElement=queryResultDocument.detachRootElement();
+        
+        List subscriptionOfferingList=queryResultElement.getChildren("SubscriptionOffering");
+        List advertiseList=queryResultElement.getChildren("advertise");
+        
+        Iterator iteratorSubscriptionOffering=subscriptionOfferingList.iterator();
+        Iterator iteratorAdvertise=advertiseList.iterator();
+        
+        String publicationId="";
+        Element desiredPublicationExpiration = null;
+        
+        Document advertiseRequestDocument=new Document();
+        String requestId="";
+        //build completedRequest hashTable
+        while(iteratorSubscriptionOffering.hasNext()){
+            try {
+                Element subscriptionOffering=(Element)iteratorSubscriptionOffering.next();
+                Element advertise=(Element)iteratorAdvertise.next();
+                Element advertiseElement=new Element("Advertise");
+                publicationId=advertise.getAttributeValue("pubId");
+                desiredPublicationExpiration = advertise.getChild("DesiredPublicationExpiration");
+                requestId=advertise.getChildText("RequestID");
+                this.IDcm=cmIDString;
+               logger.debug("publ ID: "+publicationId+ "reqID :" +requestId +" idCm: "+IDcm);
+               
+                advertiseElement.addContent(subscriptionOffering.getChild("AlertMessageStructure").detach());
+                advertiseElement.addContent(subscriptionOffering.getChild("FeatureOfInterest").detach());
+                advertiseElement.addContent(subscriptionOffering.getChild("OperationArea").detach());
+                advertiseElement.addContent(subscriptionOffering.getChild("AlertFrequency").detach());
+                advertiseElement.addContent(desiredPublicationExpiration.detach());
+                
+                advertiseRequestDocument.setRootElement(advertiseElement);
+                
+                //build advertiseRequestEntry
+                AdvertiseRequestEntry advertiseRequestEntry = new AdvertiseRequestEntry();
+                advertiseRequestEntry.publicationId=publicationId;
+                advertiseRequestEntry.advertiseRequest=outputter.outputString(advertiseRequestDocument);
+                //System.out.println(advertiseRequestEntry.advertiseRequest);
+                advertiseRequestEntry.timer=new Timer();
+                Date expirationDate=sdf.parse(desiredPublicationExpiration.getText());
+                
+                AdvertisementExpirationTask advertisementExpirationTask=new AdvertisementExpirationTask(requestId,advertiseRequestEntry,this,this.alertExpirationMinutes);
+                advertiseRequestEntry.timer.schedule(advertisementExpirationTask, expirationDate);
+                
+                //start getObservation thread
+                GetObservationThread getObservationThread=new GetObservationThread(outputter.outputString(advertiseRequestDocument),this);
+                advertiseRequestEntry.getObservationThread=getObservationThread;
+                advertiseRequestEntry.getObservationThread.start();
+                logger.info("GetObservationThread start....sincronization done!");
+                //logger.info("advertise request document:\n!"+advertiseRequestDocument.toString());
+                this.completedRequests.put(requestId, advertiseRequestEntry);
+            }
+            catch (ParseException ex) {
+                logger.error("Error recovering completedRequests hashtable: "+ex);
+                
+            }
+        }
+        
+        //start reader on SOSAgent
+        ArrayList params=new ArrayList();
+        this.invoke("SOSAgent", "startReader", true, params);
+        
+        //get advertisements from SOS
+        ArrayList paramsGet=new ArrayList();
+        ArrayList<String> advertisements=new ArrayList<String>();
+        try {
+            advertisements=(ArrayList<String>)this.invoke("SOSAgent", "getAdvertisements", true, params);
+        } catch (CleverException ex) {
+            logger.error("Error getting advertisements from SOSAgent: "+ex);
+            throw new CleverException("Error getting advertisements from SOSAgent: "+ex);
+        }
+        //send advertisement request to SASAgent on cluster Manager
+        Iterator iterator=advertisements.iterator();
+        String advertiseRequest="";
+        while(iterator.hasNext()){
+            
+            advertiseRequest=(String) iterator.next();
+            logger.debug("?=) advertiseRequest");
+            this.advertise(advertiseRequest);  
+        }
+        //System.out.println("SASAgent:get advertisement");
     }
 
     protected Document stringToDom(String xmlSource) {

@@ -30,9 +30,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
@@ -41,6 +39,10 @@ import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.jivesoftware.smackx.muc.Occupant;
 
+/**
+ * @autor Antonio Galletta 2014
+ *
+ */
 
 
 public class InfoAgent extends CmAgent
@@ -89,6 +91,8 @@ public class InfoAgent extends CmAgent
     }
 
     public List listHostManager(){
+        
+        logger.debug("dentro list host manager");
         Collection <Occupant>  list_HC=connectionXMPP.getHCsInRoom(ConnectionXMPP.ROOM.CLEVER_MAIN);
         Occupant occupant = null;
         ArrayList l2 = new ArrayList();
@@ -98,6 +102,7 @@ public class InfoAgent extends CmAgent
 
             occupant=(Occupant) i.next();
             hostManager= new HostEntityInfo();
+            logger.debug("name host: "+occupant.getNick());
             hostManager.setNick(occupant.getNick());
             hostManager.setActive(true);
             l2.add(hostManager);
@@ -106,24 +111,54 @@ public class InfoAgent extends CmAgent
         return l2;
     }
 
-    public List listClusterManager(){
+    public synchronized List listClusterManager() throws Exception{
+        logger.debug("dentro list cluster manager");
+        int tentativo;
         Collection <Occupant>  list_HC=connectionXMPP.getCCsInRoom(ConnectionXMPP.ROOM.CLEVER_MAIN);
         Occupant occupant = null;
         ArrayList l2 = new ArrayList();
         HostEntityInfo clusterManager;
-        String CCActive = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
-
+        String CCActive =" ";
+        
+        CCActive = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
+ for(tentativo=0; tentativo<5;tentativo++){
+   //  logger.debug("tentativo numero: " +tentativo);
+     logger.debug("nome ccActive "+CCActive);
+            if(CCActive==null){
+                    try{
+                        this.wait(3000);
+                        CCActive = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
+                        list_HC=connectionXMPP.getCCsInRoom(ConnectionXMPP.ROOM.CLEVER_MAIN);
+                        }
+                    catch(InterruptedException exc){
+                            logger.debug("error in listClusterManager "+ exc.getMessage());
+                             }
+                }
+            else {
+                    break;
+                 }
+        }
+if(tentativo ==5){ //TODO: richiamare un metodo per riavviare il clusterCoordinator
+    logger.debug("impossibile trovare un cm valido");
+    Exception exc =new Exception();
+    throw exc;
+    
+}
+ 
+else{
         for (Iterator i = list_HC.iterator(); i.hasNext();) {
-
             occupant=(Occupant) i.next();
             clusterManager= new HostEntityInfo();
             clusterManager.setNick(occupant.getNick());
-            if( CCActive.equals(occupant.getNick()) )
+            if( CCActive.equals(occupant.getNick()) ){
                 clusterManager.setActive(true);
-            else
+            }
+            else{
                 clusterManager.setActive(false);
-            l2.add(clusterManager);
+            }
+                l2.add(clusterManager);
         }
+ }
         return l2;
         
     }

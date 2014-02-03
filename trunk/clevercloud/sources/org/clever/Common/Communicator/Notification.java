@@ -26,6 +26,7 @@ package org.clever.Common.Communicator;
 /**
  *
  * @author alessiodipietro
+ * @author Antonio Galletta
  */
 public class Notification {
     private String id;
@@ -33,6 +34,37 @@ public class Notification {
     private String hostId;
     private String agentId;
     //todo timestamp
+   
+    /**
+     * empty costructor
+     */
+    public Notification(){}
+    
+    /**
+     * 
+     * @param id
+     * @param body
+     * @param hostId
+     * @param agentId 
+     * 
+     * when a parameter is not to be used, in the constructor must pass null
+     */
+    public Notification(String id, Object body,String hostId,String agentId){
+        if(id!=null){
+            this.setId(id);
+            }
+        if(body!=null){
+            this.setBody(body);
+            }
+        if(hostId!=null){
+            this.setHostId(hostId);
+            }
+        if(agentId!=null){
+            this.setAgentId(agentId);
+            }
+    }
+
+    
 
     /**
      * @return the notifyId
@@ -41,9 +73,9 @@ public class Notification {
         return id;
 
     }
-
-    /**
-     * @param notifyId the notifyId to set
+    
+     /**
+     * @param notificationId
      */
     public void setId(String notificationId) {
         this.id = notificationId;

@@ -122,14 +122,19 @@ public abstract class Agent implements MethodInvokerHandler {
         }
         try {
             //agent method
+            logger.debug("nome metodo  "+method.getMethodName());
             mthd = this.getClass().getMethod(method.getMethodName(), par);
-
-            if (method.getHasReturn()) {
+        //        logger.debug("dopo mthd");
+          //      logger.debug("stampo this "+this);
+            //    logger.debug("stampo input "+input);
+              //  logger.info("dopo stampo input");
+                if (method.getHasReturn()) {
                 output = (Object) mthd.invoke(this, input);
-
+          //  logger.debug("dopo invocazione");
 
             } else {
                 mthd.invoke(this, input);
+            //    logger.debug("dopo invocazione");
                 output = null;
             }
             logger.debug("Method invoked: " + method.getMethodName());

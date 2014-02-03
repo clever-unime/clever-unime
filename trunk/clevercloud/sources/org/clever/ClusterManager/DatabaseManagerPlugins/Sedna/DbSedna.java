@@ -44,6 +44,7 @@ import org.xmldb.api.modules.XQueryService;
 /**
  * @author Giuseppe Tricomi
  * @author alessiodipietro
+ * @author Antonio Galletta
  */
 public class DbSedna implements DatabaseManagerPlugin {
     private Agent owner;
@@ -132,6 +133,7 @@ public class DbSedna implements DatabaseManagerPlugin {
             updateStr = "update insert " + node + " "
                     + where + " document(\"" + this.document + "\")/" + xpathAgent + location;
             serviceUpdate.update(updateStr);
+             logger.debug("dentro insertNode:" +updateStr);
             //collect.close();
         } catch (XMLDBException ex) {
             logger.error("Insert node failed: " + ex.getMessage());
@@ -173,6 +175,7 @@ public class DbSedna implements DatabaseManagerPlugin {
                     + where + " document(\"" + this.document + "\")/" + xpathAgent + location;
             serviceUpdate.update(updateStr);
             //System.out.println(updateStr);
+            logger.debug("dentro insertNode:" +updateStr);
             collect.close();
         } catch (XMLDBException ex) {
             logger.error("Insert node failed: " + ex.getMessage());
@@ -762,6 +765,7 @@ public class DbSedna implements DatabaseManagerPlugin {
             updateStr = "update replace $a in document(\"" + this.document + "\")/" + xpathAgent + location + " " + where + " " + node;
             //System.out.println(updateStr);
             serviceUpdate.update(updateStr);
+            logger.debug("dentro update: "+updateStr);
 
             collect.close();
         } catch (XMLDBException ex) {
@@ -1209,6 +1213,7 @@ public class DbSedna implements DatabaseManagerPlugin {
                     + " with "+node;
             serviceUpdate.update(updateStr);
             collect.close();
+            logger.debug("dentro replace:" +updateStr);
         } catch (XMLDBException ex) {
             logger.error("Replace node failed: " + ex.getMessage());
             throw new CleverException("CM database update failed! " + ex);
@@ -1243,6 +1248,7 @@ public class DbSedna implements DatabaseManagerPlugin {
                     + " document(\"" + this.document + "\")/" + xpathAgent + location
                     + " with "+node;
             serviceUpdate.update(updateStr);
+             logger.debug("dentro replace:" +updateStr);
             //collect.close();
         } catch (XMLDBException ex) {
             logger.error("Update node failed: " + ex.getMessage());
@@ -1260,18 +1266,42 @@ public class DbSedna implements DatabaseManagerPlugin {
     }
     
     /**
-     * This fuction prepare context necessary for storing SAS/Publish notify.
+     * This fuction prepare context necessary for storing SAS/Publish or SAS/Presence notify.
      * @param HostId
      * @param agentId
      * @param node
      * @param location
+     * @return 
      * @throws CleverException 
      */
-    synchronized public void PrepareNode4Sens(String HostId,String agentId,String location) throws CleverException {
-        logger.debug("Esperimento2.1"); 
-        if(!this.checkAgentNode(agentId,location)){
-             logger.debug("Esperimento2.2");
-             this.insertNode(HostId,agentId,"<SASPubblicationHistory/>","into","");
-         }
+   
+    synchronized public boolean checkHMAgentNode(String agentId, String location) throws CleverException {
+        boolean existsAgentNode = false;
+        String filter = "";
+        Collection collect = null;
+        try {
+
+            collect = this.connect();
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/hm/agent[@name='" + agentId + "']" + location);
+            ResourceIterator results = resultSet.getIterator();
+            existsAgentNode = results.hasMoreResources();
+
+
+        } catch (XMLDBException ex) {
+            logger.error("Check Agent node failed: " + ex.getMessage());
+            throw new CleverException("Error checking node: " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+
+            }
+        }
+        return existsAgentNode;
     }
+    
 }

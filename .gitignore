@@ -4,3 +4,6 @@
 *.jar
 *.war
 *.ear
+*.log
+*java.netbeans-base
+/trunk/clevercloud/nbproject/private/

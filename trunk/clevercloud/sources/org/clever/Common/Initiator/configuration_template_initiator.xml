@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <server>212.189.207.118</server>
+  <server>agalletta-PC</server>
   <port>5222</port>
   <tls>false</tls>
   <caJks />
@@ -11,7 +11,7 @@
   <password></password>
   <nickname></nickname>
  
-  <room>room@conference.212.189.207.118</room>
+  <room>room@conference.agalletta-PC</room>
    <threshold>1</threshold> <!-- la threshold effettivamnte usata x istanziare i CC è questa!! -->
     <activatedCM>true</activatedCM><!--> questo flag specifica se l'initiator può istanziare Cluster manager <-->
     <activatedHM>true</activatedHM><!--questo flag specifica se l'initiator può istanziare Host manager -->

@@ -124,14 +124,14 @@ public class ConnectorDB {
         try{
             if(this.conn==null)
             {
-                //logger.debug("jdbc:mysql://"+this.getHostname()+"/"+this.getDbname()+"?user="+this.getUser()+"&password="+this.getPass());
+                logger.debug("jdbc:mysql://"+this.getHostname()+"/"+this.getDbname()+"?user="+this.getUser()+"&password="+this.getPass());
                 this.conn = (Connection) DriverManager.getConnection("jdbc:mysql://"+this.getHostname()
                         +"/"+this.getDbname()+"?user="+this.getUser()+"&password="+this.getPass());//simone-S1mone
                 return true;
             }
             else if(this.conn.isClosed())
             {
-                //logger.debug("jdbc:mysql://"+this.getHostname()+"/"+this.getDbname()+"?user="+this.getUser()+"&password="+this.getPass());
+                logger.debug("jdbc:mysql://"+this.getHostname()+"/"+this.getDbname()+"?user="+this.getUser()+"&password="+this.getPass());
                 this.conn = (Connection) DriverManager.getConnection("jdbc:mysql://"+this.getHostname()
                         +"/"+this.getDbname()+"?user="+this.getUser()+"&password="+this.getPass());//simone-S1mone
                 return true;
@@ -188,8 +188,8 @@ public class ConnectorDB {
             {
                 if((timestamp==null) && (idsensorBoard==null) ){
                     Statement stmt =  (Statement) this.conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-                    String query="select * from "+this.dbname+"." + tabella;
-                    //logger.debug(query);
+                    String query="select * from " + tabella;
+                    logger.debug(query);
                     stmt.executeQuery(query);
                     rs=stmt.getResultSet ();
                     //this.closeConnection();
@@ -198,9 +198,9 @@ public class ConnectorDB {
                 }
                 else if((timestamp==null) && !(idsensorBoard==null) ){
                     Statement stmt =  (Statement) this.conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-                    String query="select * from " +this.dbname+"."+ tabella+ " where `"+this.sBoardCol+"` = "
+                    String query="select * from " + tabella+ " where `"+this.sBoardCol+"` = "
                         + idsensorBoard;
-                    //logger.debug("select * from " +this.dbname+"."+ tabella+ " where `"+this.sBoardCol+"` = "+ idsensorBoard);
+                    logger.debug("select * from " + tabella+ " where `"+this.sBoardCol+"` = "+ idsensorBoard);
                     stmt.executeQuery(query);
                     rs=stmt.getResultSet ();
                     //this.closeConnection();
@@ -208,9 +208,9 @@ public class ConnectorDB {
                 }
                 else if(!(timestamp==null) && (idsensorBoard==null) ){
                     Statement stmt =  (Statement) this.conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-                    String query="select * from " +this.dbname+"."+ tabella+ " where `"+this.timestampCol+"` > '"
+                    String query="select * from " + tabella+ " where `"+this.timestampCol+"` > '"
                         + timestamp+"'";
-                    //logger.debug("select * from " +this.dbname+"."+ tabella+ " where `"+this.timestampCol+"` > '"+ timestamp+"'");
+                    logger.debug("select * from " + tabella+ " where `"+this.timestampCol+"` > '"+ timestamp+"'");
                     stmt.executeQuery(query);
                     rs=stmt.getResultSet ();
                     //this.closeConnection();
@@ -219,16 +219,13 @@ public class ConnectorDB {
                 else
                 {
                     Statement stmt =  (Statement) this.conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_READ_ONLY);
-                    String query="select * from " +this.dbname+"."+ tabella + " where `"+this.sBoardCol+"` = "
+                    String query="select * from " + tabella + " where `"+this.sBoardCol+"` = "
                         + idsensorBoard+ " and `"+this.timestampCol+"` > '" + timestamp +"' order by `"+this.timestampCol+"` asc ";
-                    //logger.debug("select * from " +this.dbname+"."+ tabella + " where `"+this.sBoardCol+"` = "
-                    //    + idsensorBoard+ " and `"+this.timestampCol+"` > '" + timestamp +"' order by `"+this.timestampCol+"` asc ");
+                    logger.debug("select * from " + tabella + " where `"+this.sBoardCol+"` = "
+                        + idsensorBoard+ " and `"+this.timestampCol+"` > '" + timestamp +"' order by `"+this.timestampCol+"` asc ");
                     stmt.executeQuery(query);
                     rs=stmt.getResultSet ();
                     //this.closeConnection();
-                    //logger.debug("select * from " +this.dbname+"."+ tabella + " where `"+this.sBoardCol+"` = "
-                    //    + idsensorBoard+ " and `"+this.timestampCol+"` > '" + timestamp +"' order by `"+this.timestampCol+"` asc ");
-                    
                     return rs;
                 }
             } 
@@ -255,13 +252,14 @@ public class ConnectorDB {
      */
     public void createRSMap(String timestamp, String tabella, String idsensorBoard){
         Integer index=null;
-        //logger.debug("getRecordset("+timestamp+","+ tabella+","+ idsensorBoard);
+        logger.debug("getRecordset("+timestamp+","+ tabella+","+ idsensorBoard);
         this.arlistResultMap.add(this.getRecordset(timestamp, tabella, idsensorBoard));
         if(!this.resultsetMap.containsKey(tabella))
         {
             index=this.arlistResultMap.size();
             this.resultsetMap.put(tabella, index);
-            //logger.debug("put "+tabella+" in "+index);
+            logger.debug("put "+tabella+" in "+index);
+            this.printrsMap();
         }
         
     }
@@ -271,10 +269,20 @@ public class ConnectorDB {
      * @param tabella 
      */
     public void remove_EL_RSMap(String tabella){
-        if(this.resultsetMap.containsKey(tabella))
-        {
-            int i=this.resultsetMap.get(tabella);
-            this.arlistResultMap.remove(i);
+        try{
+            logger.debug("Remove1"); 
+            if(this.resultsetMap.containsKey(tabella))
+            {
+                logger.debug("Remove2");
+                int i=this.resultsetMap.get(tabella);
+                logger.debug("Remove3"); 
+                this.arlistResultMap.set(i-1, null);
+                this.resultsetMap.remove(tabella);
+                logger.debug("REmove4");
+                this.printrsMap();
+            }
+        }catch(Exception e){
+            logger.error("remove_EL_RSMap"+ e.getMessage());
         }
     }
     
@@ -287,7 +295,7 @@ public class ConnectorDB {
      */
     public String getMisure (String misura, String idmisure,String tab,String idcolname)
     {
-        //logger.debug("getmisure :"+misura+" "+idcolname+" "+ tab);
+        logger.debug("getmisure :"+misura+" "+idcolname+" "+ tab);
         
         try
         {
@@ -315,8 +323,11 @@ public class ConnectorDB {
         catch (Exception ex)
         {
             logger.error(ex.getMessage());
-            
             ex.printStackTrace();
+            
+            this.closeConnection();
+            logger.debug("%&%");
+            this.makeConnection();
         }
         return null;
     }
@@ -383,18 +394,19 @@ public class ConnectorDB {
                 logger.debug("null");
             else
             {
-                rs.first();
-                Vector<String> v = new Vector<String>();
-                String e;
                 
-                if(rs.wasNull()){
+                Vector<String> v = new Vector<String>();
+                if(rs.wasNull())
                     logger.debug("resultset is empty");
-                }
                 else
-                {    
+                {   
+                    rs.first();
+                    
                     do
                     {
-                      //logger.debug("dbg"+misura+":"+rs.getMetaData().getColumnLabel(1)+" "+rs.getMetaData().getColumnLabel(2)+rs.getMetaData().getTableName(1));
+                      String e;
+                      
+                      //logger.debug("dbg"+rs.getMetaData().getColumnLabel(1)+" "+rs.getMetaData().getColumnLabel(2)+rs.getMetaData().getTableName(1));
                       e=rs.getString(misura);
                       v.add(e);
                     }
@@ -404,10 +416,15 @@ public class ConnectorDB {
                 }
             }
         }
+        
         catch (Exception ex)
         {        
             logger.error(ex.getMessage());
             logger.error(ex.getStackTrace()[0]);
+            this.closeConnection();
+            logger.debug("%&%");
+            this.makeConnection();
+            
         }
         
         return null;
