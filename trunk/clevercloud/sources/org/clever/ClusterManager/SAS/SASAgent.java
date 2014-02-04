@@ -123,6 +123,7 @@ public class SASAgent extends CmAgent {
     public SASAgent(/*String agentName*/) throws CleverException {
         
         try {
+            ts=new Timestamp(System.currentTimeMillis());
             super.setAgentName("SASAgent");
             agentName="SASAgent";
             logger = Logger.getLogger(agentName);
@@ -134,7 +135,7 @@ public class SASAgent extends CmAgent {
             sp = spf.newSAXParser();
             xr = sp.getXMLReader();
             init();
-            ts=new Timestamp(System.currentTimeMillis());
+            
             initCleverResouces();
             this.threadMessageDispatcher = new ThreadMessageDispatcher(this, 100, 10); //TODO: retrieve parameters from configuration file
             this.threadMessageDispatcher.start();
