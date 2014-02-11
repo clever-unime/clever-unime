@@ -554,7 +554,7 @@ public class StorageManager implements StorageManagerPlugin {
         * 4:lock    
         */
 
-       // Strat Controls
+       // Start Controls
        List params1 = new ArrayList();
        if(result.get(0).toString().isEmpty()){
             throw new LogicalCatalogException("object VFS not exist");

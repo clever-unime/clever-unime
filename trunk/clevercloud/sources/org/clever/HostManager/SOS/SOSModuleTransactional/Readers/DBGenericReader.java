@@ -418,10 +418,11 @@ public class DBGenericReader implements ReaderInterface{
     {
         //sensorStruct = new Sensor_Struct();
         String idsens_toregister=eSensid;
-        logger.debug("\n\n\n\n\n\nstart registerInfo.sensorinfo"+eSensid);
+        logger.debug("\n\n\n\n\n\nStart registerInfo.sensorinfo"+eSensid);
         sensorStruct=this.register_sensorInfo(idsens_toregister, sensorStruct);
         //Sensor Components
         Vector<Sensor_Component> sensorComponentVector = sensorStruct.getSensor_Component();
+        db.remove_EL_RSMap("misura_anagrafica");
         this.db.createRSMap(null, "misura_anagrafica", idsens_toregister);
         Vector<String> sComponent=this.db.getMisure("idmisura_anagrafica", "misura_anagrafica");
         if (!sComponent.isEmpty()) 

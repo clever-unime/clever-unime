@@ -1033,6 +1033,7 @@ public class DbSedna implements DatabaseManagerPlugin {
      * @param agentId
      * @param location
      * @param condition
+     * @param ret
      * @return
      */
   synchronized public List getNameAttributes(String agentId,String location,String condition,String ret) {

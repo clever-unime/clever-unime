@@ -345,7 +345,7 @@ public class RegisterSensorXml {
 
 
 
-
+        
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer transformer = tFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");

@@ -69,8 +69,8 @@ import org.jivesoftware.smackx.filetransfer.OutgoingFileTransfer;
 //import org.safehaus.uuid.UUIDGenerator;
 
 /*
- * @author Valerio Barbera & Luca Ciarniello
- * @author Giuseppe Tricomi
+ * @author Valerio Barbera & Luca Ciarniello 2011
+ * @author Giuseppe Tricomi 2012
  */
 
 /**
@@ -163,162 +163,131 @@ public class ImageManager implements ImageManagerPlugin {
    * @throws CleverException
    * @throws Exception 
    */
-   public List storageIM(VFSDescription vfsD, LockFile.lockMode lock) throws FileSystemException, CleverException, Exception {
-       
-       String response = "";
-       String respLock;
-      List params = new ArrayList();
-      VirtualFileSystem vfs=new VirtualFileSystem();
-      vfs.setURI(vfsD);
-      FileObject file_s=vfs.resolver(vfsD, vfs.getURI(), vfsD.getPath1());
-      UUID id = UUID.randomUUID();
-      try{
-        if(!file_s.exists()){
-          // response="";  
-         params.add(response);
-          }
-        else{
-            
+    public List storageIM(VFSDescription vfsD, LockFile.lockMode lock) throws FileSystemException, CleverException, Exception {
+//TODO: low priority-> il primo if e il caso in cui non viene trovato nessun "SI" sono coincidenti può essere reso più pulito
+//cambiando la gestione delle info         
+        String response = "";
+        String respLock;
+        List params = new ArrayList();
+        VirtualFileSystem vfs = new VirtualFileSystem();
+        vfs.setURI(vfsD);
+        FileObject file_s = vfs.resolver(vfsD, vfs.getURI(), vfsD.getPath1());
+        UUID id = UUID.randomUUID();
+        try {
+            if (!file_s.exists()) {
+                // response="";  
+                params.add(response);
+            } else {
+
                 //src.ChangeLastModificationTime(file_s);
                 FileContent content = file_s.getContent();
-                String lastMod="";
-                if(file_s.getType().equals(FileType.FILE)){
-                DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
-                lastMod = dateFormat.format(new Date(content.getLastModifiedTime()));
+                String lastMod = "";
+                if (file_s.getType().equals(FileType.FILE)) {
+                    DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM);
+                    lastMod = dateFormat.format(new Date(content.getLastModifiedTime()));
                 }
                 //se la chiave non esiste
-                logger.debug("element searched : "+file_s.getName().getURI());
-                ResultSet rs=this.sqlite.retrieveElementsInMap(file_s.getName().getURI());
-                logger.debug("pos0A");
-             if ((!rs.isAfterLast()&&!rs.isBeforeFirst())) {
-                logger.debug("posA");
-                if (file_s.getType().equals(FileType.FOLDER)) {
-                    logger.debug("pos1");
-                    response=""+this.localRepository+id;
-                         params.add("new");
-                         params.add(response);
-                         params.add(lastMod);//date
-                         params.add("");//size
-                         params.add(lock);//lock
-                         
-                       }
-                    else{
-                    logger.debug("pos2");
-                    response=this.localRepository+id+"."+file_s.getName().getExtension();
-                    params.add("new");
-                    params.add(response);
-                    params.add(lastMod);//date
-                    params.add(content.getSize());//size
-                    params.add(lock);//lock
-                    
-                    }
-                    logger.debug("pos3");
-                    FileSystemManager mgr = VFS.getManager();
-                    logger.debug("pos4");
-                    FileObject file_d=mgr.resolveFile(response);
-                    logger.debug("pos5");
-                    vfs.cp(file_s, file_d);
-                    
-                if (file_s.getType().equals(FileType.FOLDER)) {
-                    logger.debug("Image1");
-                    this.sqlite.insertElementAtMap(file_s.getName().getURI(), response,"" ,lastMod,LockFile.getLockType(lock));
-               } else {
-                    logger.debug("Image2");
-                    this.sqlite.insertElementAtMap(file_s.getName().getURI(), response,new Long(content.getSize()).toString() ,lastMod,LockFile.getLockType(lock));
-                }
-                    
-                 }
-                else{
-                 logger.debug("posB");
-                        //b = (ArrayList) map.get(file_s.getName());
-                        //b = (ArrayList) map.get(file_s.getName());
-                // scorre la prima HasMap
+                logger.debug("element searched : " + file_s.getName().getURI());
+                ResultSet rs = this.sqlite.retrieveElementsInMap(file_s.getName().getURI());
+                //logger.debug("pos0A");
+                if ((!rs.isAfterLast() && !rs.isBeforeFirst())) {
+                    //logger.debug("posA");
+                    if (file_s.getType().equals(FileType.FOLDER)) {
+                        //logger.debug("pos1");
+                        response = "" + this.localRepository + id;
+                        params.add("new");
+                        params.add(response);
+                        params.add(lastMod);//date
+                        params.add("");//size
+                        params.add(lock);//lock
 
-                // Set keySet = map.keySet( );  
-                //Iterator keyIterator = keySet.iterator();
-                //while( keyIterator.hasNext( ) ) { 
-                //  Object key = keyIterator.next( );
-                
-                //non dovrebbero esserci problemi se lo commento in quanto il resultset non viene modificato
-                //rs=this.sqlite.retrieveElementsInMap(file_s.getName().getURI());
-                
-                
-                /*
-                Collection values = (Collection) map.get(file_s.getName());
-                Iterator valuesIterator = values.iterator();
-                int contatore = 0;*/
-                
-                /*
-                while(!rs.isAfterLast()){
-                    logger.debug(rs.getString("response"));
-                    rs.next();
-                }
-                */
-                
-                while (!rs.isAfterLast())
-                {
-                     LockFile l = new LockFile();
-                    respLock = l.checkLock(LockFile.getLockEnumType(rs.getString("lock")), lock);//((LockFile.lockMode) b1.get(2), lock);////
-                    if ("SI".equals(respLock)) {
-                         LockFile.lockMode b1l=LockFile.getLockEnumType(rs.getString("lock"));//(LockFile.lockMode) b1.get(2);//
-                         
-                         if (b1l.ordinal()>=lock.ordinal()) {
-                            params.add("notUpdate");
-                            params.add(rs.getString("response"));
-                            
-                         } 
-                         else {
-                            params.add("update");
-                            params.add(rs.getString("response"));
-                            params.add("");
-                            params.add("");
-                            params.add(lock);
-                            
-                            //cancellare vecchio lock ed inserire il nuovo
-                            this.sqlite.updateElementInMap("response='"+rs.getString("response")+"'","lock='"+LockFile.getLockType(lock)+"'" );
-                        }
-                            
+                    } else {
+                        //logger.debug("pos2");
+                        response = this.localRepository + id + "." + file_s.getName().getExtension();
+                        params.add("new");
+                        params.add(response);
+                        params.add(lastMod);//date
+                        params.add(content.getSize());//size
+                        params.add(lock);//lock
+
+                    }
+                    //logger.debug("pos3");
+                    FileSystemManager mgr = VFS.getManager();
+                    //logger.debug("pos4");
+                    FileObject file_d = mgr.resolveFile(response);
+                    //logger.debug("pos5");
+                    vfs.cp(file_s, file_d);
+
+                    if (file_s.getType().equals(FileType.FOLDER)) {
+                        //logger.debug("Image1");
+                        this.sqlite.insertElementAtMap(file_s.getName().getURI(), response, "", lastMod, LockFile.getLockType(lock));
+                    } else {
+                        //logger.debug("Image2");
+                        this.sqlite.insertElementAtMap(file_s.getName().getURI(), response, new Long(content.getSize()).toString(), lastMod, LockFile.getLockType(lock));
+                    }
+
+                } else {
+                    //logger.debug("posB");
+                    while (!rs.isAfterLast()) {
+                        LockFile l = new LockFile();
+                        respLock = l.checkLock(LockFile.getLockEnumType(rs.getString("lock")), lock);//((LockFile.lockMode) b1.get(2), lock);////
+                        if ("SI".equals(respLock)) {
+                            LockFile.lockMode b1l = LockFile.getLockEnumType(rs.getString("lock"));//(LockFile.lockMode) b1.get(2);//
+
+                            if (b1l.ordinal() >= lock.ordinal()) {
+                                params.add("notUpdate");
+                                params.add(rs.getString("response"));
+
+                            } else {
+                                params.add("update");
+                                params.add(rs.getString("response"));
+                                params.add("");
+                                params.add("");
+                                params.add(lock);
+
+                                //cancellare vecchio lock ed inserire il nuovo
+                                this.sqlite.updateElementInMap("response='" + rs.getString("response") + "'", "lock='" + LockFile.getLockType(lock) + "'");
+                            }
+
                             return params;
                         }
-                        
+
                         rs.next();
-                 } 
+                    }
                       //  }
-                
-                    if(file_s.getType().equals(FileType.FOLDER)){
-                       response=this.localRepository+id; 
-                       this.sqlite.insertElementAtMap(file_s.getName().getURI(), response,"" ,lastMod,LockFile.getLockType(lock));
-                       params.add("insert");
-                       params.add(response);       
-                       params.add(lastMod);
-                       params.add("");
-                       params.add(lock);
-                       
-                    } 
-                    else{
-                        response=this.localRepository+id+"."+file_s.getName().getExtension();
-                        logger.debug("Image4");
-                        this.sqlite.insertElementAtMap(file_s.getName().getURI(), response,new Long(content.getSize()).toString() ,lastMod,LockFile.getLockType(lock));
+
+                    if (file_s.getType().equals(FileType.FOLDER)) {
+                        response = this.localRepository + id;
+                        this.sqlite.insertElementAtMap(file_s.getName().getURI(), response, "", lastMod, LockFile.getLockType(lock));
                         params.add("insert");
-                        params.add(response);       
+                        params.add(response);
+                        params.add(lastMod);
+                        params.add("");
+                        params.add(lock);
+
+                    } else {
+                        response = this.localRepository + id + "." + file_s.getName().getExtension();
+                        //logger.debug("Image4");
+                        this.sqlite.insertElementAtMap(file_s.getName().getURI(), response, new Long(content.getSize()).toString(), lastMod, LockFile.getLockType(lock));
+                        params.add("insert");
+                        params.add(response);
                         params.add(lastMod);
                         params.add(content.getSize());
                         params.add(lock);
                     }
-                    
-                    FileSystemManager mgr = VFS.getManager();
-                    FileObject file_d=mgr.resolveFile(response);
-                    vfs.cp(file_s, file_d);
-                    return params;   
-   
-                    }
 
+                    FileSystemManager mgr = VFS.getManager();
+                    FileObject file_d = mgr.resolveFile(response);
+                    vfs.cp(file_s, file_d);
+                    return params;
+
+                }
+
+            }
+        } catch (Exception e) {
+            logger.error(e.getLocalizedMessage());
         }
-      }
-      catch(Exception e){
-          logger.error(e.getLocalizedMessage());
-      }
-      return params;
+        return params;
     }
 
   /**

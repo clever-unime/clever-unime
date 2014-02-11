@@ -118,14 +118,14 @@ public class RegisterSensor {
             for (int i = 0; i < ddp.registerNodeDomParser.phenomenonDescription.size(); i++) {
                 int flag_phen = 0;
                 String query_checkphenid = "SELECT `phenomenon_id` FROM `phenomenon` WHERE `unique_id` LIKE '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id().split(";")[0] + "'";
-               rs = db.exQuery(query_checkphenid);
+                rs = db.exQuery(query_checkphenid);
                 //se il fenomeno non è già presente
                 if (rs.next() == false) {
                     String queryphenomena = "INSERT INTO `sensorml`.`phenomenon` (`unique_id`, `phenomenon_description`, `unit`, `valuetype`) VALUES ('" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id().split(";")[0] + "', '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_description() + "', '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_unit() + "', '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_valuetype() + "');";
                     db.exUpdate(queryphenomena);
                     flag_phen = 1;
                 } else {
-                    logger.debug("\n phenomena già prensente con id "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id());
+                    logger.debug("phenomena già prensente con id "+ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getPhenomenon_id());
                 }
                 String query_checkoffid = "SELECT `offering_id` FROM `offering` WHERE `unique_id` LIKE '" + ddp.registerNodeDomParser.phenomenonDescription.elementAt(i).getOffering_id().split(";")[0] + "'";
                 rs = db.exQuery(query_checkoffid);

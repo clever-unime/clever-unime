@@ -88,9 +88,18 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
        if(!this.checkMatchingVmHMNode())
             this.initVmHMNodeDB();
          if(!this.checkVmRunningNode())
-            this.initVmRunningDB(); 
+            this.initVmRunningDB();
+       if(!this.checkVEDVMNode())
+            this.initVEDVMDB(); 
 
     }
+    private boolean checkVEDVMNode() throws CleverException{
+       List params = new ArrayList();
+        params.add("VirtualizationManagerAgent");
+        params.add("/"+this.nodoVEDescriptorVm); //XPath location with eventual predicate
+        return (Boolean)this.owner.invoke("DatabaseManagerAgent", "checkAgentNode", true, params); 
+    }
+    
     private boolean checkVmRunningNode() throws CleverException{
        List params = new ArrayList();
         params.add("VirtualizationManagerAgent");
@@ -105,8 +114,18 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         return (Boolean)this.owner.invoke("DatabaseManagerAgent", "checkAgentNode", true, params);
     }
     
+    private void initVEDVMDB() throws CleverException{
+        String node="<"+this.nodoVEDescriptorVm+"/>";
+        List params = new ArrayList();
+        params.add("VirtualizationManagerAgent");
+        params.add(node);
+        params.add("into");
+        params.add(""); //XPath location with eventual predicate
+        this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
+    }
+    
      private void initVmRunningDB() throws CleverException{
-         String node="<"+this.nodoVmRunning+"/>";
+        String node="<"+this.nodoVmRunning+"/>";
         List params = new ArrayList();
         params.add("VirtualizationManagerAgent");
         params.add(node);
@@ -159,7 +178,6 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         this.dispatchToExtern(this.HostManagerServiceGuacaTarget, this.agent, this.OS_service, serviceobject); //send object to OS_service Manager of Tiny Clever
         this.updateDesktop(vmname);
     }
-
     
     /**
      * Update Sedna DB for insert new item
@@ -168,35 +186,28 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
      * @throws CleverException
      * @throws Exception 
      */
-    private void updateDesktop(DesktopVirtualization desktop,String id) throws CleverException{  
-        
-        
-           List params = new ArrayList();
-        
-        
-           params.add("VirtualizationManagerAgent");
-           params.add("<desktop>"
-                             + "<username>"+desktop.getUsername()+"</username>"
-                             + "<password_user>"+desktop.getUserPassword()+"</password_user>"
-                             + "<password_vnc_vm>"+desktop.getVmVNCPassword()+"</password_vnc_vm>"
-                             + "<ip_vnc>"+desktop.getIpVNC()+"</ip_vnc>"
-                             + "<port>"+desktop.getPort()+"</port>"
-                    + "</desktop>");
-           params.add("with");
-           params.add("/org.clever.Common.VEInfo.VEDescription[./name/text()=\""+id+"\"]/desktop");
-       
-           this.owner.invoke("DatabaseManagerAgent", "updateNode", true, params);
-        
-        
-        
-        /* 
-        String node="<VMHTML5 name=\""+desktop.getUsername() +"\" host=\""+desktop.getIpVNC()+"\"><port>"+desktop.getPort()+"</port><pass_vnc>"+desktop.getVmVNCPassword()+"</pass_vnc><pass>"+desktop.getUserPassword()+"</pass></VMHTML5>";
+    private void updateDesktop(DesktopVirtualization desktop, String id) throws CleverException {
         List params = new ArrayList();
         params.add("VirtualizationManagerAgent");
-        params.add(node);
-        params.add("into");
-        params.add("/org.clever.Common.VEDescription[./name/text()='"+desktop.getUsername()+"']"); //XPath location with eventual predicate. Username coincide con il nome della vm
-        this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
+        params.add("<desktop>"
+                + "<username>" + desktop.getUsername() + "</username>"
+                + "<password_user>" + desktop.getUserPassword() + "</password_user>"
+                + "<password_vnc_vm>" + desktop.getVmVNCPassword() + "</password_vnc_vm>"
+                + "<ip_vnc>" + desktop.getIpVNC() + "</ip_vnc>"
+                + "<port>" + desktop.getPort() + "</port>"
+                + "</desktop>");
+        params.add("with");
+        params.add("/org.clever.Common.VEInfo.VEDescription[./name/text()=\"" + id + "\"]/desktop");
+        this.owner.invoke("DatabaseManagerAgent", "updateNode", true, params);
+
+        /* 
+         String node="<VMHTML5 name=\""+desktop.getUsername() +"\" host=\""+desktop.getIpVNC()+"\"><port>"+desktop.getPort()+"</port><pass_vnc>"+desktop.getVmVNCPassword()+"</pass_vnc><pass>"+desktop.getUserPassword()+"</pass></VMHTML5>";
+         List params = new ArrayList();
+         params.add("VirtualizationManagerAgent");
+         params.add(node);
+         params.add("into");
+         params.add("/org.clever.Common.VEDescription[./name/text()='"+desktop.getUsername()+"']"); //XPath location with eventual predicate. Username coincide con il nome della vm
+         this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
          
          */
     }
@@ -316,15 +327,15 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
          params1.add(location);
          String pathxml=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, params1); 
          VEDescription veD =(VEDescription) MessageFormatter.objectFromMessage(pathxml);
-
-         params.add(((StorageSettings)veD.getStorage().get(0)).getDiskPath());
+         String diskPath=((StorageSettings)veD.getStorage().get(0)).getDiskPath();
+         params.add(diskPath);
          params.add(targetHM);
          params.add(param.getLock());
          // physical path
          String res=(String) this.owner.invoke("StorageManagerAgent", "lockManager", true, params); 
          
          List params2 = new ArrayList();
-         params2.add(((StorageSettings)veD.getStorage().get(0)).getDiskPath());
+         params2.add(diskPath);
          Boolean check=(Boolean) this.owner.invoke("StorageManagerAgent", "check", true, params2);
         
          ((StorageSettings)veD.getStorage().get(0)).setDiskPath(res);
@@ -343,7 +354,7 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
          else{
               result=(Boolean)((CmAgent)this.owner).remoteInvocation(targetHM,"HyperVisorAgent", "createVm", true, params2);
          }
-         this.InsertItemIntoMatchingVEDVm(id,vmname,param.getLock(),res,"");
+         this.InsertItemIntoMatchingVEDVm(id,vmname,param.getLock(),res,diskPath);
          }
          /*
          String a="";
@@ -699,7 +710,11 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
          String pathHDD=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
          //this.logger.debug("path:"+pathHDD);
          params.clear();
-         
+         params.add("VirtualizationManagerAgent");
+         params.add("/Matching_VED_VM/VED[@VM_name='"+id+"']/HDD/text()");
+         String HDD=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+         //this.logger.debug("path:"+pathHDD);
+         params.clear();
          //inserire un controllo del tipo di lock realizzato sul disco della macchina
          //se  lock di tipo ex richiamre la funzione attuale altrimenti richiamare la funzione corretta
          //questa funzione deve essere modificata per eliminare il file corretto correlato alla vm
@@ -710,28 +725,18 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
          }
          else if((lock.equals("Concurrent Read"))||(lock.equals("Protected Read"))){
              params.add("VirtualizationManagerAgent");
-             params.add("/Matching_VED_VM/VED");
-             params.add("/ParentHDD/text()=\""+pathHDD+"\"");
-             params.add("/HDD");
-             List pathsHDD=(List<String>)this.owner.invoke("DatabaseManagerAgent", "getNameAttributes", true, params);
-             //logger.debug("X£X deletefile storage pathsHDDsize:"+pathsHDD.size()+" pathsHDD item:"+pathsHDD.toArray().toString());
-             if(pathsHDD.size()==1){
-                 params.clear();
-                 params.add(pathHDD);
-                 params.add(id);
-                 params.add(HMTarget);
-                 this.owner.invoke("StorageManagerAgent","deleteFile", true, params);
+             params.add("/Matching_VED_VM/VED/HDD/text()");
+             String pathsHDDs=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+             boolean testValue=testUsageHDD(pathsHDDs,HDD);
+             params.clear();
+             if(testValue)
+             {
+                params.add(HDD);
+                params.add(id);
+                params.add(HMTarget);
+                this.owner.invoke("StorageManagerAgent","deleteFile", true, params);
+                params.clear();
              }
-             params.clear();
-             params.add("VirtualizationManagerAgent");
-             params.add("/Matching_VED_VM/VED[@VM_name='"+id+"']/HDD/text()");
-             pathHDD=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
-             params.clear();
-             params.add(pathHDD);
-             params.add(id);
-             params.add(HMTarget);
-             this.owner.invoke("StorageManagerAgent","deleteFile", true, params);
-             params.clear();
          }
          else if(lock.equals("Concurrent Write")){
              //Nothing to do, the VM's Disk must not be deleted
@@ -769,9 +774,22 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
          params.add(id);
          ((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent", "unregisterVm", true, params);
          return true;
-        
-        
+   }
+ private boolean testUsageHDD(String pathHDD,String element2verfiy){
+     int counter=0;
+     String[] alp=pathHDD.split(".vdi");
+             for(int i =0;i<alp.length;i++){
+                 //String[] alp2=alp[i].split("/");
+                 if(element2verfiy.equals(alp[i]+".vdi")){
+                     counter++;
+                     logger.debug("$$confronto: "+element2verfiy+" "+alp[i]+".vdi"+" "+counter);
+                     if(counter>1)
+                         return false;
+                 }
+             }
+     return true;
  }
+ 
 public boolean attackInterface(String id,String inf,String mac,String type) throws CleverException{
   List params = new ArrayList();
         params.add("VirtualizationManagerAgent");
@@ -939,6 +957,7 @@ public String listMac_address(String id) throws CleverException{
      * @throws CleverException
      */
     public void InsertItemIntoMatchingVEDVm(String id,String vmname,LockFile.lockMode lock,String HDDpath,String ParentHDD) throws CleverException {
+        logger.debug("sto inserendo il VED element");
         String node="<VED name=\""+id+"\" VM_name=\""+vmname+"\"> <locklevel>"+new LockFile().getLockType(lock)
                     +"</locklevel><HDD>"+HDDpath+"</HDD> <ParentHDD>"+ParentHDD+"</ParentHDD></VED>";
         List params = new ArrayList();

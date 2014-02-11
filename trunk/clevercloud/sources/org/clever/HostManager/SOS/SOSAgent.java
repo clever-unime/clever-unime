@@ -173,7 +173,7 @@ public class SOSAgent extends Agent{
         try {
             ArrayList params=new ArrayList();
             params.add(advertisementRequest);
-            advertisementResponse=(String)this.invoke("SASAgentHm", "provadvertise", true, params);
+            advertisementResponse=(String)this.invoke("SASAgentHm", "advertise", true, params);
             logger.info(" sendSASAdvertise response=\n"+advertisementResponse);
         
         } catch (CleverException ex) {
