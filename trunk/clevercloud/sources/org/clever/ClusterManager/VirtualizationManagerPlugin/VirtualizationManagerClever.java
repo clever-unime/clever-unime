@@ -757,7 +757,7 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
              params.add(((StorageSettings)veD.getStorage().get(0)).getDiskPath());*/
              
              params.clear();
-             params.add(pathHDD);
+             params.add(HDD);
              params.add(id);
              params.add(HMTarget);
              this.owner.invoke("StorageManagerAgent","deleteFile", true, params);
