@@ -53,12 +53,17 @@ import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
 public class SensorBrain implements BrainInterface {
    
     Logger logger;
-    //DispatcherAgent dispatcherAgent;
+    DispatcherAgent dispatcherAgent;
     DispatcherPlugin dispatcherPlugin;
     
     public SensorBrain(DispatcherPlugin dispatcherPlugin) {
         logger = Logger.getLogger("SensorBrain");
         this.dispatcherPlugin = dispatcherPlugin;
+    }
+    public SensorBrain(DispatcherAgent dispatcheragent) {
+        logger = Logger.getLogger("SensorBrain");
+        this.dispatcherAgent= dispatcheragent;
+        this.dispatcherPlugin = dispatcherAgent.getDispatcherPlugin();
     }
   /**
      * This method is used to invoke the correct method of DB.
