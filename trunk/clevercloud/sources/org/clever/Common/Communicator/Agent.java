@@ -30,6 +30,7 @@
  */
 package org.clever.Common.Communicator;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -40,6 +41,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.Shared.LoggerInstantiator;
 
 /**
@@ -60,6 +62,7 @@ public abstract class Agent implements MethodInvokerHandler {
             InputStream in = getClass().getResourceAsStream("/org/clever/Common/Shared/logger.properties");
             prop.load(in);
             PropertyConfigurator.configure(prop);
+            
         } catch (IOException e) {
 
             logger.error("Missing logger.properties");
@@ -68,7 +71,9 @@ public abstract class Agent implements MethodInvokerHandler {
         loggerInstantiator = new LoggerInstantiator();
         logger = Logger.getLogger("Agent");
     }
-
+    
+    
+    
     /*
      * This function must implemented by all the agents children in this way: 1.
      * first must check if has already been assigned a name to the agent,
@@ -306,4 +311,32 @@ public abstract class Agent implements MethodInvokerHandler {
             }
         }
     }
+    
+    /**
+     * 
+     * @param logger
+     * @param pathLogConf dir dove andare a prendere i frammenti xml per comporre il file di conf
+     * @param pathDirOut dir dove salvare i file di log
+     * 
+     * es:
+     * pathLogConf -> "/sources/org/clever/HostManager/Info/log_conf/"
+     * pathDirOut -> "/LOGS/HostManager/Info"
+     */
+    public void setLog4J(Logger logger, String pathLogConf, String pathDirOut){
+      //
+      String radice =  System.getProperty("user.dir"); 
+      String path = radice +pathLogConf; 
+      String log4jConfigFile= path+"/conf.xml";
+      String vett[]={path};
+      Log4J log =new Log4J();
+      new File(radice+pathDirOut).mkdirs();
+    //  log.creaDir(radice+pathDirOut);
+      log=new Log4J(radice,log4jConfigFile,vett,1,logger);
+      log.creaFileConfigurazioneLog();
+      log.assegnaConfToLog4j(log4jConfigFile);
+      //
+    }
+    
+    
+    
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <ImageManagerPlugin>org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.ImageManager</ImageManagerPlugin>
+  <moduleName>ImageManagerAgent</moduleName>
+</root>

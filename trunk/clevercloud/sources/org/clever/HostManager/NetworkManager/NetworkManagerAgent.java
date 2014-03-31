@@ -37,19 +37,31 @@ import java.io.InputStream;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.ModuleCommunicator;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 //import org.clever.Common.Shared.LoggerInstantiator;
 
 public class NetworkManagerAgent extends Agent
 {
     private NetworkManagerPlugin networkManager;  
     private Class cl;
-    
+      //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/NetworkManager/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/NetworkManager";
+    //########
     
     
     public NetworkManagerAgent() throws IOException
     {
        super();
-       logger = Logger.getLogger("NetworkManagerAgent");       
+      
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("NetworkManager");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
     }
     
     @Override

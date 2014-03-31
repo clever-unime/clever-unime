@@ -1,0 +1,4 @@
+<appender-ref ref="ImgMan1" />
+<appender-ref ref="ImgMan2" />
+<appender-ref ref="ImgMan3" />
+<appender-ref ref="ImgMan4" />

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+<appender name="NetMa1" class="org.apache.log4j.FileAppender">
+   <param name="file" value="LOGS/HostManager/NetworkManager/SOLO_INFO.txt"/>
+   <layout class="org.apache.log4j.PatternLayout" >
+        <param name="ConversionPattern" value="%5p [%t] (%F:%L) - %m%n"/>     
+   </layout>
+   <filter class="org.apache.log4j.varia.LevelMatchFilter">
+      <param name="LevelToMatch" value="INFO" />
+      <param name="AcceptOnMatch" value="true" />
+    </filter>
+    <filter class="org.apache.log4j.varia.DenyAllFilter" /> 
+</appender>
+
+<appender name="NetMa2" class="org.apache.log4j.FileAppender">
+    <param name="Threshold" value="ERROR"/>  
+    <param name="file" value="LOGS/HostManager/NetworkManager/Threshold_ERROR_log.txt"/>
+    <layout class="org.apache.log4j.PatternLayout" >
+       <param name="ConversionPattern" value="%d [%t] %-5p (%F:%L) %m%n"/>     
+    </layout>
+</appender>
+
+<appender name="NetMa3" class="org.apache.log4j.FileAppender">
+    <param name="file" value="LOGS/HostManager/NetworkManager/DEBUG.txt"/>
+    <layout class="org.apache.log4j.PatternLayout" >
+        <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %p [%C:%L] - %m%n"/>  
+   </layout>
+</appender>
+
+<appender name="NetMa4" class="org.apache.log4j.FileAppender">
+   <param name="file" value="LOGS/DEBUG.txt"/>
+   <layout class="org.apache.log4j.PatternLayout" >
+        <param name="ConversionPattern" value="%5p [%t] (%F:%L) - %m%n"/>     
+   </layout>
+</appender>
+
+
+
+
+
+<logger name="NetworkManager" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="NetMa1" />
+        <appender-ref ref="MNetMa2" />
+        <appender-ref ref="NetMa3" />
+        <appender-ref ref="NetMa4" />
+</logger>
+<logger name="log4j.rootLogger" additivity="false">
+<level value="DEBUG"/>
+<appender-ref ref="NetMa1" />
+<appender-ref ref="NetMa2" />
+<appender-ref ref="NetMa3" />
+<appender-ref ref="NetMa4" />
+
+</logger>
+</log4j:configuration>

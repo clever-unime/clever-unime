@@ -38,6 +38,7 @@ import org.apache.log4j.PropertyConfigurator;
 import org.clever.ClusterManager.DatabaseManager.DatabaseManagerPlugin;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.jdom.Element;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.*;
@@ -50,25 +51,39 @@ import org.xmldb.api.modules.XQueryService;
  */
 public class DbSedna implements DatabaseManagerPlugin {
     private Agent owner;
-    private Logger logger;
     private String serverURL;
     private String dbName;
     private String user;
     private String password;
     private String document;
     private String xpath = "/clever/cluster[@id='clustermain']";
+    
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/DatabaseManagerPlugins/Sedna/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/DbSedna";
+    //########
+    
 
     public DbSedna() throws CleverException {
+        
+       //#############################################
+       //Inizializzazione meccanismo di logging
+       logger=Logger.getLogger("DbSedna");    
+       Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //#############################################
+        
+        
         try {
-            logger = Logger.getLogger("DbSednaPlugin");
+            //logger = Logger.getLogger("DbSednaPlugin");
             Properties prop = new Properties();
             InputStream in = getClass().getResourceAsStream("/org/clever/Common/Shared/logger.properties");
             prop.load(in);
             PropertyConfigurator.configure(prop);
             this.registerXMLDBDriver();
             logger.debug("DbSedna plugin created!");
-
-
 
 
         } catch (XMLDBException ex) {

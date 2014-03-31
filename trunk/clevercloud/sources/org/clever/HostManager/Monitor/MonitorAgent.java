@@ -37,6 +37,7 @@ import java.io.InputStream;
 import org.apache.log4j.Logger;
 
 import org.clever.Common.Communicator.Agent;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 
 
 
@@ -46,13 +47,23 @@ public class MonitorAgent extends Agent
 {
     private MonitorPlugin monitorPlugin;
     private Class cl;
-    
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/Monitor/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/Monitor";
+    //########
    
 
   public MonitorAgent()
   {   
       super();
-      logger = Logger.getLogger("MonitorAgent");      
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("MonitorAgent");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
   }
   
    @Override

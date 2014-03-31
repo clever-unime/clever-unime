@@ -47,6 +47,7 @@ import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.Shared.Support;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
@@ -65,7 +66,7 @@ import org.xml.sax.SAXException;
  */
 public class SASAgent extends Agent {
 
-    private Logger logger = null;
+    
     private UUIDGenerator uuidGenerator = UUIDGenerator.getInstance();
     private Map<String, String> pendingRequests = new ConcurrentHashMap<String, String>();
     protected Map<String, AdvertiseRequestEntry> completedRequests = new ConcurrentHashMap<String, AdvertiseRequestEntry>();
@@ -75,14 +76,30 @@ public class SASAgent extends Agent {
     private FileStreamer fs = new FileStreamer();
     private Long alertExpirationMinutes;
     String cfgPath="./cfg/configuration_sasagent.xml";
+    
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/SAS/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/SASAgentHm";
+    //########
 
     
     public SASAgent() throws CleverException {
             super();
+            
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("SASAgentHm");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################    
+            
+            
         try {
             super.setAgentName("SASAgentHm");
            
-            logger = Logger.getLogger("SASAgentHm");
+            //logger = Logger.getLogger("SASAgentHm");
             logger.debug("SASAgentHm start");
             Properties prop = new Properties();
             InputStream in = getClass().getResourceAsStream( "/org/clever/Common/Shared/logger.properties" );

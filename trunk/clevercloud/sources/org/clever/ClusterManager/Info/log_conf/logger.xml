@@ -1,0 +1,11 @@
+
+
+<logger name="InfoAgentCM" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="InfoAgentCM1" />
+        <appender-ref ref="InfoAgentCM2" />
+        <appender-ref ref="InfoAgentCM3" />
+        <appender-ref ref="InfoAgentCM4" />
+
+        
+</logger>

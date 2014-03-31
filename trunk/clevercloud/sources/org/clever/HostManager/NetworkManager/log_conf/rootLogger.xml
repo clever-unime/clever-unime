@@ -1,0 +1,5 @@
+<appender-ref ref="NetMa1" />
+<appender-ref ref="NetMa2" />
+<appender-ref ref="NetMa3" />
+<appender-ref ref="NetMa4" />
+

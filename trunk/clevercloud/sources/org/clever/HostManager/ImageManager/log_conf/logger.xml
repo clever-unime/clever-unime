@@ -1,0 +1,9 @@
+
+
+<logger name="ImageManagerAgent" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="ImgMan1" />
+        <appender-ref ref="ImgMan2" />
+        <appender-ref ref="ImgMan3" />
+        <appender-ref ref="ImgMan4" />
+</logger>

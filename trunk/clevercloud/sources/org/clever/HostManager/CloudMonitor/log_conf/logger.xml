@@ -1,0 +1,9 @@
+<logger name="CloudMonitorAgent" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="ClMoAg1" />
+        <appender-ref ref="ClMoAg2" />
+        <appender-ref ref="ClMoAg3" />
+        <appender-ref ref="ClMoAg4" />
+</logger>
+
+

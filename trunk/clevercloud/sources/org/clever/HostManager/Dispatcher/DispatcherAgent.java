@@ -32,22 +32,16 @@ import java.util.List;
 import java.util.Queue;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
-import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.XMLTools.MessageFormatter;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
-import org.clever.Common.XMPPCommunicator.ErrorResult;
-import org.clever.Common.XMPPCommunicator.MethodConfiguration;
 import org.clever.Common.XMPPCommunicator.NotificationOperation;
-import org.clever.Common.XMPPCommunicator.OperationResult;
-import org.clever.Common.XMPPCommunicator.Result;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.packet.Packet;
 
 
-import org.clever.Common.Measure.*;
 /**
  *
  * @author alessiodipietro
@@ -135,17 +129,37 @@ public class DispatcherAgent extends Agent
     private ConnectionXMPP connectionXMPP = null;
     private NotificationThread notificationThread;
     private int notificationsThreshold;    
-   
+        
+     //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/Dispatcher/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/DispatcherAgentHm";
+    //########
 
     public DispatcherAgent(ConnectionXMPP connectionXMPP, int notificationsThreshold)
     {   super();
-        logger = Logger.getLogger("DispatcherAgentHM");
         this.connectionXMPP = connectionXMPP;
         this.notificationsThreshold = notificationsThreshold;
+        
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("DispatcherAgentHm");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
+        
     }
     public DispatcherAgent(){
         super();
-        logger=Logger.getLogger("DispatcherAgentHM");
+          
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("DispatcherAgentHm");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
+        
     }
     
      @Override

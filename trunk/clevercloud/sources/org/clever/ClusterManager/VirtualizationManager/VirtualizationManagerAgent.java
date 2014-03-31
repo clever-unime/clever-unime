@@ -28,19 +28,15 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.clever.Common.Communicator.CmAgent;
-import org.clever.Common.Communicator.MethodInvoker;
-import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.VEInfo.DesktopVirtualization;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
-import org.jdom.Element;
 
 /**
  *
@@ -48,7 +44,6 @@ import org.jdom.Element;
  */
 public class VirtualizationManagerAgent extends CmAgent {
     
-    private Logger logger;
     private Class cl;
     private VirtualizationManagerPlugin VirtualizationManager;
     private String agentName;
@@ -60,11 +55,25 @@ public class VirtualizationManagerAgent extends CmAgent {
     private String notificatioPresenceHM = "PRESENCE/HM";
  //Modifico il virtualizationManagerAgent 05/24/2012 Rob
   
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/VirtualizationManager/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/VirtualizationManager";
+    //########
+    
+    
     
    //05/24/2012 
     public VirtualizationManagerAgent() {
       super();
-      logger=Logger.getLogger("VirtualizationManagerAgent");
+      
+      //#############################################
+      //Inizializzazione meccanismo di logging
+       logger=Logger.getLogger("VirtualizationManager");    
+       Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+    //#############################################
     }
     
     

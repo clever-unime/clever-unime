@@ -49,6 +49,7 @@ import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.Shared.Host;
 import org.clever.Common.Shared.ImageFileInfo;
 import org.clever.Common.Storage.VFSDescription;
@@ -96,7 +97,6 @@ public class ImageManager implements ImageManagerPlugin {
   //private DistributedStoragePlugin distributedStorage;
   private ConnectionXMPP conn;
   private ModuleCommunicator mc;
-  private Logger logger;
   private FileTransferManager ftm;
   private Agent owner;
   private SQLite sqlite;
@@ -109,12 +109,27 @@ public class ImageManager implements ImageManagerPlugin {
    * A constant representing the XMPP-based file transfer
    */
   public static final int XMPP = 101;
+  
+  //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/ImageManager/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/ImageManager";
+    //########
 
   /**
    * Instantiates a new ImageManager
    */
   public ImageManager(Element pp) {
-    logger = Logger.getLogger("ImageManager");
+    
+     //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("ImageManagerAgent");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################  
+      
+   
    // this.uuidGenerator=null;
     //this.des=pp.getChildText("dest");
     this.map = new MultiHashMap( );

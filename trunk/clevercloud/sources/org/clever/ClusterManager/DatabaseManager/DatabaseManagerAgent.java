@@ -32,13 +32,12 @@ import org.clever.Common.Communicator.Notification;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 import org.apache.log4j.*;
-import java.util.Properties;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import org.clever.Common.Communicator.CmAgent;
-import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 
 
 
@@ -48,10 +47,24 @@ public class DatabaseManagerAgent extends CmAgent
     private DatabaseManagerPlugin DbManagerPlugin;
     private Class cl;
     private String configPath="./cfg/configuration_dbManagerPlugin.xml";
+    
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/DatabaseManager/conf_log";
+    private String pathDirOut="/LOGS/ClusterManager/DatabaseManager";
+    //########
+    
     public DatabaseManagerAgent() 
     {
             super();
-            logger = Logger.getLogger("DatabaseManagerAgent");  
+        //#############################################
+        //Inizializzazione meccanismo di logging
+        logger=Logger.getLogger("DatabaseManager");    
+        Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //############################################# 
+        
        
     }
     

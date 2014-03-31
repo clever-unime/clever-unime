@@ -33,6 +33,7 @@ import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Communicator.ThreadMessageDispatcher;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
@@ -49,14 +50,37 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
     private ThreadMessageDispatcher threadMessageDispatcher;
     private ConnectionXMPP connectionXMPP = null;
     
+    
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/Dispatcher/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/Dispatcher";
+    //########
+    
+    
     public DispatcherAgent( ConnectionXMPP connectionXMPP ) 
     {   super();
-        logger = Logger.getLogger("DispatcherAgent");
-        this.connectionXMPP = connectionXMPP;   
+        
+        this.connectionXMPP = connectionXMPP; 
+        
+         //#############################################
+        //Inizializzazione meccanismo di logging
+        logger=Logger.getLogger("Dispatcher");    
+        Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //#############################################
+        
     }
     public DispatcherAgent(){
         super();
-        logger= Logger.getLogger("DispatcherAgent");
+        
+        //#############################################
+        //Inizializzazione meccanismo di logging
+        logger=Logger.getLogger("Dispatcher");    
+        Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //############################################# 
     }
     
     @Override

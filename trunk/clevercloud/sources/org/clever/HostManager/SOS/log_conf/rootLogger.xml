@@ -1,0 +1,4 @@
+<appender-ref ref="SosAg1" />
+<appender-ref ref="SosAg2" />
+<appender-ref ref="SosAg3" />
+<appender-ref ref="SosAg4" />

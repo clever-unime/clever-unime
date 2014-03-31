@@ -27,6 +27,7 @@ package org.clever.HostManager.Info;
  *
  * @author alessiodipietro
  */
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -36,6 +37,7 @@ import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Initiator.ModuleFactory.ModuleFactory;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 
 
@@ -48,13 +50,33 @@ public class InfoAgent extends Agent
     private  ArrayList <Agent> Agents = new ArrayList(3);
     private ModuleFactory mf;
     
+    
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/Info/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/Info";
+    //########
+    
+    
     public InfoAgent( ConnectionXMPP connectionXMPP ) throws CleverException
     {
         //nota questo infoagent deve avere un nome diverso dall'info agentr del cluster managre residente
         //sullo stesso host, altrimenti si verificano problemi di registrazione sul bus!
-        super();
-        logger = Logger.getLogger("InfoAgent");
         
+        //super("InfoAgentHM","/sources/org/clever/HostManager/Info/log_conf/","/LOGS/HostManager/Info");
+        // logger = Logger.getLogger("InfoAgentHM");
+        super();
+        
+        
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("InfoAgentHM");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
+        
+       
         mf = ModuleFactory.getInstance();
         
         try
@@ -70,13 +92,35 @@ public class InfoAgent extends Agent
             throw new CleverException( e );
         }
     }
+    
     public InfoAgent(){
-        super();
-    }
+       super();
+       
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("InfoAgentHM");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
+       
+       }
     
     @Override
   public void initialization()
   {
+
+      //##Logger di comodo
+      //logger.debug("Debug Message! su InfoAgentHM");
+      //logger.info("Info Message!  su InfoAgentHM");
+      //logger.warn("Warn Message!  su InfoAgentHM");
+      //logger.error("Error Message!  su InfoAgentHM");
+      //logger.fatal("Fatal Message!  su InfoAgentHM");
+      //#############################################
+      
+
+ 
+
+
       super.setAgentName("InfoAgent");
       
       try 
@@ -128,4 +172,6 @@ public class InfoAgent extends Agent
     {
         
     }
+
+  
 }

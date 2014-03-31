@@ -43,6 +43,7 @@ import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.Shared.Support;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
@@ -70,8 +71,24 @@ public class SOSAgent extends Agent{
 //    logger.info("SOSAgent() avviato!!!!");
 //    SOSAgent prova=new SOSAgent("SOSAgent");
 //    }
-            
+       
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/SOS/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/SOS";
+    //########
+    
+    
     public SOSAgent(/*String agentName*/) throws CleverException {
+        
+        //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("SOSAgentHm");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
+        
         try {
             super.setAgentName("SOSAgent");
             
@@ -79,7 +96,7 @@ public class SOSAgent extends Agent{
             
             //logger = Logger.getLogger(this.getAgentName());
             //sposto i log su un altro file
-            logger = Logger.getLogger("debugLogger");
+            //logger = Logger.getLogger("debugLogger");
             
             
             logger.info("SOSAgent(agentName) avviato!!!!");

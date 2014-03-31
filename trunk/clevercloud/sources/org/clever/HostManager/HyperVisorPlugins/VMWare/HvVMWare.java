@@ -121,6 +121,7 @@ import org.apache.log4j.*;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.*;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.VEInfo.CpuSettings;
 import org.clever.Common.VEInfo.CpuSettings.Architecture;
 import org.clever.Common.VEInfo.DesktopVirtualization;
@@ -164,7 +165,6 @@ public class HvVMWare implements HyperVisorPlugin{
     private String datastore;
     private String netName;
     private String nicName;
-    private Logger logger;    
     private ServiceInstance si = null;
     private Folder rootFolder = null; 
     private List params = null;
@@ -179,9 +179,25 @@ public class HvVMWare implements HyperVisorPlugin{
     private String notificationCreatedVm = "Virtualization/VmCreated";
     private String notificationImportedVm = "Virtualization/VmImported";
     
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger = null;
+    private String pathLogConf="/sources/org/clever/HostManager/HyperVisorPlugins/VMWare/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/HyperVisor/VMWare";
+    //########
+    
+    
+    
     public HvVMWare() throws Exception{
-        this.logger = Logger.getLogger( "Hypervisor plugin" );
-        this.logger.info("VMWare plugin created: ");
+        
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("VMWarePlugin");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
+        
+      this.logger.info("VMWare plugin created: ");
 
     }    
         

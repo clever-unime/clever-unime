@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+<appender name="MonAg1" class="org.apache.log4j.FileAppender">
+   <param name="file" value="LOGS/HostManager/Monitor/SOLO_INFO.txt"/>
+   <layout class="org.apache.log4j.PatternLayout" >
+        <param name="ConversionPattern" value="%5p [%t] (%F:%L) - %m%n"/>     
+   </layout>
+   <filter class="org.apache.log4j.varia.LevelMatchFilter">
+      <param name="LevelToMatch" value="INFO" />
+      <param name="AcceptOnMatch" value="true" />
+    </filter>
+    <filter class="org.apache.log4j.varia.DenyAllFilter" /> 
+</appender>
+
+<appender name="MonAg2" class="org.apache.log4j.FileAppender">
+    <param name="Threshold" value="ERROR"/>  
+    <param name="file" value="LOGS/HostManager/Monitor/Threshold_ERROR_log.txt"/>
+    <layout class="org.apache.log4j.PatternLayout" >
+       <param name="ConversionPattern" value="%d [%t] %-5p (%F:%L) %m%n"/>     
+    </layout>
+</appender>
+
+<appender name="MonAg3" class="org.apache.log4j.FileAppender">
+    <param name="file" value="LOGS/HostManager/Monitor/DEBUG.txt"/>
+    <layout class="org.apache.log4j.PatternLayout" >
+        <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %p [%C:%L] - %m%n"/>  
+   </layout>
+</appender>
+
+<appender name="MonAg4" class="org.apache.log4j.FileAppender">
+   <param name="file" value="LOGS/DEBUG.txt"/>
+   <layout class="org.apache.log4j.PatternLayout" >
+        <param name="ConversionPattern" value="%5p [%t] (%F:%L) - %m%n"/>     
+   </layout>
+</appender>
+
+
+
+
+
+<logger name="MonitorAgent" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="MonAg1" />
+        <appender-ref ref="MonAg2" />
+        <appender-ref ref="MonAg3" />
+        <appender-ref ref="MonAg4" />
+</logger>
+<logger name="log4j.rootLogger" additivity="false">
+<level value="DEBUG"/>
+<appender-ref ref="MonAg1" />
+<appender-ref ref="MonAg2" />
+<appender-ref ref="MonAg3" />
+<appender-ref ref="MonAg4" />
+</logger>
+</log4j:configuration>

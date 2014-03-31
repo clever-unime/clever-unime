@@ -1,0 +1,11 @@
+
+
+<logger name="ESOSAgent" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="ESOS1" />
+        <appender-ref ref="ESOS2" />
+        <appender-ref ref="ESOS3" />
+        <appender-ref ref="ESOS4" />
+
+        
+</logger>

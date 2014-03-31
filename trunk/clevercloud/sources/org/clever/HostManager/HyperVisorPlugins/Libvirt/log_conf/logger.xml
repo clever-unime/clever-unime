@@ -1,0 +1,9 @@
+<logger name="LibvirtPlugin" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="HypVMW1" />
+        <appender-ref ref="HypVMW2" />
+        <appender-ref ref="HypVMW3" />
+        <appender-ref ref="HypVMW4" />
+</logger>
+
+

@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.Initiator.ModuleFactory.ModuleFactory;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.jivesoftware.smackx.muc.Occupant;
@@ -20,10 +20,24 @@ public class ESOSAgent extends CmAgent
     private ConnectionXMPP connectionXMPP = null;
     private  ArrayList <CmAgent> Agents = new ArrayList(3);
     
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/ESOSAgent/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/ESOSAgent";
+    //########
+    
+    
     
     public ESOSAgent() throws CleverException
     {   super();
-        logger = Logger.getLogger( "ESOSAgent" );
+        
+       //#############################################
+       //Inizializzazione meccanismo di logging
+       logger=Logger.getLogger("ESOSAgent");    
+       Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //#############################################
         
     }
     

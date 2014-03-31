@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 import org.jdom.Element;
@@ -39,10 +40,23 @@ public class ServiceManagerAgent extends Agent {
 
     private ServiceManagerPlugin service_manager;
     private Class cl;
+    
+     //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/ServiceManager/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/ServiceManager";
+    //########
 
     public ServiceManagerAgent() {
         super();
-        logger = Logger.getLogger("ServiceManager");
+        
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("ServiceManager");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
     }
 
     @Override

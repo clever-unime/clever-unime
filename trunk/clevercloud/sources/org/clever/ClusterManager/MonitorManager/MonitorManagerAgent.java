@@ -28,31 +28,13 @@
 
 package org.clever.ClusterManager.MonitorManager;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import org.clever.Common.Communicator.Agent;
-import static org.clever.Common.Communicator.Agent.logger;
 import org.clever.Common.Communicator.CmAgent;
-import org.clever.Common.Communicator.MethodInvoker;
-import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.Exceptions.LogicalCatalogException;
-import org.clever.Common.Initiator.ModuleFactory.ModuleFactory;
-import org.clever.Common.Shared.HostEntityInfo;
-import org.clever.Common.XMLTools.MessageFormatter;
-import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
-import org.jivesoftware.smackx.muc.Occupant;
-
-
-import org.clever.ClusterManager.MonitorManager.SendMeasureRequest;
-import org.clever.Common.Measure.*;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 
 
 public class MonitorManagerAgent extends CmAgent
@@ -60,12 +42,25 @@ public class MonitorManagerAgent extends CmAgent
     private String version = "1.0";
     private String description = "Monitoring of the Clever resources about Cluster Manager";
 
-    
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/MonitorManager/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/MonitorManager";
+    //########    
     
     
     public MonitorManagerAgent( ) throws CleverException {
         super();
-        logger = Logger.getLogger( "MonitorManagerAgent" );
+              
+       //#############################################
+       //Inizializzazione meccanismo di logging
+       logger=Logger.getLogger( "MonitorManagerAgent" );    
+       Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //#############################################  
+        
+        
         
     }
     

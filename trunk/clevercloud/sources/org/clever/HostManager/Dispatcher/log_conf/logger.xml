@@ -1,0 +1,9 @@
+<logger name="DispatcherAgentHm" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="DisAgtHm1" />
+        <appender-ref ref="DisAgtHm2" />
+        <appender-ref ref="DisAgtHm3" />
+        <appender-ref ref="DisAgtHm4" />
+</logger>
+
+

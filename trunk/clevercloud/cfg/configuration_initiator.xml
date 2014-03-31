@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <server>localhost</server>
-  <port>5222</port>
-  <tls>false</tls>
-  <caJks />
-  <caJksPassword />
-  <certPkcs12 />
-  <certPkcs12Password />
- <username></username>
-  <password></password>
-  <nickname></nickname>
-  <room>vision@conference.localhost</room>
+  <server>riccardo</server>
+<port>5222</port>
+<tls>false</tls>
+<caJks />
+<caJksPassword />
+<certPkcs12 />
+<certPkcs12Password />
+<username>hmricky</username>
+<password>hmricky</password>
+<nickname>hmricky</nickname>
+<room>room@conference.riccardo</room>
   <threshold>1</threshold>
   <!-- la threshold effettivamnte usata x istanziare i CC è questa!! -->
   <activatedCM>true</activatedCM>

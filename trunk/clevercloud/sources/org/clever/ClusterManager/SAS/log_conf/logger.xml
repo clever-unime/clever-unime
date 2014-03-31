@@ -1,0 +1,9 @@
+<logger name="SASAgent" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="SAS1" />
+        <appender-ref ref="SAS2" />
+        <appender-ref ref="SAS3" />
+         <appender-ref ref="SAS4" />
+</logger>
+
+

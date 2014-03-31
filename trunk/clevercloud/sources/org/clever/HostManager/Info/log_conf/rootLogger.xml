@@ -1,0 +1,4 @@
+<appender-ref ref="InfoAgentHM1" />
+<appender-ref ref="InfoAgentHM2" />
+<appender-ref ref="InfoAgentHM3" />
+<appender-ref ref="InfoAgentHM4" />

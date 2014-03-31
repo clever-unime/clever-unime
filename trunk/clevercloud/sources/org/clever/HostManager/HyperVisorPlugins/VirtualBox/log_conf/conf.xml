@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+<appender name="HypVB1" class="org.apache.log4j.FileAppender">
+   <param name="file" value="LOGS/HostManager/HyperVisor/SOLO_INFO.txt"/>
+   <layout class="org.apache.log4j.PatternLayout" >
+        <param name="ConversionPattern" value="%5p [%t] (%F:%L) - %m%n"/>     
+   </layout>
+   <filter class="org.apache.log4j.varia.LevelMatchFilter">
+      <param name="LevelToMatch" value="INFO" />
+      <param name="AcceptOnMatch" value="true" />
+    </filter>
+    <filter class="org.apache.log4j.varia.DenyAllFilter" /> 
+</appender>
+
+<appender name="HypVB2" class="org.apache.log4j.FileAppender">
+    <param name="Threshold" value="ERROR"/>  
+    <param name="file" value="LOGS/HostManager/HyperVisor/Threshold_ERROR_log.txt"/>
+    <layout class="org.apache.log4j.PatternLayout" >
+       <param name="ConversionPattern" value="%d [%t] %-5p (%F:%L) %m%n"/>     
+    </layout>
+</appender>
+
+<appender name="HypVB3" class="org.apache.log4j.FileAppender">
+    <param name="file" value="LOGS/HostManager/HyperVisor/DEBUG.txt"/>
+    <layout class="org.apache.log4j.PatternLayout" >
+        <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %p [%C:%L] - %m%n"/>  
+   </layout>
+</appender>
+
+<appender name="HypVB4" class="org.apache.log4j.FileAppender">
+   <param name="file" value="LOGS/DEBUG.txt"/>
+   <layout class="org.apache.log4j.PatternLayout" >
+        <param name="ConversionPattern" value="%5p [%t] (%F:%L) - %m%n"/>     
+   </layout>
+</appender>
+
+
+
+<logger name="VirtualboxPlugin" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="HypVB1" />
+        <appender-ref ref="HypVB2" />
+        <appender-ref ref="HypVB3" />
+        <appender-ref ref="HypVB4" />
+</logger>
+
+
+<logger name="log4j.rootLogger" additivity="false">
+<level value="DEBUG"/>
+<appender-ref ref="HypVB1" />
+<appender-ref ref="HypVB2" />
+<appender-ref ref="HypVB3" />
+<appender-ref ref="HypVB4" />
+</logger>
+</log4j:configuration>

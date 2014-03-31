@@ -32,13 +32,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Initiator.ModuleFactory.ModuleFactory;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.jivesoftware.smackx.muc.Occupant;
@@ -53,10 +52,24 @@ public class InfoAgent extends CmAgent
     private  ArrayList <CmAgent> Agents = new ArrayList(3);
     private ModuleFactory mf;
     
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/Info/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/Info";
+    //########
+    
     public InfoAgent( ConnectionXMPP connectionXMPP ) throws CleverException
     {   super();
-        logger = Logger.getLogger( "InfoAgent" );
-        this.connectionXMPP= connectionXMPP;
+      this.connectionXMPP= connectionXMPP;
+        
+       //#############################################
+       //Inizializzazione meccanismo di logging
+       logger=Logger.getLogger("InfoAgentCM");    
+       Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //############################################# 
+        
     }
     
     @Override

@@ -1,0 +1,5 @@
+<appender-ref ref="MntAg1" />
+<appender-ref ref="MntAg2" />
+<appender-ref ref="MntAg3" />
+ <appender-ref ref="MntAg4" />
+ 

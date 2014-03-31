@@ -1,0 +1,4 @@
+<appender-ref ref="StoMan1" />
+<appender-ref ref="StoMan2" />
+<appender-ref ref="StoMan3" />
+<appender-ref ref="StoMan4" />

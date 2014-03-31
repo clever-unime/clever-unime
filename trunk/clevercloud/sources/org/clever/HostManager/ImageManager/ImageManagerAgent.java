@@ -36,15 +36,12 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.Agent;
-import org.clever.Common.Communicator.ModuleCommunicator;
-import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
@@ -59,7 +56,17 @@ import org.jdom.Element;
 
 public class ImageManagerAgent extends Agent {
     
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/ImageManager/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/ImageManager";
+    //########
     
+     private Class cl;
+  //private ModuleCommunicator mc;
+  private ImageManager imgManager;
+  //rob
 
     @Override
     public void initialization()
@@ -132,25 +139,36 @@ public class ImageManagerAgent extends Agent {
     }
     }
   
-  private Class cl;
-  //private ModuleCommunicator mc;
-  private ImageManager imgManager;
-  //rob
+ 
   
 
   public ImageManagerAgent() 
   {     
         super();
-        logger=Logger.getLogger("ImageManagerAgent");
+        
      // init();
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("ImageManagerAgent");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
+        
     
     }
 
   public ImageManagerAgent(ConnectionXMPP conn) {
-      super();
-      logger=Logger.getLogger("ImageManagerAgent");
+    super();
     //init();
     this.imgManager.setXMPP(conn);
+    
+    //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("ImageManagerAgent");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
+    
   }
 
   private void init() { //va tolto l'underscore dopo la prova

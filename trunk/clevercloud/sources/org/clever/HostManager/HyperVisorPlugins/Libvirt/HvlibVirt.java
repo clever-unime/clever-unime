@@ -57,6 +57,7 @@ import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
 import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.VFS;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.Storage.VirtualFileSystem;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
@@ -97,15 +98,27 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
   private Agent owner;
   private Connect conn = null;
   private int counter;
-  private Logger logger;
   private Architecture DEFAULT_ARCHITECTURE = Architecture.X86_64; //TODO GET THIS INFORMATION FROM HOST ARCHITECTURE
-
+  
+  //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger = null;
+    private String pathLogConf="/sources/org/clever/HostManager/HyperVisorPlugins/Libvirt/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/HyperVisor/Libvirt";
+    //########
 
 
   public HvlibVirt() throws IOException
   {
 
-    logger = Logger.getLogger( "Libvirt plugin" );
+   //############################################
+   //Inizializzazione meccanismo di logging
+   logger = Logger.getLogger( "LibvirtPlugin" );
+   Log4J log =new Log4J();
+   log.setLog4J(logger, pathLogConf, pathDirOut);
+   //#############################################   
+     
+    
     try
     {
       Properties prop = new Properties();

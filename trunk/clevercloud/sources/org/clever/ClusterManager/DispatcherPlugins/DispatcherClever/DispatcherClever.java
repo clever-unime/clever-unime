@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
 import org.clever.Common.Communicator.Agent;
@@ -40,6 +39,7 @@ import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.XMLTools.MessageFormatter;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.CleverMessage.MessageType;
@@ -54,7 +54,6 @@ import org.jdom.Element;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Packet;
-import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.safehaus.uuid.UUIDGenerator;
 
@@ -103,11 +102,32 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
     private ConnectionXMPP connectionXMPP = null;
     private ModuleCommunicator mc = null;
     private RequestsManager requestsManager = null;
-    private Logger logger = null;
     private Map<String, List<String>> notificationDelivery = new HashMap<String, List<String>>();
     private Map<String, MultiUserChat> agentMucs=new HashMap<String, MultiUserChat>();
     private UUIDGenerator uuidGenerator = UUIDGenerator.getInstance();
     private org.clever.ClusterManager.Brain.BrainInterface brain;
+    
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/Dispatcher/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/Dispatcher";
+    //########
+    
+    
+    public DispatcherClever() { // !!!!
+        super();
+        
+        //#############################################
+        //Inizializzazione meccanismo di logging
+        logger=Logger.getLogger("Dispatcher");    
+        Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //############################################# 
+        
+    }
+    
+    
     /**
      * This method manage a received clevermessage launching a separate thread
      *

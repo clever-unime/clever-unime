@@ -40,16 +40,30 @@ import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 import java.io.FileInputStream;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 
 public class HyperVisorAgent extends Agent {
 
     private HyperVisorPlugin hypervisor;
     private Class cl;
     
+     //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger = null;
+    private String pathLogConf="/sources/org/clever/HostManager/HyperVisorPlugins/VirtualBox/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/HyperVisor";
+    //########
+    
     
     public HyperVisorAgent()  {
         super();
-        logger=Logger.getLogger("HypervisorAgent");  
+      //############################################
+      //Inizializzazione meccanismo di logging
+      //logger = Logger.getLogger("HyperVisorAgent");
+      logger = Logger.getLogger("VirtualBoxPlugin");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //############################################# 
       
     }
 

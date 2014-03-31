@@ -1,0 +1,9 @@
+<logger name="MonitorManagerAgent" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="MntAg1" />
+        <appender-ref ref="MntAg2" />
+        <appender-ref ref="MntAg3" />
+        <appender-ref ref="MntAg4" />
+</logger>
+
+

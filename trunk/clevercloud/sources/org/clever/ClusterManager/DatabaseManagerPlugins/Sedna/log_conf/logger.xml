@@ -1,0 +1,11 @@
+
+
+<logger name="DbSedna" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="DBSedna1" />
+        <appender-ref ref="DBSedna2" />
+        <appender-ref ref="DBSedna3" />
+        <appender-ref ref="DBSedna4" />
+
+        
+</logger>

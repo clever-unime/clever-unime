@@ -28,14 +28,12 @@
 
 package org.clever.HostManager.CloudMonitor;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
-import static org.clever.Common.Communicator.Agent.logger;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 
@@ -52,13 +50,29 @@ public class CloudMonitorAgent extends Agent{
     private boolean flag_monitor; //se true viene attivato il monitoring continuo
     
     
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/CloudMonitor/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/CloudMonitor";
+    //########
+    
+    
+    
+    
     
     public CloudMonitorAgent()  {
         
         super();
 
-        logger=Logger.getLogger("CloudMonitorAgent");  
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("CloudMonitorAgent");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
         
+              
         flag_monitor = true;
       
     }

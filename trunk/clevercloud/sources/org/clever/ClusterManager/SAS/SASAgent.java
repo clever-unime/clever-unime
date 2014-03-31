@@ -50,13 +50,11 @@ import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.Shared.Support;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
-import org.clever.HostManager.SAS.AdvertiseRequestEntry;
-import org.clever.HostManager.SAS.AdvertisementExpirationTask;
 import org.clever.HostManager.SAS.SensorAlertMessage;
-import org.jdom.CDATA;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -93,7 +91,6 @@ class AssignedSoi {
  */
 public class SASAgent extends CmAgent {
 
-    private Logger logger = null;
     private Map<String, List<PublishDeliveryEntry>> publishDelivery = new ConcurrentHashMap<String, List<PublishDeliveryEntry>>();
     private Map<String, String> pubSoi = new ConcurrentHashMap<String, String>();
     private Map<String, SubscriptionEntry> subscriptions = new ConcurrentHashMap<String, SubscriptionEntry>();
@@ -111,9 +108,25 @@ public class SASAgent extends CmAgent {
     private ParameterDbContainer parameterContainer;
     private org.w3c.dom.Document doc;
      
-     
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/SAS/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/SASAgent";
+    //########
+    
      
     public SASAgent(/*String agentName*/) throws CleverException {
+        
+        //#############################################
+       //Inizializzazione meccanismo di logging
+       logger=Logger.getLogger("SASAgent");    
+       Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //#############################################  
+        
+        
+        
         try {
             super.setAgentName("SASAgent");
             agentName="SASAgent";

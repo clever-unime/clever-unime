@@ -19,7 +19,7 @@
         <hostname>localhost</hostname>
         <DBName>sensordb</DBName>
         <UserName>root</UserName>
-        <Password></Password>
+        <Password />
         <!--insert your sql password -->
         <resettimeMillisec>150000</resettimeMillisec>
         <sensorNumber>1</sensorNumber>

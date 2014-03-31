@@ -57,6 +57,7 @@ import org.clever.Common.Exceptions.SaveStateException;
 import org.clever.Common.Exceptions.StartException;
 import org.clever.Common.Exceptions.StopException;
 import org.clever.Common.Exceptions.SuspendException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.VEInfo.CpuSettings;
 import org.clever.Common.VEInfo.CpuSettings.Architecture;
 import org.clever.Common.VEInfo.MemorySettings;
@@ -71,18 +72,31 @@ import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
 public class HvVirtualBox implements HyperVisorPlugin {
     private Agent owner;
     private Map<String, VMWrapper> m = new HashMap<String, VMWrapper>();
-    private Logger logger;
     private VirtualBoxManager mgr ;
     private IVirtualBox vbox;
     private Agent ownerAgent;
+    
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger = null;
+    private String pathLogConf="/sources/org/clever/HostManager/HyperVisorPlugins/VirtualBox/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/HyperVisor/VirtualBox";
+    //########
+    
 
     public HvVirtualBox() throws IOException{
 
-            logger = Logger.getLogger( "Virtualbox plugin" );
-            //PropertyConfigurator.configure( "logger.properties" );
-            logger.info( "VirtualBox plugin created: " );
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("VirtualBoxPlugin");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
+      logger.info( "VirtualBox plugin created: " );
 
     }
+    
+    
  @Override
     public void init(Element params, Agent owner) throws CleverException {
         try{

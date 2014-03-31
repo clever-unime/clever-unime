@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+<appender name="Disp1" class="org.apache.log4j.FileAppender">
+   <param name="file" value="LOGS/ClusterManager/Dispatcher/SOLO_INFO.txt"/>
+   <layout class="org.apache.log4j.PatternLayout" >
+        <param name="ConversionPattern" value="%5p [%t] (%F:%L) - %m%n"/>     
+   </layout>
+   <filter class="org.apache.log4j.varia.LevelMatchFilter">
+      <param name="LevelToMatch" value="INFO" />
+      <param name="AcceptOnMatch" value="true" />
+    </filter>
+    <filter class="org.apache.log4j.varia.DenyAllFilter" /> 
+</appender>
+
+<appender name="Disp2" class="org.apache.log4j.FileAppender">
+    <param name="Threshold" value="ERROR"/>  
+    <param name="file" value="LOGS/ClusterManager/Dispatcher/Threshold_ERROR_log.txt"/>
+    <layout class="org.apache.log4j.PatternLayout" >
+       <param name="ConversionPattern" value="%d [%t] %-5p (%F:%L) %m%n"/>     
+    </layout>
+</appender>
+
+<appender name="Disp3" class="org.apache.log4j.FileAppender">
+    <param name="file" value="LOGS/ClusterManager/Dispatcher/DEBUG.txt"/>
+    <layout class="org.apache.log4j.PatternLayout" >
+        <param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} %p [%C:%L] - %m%n"/>  
+   </layout>
+</appender>
+
+<appender name="Disp4" class="org.apache.log4j.FileAppender">
+   <param name="file" value="LOGS/DEBUG.txt"/>
+   <layout class="org.apache.log4j.PatternLayout" >
+        <param name="ConversionPattern" value="%5p [%t] (%F:%L) - %m%n"/>     
+   </layout>
+</appender>
+
+
+
+<logger name="Dispatcher" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="Disp1" />
+        <appender-ref ref="Disp2" />
+        <appender-ref ref="Disp3" />
+        <appender-ref ref="Disp4" />
+
+        
+</logger>
+<logger name="log4j.rootLogger" additivity="false">
+<level value="DEBUG"/>
+<appender-ref ref="Disp1" />
+<appender-ref ref="Disp2" />
+<appender-ref ref="Disp3" />
+<appender-ref ref="Disp4" />
+</logger>
+</log4j:configuration>

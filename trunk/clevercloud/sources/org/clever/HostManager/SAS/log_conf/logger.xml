@@ -1,0 +1,10 @@
+
+<logger name="SASAgentHm" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="SasAg1" />
+        <appender-ref ref="SasAg2" />
+        <appender-ref ref="SasAg3" />
+        <appender-ref ref="SasAg4" />
+
+        
+</logger>

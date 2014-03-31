@@ -43,6 +43,7 @@ import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Initiator.ModuleFactory.ModuleFactory;
 import org.clever.Common.Initiator.ModuleFactory.ShutdownThread;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.MessageFormatter;
 import org.clever.Common.XMLTools.ParserXML;
@@ -58,7 +59,6 @@ public class HostCoordinator implements CleverMessageHandler {
     private ConnectionXMPP conn;
     private ModuleFactory moduleFactory;
     private ModuleCommunicator mc;
-    private Logger logger;
     private String cfgPath = "./cfg/configuration_initiator.xml"; //28/11/2011: il file di configurazione ora coincide con quello dell'initiator!
     private ParserXML pXML;
     private InfoAgent infoAgent;
@@ -69,10 +69,24 @@ public class HostCoordinator implements CleverMessageHandler {
     private boolean replaceAgents;
     private int numReload; //memorizzo il numero di volte max x rilanciare un agente
     private int timeReload; //memorizzo il tempo max x rilanciare un agente
+    
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/HostCoordinator/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/HostCoordinator";
+    //########
+    
 
     public HostCoordinator(ConnectionXMPP conn) throws CleverException {
-        logger = Logger.getLogger("Host Coordinator");
-
+        
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("HostCoordinatorHM");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //############################################# 
+        
         this.conn = conn; //il costruttore accetta come parametro la connessione dell'initiator
 
         moduleFactory = null;

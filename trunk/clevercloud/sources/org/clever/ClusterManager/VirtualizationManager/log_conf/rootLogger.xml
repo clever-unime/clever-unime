@@ -1,0 +1,5 @@
+<appender-ref ref="VirtMan1" />
+<appender-ref ref="VirtMan2" />
+<appender-ref ref="VirtMan3" />
+ <appender-ref ref="VirtMan4" />
+ 
