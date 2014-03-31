@@ -7,26 +7,6 @@
  *  Copyright (c) 2010 Antonio Nastasi
  *  Copyright (c) 2011 Marco Carbone
  *
- *  Permission is hereby granted, free of charge, to any person
- *  obtaining a copy of this software and associated documentation
- *  files (the "Software"), to deal in the Software without
- *  restriction, including without limitation the rights to use,
- *  copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following
- *  conditions:
- *
- *  The above copyright notice and this permission notice shall be
- *  included in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- *  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- *  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- *  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- *  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- *  OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.clever.HostManager.HostCoordinator;
 
@@ -36,20 +16,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Initiator.ModuleFactory.ModuleFactory;
 import org.clever.Common.Initiator.ModuleFactory.ShutdownThread;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.MessageFormatter;
 import org.clever.Common.XMLTools.ParserXML;
 import org.clever.Common.XMPPCommunicator.*;
 import org.clever.HostManager.Dispatcher.DispatcherAgent;
 import org.clever.HostManager.Info.InfoAgent;
-import org.clever.HostManager.Test.TestAgent;
 import org.jdom.Element;
 import org.jivesoftware.smack.packet.Presence.Mode;
 
@@ -58,7 +37,6 @@ public class HostCoordinator implements CleverMessageHandler {
     private ConnectionXMPP conn;
     private ModuleFactory moduleFactory;
     private ModuleCommunicator mc;
-    private Logger logger;
     private String cfgPath = "./cfg/configuration_initiator.xml"; //28/11/2011: il file di configurazione ora coincide con quello dell'initiator!
     private ParserXML pXML;
     private InfoAgent infoAgent;
@@ -69,10 +47,25 @@ public class HostCoordinator implements CleverMessageHandler {
     private boolean replaceAgents;
     private int numReload; //memorizzo il numero di volte max x rilanciare un agente
     private int timeReload; //memorizzo il tempo max x rilanciare un agente
+    
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/HostCoordinator/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/HostCoordinator";
+    //########
+    
 
     public HostCoordinator(ConnectionXMPP conn) throws CleverException {
-        logger = Logger.getLogger("Host Coordinator");
-
+        
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("HostCoordinatorHM");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //############################################# 
+        
+        
         this.conn = conn; //il costruttore accetta come parametro la connessione dell'initiator
 
         moduleFactory = null;
@@ -88,6 +81,15 @@ public class HostCoordinator implements CleverMessageHandler {
     }
 
     public void init()  {
+      
+         //    
+        //logger.debug("Debug Message! su HostCoordinator.java HM");
+        //logger.info("Info Message!  su HostCoordinator.java HM");
+        //logger.warn("Warn Message!  su HostCoordinator.java HM");
+        //logger.error("Error Message!  su HostCoordinator.java HM");
+        //logger.fatal("Fatal Message!  su HostCoordinator.java HM");
+        //
+        
         try {
             logger.debug("CLASSPATH= " + System.getProperty("java.class.path", null));
             inxml = new FileInputStream(cfgPath);
@@ -294,4 +296,6 @@ public class HostCoordinator implements CleverMessageHandler {
             this.conn.sendMessage(message.getSrc(), cleverMsg);
         }
     }
+    
+        
 }

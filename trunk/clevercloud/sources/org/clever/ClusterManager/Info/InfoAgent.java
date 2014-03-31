@@ -35,6 +35,7 @@ import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Initiator.ModuleFactory.ModuleFactory;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.Shared.HostEntityInfo;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.jivesoftware.smackx.muc.Occupant;
@@ -49,14 +50,41 @@ public class InfoAgent extends CmAgent
     private  ArrayList <CmAgent> Agents = new ArrayList(3);
     private ModuleFactory mf;
     
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/Info/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/Info";
+    //########
+    
+    
     public InfoAgent( ConnectionXMPP connectionXMPP ) throws CleverException
     {   super();
         this.connectionXMPP= connectionXMPP;
+        
+        //#############################################
+        //Inizializzazione meccanismo di logging
+        logger=Logger.getLogger("InfoAgentCM");    
+        Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //############################################# 
     }
     
     @Override
     public void initialization()throws CleverException
-    {        
+    {   
+      
+             
+      //
+      //logger.debug("Debug Message! su InfoAgent.java CM");
+      //logger.info("Info Message!  su InfoAgent.java CM");
+      //logger.warn("Warn Message!  su InfoAgent.java CM");
+      //logger.error("Error Message!  su InfoAgent.java CM");
+      //logger.fatal("Fatal Message!  su InfoAgent.java CM");
+      //
+      
+      
+      
         super.setAgentName("InfoAgent");
         super.start();
         
@@ -149,5 +177,6 @@ public class InfoAgent extends CmAgent
     {
         
     }
-    
+   
+      
 }

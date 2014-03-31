@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Exceptions.*;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.VEInfo.*;
 import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
 import org.jdom.Document;
@@ -88,15 +89,25 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
   private Agent owner;
   private Connect conn = null;
   private int counter;
-  private Logger logger;
   private Architecture DEFAULT_ARCHITECTURE = Architecture.X86_64; //TODO GET THIS INFORMATION FROM HOST ARCHITECTURE
 
-
+  //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger = null;
+    private String pathLogConf="/sources/org/clever/HostManager/HyperVisorPlugins/Libvirt/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/HyperVisor/Libvirt";
+    //########
 
   public HvlibVirt() throws IOException
   {
 
-    logger = Logger.getLogger( "Libvirt plugin" );
+    //############################################
+   //Inizializzazione meccanismo di logging
+   logger = Logger.getLogger( "LibvirtPlugin" );
+   Log4J log =new Log4J();
+   log.setLog4J(logger, pathLogConf, pathDirOut);
+   //#############################################
+      
     try
     {
       Properties prop = new Properties();

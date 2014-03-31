@@ -35,6 +35,7 @@ import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.HostManager.NetworkManager.*;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
@@ -65,13 +66,27 @@ public class NetworkManagerLinux implements NetworkManagerPlugin
   private boolean hasBrctl = false;
   private boolean hasEthtool = false;
   private PluginDescription pluginDescription;
-  private Logger logger = null;
-	
+    
+   //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/NetworkManager/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/NetworkManager";
+    //########
 
 
   public NetworkManagerLinux() //cmq i log non funzionano nemmeno qui!!!
   {
-      logger = Logger.getLogger( "NetworkManagerLinux" );
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("NetworkManager");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
+      
+      
+      //logger = Logger.getLogger( "NetworkManagerLinux" );
+      Logger logger = Logger.getLogger("NetworkManager");
       this.logger.info("Network Manager plugin created: ");
   }
 
@@ -84,6 +99,17 @@ public class NetworkManagerLinux implements NetworkManagerPlugin
     }
 
     private void init(Agent owner) throws CleverException {
+        
+        ////
+        //logger.info("SONO DENTRO init di NetworkManager.java : ");
+        //logger.debug("Debug Message! su NetworkManager.java");
+        //logger.info("Info Message! su NetworkManager.java");
+        //logger.warn("Warn Message! su NetworkManager.java");
+        //logger.error("Error Message! su NetworkManager.java");
+        //logger.fatal("Fatal Message! su NetworkManager.java");
+        ////
+        
+        
         this.owner=owner;
         this.adaptersInfo = new ArrayList();
         this.adaptersState = new ArrayList();

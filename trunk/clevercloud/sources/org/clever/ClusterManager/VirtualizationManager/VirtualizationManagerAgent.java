@@ -3,44 +3,20 @@
  *
  * Copyright 2011 giovalenti.
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */
 package org.clever.ClusterManager.VirtualizationManager;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.clever.Common.Communicator.CmAgent;
-import org.clever.Common.Communicator.MethodInvoker;
-import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.VEInfo.DesktopVirtualization;
-import org.clever.Common.XMLTools.FileStreamer;
-import org.clever.Common.XMLTools.ParserXML;
-import org.jdom.Element;
 
 /**
  *
@@ -60,16 +36,30 @@ public class VirtualizationManagerAgent extends CmAgent {
     private String notificatioPresenceHM = "PRESENCE/HM";
  //Modifico il virtualizationManagerAgent 05/24/2012 Rob
   
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/VirtualizationManager/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/VirtualizationManager";
+    //########
+    
     
    //05/24/2012 
     public VirtualizationManagerAgent() throws CleverException {
       super();
+      //#############################################
+       //Inizializzazione meccanismo di logging
+       logger=Logger.getLogger("VirtualizationManager");    
+       Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+    //#############################################
      
     }
     
     
     public void initialization()throws CleverException,IOException {
-        try {
+        
+     try {
             List params = null;
            // MethodInvoker mi = null;
             
@@ -266,5 +256,5 @@ public class VirtualizationManagerAgent extends CmAgent {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    
+        
 }

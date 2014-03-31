@@ -4,40 +4,21 @@
  * Copyright 2011 giovalenti.
  * Copyright 2012 giancarloalteri
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */     
 package org.clever.ClusterManager.VirtualizationManagerPlugin;
 
-import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 import org.apache.log4j.Logger;
 import org.clever.ClusterManager.VirtualizationManager.VirtualizationManagerPlugin;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.MethodInvoker;
-import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Exceptions.LogicalCatalogException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.VEInfo.DesktopVirtualization;
 import org.clever.Common.VEInfo.StorageSettings;
 import org.clever.Common.VEInfo.VEDescription;
@@ -54,7 +35,6 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
     private String version = "0.0.1";
     private String description = "Plugin per HTML5 remote desktop";
     private String name = "Virtualization Desktop Plugin";
-    private Logger logger = null;
     private String HostManagerServiceGuacaTarget;
     private String agent;
     private String OS_service;
@@ -70,15 +50,36 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
     private String nodoMatchingVmHM="Matching_VM_HM";
     private String nodoVmRunning="VMs_Running";
 
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/VirtualizationManager/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/VirtualizationManager";
+    //########
+    
 
     public VirtualizationManagerClever() throws Exception{
-        this.logger = Logger.getLogger( "VirtualizationManager plugin" );
-        this.logger.info("VirtualizationManager plugin created: ");
+       //#############################################
+       //Inizializzazione meccanismo di logging
+       logger=Logger.getLogger("VirtualizationManager");    
+       Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+    //#############################################
+    logger.info("VirtualizationManager plugin created: ");
     }
 
 
     @Override
     public void init(Element params, Agent owner) throws CleverException {
+         //logger.info("SONO DENTRO init() di VirtualizationManagerClever.java : ");
+         //debug
+         //logger.debug("Debug Message! su VirtualizationManagerClever");
+         //logger.info("Info Message! su VirtualizationManagerClever");
+         //logger.warn("Warn Message! su VirtualizationManagerClever");
+         //logger.error("Error Message! su VirtualizationManagerClever");
+         //logger.fatal("Fatal Message! su VirtualizationManagerClever");
+        
+        
         if(params!=null){
             this.HostManagerServiceGuacaTarget = params.getChildText("HostManagerServiceGuacaTarget");
         }
@@ -999,6 +1000,8 @@ public String listMac_address(String id) throws CleverException{
     public void shutdownPluginInstance(){
         
     }
+    
+         
 }
 
  

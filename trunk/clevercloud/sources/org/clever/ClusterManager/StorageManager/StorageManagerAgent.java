@@ -1,23 +1,25 @@
 package org.clever.ClusterManager.StorageManager;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.XMLTools.FileStreamer;
-import org.clever.Common.XMLTools.ParserXML;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 
 /*
  * @author Valerio Barbera & Luca Ciarniello
  */
 public class StorageManagerAgent extends CmAgent {
-    private Logger loger;
+    //private Logger logger ;
     //private Class cl;
     private StorageManagerPlugin StoragePlugin;
+    
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/StorageManager/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/StorageManager";
+    //########
 
     public StorageManagerAgent() throws CleverException {
        /* logger = Logger.getLogger("StorageManagerAgent");
@@ -32,10 +34,22 @@ public class StorageManagerAgent extends CmAgent {
         }*/
         super();
        
+       //#############################################
+       //Inizializzazione meccanismo di logging
+       logger=Logger.getLogger("StorageManager");    
+       Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //############################################# 
+        
+        
+        
     }
 
     @Override
     public void initialization() throws CleverException {
+        
+       
+             
         if (super.getAgentName().equals("NoName")) {
             super.setAgentName("StorageManagerAgent");
         }
@@ -86,4 +100,7 @@ public class StorageManagerAgent extends CmAgent {
     @Override
     public void shutDown() {
     }
+    
+      
+    
 }

@@ -42,14 +42,15 @@ import org.jdom.Element;
  */
 public class Guacamole {
     private ServiceObject serviceobject;
-    private Logger logger;
+    private Logger logger7;
     private String path;
 
     private String RegisterVirtualDeskHTML5 = "Virtualization/RegisterVirtualDesktopHTML5";
     private String UnRegisterVirtualDeskHTML5 = "Virtualization/UnRegisterVirtualDesktopHTML5";
 
     public Guacamole(ServiceObject serviceobject){
-        this.logger = Logger.getLogger("Guacamole Class");
+        //this.logger = Logger.getLogger("Guacamole Class");
+        Logger logger = Logger.getLogger("ServiceManager");
         this.serviceobject = serviceobject;
         try {
             FileStreamer fs = new FileStreamer();
@@ -59,7 +60,7 @@ public class Guacamole {
         } catch (IOException ex) {
             logger.error( "Error: Class Guacamole is not created " + ex );
         }
-        this.logger.info("Guacamole Class created: ");
+        this.logger7.info("Guacamole Class created: ");
     }
 
     public void update(){
@@ -70,7 +71,7 @@ public class Guacamole {
                 this.UnRegisterAccount((String)serviceobject.getObject());
             }
         } catch (Exception ex) {
-            this.logger.error("Errore aggiornamento file di configurazione del servizio Guacamole: "+ex);
+            this.logger7.error("Errore aggiornamento file di configurazione del servizio Guacamole: "+ex);
         }
     }
 
@@ -89,7 +90,7 @@ public class Guacamole {
 	for (int i=0; i<list.size(); i++){
             elem = (Element) list.get(i);
             if(elem.getAttribute("username").getValue().equals(desktop.getUsername())){
-                this.logger.error("Error: username present!!");
+                this.logger7.error("Error: username present!!");
 		stop=true;
             }
 	}
@@ -131,7 +132,7 @@ public class Guacamole {
 
             pXML.saveXML(this.path);
 
-            this.logger.info("User-Mapping Guacamole updated with Register username "+desktop.getUsername());
+            this.logger7.info("User-Mapping Guacamole updated with Register username "+desktop.getUsername());
 
         }
 
@@ -154,7 +155,7 @@ public class Guacamole {
             }
 	}
 
-        this.logger.info("User-Mapping Guacamole updated with UnRegister username "+id);
+        this.logger7.info("User-Mapping Guacamole updated with UnRegister username "+id);
     }
 
 }

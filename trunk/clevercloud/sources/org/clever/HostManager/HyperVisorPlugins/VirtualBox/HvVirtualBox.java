@@ -4,23 +4,6 @@
  * Copyright Elena Sentimentale.
  * Copyright 2012 Giuseppe Tricomi
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
  */
 package org.clever.HostManager.HyperVisorPlugins.VirtualBox;
 
@@ -57,6 +40,7 @@ import org.clever.Common.Exceptions.SaveStateException;
 import org.clever.Common.Exceptions.StartException;
 import org.clever.Common.Exceptions.StopException;
 import org.clever.Common.Exceptions.SuspendException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.VEInfo.CpuSettings;
 import org.clever.Common.VEInfo.CpuSettings.Architecture;
 import org.clever.Common.VEInfo.MemorySettings;
@@ -72,20 +56,43 @@ import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
 public class HvVirtualBox implements HyperVisorPlugin {
     private Agent owner;
     private Map<String, VMWrapper> m = new HashMap<String, VMWrapper>();
-    private Logger logger;
     private VirtualBoxManager mgr ;
     private IVirtualBox vbox;
     private Agent ownerAgent;
+        
+    //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger4 = null;
+    private String pathLogConf="/sources/org/clever/HostManager/HyperVisorPlugins/VirtualBox/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/HyperVisor/VirtualBox";
+    //########
 
     public HvVirtualBox() throws IOException{
-
-            logger = Logger.getLogger( "Virtualbox plugin" );
-            //PropertyConfigurator.configure( "logger.properties" );
-            logger.info( "VirtualBox plugin created: " );
-
+     
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger4 = Logger.getLogger("VirtualBoxPlugin");
+      Log4J log =new Log4J();
+      log.setLog4J(logger4, pathLogConf, pathDirOut);
+      //#############################################    
+            
+     logger4.info( "VirtualBox plugin created: " );
     }
+    
+    
  @Override
     public void init(Element params, Agent owner) throws CleverException {
+        //
+        //logger4.info("Sono dentro init() di HvVirtualbox.java");
+        //logger4.debug("Debug Message! su HvVirtualbox");
+        //logger4.info("Info Message!  su HvVirtualbox");
+        //logger4.warn("Warn Message!  su HvVirtualbox");
+        //logger4.error("Error Message!  su HvVirtualbox");
+        //logger4.fatal("Fatal Message!  su HvVirtualbox");
+        //
+        
+        
+        
         try{
             // TODO: check if librarypath is present
             System.setProperty( "java.library.path", params.getChildText( "librarypath" ) + ":" + System.getProperty( "java.library.path" ));
@@ -94,7 +101,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
             fieldSysPath.setAccessible(true);
             fieldSysPath.set(null, null);
 
-            logger.debug( System.getProperty( "java.library.path" ) );
+            logger4.debug( System.getProperty( "java.library.path" ) );
 
 
                   
@@ -103,20 +110,22 @@ public class HvVirtualBox implements HyperVisorPlugin {
            // mgr.connect( "http://localhost:18083/"," test", "test" );
             
             vbox = mgr.getVBox();
-            logger.info( "Virtualbox plugin initialized: "+ "connected to virtualbox" +vbox);
+            logger4.info( "Virtualbox plugin initialized: "+ "connected to virtualbox" +vbox);
             updateMap();
             this.ownerAgent = owner;
 
         }
         catch( VBoxException e ){
             e.getWrapped().printStackTrace();
-             logger.error( "Error: "+e );
+             logger4.error( "Error: "+e );
         }
          catch(Exception e){
-            logger.error("Exception in HvVirtualBox. :"+e);
+            logger4.error("Exception in HvVirtualBox. :"+e);
             e.printStackTrace();
         }
-       
+    
+        
+   // logger4.info("\n\nFine delle istruzioni di init() di HvVirtualbox\n\n: ");    
     }
 
     
@@ -161,7 +170,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
     //
                 vm = vbox.createMachine(null, id,"Linux26", null, false);
                 setMachine(vm, veD);
-                logger.info ("VM "+id+"created ");
+                logger4.info ("VM "+id+"created ");
 
                 vbox.registerMachine(vm);
                 attachDevice(vm, veD,notExclusive);
@@ -170,11 +179,11 @@ public class HvVirtualBox implements HyperVisorPlugin {
                 
                 
 
-                logger.info("VM " + id + " created");
+                logger4.info("VM " + id + " created");
                 return(true);
             }
            catch(Exception e){
-                logger.error("Error: " + e);
+                logger4.error("Error: " + e);
                 throw new HyperVisorException(e.getMessage());
            }
           
@@ -191,7 +200,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
             vm.saveSettings();
          }
         catch(VBoxException ex){
-            logger.error("Error: " + ex);
+            logger4.error("Error: " + ex);
         }
      }
 
@@ -224,7 +233,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
              
          }
          catch(VBoxException ex){
-             logger.error("Exception: "+ex);
+             logger4.error("Exception: "+ex);
              
          }
      }
@@ -243,11 +252,11 @@ public class HvVirtualBox implements HyperVisorPlugin {
             return ( true );
          }
           catch(VBoxException e){
-             logger.error( "Vbox exception: "+e );
+             logger4.error( "Vbox exception: "+e );
              throw new HyperVisorException(e.getMessage());
          }
          catch( Exception e ){
-           logger.error( "Error on destroy: "+e );
+           logger4.error( "Error on destroy: "+e );
            throw new HyperVisorException(e.getMessage());
          }
     }
@@ -259,7 +268,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
             return new VMWrapper(vm,null);
         }
         catch(Exception ex){
-                       logger.error("Error: " + ex);
+                       logger4.error("Error: " + ex);
             throw new Exception("id not found");
 
         }
@@ -269,12 +278,12 @@ public class HvVirtualBox implements HyperVisorPlugin {
      public List<VEState> listVms() throws Exception{
         try {
             ArrayList l = new ArrayList( m.keySet() );
-            logger.info( "List VMS returned :" +l.size() + " VMs");
+            logger4.info( "List VMS returned :" +l.size() + " VMs");
             
             return( l );
         }
         catch ( Exception ex ) {
-            logger.error( "Error on listVms : " + ex );
+            logger4.error( "Error on listVms : " + ex );
             throw new CleverException(ex.getMessage());
         }
     }
@@ -292,11 +301,11 @@ public class HvVirtualBox implements HyperVisorPlugin {
                  if ( vm.getState().name().compareTo(MachineState.Running.name()) == 0 )
                      l2.add( vm.getName() );
              }
-             logger.info( "List running Vms returned number of machine: "+ l2.size() );
+             logger4.info( "List running Vms returned number of machine: "+ l2.size() );
              return ( l2 );
          }
           catch( VBoxException ex ){
-             logger.error( "Error on listRunningVms: "+ex );
+             logger4.error( "Error on listRunningVms: "+ex );
              throw new CleverException(ex.getMessage());
          }
      }
@@ -308,7 +317,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
      public List listHVms() throws Exception{
          try{
             ArrayList l = new ArrayList(vbox.getMachines());
-            logger.info("List VMs rturned numero di macchine: "+l.size());
+            logger4.info("List VMs rturned numero di macchine: "+l.size());
             ArrayList l2 = new ArrayList();
             IMachine vm;
             for(Object obj: l){
@@ -320,7 +329,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
             return (l2);
          }
          catch(Exception e){
-             logger.error("Error on listVirtualBox: "+e);
+             logger4.error("Error on listVirtualBox: "+e);
              throw new HyperVisorException(e.getMessage());
          }
      }
@@ -339,11 +348,11 @@ public class HvVirtualBox implements HyperVisorPlugin {
                      l2.add( vm.getName() );
                  }
              }
-             logger.debug( "List running HVms returned number of machine: "+ l2.size() );
+             logger4.debug( "List running HVms returned number of machine: "+ l2.size() );
              return ( l2 );
          }
          catch( Exception ex ){
-             logger.error( "Error on listRunningVms: "+ex );
+             logger4.error( "Error on listRunningVms: "+ex );
              throw new HyperVisorException(ex.getMessage());
          }
      }
@@ -355,10 +364,10 @@ public class HvVirtualBox implements HyperVisorPlugin {
             if (listCl.isEmpty()){
                for(Object id1 : listLib){
                     String id = id1.toString();
-                    logger.info("VM adding: "+id);
+                    logger4.info("VM adding: "+id);
                     VMWrapper wrap = createVMwrapper(id);
                     m.put(id, wrap);
-                    logger.info("VM added: "+id);
+                    logger4.info("VM added: "+id);
                }
                return;
             }
@@ -381,7 +390,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
               }
           }
           catch(Exception ex){
-              logger.error("Error on updateMap");
+              logger4.error("Error on updateMap");
               
           }
         }
@@ -409,11 +418,11 @@ public class HvVirtualBox implements HyperVisorPlugin {
                 return wrap;
             }
              catch(VBoxException e){
-                 logger.error("Error :"+e);
+                 logger4.error("Error :"+e);
                  throw e; //TODO add a efficent exception managing
             }
             catch(Exception e){
-                 logger.error("Error: "+e);
+                 logger4.error("Error: "+e);
                 throw e;
             }
         }
@@ -427,7 +436,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
                  return ( false );
          }
          catch( Exception ex ){
-             logger.error( "Error : "+ex );
+             logger4.error( "Error : "+ex );
              throw new CleverException(ex.getMessage());
          }
         
@@ -435,7 +444,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
 
 
     public boolean addAdapter(String id, NetworkSettings settings) {
-        logger.error("addAdapter Not supported yet ");
+        logger4.error("addAdapter Not supported yet ");
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -445,21 +454,21 @@ public class HvVirtualBox implements HyperVisorPlugin {
             IMachine vm = (IMachine) resolveUUID(id).getReference();
              if(vm.getSessionState().compareTo(SessionState.Locked) == 0){
                 if(vm.getState().compareTo(MachineState.Running) == 0){
-                    logger.error("Virtual Machine: "+vm.getName()+" is already running");
+                    logger4.error("Virtual Machine: "+vm.getName()+" is already running");
                     return (true);
                 }
-                logger.error("Error on startVm: machine is already locked because another session has a write lock");
+                logger4.error("Error on startVm: machine is already locked because another session has a write lock");
                 throw new ResumeStateException("machine is already locked because another session has a write lock");
             }
             ISession session= mgr.getSessionObject();
             IProgress pro = vm.launchVMProcess(session, "sdl", "");
             pro.waitForCompletion(7000);
             mgr.closeMachineSession(session);
-            logger.info("VM " + id + " resumed");
+            logger4.info("VM " + id + " resumed");
             return(true);
         }
         catch (Exception ex) {
-            logger.error("Error on resumeState: " + ex);
+            logger4.error("Error on resumeState: " + ex);
             throw new HyperVisorException(ex.getMessage());
         }
     }
@@ -474,7 +483,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
             return ( vbox.getVersion() );
         }
         catch( VBoxException ex){
-            logger.error("Error: " + ex);
+            logger4.error("Error: " + ex);
             return (null);
         }
     }
@@ -499,7 +508,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
         return fileData.toString();
         }
         catch(IOException e){
-            logger.error("Error on xmlToString "+e);
+            logger4.error("Error on xmlToString "+e);
             throw e;
         }
     }
@@ -510,7 +519,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
         try {
             
             if(! ((vm.getState().compareTo(MachineState.Running) == 0) || (vm.getState().compareTo(MachineState.Paused) == 0))){
-                logger.error("Error on savestate: Virtual machine state neither Running nor Paused. ");
+                logger4.error("Error on savestate: Virtual machine state neither Running nor Paused. ");
                 throw new SaveStateException("Virtual machine state neither Running nor Paused");
             }
             session = mgr.openMachineSession(vm);
@@ -522,7 +531,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
         }
         catch (Exception ex) {
             mgr.closeMachineSession(session);
-            logger.error("Error: " + ex);
+            logger4.error("Error: " + ex);
             throw new HyperVisorException(ex.getMessage());
         }
     }
@@ -533,22 +542,22 @@ public class HvVirtualBox implements HyperVisorPlugin {
          try {
             if(vm.getSessionState().compareTo(SessionState.Locked) == 0){
                 if(vm.getState().compareTo(MachineState.Running) == 0){
-                    logger.error("Virtual Machine: "+vm.getName()+" is already running");
+                    logger4.error("Virtual Machine: "+vm.getName()+" is already running");
                     return (true);
                 }
-                logger.error("Error on startVm: machine is already locked because another session has a write lock");
+                logger4.error("Error on startVm: machine is already locked because another session has a write lock");
                 throw new StartException("machine is already locked because another session has a write lock");
             }
             ISession s =  mgr.getSessionObject();
             IProgress pro = vm.launchVMProcess(s, "sdl", "");
             pro.waitForCompletion(7000);
             mgr.closeMachineSession(s);
-            logger.info("VM " + id + " started");
+            logger4.info("VM " + id + " started");
             return true;
         }
 
         catch (VBoxException ex) {
-            logger.error("Errorn on startVM: "+ex);
+            logger4.error("Errorn on startVM: "+ex);
             throw new HyperVisorException(ex.getMessage());
         }
     }
@@ -561,7 +570,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
            
              session = mgr.openMachineSession( vm );
             if(!(vm.getState().compareTo(MachineState.Paused) == 0)){
-                logger.error("Error on resume: cannot resume vm as it is not paused");
+                logger4.error("Error on resume: cannot resume vm as it is not paused");
                 mgr.closeMachineSession(session);
                 throw new ResumeException("cannot resume vm as it is not paused");
             }
@@ -569,12 +578,12 @@ public class HvVirtualBox implements HyperVisorPlugin {
             IConsole console = session.getConsole();
             console.resume();
             mgr.closeMachineSession( session );
-            logger.info( "VM "+id+"  resumed" );
+            logger4.info( "VM "+id+"  resumed" );
             return ( true );
         }
         catch ( Exception ex )  {
             mgr.closeMachineSession(session);
-            logger.error( "Error on resume : "+ex);
+            logger4.error( "Error on resume : "+ex);
             throw new HyperVisorException("Error on resume: "+ex.getMessage());
             
         }
@@ -584,7 +593,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
          try{
              IMachine vm = (IMachine) resolveUUID(id).getReference();
              if(!(vm.getState().compareTo(MachineState.Running) == 0)){
-                logger.error("Error on suspend: domain is not running");
+                logger4.error("Error on suspend: domain is not running");
                 throw new SuspendException("Error on suspend: domain is not running");
              }
              ISession session = mgr.openMachineSession(vm);
@@ -594,7 +603,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
              return (true);
          }
          catch(Exception ex){
-             logger.error("Error on suspend: " + ex);
+             logger4.error("Error on suspend: " + ex);
              throw new HyperVisorException(ex.getMessage());
          }
      }
@@ -610,13 +619,13 @@ public class HvVirtualBox implements HyperVisorPlugin {
             vm = ( IMachine ) resolveUUID( id ).getReference();
         try {
             if(vm.getState().compareTo(MachineState.PoweredOff) == 0){
-                  logger.error("Error on shutdown: Virtual machine is already powered off");
+                  logger4.error("Error on shutdown: Virtual machine is already powered off");
                   return (true);
             }
               
             if(!((vm.getState().compareTo(MachineState.Paused) == 0) || (vm.getState().compareTo(MachineState.Stuck) == 0) || (vm.getState().compareTo(MachineState.Running) == 0)))
             {
-                logger.error("Error on shutdown: Virtual machine must be Running, Paused or Stuck to be powered down.");
+                logger4.error("Error on shutdown: Virtual machine must be Running, Paused or Stuck to be powered down.");
                 throw new StopException ("Error on shutdown: Virtual machine must be Running, Paused or Stuck to be powered down.");
             }
             ses = mgr.openMachineSession( vm );
@@ -629,14 +638,14 @@ public class HvVirtualBox implements HyperVisorPlugin {
             if(pro != null)
                     pro.waitForCompletion( 7000);
             mgr.closeMachineSession( ses );
-            logger.info( "VM "+id+"  shutted " );
+            logger4.info( "VM "+id+"  shutted " );
             return ( true );
             
             
         }
         catch ( Exception ex ) {
             mgr.closeMachineSession(ses);
-            logger.error( "Error on shutdownVM : "+ex.getMessage() );
+            logger4.error( "Error on shutdownVM : "+ex.getMessage() );
             throw new HyperVisorException(ex.getMessage());
         }
     }
@@ -696,7 +705,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
           }
           catch(Exception ex){
                 mgr.closeMachineSession(session);
-              logger.error("Error on cloneVM: "+ex);
+              logger4.error("Error on cloneVM: "+ex);
               throw new HyperVisorException(ex.getMessage());
           }
       }
@@ -726,7 +735,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
           }
           catch(Exception ex){
               mgr.closeMachineSession(session);
-              logger.error("Error on takeSnapshot: "+ex);
+              logger4.error("Error on takeSnapshot: "+ex);
               throw new HyperVisorException(ex.getMessage());
           }
       }
@@ -737,7 +746,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
           IMachine vm = (IMachine) resolveUUID(id).getReference();
           try{
             if (vm.getState().compareTo(MachineState.Running) == 0){
-                  logger.error("Error on restorSnapshot: Virtual machine is running");
+                  logger4.error("Error on restorSnapshot: Virtual machine is running");
                   throw new HyperVisorException ("The machine must not be running");
               }
               ISnapshot snap = vm.findSnapshot(nameS);
@@ -750,7 +759,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
           }
           catch(Exception ex){
               mgr.closeMachineSession(session);
-              logger.error("Error on restoreSnapshot: "+ex);
+              logger4.error("Error on restoreSnapshot: "+ex);
               throw new HyperVisorException(ex.getMessage());
           }
       }
@@ -771,7 +780,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
           }
           catch(Exception ex){
               mgr.closeMachineSession(session);
-              logger.error("Error on deleteSnapshot: "+ex);
+              logger4.error("Error on deleteSnapshot: "+ex);
               throw new HyperVisorException(ex.getMessage());
           }
       }
@@ -790,7 +799,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
 
           }
           catch(Exception ex){
-              logger.error("Error on currentSnapshot"+ex);
+              logger4.error("Error on currentSnapshot"+ex);
               throw new HyperVisorException (ex.getMessage());
           }
       }
@@ -802,7 +811,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
               return ( vm.getSnapshotCount());
           }
           catch(Exception ex){
-              logger.error(("Error on snapshotCount"));
+              logger4.error(("Error on snapshotCount"));
               throw new HyperVisorException(ex.getMessage());
           }
       }
@@ -831,7 +840,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
         }
         catch (VBoxException e)
         {
-            logger.error("error : "+e);
+            logger4.error("error : "+e);
             throw (e);
         }
     }
@@ -845,7 +854,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
         }
         catch (VBoxException e)
         {
-            logger.error("error : "+e);
+            logger4.error("error : "+e);
             throw (e);
         }
     }
@@ -870,7 +879,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
         }
         catch (VBoxException e)
         {
-            logger.error("error : "+e);
+            logger4.error("error : "+e);
             throw new CleverException(e.getMessage());
         }
     }
@@ -934,7 +943,7 @@ public class HvVirtualBox implements HyperVisorPlugin {
           }
           catch(Exception ex){
               mgr.closeMachineSession(session);
-              logger.error("Error on deleteSnapshot: "+ex);
+              logger4.error("Error on deleteSnapshot: "+ex);
               throw new HyperVisorException(ex.getMessage());
           }
          
@@ -996,7 +1005,5 @@ public class HvVirtualBox implements HyperVisorPlugin {
         
     }
 
-
-}
-
-
+    
+  }

@@ -23,6 +23,7 @@
  */
 package org.clever.Common.Initiator;
 
+import java.io.File;
 import java.util.logging.Logger;
 import org.clever.Common.Exceptions.CleverException;
 import org.apache.log4j.*;
@@ -37,7 +38,8 @@ public class Main { //Questo è IL MAIN PRINCIPALE DI TUTTO IL PROGETTO CLEVER!!
     static Initiator in;
     
     public static void main(String[] args) throws CleverException
-    {              
+    {   
+                
         in = Initiator.getInstance(); //creo un oggetto Initiator
         in.start(); //faccio partire l'initiator        
         
@@ -53,5 +55,6 @@ public class Main { //Questo è IL MAIN PRINCIPALE DI TUTTO IL PROGETTO CLEVER!!
             }
          }
     }
-    
+ 
+ 
 }

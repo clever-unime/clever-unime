@@ -50,8 +50,9 @@ public class ServiceManagerLinux implements ServiceManagerPlugin{
     private Class cl;
 
     public ServiceManagerLinux()throws Exception{
-        this.logger = Logger.getLogger( "Hypervisor plugin" );
-        this.logger.info("VMWare plugin created: ");
+        //this.logger = Logger.getLogger( "Hypervisor plugin" );
+         this.logger = Logger.getLogger( "ServiceManager" );
+         this.logger.info("VMWare plugin created: ");
     }
 
 

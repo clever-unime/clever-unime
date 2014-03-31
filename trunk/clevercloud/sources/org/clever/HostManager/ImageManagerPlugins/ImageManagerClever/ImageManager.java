@@ -1,28 +1,4 @@
-/*
- * The MIT License
- *
- * Copyright Università degli studi di Messina.
- * Copyright Valerio Barbera & Luca Ciarniello.
- * Copyright 2012 Giuseppe Tricomi
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+
 package org.clever.HostManager.ImageManagerPlugins.ImageManagerClever;
 
 import org.clever.Common.SqliteDB.SQLite;
@@ -41,15 +17,14 @@ import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 import org.apache.commons.collections.MultiHashMap;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.vfs2.*;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.MethodInvoker;
-import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.Shared.Host;
 import org.clever.Common.Shared.ImageFileInfo;
 import org.clever.Common.Storage.VFSDescription;
@@ -95,7 +70,6 @@ public class ImageManager implements ImageManagerPlugin {
   //private DistributedStoragePlugin distributedStorage;
   private ConnectionXMPP conn;
   
-  private Logger logger;
   private FileTransferManager ftm;
   private Agent owner;
   private SQLite sqlite;
@@ -108,18 +82,53 @@ public class ImageManager implements ImageManagerPlugin {
    * A constant representing the XMPP-based file transfer
    */
   public static final int XMPP = 101;
+  
+  //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger3 =null;
+    private String pathLogConf="/sources/org/clever/HostManager/ImageManager/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/ImageManager";
+    //########
+  
 
   /**
    * Instantiates a new ImageManager
    */
   public ImageManager(Element pp) {
       init(pp,this.owner);
+      
+       //############################################
+      //Inizializzazione meccanismo di logging
+      logger3 = Logger.getLogger("ImageManagerAgent");
+      Log4J log =new Log4J();
+      log.setLog4J(logger3, pathLogConf, pathDirOut);
+      //#############################################
+      
   }
   public ImageManager() {
+       //############################################
+      //Inizializzazione meccanismo di logging
+      logger3 = Logger.getLogger("ImageManagerAgent");
+      Log4J log =new Log4J();
+      log.setLog4J(logger3, pathLogConf, pathDirOut);
+      //#############################################
+      
+      logger3 = Logger.getLogger("ImageManagerAgent");
+      logger3.info("ImageManager inizializzato ");
   }
   
   public void init( Element params, Agent owner ){
-    logger = Logger.getLogger("ImageManager");
+      //
+      //logger3.info("SONO DENTRO init() di ImageMAnager.java : ");
+      //logger3.debug("Debug Message! su ImageMAnager");
+      //logger3.info("Info Message!  su ImageMAnager");
+      //logger3.warn("Warn Message!  su ImageMAnager");
+      //logger3.error("Error Message!  su ImageMAnager");
+      //logger3.fatal("Fatal Message!  su ImageMAnager");
+      //
+      
+      
+    //logger = Logger.getLogger("ImageManager");
    // this.uuidGenerator=null;
     //this.des=pp.getChildText("dest");
     this.map = new MultiHashMap( );
@@ -141,7 +150,7 @@ public class ImageManager implements ImageManagerPlugin {
     {
       this.hostName = java.net.InetAddress.getLocalHost().getHostName();
     } catch (java.net.UnknownHostException uhe) {
-      logger.error("Error getting Ip address : " + uhe.getMessage());
+      logger3.error("Error getting Ip address : " + uhe.getMessage());
       return;
     }
     Thread hook = new ThreadCloser(this);
@@ -189,7 +198,7 @@ public class ImageManager implements ImageManagerPlugin {
                 lastMod = dateFormat.format(new Date(content.getLastModifiedTime()));
                 }
                 //se la chiave non esiste
-                logger.debug("element searched : "+file_s.getName().getURI());
+                logger3.debug("element searched : "+file_s.getName().getURI());
                 ResultSet rs=this.sqlite.retrieveElementsInMap(file_s.getName().getURI());
                 
              if ((!rs.isAfterLast()&&!rs.isBeforeFirst())) {
@@ -218,10 +227,10 @@ public class ImageManager implements ImageManagerPlugin {
                     vfs.cp(file_s, file_d);
                     
                 if (file_s.getType().equals(FileType.FOLDER)) {
-                    logger.debug("Image1");
+                    logger3.debug("Image1");
                     this.sqlite.insertElementAtMap(file_s.getName().getURI(), response,"" ,lastMod,LockFile.getLockType(lock));
                } else {
-                    logger.debug("Image2");
+                    logger3.debug("Image2");
                     this.sqlite.insertElementAtMap(file_s.getName().getURI(), response,new Long(content.getSize()).toString() ,lastMod,LockFile.getLockType(lock));
                 }
                     
@@ -294,7 +303,7 @@ public class ImageManager implements ImageManagerPlugin {
                     else{
                     
                     response=this.localRepository+id+"."+file_s.getName().getExtension();
-                    logger.debug("Image4");
+                    logger3.debug("Image4");
                     this.sqlite.insertElementAtMap(file_s.getName().getURI(), response,new Long(content.getSize()).toString() ,lastMod,LockFile.getLockType(lock));
                      params.add("insert");
                     params.add(response);       
@@ -313,7 +322,7 @@ public class ImageManager implements ImageManagerPlugin {
         }
       }
       catch(Exception e){
-          logger.error(e.getLocalizedMessage());
+          logger3.error(e.getLocalizedMessage());
       }
       return params;
     }
@@ -352,12 +361,12 @@ public class ImageManager implements ImageManagerPlugin {
 
       if (result == null)
       {
-        logger.info("Could not get the free storage space from the host");
+        logger3.info("Could not get the free storage space from the host");
         return false;
       }
 
     } catch (Exception e) {//modifico l errore altrimenti non restituisce nulla 05/26/2012
-      logger.error("Error getting free storage space info from host : " + e.getMessage());
+      logger3.error("Error getting free storage space info from host : " + e.getMessage());
       return false;
     }
 
@@ -372,14 +381,14 @@ public class ImageManager implements ImageManagerPlugin {
       //boolean res = (Boolean) this.mc.invoke(mi);
       boolean res = (Boolean) this.owner.invoke(mi);
       if (res)
-        logger.info("Host registered within the cluster");
+        logger3.info("Host registered within the cluster");
       else
-        logger.info("Can't register the host within the cluster");
+        logger3.info("Can't register the host within the cluster");
 
       return res;
 
     } catch (Exception e) { //modifico l errore altrimenti non restituisce nulla 05/26/2012 
-     logger.error("Error inserting host info into the database : " + e.getMessage());
+     logger3.error("Error inserting host info into the database : " + e.getMessage());
       return false;
     }
   }
@@ -392,7 +401,7 @@ public class ImageManager implements ImageManagerPlugin {
    */
   private void initFTM() {
     System.out.println("Adding a FileTransferListener");
-    logger.info("Adding a FileTransferListener");
+    logger3.info("Adding a FileTransferListener");
     ftm.addFileTransferListener(new FileTransferListener() {
       @Override
       public void fileTransferRequest(FileTransferRequest request) {
@@ -418,14 +427,14 @@ public class ImageManager implements ImageManagerPlugin {
             System.out.println("IM - putting in path (" + id + "," + path + ")");
             paths.put(id, path);
           } catch (XMPPException e) {
-            logger.error("Error getting the VM file: " + e.getMessage());
+            logger3.error("Error getting the VM file: " + e.getMessage());
           }
         }
         else
         {
           // Reject it
           request.reject();
-          logger.info("VM file transfer rejected");
+          logger3.info("VM file transfer rejected");
         }
       }
     });
@@ -550,7 +559,7 @@ public class ImageManager implements ImageManagerPlugin {
         return false;
 
     } catch (NullPointerException e) {
-      logger.error(e.getMessage());
+      logger3.error(e.getMessage());
       return false;
     }
   }
@@ -569,7 +578,7 @@ public class ImageManager implements ImageManagerPlugin {
       return true;
 
     } catch (Exception e) {
-      logger.error(e.getMessage());
+      logger3.error(e.getMessage());
       return false;
     }
   }
@@ -611,7 +620,7 @@ public class ImageManager implements ImageManagerPlugin {
         return sendFileFTM(name, filePath, destHost);
 
       default:
-        this.logger.info("Invalid file transfer technology case");
+        this.logger3.info("Invalid file transfer technology case");
         return false;
     }
   }
@@ -633,14 +642,14 @@ public class ImageManager implements ImageManagerPlugin {
         return null;
 
       ServerSocket ss = new ServerSocket(9999);
-      logger.info("Waiting to receive VM file on destination host");
+      logger3.info("Waiting to receive VM file on destination host");
       ThreadSocket ts = new ThreadSocket(ss, name, fileName);
       ts.start();
       System.out.println("returning " + ip.getAddress());
       return ip.getAddress();
 
     } catch (Exception e) {
-      this.logger.error("Error while getting VM file:" + e.getMessage());
+      this.logger3.error("Error while getting VM file:" + e.getMessage());
       return null;
     }
   }
@@ -650,7 +659,7 @@ public class ImageManager implements ImageManagerPlugin {
     File f = new File(filePath);
     if (!f.isFile())
     {
-      logger.info("Can't open the VM's image file");
+      logger3.info("Can't open the VM's image file");
       return null;
     }
 
@@ -676,13 +685,13 @@ public class ImageManager implements ImageManagerPlugin {
       File f = new File(filePath);
       if (!f.exists())
       {
-        logger.error("Can't read VM file for sending");
+        logger3.error("Can't read VM file for sending");
         return null;
       }
 
-      logger.info("Sending " + f.getName() + " to " + destHost);
+      logger3.info("Sending " + f.getName() + " to " + destHost);
       Socket soc = new Socket(destHost, 9999);
-      logger.info("Connected to " + destHost);
+      logger3.info("Connected to " + destHost);
       byte[] data = new byte[(int) f.length()];
       BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));
       bis.read(data, 0, data.length);
@@ -691,7 +700,7 @@ public class ImageManager implements ImageManagerPlugin {
       dos.writeInt(data.length);
       dos.write(data, 0, data.length);
       dos.flush();
-      this.logger.info("VM file sent succesfully");
+      this.logger3.info("VM file sent succesfully");
       DataInputStream dis = new DataInputStream(soc.getInputStream());
       String path = dis.readUTF();
       dis.close();
@@ -700,15 +709,15 @@ public class ImageManager implements ImageManagerPlugin {
       return path;
 
     } catch (UnknownHostException ex) {
-      this.logger.error("Unknown Host Error sending VM file : " + ex.getMessage());
+      this.logger3.error("Unknown Host Error sending VM file : " + ex.getMessage());
       return null;
 
     } catch (FileNotFoundException ex) {
-      this.logger.error("File not found Error sending VM file : " + ex.getMessage());
+      this.logger3.error("File not found Error sending VM file : " + ex.getMessage());
       return null;
 
     } catch (IOException ex) {
-      this.logger.error("IO Error sending VM file : " + ex.getMessage());
+      this.logger3.error("IO Error sending VM file : " + ex.getMessage());
       return null;
     }
   }
@@ -727,7 +736,7 @@ public class ImageManager implements ImageManagerPlugin {
     System.out.println("filesize: " + f.length());
     if (!f.exists())
     {
-      logger.error("Can't read VM file for sending");
+      logger3.error("Can't read VM file for sending");
       return false;
     }
 
@@ -810,7 +819,7 @@ public class ImageManager implements ImageManagerPlugin {
     public void run() {
       try
       {
-        logger.info("Waiting for VM file on destination host");
+        logger3.info("Waiting for VM file on destination host");
         Socket soc = ss.accept();
         DataInputStream dis = new DataInputStream(soc.getInputStream());
         byte[] data = new byte[dis.readInt()];
@@ -829,11 +838,11 @@ public class ImageManager implements ImageManagerPlugin {
         dis.close();
         soc.close();
 
-        logger.info("VM file written on destination host");
+        logger3.info("VM file written on destination host");
         return;
 
       } catch (Exception e) {
-        logger.error("Error receiving VM file:" + e.getMessage());
+        logger3.error("Error receiving VM file:" + e.getMessage());
         return;
       }
     }
@@ -870,12 +879,12 @@ public class ImageManager implements ImageManagerPlugin {
         //boolean res = (Boolean) this.im.mc.invoke(mi);
         boolean res = (Boolean) this.im.owner.invoke(mi);
         if (res)
-          logger.info("Host removed from the cluster");
+          logger3.info("Host removed from the cluster");
         else
-          logger.info("Can't remove the host from the cluster");
+          logger3.info("Can't remove the host from the cluster");
 
       } catch (CleverException e) {
-        logger.error("Error deleting host info from the database : " + e.getMessage());
+        logger3.error("Error deleting host info from the database : " + e.getMessage());
       }
     }
   }
@@ -898,10 +907,10 @@ public List SnapshotImageCreate(String localpath,VFSDescription vfsD,LockFile.lo
             try{
             Process p=Runtime.getRuntime().exec("qemu-img create -f "+extension+" -b "+localpath+" "+localrepository+uuid+"."+extension);
             p.waitFor();
-            //logger.debug("X?X qui arrivo");
+            //logger3.debug("X?X qui arrivo");
             }
             catch(Exception e){
-                logger.error(e.getMessage());
+                logger3.error(e.getMessage());
             }
             String response=localrepository+uuid+"."+extension;
             this.sqlite.insertElementAtMap(file_s.getName().getURI(), response,"" ,"",LockFile.getLockType(lock));

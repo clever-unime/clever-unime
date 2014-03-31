@@ -3,38 +3,18 @@
  *
  * Copyright 2011 Alessio Di Pietro.
  * Copyright 2013 Tricomi Giuseppe
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Copyright 2013 Riccardo Di Pietro
  */
 package org.clever.ClusterManager.DatabaseManagerPlugins.Sedna;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import net.cfoster.sedna.SednaUpdateService;
 import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.clever.ClusterManager.DatabaseManager.DatabaseManagerPlugin;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.jdom.Element;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.*;
@@ -47,15 +27,39 @@ import org.xmldb.api.modules.XQueryService;
  */
 public class DbSedna implements DatabaseManagerPlugin {
     private Agent owner;
-    private Logger logger;
     private String serverURL;
     private String dbName;
     private String user;
     private String password;
     private String document;
     private String xpath = "/clever/cluster[@id='clustermain']";
+    
+     //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/DatabaseManagerPlugins/Sedna/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/DbSedna";
+    //########
+    
 
     public DbSedna() throws CleverException {
+         
+        //#############################################
+       //Inizializzazione meccanismo di logging
+       logger=Logger.getLogger("DbSedna");    
+       Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //#############################################
+         
+        try {
+            this.registerXMLDBDriver();
+        } catch (XMLDBException ex) {
+            logger.debug("Errore: ", ex);
+        }
+         logger.debug("DbSedna plugin created!");
+         //        
+        
+   /*      
         try {
             logger = Logger.getLogger("DbSednaPlugin");
             Properties prop = new Properties();
@@ -73,6 +77,9 @@ public class DbSedna implements DatabaseManagerPlugin {
         } catch (IOException ex) {
             throw new CleverException("Error on reading logger.properties");
         }
+   */ 
+        
+        
     }
 
     private void registerXMLDBDriver() throws XMLDBException {
@@ -359,6 +366,17 @@ public class DbSedna implements DatabaseManagerPlugin {
     
     
     private void init() {
+       
+      //
+      //logger5.info("SONO DENTRO init() di DbSedna.java : ");  
+      //logger5.debug("Debug Message! su DbSedna.java");
+      //logger5.info("Info Message!  su DbSedna.java");
+      //logger5.warn("Warn Message!  su DbSedna.java");
+      //logger5.error("Error Message!  su DbSedna.java");
+      //logger5.fatal("Fatal Message!  su DbSedna.java");
+      //
+      
+        
         ResourceSet resultSet = null;
         ResourceIterator results = null;
         Collection collect = null;
@@ -946,4 +964,6 @@ public class DbSedna implements DatabaseManagerPlugin {
     public void shutdownPluginInstance(){
         
     }
+    
+    
 }

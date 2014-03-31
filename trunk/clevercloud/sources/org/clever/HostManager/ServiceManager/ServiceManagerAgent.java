@@ -2,35 +2,13 @@
  *  The MIT License
  * 
  *  Copyright 2011 brady.
- * 
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
- * 
- *  The above copyright notice and this permission notice shall be included in
- *  all copies or substantial portions of the Software.
- * 
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- *  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- *  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- *  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- *  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- *  THE SOFTWARE.
  */
 package org.clever.HostManager.ServiceManager;
 
-import java.io.IOException;
-import java.io.InputStream;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.XMLTools.FileStreamer;
-import org.clever.Common.XMLTools.ParserXML;
-import org.jdom.Element;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 
 /**
  *
@@ -40,9 +18,25 @@ public class ServiceManagerAgent extends Agent {
 
     private ServiceManagerPlugin service_manager;
     //private Class cl;
+    
+     //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger =null;
+    private String pathLogConf="/sources/org/clever/HostManager/ServiceManager/log_conf/";
+    private String pathDirOut="/LOGS/HostManager/ServiceManager";
+    //########
+    
 
     public ServiceManagerAgent() throws CleverException {
         super();
+        
+      //############################################
+      //Inizializzazione meccanismo di logging
+      logger = Logger.getLogger("ServiceManager");
+      Log4J log =new Log4J();
+      log.setLog4J(logger, pathLogConf, pathDirOut);
+      //#############################################
+        
        
     }
 
@@ -58,7 +52,15 @@ public class ServiceManagerAgent extends Agent {
 
     @Override
     public void initialization() throws Exception {
-          
+      
+        
+      //logger.debug("Debug Message! su ServiceManagerAgent.java");
+      //logger.info("Info Message! su ServiceManagerAgent.java");
+      //logger.warn("Warn Message! su ServiceManagerAgent.java");
+      //logger.error("Error Message! su ServiceManagerAgent.java");
+      //logger.fatal("Fatal Message! su ServiceManagerAgent.java"); 
+      
+      
        try {
            service_manager = (ServiceManagerPlugin) super.startPlugin("./cfg/configuration_ServiceManager.xml","/org/clever/HostManager/ServiceManager/configuration_ServiceManager.xml");
            service_manager.setOwner(this);
@@ -73,4 +75,6 @@ public class ServiceManagerAgent extends Agent {
         //TODO: implement shutdown
         throw new UnsupportedOperationException("Not supported yet.");
     }
+    
+   
 }

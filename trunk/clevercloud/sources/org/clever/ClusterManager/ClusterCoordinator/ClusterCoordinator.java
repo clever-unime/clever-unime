@@ -7,26 +7,7 @@
  *  Copyright (c) 2010 Antonio Nastasi
  *  Copyright (c) 2012 Marco Carbone
  *
- *  Permission is hereby granted, free of charge, to any person
- *  obtaining a copy of this software and associated documentation
- *  files (the "Software"), to deal in the Software without
- *  restriction, including without limitation the rights to use,
- *  copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following
- *  conditions:
- *
- *  The above copyright notice and this permission notice shall be
- *  included in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- *  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- *  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- *  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- *  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- *  OTHER DEALINGS IN THE SOFTWARE.
+
  */
 
 
@@ -53,6 +34,7 @@ import org.clever.ClusterManager.Brain.BrainInterface;
 import org.clever.Common.Initiator.ElectionThread;
 import org.clever.Common.Initiator.Listener;
 import org.clever.Common.Initiator.ModuleFactory.*;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.Shared.Support;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
@@ -96,9 +78,11 @@ public class ClusterCoordinator implements CleverMessageHandler
   
   private boolean tls;
     
+  
+  
   public ClusterCoordinator()
   {
-      try
+     try
       {         
           Properties prop = new Properties();
           InputStream in = getClass().getResourceAsStream("/org/clever/Common/Shared/logger.properties");
@@ -110,9 +94,13 @@ public class ClusterCoordinator implements CleverMessageHandler
           java.util.logging.Logger.getLogger(ClusterCoordinator.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);       
       }
       
-      logger = Logger.getLogger( "ClusterCoordinator" );     
+      
+   logger = Logger.getLogger( "ClusterCoordinator" );
+     
+      
+ //inizializzo le variabili usate in seguito     
+           
       conn = null;
-
       pXML = null;      
       roomclients = "";      
       dispatcherAgent = null;
@@ -134,6 +122,7 @@ public class ClusterCoordinator implements CleverMessageHandler
   
   public void init() 
   {
+         
       cfgFile = new File( cfgPath );
       
       if( !cfgFile.exists() )
@@ -576,5 +565,5 @@ public class ClusterCoordinator implements CleverMessageHandler
     return conn.getMembers(ROOM.CLEVER_MAIN);
   }
   
-  
+    
 }

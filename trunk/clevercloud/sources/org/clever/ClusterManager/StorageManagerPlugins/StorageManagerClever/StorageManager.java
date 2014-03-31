@@ -40,6 +40,7 @@ import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Exceptions.LogicalCatalogException;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.Storage.VFSDescription;
 import org.clever.Common.Storage.VirtualFileSystem;
 import org.clever.Common.XMLTools.MessageFormatter;
@@ -52,18 +53,33 @@ import org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile;
  */
 
 public class StorageManager implements StorageManagerPlugin {
-  private Logger logger;
   private Class cl;
 //  private ModuleCommunicator mc;
   private String hostName;
   private ParserXML pXML;
   private Agent owner;
+  
+  //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/StorageManager/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/StorageManager";
+    //########
+  
 
   /**
    * Instantiates a new StorageManager object
    */
   public StorageManager() {
-    this.logger = Logger.getLogger("StorageManager");
+    
+    //#############################################
+       //Inizializzazione meccanismo di logging
+       logger=Logger.getLogger("StorageManager");    
+       Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+    //#############################################
+    
+       
     try
     {
       hostName = InetAddress.getLocalHost().getHostName();
@@ -632,6 +648,16 @@ public class StorageManager implements StorageManagerPlugin {
     @Override
     public void init(Element params, Agent owner) throws CleverException {
         this.owner=owner;
+        
+        //debug
+        //logger.info("SONO DENTRO init() di StorageManager.java : ");
+        //logger.debug("Debug Message! su StorageManager");
+        //logger.info("Info Message! su StorageManager");
+        //logger.warn("Warn Message! su StorageManager");
+        //logger.error("Error Message! su StorageManager");
+        //logger.fatal("Fatal Message! su StorageManager");
+        
+        
     }
 
     @Override
@@ -719,4 +745,6 @@ public String SnapshotImageCreate(String localpath,String logicalpath,String HMT
     public void shutdownPluginInstance(){
         
     }
+    
+         
 }

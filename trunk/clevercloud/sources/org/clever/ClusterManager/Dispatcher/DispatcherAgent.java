@@ -3,38 +3,16 @@
  *  Copyright (c) 2011 Marco Sturiale
  *  Copyright (c) 2012 Marco Carbone
  *
- *  Permission is hereby granted, free of charge, to any person
- *  obtaining a copy of this software and associated documentation
- *  files (the "Software"), to deal in the Software without
- *  restriction, including without limitation the rights to use,
- *  copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following
- *  conditions:
- *
- *  The above copyright notice and this permission notice shall be
- *  included in all copies or substantial portions of the Software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- *  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- *  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- *  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- *  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- *  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- *  OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.clever.ClusterManager.Dispatcher;
 
-import java.io.InputStream;
 import org.apache.log4j.Logger;
 import org.clever.ClusterManager.Brain.BrainInterface;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Communicator.ThreadMessageDispatcher;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.XMLTools.FileStreamer;
-import org.clever.Common.XMLTools.ParserXML;
+import org.clever.Common.LoggingPlugins.Log4J.Log4J;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.CleverMessageHandler;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
@@ -48,21 +26,46 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
     private BrainInterface brainInterface;
     private ThreadMessageDispatcher threadMessageDispatcher;
     public ConnectionXMPP connectionXMPP = null;
+      
+   //########
+    //Dichiarazioni per meccanismo di logging
+    Logger logger=null;
+    private String pathLogConf="/sources/org/clever/ClusterManager/Dispatcher/log_conf/";
+    private String pathDirOut="/LOGS/ClusterManager/Dispatcher";
+    //########
+   
     
     public DispatcherAgent( ConnectionXMPP connectionXMPP ) throws CleverException 
     {   
         super();
         
-        this.connectionXMPP = connectionXMPP;   
+        this.connectionXMPP = connectionXMPP;
+        
+        //#############################################
+        //Inizializzazione meccanismo di logging
+        logger=Logger.getLogger("Dispatcher");    
+        Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //############################################# 
     }
     public DispatcherAgent() throws CleverException{
         super();
+        
+        //#############################################
+        //Inizializzazione meccanismo di logging
+        logger=Logger.getLogger("Dispatcher");    
+        Log4J log =new Log4J();
+       log.setLog4J(logger, pathLogConf, pathDirOut);
+       //############################################# 
      
     }
     
     @Override
     public void initialization() throws CleverException
     {
+        
+        
+                
         super.setAgentName("DispatcherAgent");
         super.start();
         
@@ -175,4 +178,5 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
         
     }
 
+  
 }

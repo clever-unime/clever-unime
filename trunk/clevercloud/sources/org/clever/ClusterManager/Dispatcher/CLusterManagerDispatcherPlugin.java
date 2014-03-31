@@ -28,11 +28,8 @@ package org.clever.ClusterManager.Dispatcher;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.CleverMessagesDispatcher;
 import org.clever.Common.Communicator.MethodInvoker;
-import org.clever.Common.Communicator.ModuleCommunicator;
-import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Plugins.RunnerPlugin;
-import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 
 

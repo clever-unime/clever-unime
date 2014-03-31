@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <server>ing-clever-master.me.trigrid.it</server>
-  <port>5222</port>
-
-  <username></username>
-  <password></password>
-  <nickname></nickname>
-  <room>clever-giancarlo@conference.ing-clever-master.me.trigrid.it</room>
+<server>riccardo</server>
+<port>5222</port>
+<username>ricky</username>
+<password>ricky</password>
+<nickname>ricky</nickname>
+<room>SHELL-room@conference.riccardo</room>
 </configuration>
-
