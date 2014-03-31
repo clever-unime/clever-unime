@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : configuration_VirtualizationManager.xml
+    Created on : November 4, 2011, 9:01 PM
+    Author     : giovalenti
+    Description:
+        Purpose of the document follows.
+-->
+
+<configuration>
+    <ClassPlugin>org.clever.ClusterManager.VirtualizationManagerPlugin.VirtualizationManagerClever</ClassPlugin>
+    <writeOnCfgFolder>yes</writeOnCfgFolder>
+    <moduleName>VirtualizationManagerAgent</moduleName>
+    <pluginParams>
+        <HostManagerServiceGuacaTarget>brady-desktop</HostManagerServiceGuacaTarget>
+    </pluginParams>
+</configuration>

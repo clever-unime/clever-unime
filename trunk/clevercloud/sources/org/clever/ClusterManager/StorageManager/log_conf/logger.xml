@@ -1,0 +1,10 @@
+
+<logger name="StorageManager" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="StoMan1" />
+        <appender-ref ref="StoMan2" />
+        <appender-ref ref="StoMan3" />
+        <appender-ref ref="StoMan4" />
+
+        
+</logger>

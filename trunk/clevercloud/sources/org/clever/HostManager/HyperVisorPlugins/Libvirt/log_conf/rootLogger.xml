@@ -1,0 +1,4 @@
+<appender-ref ref="HypLib1" />
+<appender-ref ref="HypLib2" />
+<appender-ref ref="HypLib3" />
+<appender-ref ref="HypLib4" />

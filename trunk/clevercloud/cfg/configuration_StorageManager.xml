@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<ClassPlugin>org.clever.ClusterManager.StorageManagerPlugins.StorageManagerClever.StorageManager</ClassPlugin>
+<writeOnCfgFolder>yes</writeOnCfgFolder>
+<moduleName>StorageManagerAgent</moduleName>
+</root>

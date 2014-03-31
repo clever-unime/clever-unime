@@ -1,0 +1,11 @@
+
+
+<logger name="Dispatcher" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="Disp1" />
+        <appender-ref ref="Disp2" />
+        <appender-ref ref="Disp3" />
+        <appender-ref ref="Disp4" />
+
+        
+</logger>

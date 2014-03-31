@@ -1,0 +1,9 @@
+<logger name="VirtualboxPlugin" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="HypVB1" />
+        <appender-ref ref="HypVB2" />
+        <appender-ref ref="HypVB3" />
+        <appender-ref ref="HypVB4" />
+</logger>
+
+

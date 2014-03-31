@@ -1,0 +1,4 @@
+<appender-ref ref="SerMan1" />
+<appender-ref ref="SerMan2" />
+<appender-ref ref="SerMan3" />
+<appender-ref ref="SerMan4" />

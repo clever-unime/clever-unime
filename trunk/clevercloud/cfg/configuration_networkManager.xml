@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<ClassPlugin>org.clever.HostManager.NetworkManagerPlugins.Linux.NetworkManagerLinux</ClassPlugin>
+	<writeOnCfgFolder>yes</writeOnCfgFolder>
+        <moduleName>NetworkManagerAgent</moduleName>
+</configuration>

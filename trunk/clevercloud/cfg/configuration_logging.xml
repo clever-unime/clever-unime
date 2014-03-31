@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <ClassPlugin>org.clever.Common.LoggingPlugins.Log4J.Log4J</ClassPlugin>
+  <writeOnCfgFolder>yes</writeOnCfgFolder>
+  <moduleName>LoggingAgent</moduleName>
+</root>

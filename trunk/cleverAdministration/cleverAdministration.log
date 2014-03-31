@@ -1,0 +1,958 @@
+org.clever.administration.api.Configuration: configure 2014-03-03 09:27:50,439 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 09:27:50,552 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 09:27:50,552 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 09:27:50,553 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 09:27:50,553 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 09:27:50,561 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 09:27:55,842 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 09:27:56,424 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource1190246460
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 09:27:56,430 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 09:27:56,451 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 09:27:56,470 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 15427674 new id (differ for EXTERNAL): 1123692906
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 09:27:56,476 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1123692906" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 09:27:56 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 09:27:56,728 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 09:27:56,736 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1120656551" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 09:27:56 CET 2014</timestamp>
+  <replyToMsg>1123692906</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 09:27:56,737 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 09:27:56,738 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 09:27:56,738 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 09:28:30,655 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 09:28:30,655 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 09:34:20,103 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 09:34:20,219 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 09:34:20,219 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 09:34:20,220 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 09:34:20,220 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 09:34:20,228 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 09:34:25,294 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 09:34:25,866 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource1808086574
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 09:34:25,872 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 09:34:25,892 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 09:34:25,913 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 861681595 new id (differ for EXTERNAL): 2123046196
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 09:34:25,920 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="2123046196" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 09:34:25 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 09:34:26,165 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 09:34:26,172 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="987019057" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 09:34:26 CET 2014</timestamp>
+  <replyToMsg>2123046196</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 09:34:26,173 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 09:34:26,174 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 09:34:26,174 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 09:51:34,044 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 09:51:34,044 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 09:52:10,920 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 09:52:11,044 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 09:52:11,044 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 09:52:11,045 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 09:52:11,046 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 09:52:11,053 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 09:52:20,397 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 09:52:20,991 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource-1757069510
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 09:52:20,999 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 09:52:21,019 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 09:52:21,036 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 2054198975 new id (differ for EXTERNAL): 995877617
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 09:52:21,042 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="995877617" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 09:52:21 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 09:52:21,291 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 09:52:21,296 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="530376934" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 09:52:21 CET 2014</timestamp>
+  <replyToMsg>995877617</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 09:52:21,298 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 09:52:21,299 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 09:52:21,300 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:00:07,777 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:00:07,777 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 10:02:54,419 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:02:54,541 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:02:54,541 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:02:54,542 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:02:54,543 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 10:02:54,551 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 10:03:03,678 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 10:03:04,253 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource-53865591
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:03:04,259 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:03:04,280 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 10:03:04,300 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 1944069393 new id (differ for EXTERNAL): 262961898
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 10:03:04,307 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="262961898" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 10:03:04 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 10:03:04,577 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 10:03:04,585 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="180738007" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 10:03:04 CET 2014</timestamp>
+  <replyToMsg>262961898</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:03:04,586 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:03:04,586 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 10:03:04,587 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:04:28,677 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:04:28,677 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 10:07:25,741 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:07:25,853 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:07:25,854 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:07:25,855 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:07:25,855 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 10:07:25,863 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 10:07:28,529 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 10:07:29,103 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource1657854108
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:07:29,110 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:07:29,130 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 10:07:29,147 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 2140085566 new id (differ for EXTERNAL): 1443586179
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 10:07:29,153 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1443586179" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 10:07:29 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 10:07:29,401 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 10:07:29,408 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="264213821" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 10:07:29 CET 2014</timestamp>
+  <replyToMsg>1443586179</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:07:29,409 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:07:29,410 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 10:07:29,410 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:08:57,151 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:08:57,151 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 10:11:28,647 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:11:28,762 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:11:28,763 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:11:28,764 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:11:28,764 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 10:11:28,772 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 10:11:32,597 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 10:11:33,176 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource-616932056
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:11:33,182 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:11:33,202 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 10:11:33,224 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 1013549931 new id (differ for EXTERNAL): 1330256702
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 10:11:33,230 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1330256702" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 10:11:33 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 10:11:33,482 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 10:11:33,489 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1503623016" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 10:11:33 CET 2014</timestamp>
+  <replyToMsg>1330256702</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:11:33,490 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:11:33,492 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 10:11:33,492 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:14:28,761 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:14:28,761 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 10:16:42,805 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:16:42,917 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:16:42,918 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:16:42,919 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:16:42,919 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 10:16:42,927 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 10:16:46,634 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 10:16:47,213 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource-2126836097
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:16:47,219 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:16:47,239 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 10:16:47,255 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 1819775720 new id (differ for EXTERNAL): 71319377
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 10:16:47,261 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="71319377" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 10:16:47 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:16:57,003 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 10:16:58,920 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:16:59,033 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:16:59,033 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:16:59,034 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:16:59,035 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 10:16:59,042 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 10:17:01,256 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 10:17:01,829 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource-156255323
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:17:01,835 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:17:01,857 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 10:17:01,876 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 1683257831 new id (differ for EXTERNAL): 1680684778
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 10:17:01,883 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1680684778" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 10:17:01 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 10:17:02,136 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 10:17:02,144 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1741630883" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 10:17:02 CET 2014</timestamp>
+  <replyToMsg>1680684778</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:17:02,146 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:17:02,147 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 10:17:02,147 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:35:33,235 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:35:33,235 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 10:36:15,195 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:36:15,309 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:36:15,309 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:36:15,310 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:36:15,310 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 10:36:15,318 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 10:36:18,915 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 10:36:19,500 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource1115709392
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:36:19,506 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:36:19,526 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 10:36:19,544 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 851464033 new id (differ for EXTERNAL): 517116859
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 10:36:19,551 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="517116859" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 10:36:19 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 10:36:19,824 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 10:36:19,831 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="300265859" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 10:36:19 CET 2014</timestamp>
+  <replyToMsg>517116859</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:36:19,832 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:36:19,833 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 10:36:19,834 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:45:22,627 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:45:22,627 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 10:46:56,063 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:46:56,215 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:46:56,216 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:46:56,217 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:46:56,217 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 10:46:56,226 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 10:46:58,878 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 10:46:59,456 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource521965865
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:46:59,462 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:46:59,482 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 10:46:59,504 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 1195227668 new id (differ for EXTERNAL): 1550984268
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 10:46:59,510 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1550984268" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 10:46:59 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 10:46:59,762 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 10:46:59,769 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="731730597" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 10:46:59 CET 2014</timestamp>
+  <replyToMsg>1550984268</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:47:00,152 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:47:00,153 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 10:47:00,154 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:47:36,968 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:47:36,968 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 10:52:35,745 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:52:35,858 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 10:52:35,858 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:52:35,859 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 10:52:35,859 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 10:52:35,867 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 10:52:44,063 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 10:52:44,637 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource-2131661545
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:52:44,644 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 10:52:44,663 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 10:52:44,682 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 1660293277 new id (differ for EXTERNAL): 1991119796
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 10:52:44,688 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1991119796" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 10:52:44 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 10:52:44,943 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 10:52:44,951 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1072844955" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 10:52:44 CET 2014</timestamp>
+  <replyToMsg>1991119796</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>LoggingAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:52:44,952 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:52:44,953 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 10:52:44,954 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 10:54:14,215 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 10:54:14,215 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 11:52:21,085 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 11:52:21,197 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 11:52:21,197 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 11:52:21,198 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 11:52:21,199 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 11:52:21,206 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 11:52:26,057 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 11:52:26,623 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource-1869041168
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 11:52:26,629 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 11:52:26,651 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 11:52:26,672 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 78486622 new id (differ for EXTERNAL): 998355625
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 11:52:26,678 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="998355625" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 11:52:26 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 11:52:26,922 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 11:52:26,926 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="285160195" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 11:52:26 CET 2014</timestamp>
+  <replyToMsg>998355625</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>LoggingAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 11:52:26,927 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 11:52:26,929 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 11:52:26,929 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 12:06:49,410 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 12:06:49,410 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 12:07:50,714 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 12:07:50,826 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 12:07:50,826 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 12:07:50,827 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 12:07:50,827 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 12:07:50,835 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 12:07:54,812 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 12:07:55,389 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource817726715
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 12:07:55,396 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 12:07:55,416 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 12:07:55,437 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 627278602 new id (differ for EXTERNAL): 1676233789
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 12:07:55,443 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1676233789" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 12:07:55 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 12:07:55,693 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 12:07:55,698 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="282927287" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 12:07:55 CET 2014</timestamp>
+  <replyToMsg>1676233789</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>LoggingAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 12:07:55,699 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 12:07:55,701 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 12:07:55,701 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 12:18:02,636 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 12:18:02,636 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 12:18:07,093 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 12:18:07,205 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 12:18:07,206 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 12:18:07,207 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 12:18:07,207 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 12:18:07,215 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 12:18:09,833 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 12:18:10,399 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource-940735359
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 12:18:10,406 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 12:18:10,426 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 12:18:10,446 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 237893617 new id (differ for EXTERNAL): 777566785
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 12:18:10,453 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="777566785" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 12:18:10 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 12:18:10,702 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 12:18:10,710 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1957015745" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 12:18:10 CET 2014</timestamp>
+  <replyToMsg>777566785</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>HyperVisorAgent</string>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>LoggingAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 12:18:10,711 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 12:18:10,712 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 12:18:10,712 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 12:18:32,149 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 2137055014 new id (differ for EXTERNAL): 879452748
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 12:18:32,155 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="879452748" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 12:18:32 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listTemplates</operation>
+      <module>HyperVisorAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 12:18:32,273 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="964445723" type="ERROR">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 12:18:32 CET 2014</timestamp>
+  <replyToMsg>879452748</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="ERROR" useAttachementId="true">
+      <module>HyperVisorAgent</module>
+      <operation>listTemplates</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<org.clever.Common.Exceptions.CleverException>
+  <detailMessage>method not found: org.clever.HostManager.HyperVisor.HyperVisorAgent.listTemplates()</detailMessage>
+  <stackTrace>
+    <trace>org.clever.Common.Communicator.Agent.handleInvocation(Agent.java:377)</trace>
+    <trace>org.clever.Common.Communicator.ModuleCommunicator.handleMessage(ModuleCommunicator.java:99)</trace>
+    <trace>org.clever.Common.CommunicatorPlugins.Dbus.CommunicatorDbus.OnMessage(CommunicatorDbus.java:189)</trace>
+    <trace>sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</trace>
+    <trace>sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:57)</trace>
+    <trace>sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</trace>
+    <trace>java.lang.reflect.Method.invoke(Method.java:606)</trace>
+    <trace>org.freedesktop.dbus.AbstractConnection$1.run(AbstractConnection.java:785)</trace>
+    <trace>org.freedesktop.dbus.AbstractConnection$_workerthread.run(AbstractConnection.java:169)</trace>
+  </stackTrace>
+  <suppressedExceptions class="java.util.Collections$UnmodifiableRandomAccessList" resolves-to="java.util.Collections$UnmodifiableList">
+    <c class="list"/>
+    <list reference="../c"/>
+  </suppressedExceptions>
+</org.clever.Common.Exceptions.CleverException>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 12:18:32,274 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 12:18:32,274 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 12:18:32,291 [ThreadMessageHandler] ERROR org.clever.administration.api.CleverCommandClient - from CleverCommandClient: null
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 12:37:01,681 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 12:37:01,681 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 12:37:12,373 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 12:37:12,487 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 12:37:12,488 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 12:37:12,489 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 12:37:12,489 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 12:37:12,497 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 12:37:17,341 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 12:37:17,926 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource1615467077
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 12:37:17,931 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 12:37:17,951 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 12:37:17,971 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 1797679722 new id (differ for EXTERNAL): 1714016577
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 12:37:17,978 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1714016577" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 12:37:17 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 12:37:18,226 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 12:37:18,235 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="22453693" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 12:37:18 CET 2014</timestamp>
+  <replyToMsg>1714016577</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>LoggingAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 12:37:18,237 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 12:37:18,239 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 12:37:18,239 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 12:42:10,725 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 12:42:10,725 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...
+org.clever.administration.api.Configuration: configure 2014-03-03 12:43:24,133 [main] DEBUG org.clever.administration.api.Configuration - Configuration from classpath resource: /clever_client.xml
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 12:43:24,245 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - No providerClass ... using default class : org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderFactory: newCleverCommandClientProvider 2014-03-03 12:43:24,245 [main] INFO  org.clever.administration.api.CleverCommandClientProviderFactory - Initializing Clever command client  provider: org.clever.administration.api.SimpleCleverCommandClientProvider
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 12:43:24,246 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages in queue to default:500
+org.clever.administration.api.CleverCommandClientProviderImpl: configure 2014-03-03 12:43:24,246 [main] INFO  org.clever.administration.api.CleverCommandClientProviderImpl - Set max number of clever messages handlers to default:20
+org.clever.administration.api.SessionFactoryImpl$1: initialValue 2014-03-03 12:43:24,254 [main] DEBUG org.clever.administration.api.Configuration - Creating Session for thread : main
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: connect 2014-03-03 12:43:27,256 [main] INFO  XMPPCommunicator - XMPP connected plain mode
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: authenticate 2014-03-03 12:43:27,834 [main] DEBUG XMPPCommunicator - XMPP connection established with username: ricky password: ricky server: riccardo port: 5222resource-547326558
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 12:43:27,841 [main] INFO  XMPPCommunicator - Creating room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.XMPPCommunicator.ConnectionXMPP: joinInRoom 2014-03-03 12:43:27,860 [main] INFO  XMPPCommunicator - Created room: SHELL-room@conference.riccardo with nickname: ricky
+org.clever.Common.Communicator.RequestsManager: addSyncRequestPending 2014-03-03 12:43:27,882 [main] DEBUG org.clever.Common.Communicator.RequestsManager - Sync Request added from: ricky id: 159770397 new id (differ for EXTERNAL): 1580440821
+org.clever.administration.api.CleverCommandClient: execSyncAdminCommand 2014-03-03 12:43:27,889 [main] DEBUG org.clever.administration.api.CleverCommandClient - Clever Request Message: 
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1580440821" type="REQUEST">
+  <source>ricky</source>
+  <destination>hmricky</destination>
+  <timestamp>Mon Mar 03 12:43:27 CET 2014</timestamp>
+  <replyToMsg>0</replyToMsg>
+  <hasReply>true</hasReply>
+  <body>
+    <exec>
+      <operation>listActiveAgents</operation>
+      <module>InfoAgent</module>
+    </exec>
+  </body>
+</message>
+
+
+org.clever.Common.XMPPCommunicator.CleverChatManagerListener: chatCreated 2014-03-03 12:43:28,229 [Smack Listener Processor (0)] INFO  XMPPCommunicator - Chat created with: cmricky@riccardo createdLocally: false
+org.clever.administration.api.CleverCommandClient: handleCleverMessage 2014-03-03 12:43:28,236 [Smack Listener Processor (0)] DEBUG org.clever.administration.api.CleverCommandClient - Received:
+<?xml version="1.0" encoding="UTF-8"?>
+<message id="1813657080" type="REPLY">
+  <source>cmricky</source>
+  <destination>ricky</destination>
+  <timestamp>Mon Mar 03 12:43:28 CET 2014</timestamp>
+  <replyToMsg>1580440821</replyToMsg>
+  <hasReply>false</hasReply>
+  <body>
+    <result type="OBJECT" useAttachementId="true">
+      <module>InfoAgent</module>
+      <operation>listActiveAgents</operation>
+    </result>
+  </body>
+  <attachement id="0"><![CDATA[<list>
+  <string>ImageManagerAgent</string>
+  <string>MonitorAgent</string>
+  <string>NetworkManagerAgent</string>
+  <string>LoggingAgent</string>
+  <string>ProvaAgent</string>
+</list>]]></attachement>
+</message>
+
+
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 12:43:28,238 [messageDispatcher] DEBUG ThreadDispatcher - £$% thread aperto
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 12:43:28,239 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Reply received
+org.clever.administration.api.CleverCommandClient: handleMessage 2014-03-03 12:43:28,239 [ThreadMessageHandler] DEBUG org.clever.administration.api.CleverCommandClient - Sync request serving ... 
+org.clever.Common.Communicator.ThreadMessageDispatcher: run 2014-03-03 12:45:43,518 [messageDispatcher] DEBUG ThreadDispatcher - Interrupt: exiting ...
+org.clever.Common.Communicator.ThreadMessageHandler: run 2014-03-03 12:45:43,518 [ThreadMessageHandler] DEBUG org.clever.Common.Communicator.ThreadMessageHandler - Interrupt exiting ...

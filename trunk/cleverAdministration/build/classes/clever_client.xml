@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+<server>riccardo</server>
+<port>5222</port>
+<username>ricky</username>
+<password>ricky</password>
+<nickname>ricky</nickname>
+<room>SHELL-room@conference.riccardo</room>
+</configuration>
+

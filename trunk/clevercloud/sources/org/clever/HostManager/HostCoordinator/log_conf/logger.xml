@@ -1,0 +1,8 @@
+
+<logger name="HostCoordinatorHM" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="HoCoHM1" />
+        <appender-ref ref="HoCoHM2" />
+        <appender-ref ref="HoCoHM3" />
+        <appender-ref ref="HoCoHM4" />
+</logger>

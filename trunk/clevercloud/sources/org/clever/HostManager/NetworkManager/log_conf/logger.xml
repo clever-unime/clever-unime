@@ -1,0 +1,9 @@
+
+
+<logger name="NetworkManager" additivity="false">
+        <level value="debug" />
+        <appender-ref ref="NetMa1" />
+        <appender-ref ref="MNetMa2" />
+        <appender-ref ref="NetMa3" />
+        <appender-ref ref="NetMa4" />
+</logger>

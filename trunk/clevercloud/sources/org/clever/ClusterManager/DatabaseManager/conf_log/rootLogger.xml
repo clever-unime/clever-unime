@@ -1,0 +1,4 @@
+<appender-ref ref="DBMa1" />
+<appender-ref ref="DBMa2" />
+<appender-ref ref="DBMa3" />
+<appender-ref ref="DBMa4" />
