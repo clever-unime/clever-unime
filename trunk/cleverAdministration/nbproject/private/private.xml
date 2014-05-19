@@ -3,8 +3,30 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group name="test">
-            <file>file:/media/dati/merge/clever-unime/trunk/cleverAdministration/src/org/clever/administration/commands/CreateMountCommand.java</file>
+        <group name="MergeDevelopAPI">
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/commands/CreateNodeCommand.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/SimpleCleverCommandClientProvider.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/modules/scripts/vmm.bsh</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/Shell.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/Session.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/modules/StrorageAdministrationModule.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/modules/VMAdministrationModule.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/Configuration.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/modules/AdministrationModule.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/CleverCommandClientProviderImpl.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/PerThreadCleverCommandClientProvider.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/CleverCommandClientProviderFactory.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/commands/StartVMCommand.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/modules/MonitoringAdministrationModule.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/modules/scripts/ham.bsh</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/SettingsFactory.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/CleverCommandClientProvider.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/modules/scripts/init.bsh</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/Environment.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/modules/HostAdministrationModule.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/Settings.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/commands/DownloadCommand.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/test/TestApi.java</file>
         </group>
     </open-files>
 </project-private>

@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-  <server>localhost</server>
-  <port>5222</port>
-  <!--<username>test-giancarlo</username>
-  <password>storage</password>
-  <nickname>test-giancarlo</nickname>-->
-  <username>peppe</username>
-  <password>peppe</password>
-  <nickname>peppe</nickname><!--Actually username e nickname  -->
-  <room>SHELL-vision@conference.localhost</room>
-  
+ 
+ <!--<CleverClientCommandProviderClass>org.clever.administration.common.PerThreadCleverCommandClientProvider</CleverClientCommandProviderClass>-->
+ <server>localhost</server>
+ <port>5222</port>
+ <username>peppe</username>
+ <password>peppe</password>
+ <nickname>peppe</nickname>
+ <room>SHELL-vision@conference.localhost</room>
+ 
 </configuration>
-

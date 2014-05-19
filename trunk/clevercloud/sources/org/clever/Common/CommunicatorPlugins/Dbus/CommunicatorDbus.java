@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  Copyright (c) 2010 Marco Sturiale
  *  Copyright (c) 2012 Maurizio Paone
  *  Copyright (c) 2012 Marco Carbone
@@ -86,17 +100,18 @@ public class CommunicatorDbus implements CommunicationPlugin, CleverDbusInterfac
     @Override
     public String sendRecv(String to, String msg) throws CleverException {
         try {
-
+            //logger.debug("SendReceive Started");
             senderConnection = DBusConnection.getConnection(DBusConnection.SESSION);
             logger.debug("Creating connection to remote object " + baseObjectPath + to + " on bus " + serviceBusName+"."+to+this.group);
             CleverDbusInterface c = (CleverDbusInterface) senderConnection.getRemoteObject(serviceBusName+"."+to+this.group, baseObjectPath + to);
             String reply=null;
             DBusAsyncReply<String> rep=senderConnection.callMethodAsync(c,"OnMessage", msg);
+            
             while(!rep.hasReply())
                 try {
                 Thread.currentThread().sleep(50)    ;
             } catch (InterruptedException ex) {
-                java.util.logging.Logger.getLogger(CommunicatorDbus.class.getName()).log(Level.SEVERE, null, ex);
+                logger.debug(ex);
             }
             reply=rep.getReply();
             //reply = c.OnMessage(msg);
@@ -119,6 +134,12 @@ public class CommunicatorDbus implements CommunicationPlugin, CleverDbusInterfac
             logger.error(ex_msg, ex);
             throw new CleverException(ex_msg);
         }
+        /*catch (Exception ex) {
+            StackTraceElement[] ar=ex.getStackTrace();
+            logger.error(ar.length+" "+ar[0].toString()+ar[1].toString()+ar[2].toString()+ar[3].toString()+ar[4].toString()+ar[5].toString()+ar[6].toString()+ar[7].toString()+ar[8].toString()+ar[9].toString()+ar[10].toString()+ar[11].toString());
+            throw new CleverException("Generic Exception: "+ex.);
+        }*/
+        
     }
 
     @Override

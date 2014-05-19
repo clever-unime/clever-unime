@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  * The MIT License
  *
  * Copyright 2012 alessiodipietro.
@@ -72,100 +86,8 @@ public class SOSAgent extends Agent{
 //    }
             
     public SOSAgent(/*String agentName*/) throws CleverException {
-        try {
-            super.setAgentName("SOSAgent");
-            
-            
-            
-            //logger = Logger.getLogger(this.getAgentName());
-            //sposto i log su un altro file
-            logger = Logger.getLogger("debugLogger");
-            
-            
-            logger.info("SOSAgent(agentName) avviato!!!!");
-            ParameterContainer parameterContainer=ParameterContainer.getInstance();
-            Properties prop = new Properties();
-            InputStream in = getClass().getResourceAsStream( "/org/clever/Common/Shared/logger.properties" );
-            prop.load( in );
-            PropertyConfigurator.configure( prop );
-            File cfgFile = new File( cfgPath );
-            InputStream inxml=null;
-            if( !cfgFile.exists() )
-            {
-                inxml = getClass().getResourceAsStream( "/org/clever/HostManager/SOS/configuration_sosagent.xml" );
-                try
-                {
-                    Support.copy( inxml, cfgFile );
-                }
-                catch( IOException ex )
-                {
-                    logger.error( "Copy file failed" + ex );
-                    System.exit( 1 );
-                }
-            }
-            try
-      {
-          inxml = new FileInputStream( cfgPath );
-      }
-      catch( FileNotFoundException ex )
-      {
-          logger.error( "File not found: " + ex );
-      }
-      
-            FileStreamer fs = new FileStreamer();
-            ParserXML pXML = new ParserXML( fs.xmlToString( inxml ) );
-            
-            
-            mc = new ModuleCommunicator(this.getAgentName(),"HM");
-            mc.setMethodInvokerHandler(this);
-            logger.debug("setMethodInvokerHandler done!");
-            //set configuration file
-            parameterContainer.setConfigurationFile(pXML.getRootElement().getChildText("sosConfigurationFile"));
-            
-            
-            
-            //set db parameter
-            Element dbParams=pXML.getRootElement().getChild("dbParams");
-            parameterContainer.setDbDriver(dbParams.getChildText("driver"));
-            parameterContainer.setDbServer(dbParams.getChildText("server"));
-            parameterContainer.setDbPassword(dbParams.getChildText("password"));
-            parameterContainer.setDbUsername(dbParams.getChildText("username"));
-            parameterContainer.setDbName(dbParams.getChildText("name"));
-            
-            
-            Element testDbParams=pXML.getRootElement().getChild("test").getChild("dbParams");
-            parameterContainer.setTestDbDriver(testDbParams.getChildText("driver"));
-            parameterContainer.setTestDbServer(testDbParams.getChildText("server"));
-            parameterContainer.setTestDbPassword(testDbParams.getChildText("password"));
-            parameterContainer.setTestDbUsername(testDbParams.getChildText("username"));
-            parameterContainer.setTestDbName(testDbParams.getChildText("name"));
-            
-            
-            
-            parameterContainer.setLogger(logger);
-            
-            parameterContainer.setSosAgent(this);
-            
-            startReader();
-//            //invio una notifica di presenza al WebAgent
-//            String password="francesco";
-//            Notification presence = new Notification();
-//            presence.setAgentId(this.getAgentName());
-//            presence.setId("Web/RegisterClient");
-//            presence.setBody(password);
-//            this.sendNotification(presence);
-            
-            
-        } catch (InstantiationException ex) {
-            throw new CleverException(ex, "Missing logger.properties or configuration not found");
-        } catch (IllegalAccessException ex) {
-            throw new CleverException(ex, "Access Error");
-        } catch (ClassNotFoundException ex) {
-            throw new CleverException(ex, "Plugin Class not found");
-        } catch (IOException ex) {
-            throw new CleverException(ex, "Error on reading logger.properties");
-        }
-
+        super();
+        super.setAgentName("SOSAgent");
     }
     
     public String sendSASAdvertisement(String advertisementRequest){
@@ -376,7 +298,40 @@ public class SOSAgent extends Agent{
 
     @Override
     public void initialization() throws Exception {
-
+         super.setAgentName("SOSAgent");
+         super.start();
+         ParserXML pXML = this.getconfiguration(this.cfgPath,"/org/clever/HostManager/SOS/configuration_sosagent.xml");
+         org.clever.HostManager.SOS.ParameterContainer parameterContainer=org.clever.HostManager.SOS.ParameterContainer.getInstance();    
+            
+            logger.debug("setMethodInvokerHandler done!");
+            //set configuration file
+            parameterContainer.setConfigurationFile(pXML.getRootElement().getChildText("sosConfigurationFile"));
+            
+            
+            
+            //set db parameter
+            Element dbParams=pXML.getRootElement().getChild("dbParams");
+            parameterContainer.setDbDriver(dbParams.getChildText("driver"));
+            parameterContainer.setDbServer(dbParams.getChildText("server"));
+            parameterContainer.setDbPassword(dbParams.getChildText("password"));
+            parameterContainer.setDbUsername(dbParams.getChildText("username"));
+            parameterContainer.setDbName(dbParams.getChildText("name"));
+            
+            
+            Element testDbParams=pXML.getRootElement().getChild("test").getChild("dbParams");
+            parameterContainer.setTestDbDriver(testDbParams.getChildText("driver"));
+            parameterContainer.setTestDbServer(testDbParams.getChildText("server"));
+            parameterContainer.setTestDbPassword(testDbParams.getChildText("password"));
+            parameterContainer.setTestDbUsername(testDbParams.getChildText("username"));
+            parameterContainer.setTestDbName(testDbParams.getChildText("name"));
+            
+            
+            
+            parameterContainer.setLogger(logger);
+            
+            parameterContainer.setSosAgent(this);
+            
+            startReader();
     }
 
     @Override

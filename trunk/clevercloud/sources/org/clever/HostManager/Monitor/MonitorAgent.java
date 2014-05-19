@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  Copyright (c) 2010 Filippo Bua
  *  Copyright (c) 2010 Maurizio Paone
  *  Copyright (c) 2010 Francesco Tusa
@@ -45,14 +59,14 @@ import org.clever.Common.Communicator.Agent;
 public class MonitorAgent extends Agent
 {
     private MonitorPlugin monitorPlugin;
-    private Class cl;
+    //private Class cl;
     
    
 
-  public MonitorAgent()
+  public MonitorAgent() throws CleverException
   {   
       super();
-      logger = Logger.getLogger("MonitorAgent");      
+         
   }
   
    @Override
@@ -64,25 +78,15 @@ public class MonitorAgent extends Agent
         try 
         {
             super.start();
-            
-            InputStream inxml = getClass().getResourceAsStream( "/org/clever/HostManager/Monitor/configuration_monitor.xml" );
-            FileStreamer fs = new FileStreamer();
-            ParserXML pars = new ParserXML( fs.xmlToString( inxml ) );
-            
-            cl = Class.forName( pars.getElementContent( "PluginName" ) );
-            monitorPlugin = ( MonitorPlugin ) cl.newInstance();
-            
-            monitorPlugin.init();
-         //   mc.setMethodInvokerHandler( this );
-            
+            logger.debug( "MonitorPlugin start creation" );
+            monitorPlugin = ( MonitorPlugin )super.startPlugin("./cfg/configuration_monitor.xml","/org/clever/HostManager/Monitor/configuration_monitor.xml");
             monitorPlugin.setOwner(this);
             logger.info( "MonitorPlugin Created" );
             
-            //agentName=pars.getElementContent( "moduleName" );
         }
         catch (CleverException ex) 
         {
-            java.util.logging.Logger.getLogger(MonitorAgent.class.getName()).log(Level.SEVERE, null, ex);
+            logger.error("CleverException is occurred in Monitor Agent initialization.Message"+ex.getMessage());
         }
         catch( Exception e )
         {
@@ -100,7 +104,7 @@ public class MonitorAgent extends Agent
   @Override
   public Object getPlugin()
   {
-    return monitorPlugin;
+    return this.pluginInstantiation;
   }
   
   @Override

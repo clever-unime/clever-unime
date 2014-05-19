@@ -10,7 +10,9 @@
 -->
 
 <configuration>
+    <writeOnCfgFolder>yes</writeOnCfgFolder>
     <sosConfigurationFile>cfg/configuration_Readers.xml</sosConfigurationFile>
+    <moduleName>SOSAgent</moduleName>
     <dbParams>
         <server>localhost</server>
         <driver>com.mysql.jdbc.Driver</driver>

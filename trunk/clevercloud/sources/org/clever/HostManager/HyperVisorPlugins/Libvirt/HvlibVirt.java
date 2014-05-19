@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  Copyright (c) 2010 Filippo Bua
  *  Copyright (c) 2010 Maurizio Paone
  *  Copyright (c) 2010 Francesco Tusa
@@ -33,8 +47,6 @@ import com.sun.jna.Pointer;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.clever.Common.Communicator.Agent;
@@ -52,15 +64,8 @@ import org.libvirt.jna.Libvirt.VirConnectDomainEventGenericCallback;
 import org.clever.Common.VEInfo.CpuSettings.Architecture;
 import org.clever.Common.XMLTools.ParserXML;
 import org.libvirt.jna.Libvirt;
-import javax.xml.parsers.*;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
-import org.apache.commons.vfs2.VFS;
-import org.clever.Common.Storage.VirtualFileSystem;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
-import org.xml.sax.SAXException;
 
 
 
@@ -168,8 +173,8 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
       return "LibVirt";
   }
 
- 
- 
+ @Override
+ //TODO: choose shutdown policy: if !poweroff must it destroy the domain ?
  public boolean shutDownVm( String id , Boolean poweroff) throws CleverException
  {
      if(!poweroff)
@@ -533,7 +538,7 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
     }
   }
 
-  public List listRunningHVms() throws CleverException{
+  public List<VEState> listRunningHVms() throws CleverException{
       try{
           ArrayList l = new ArrayList();
           Domain dom;
@@ -553,8 +558,8 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
   }
 
 
-
-  public List listVms() throws CleverException
+  //TODO: the method MUST return List of VEState , no List of String
+  public List<VEState> listVms() throws CleverException
   {
     try
     {
@@ -593,7 +598,7 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
     }
   }
 
-
+//TODO: the method MUST return List of VEState , no List of String
   public List listRunningVms() throws CleverException{
       String name = "";
       try{
@@ -941,13 +946,9 @@ public long snapshotCount(String id) throws CleverException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    @Override
-    public boolean registerVm(String id, String path) throws CleverException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+       
 
-    @Override
-    public boolean unregisterVm(String id) throws CleverException {
+        public boolean unregisterVm(String id) throws CleverException {
         try {
             Domain domain= (Domain) resolveUUID(id).getReference();
             if((domain.getInfo().state.name().compareTo(DomainInfo.DomainState.VIR_DOMAIN_RUNNING.name())==0) || (domain.getInfo().state.name().compareTo(DomainInfo.DomainState.VIR_DOMAIN_PAUSED.name())==0))
@@ -980,7 +981,7 @@ public long snapshotCount(String id) throws CleverException{
  
 
  
-    @Override
+   
      
      public String getLocalPath(String id) throws HyperVisorException{
       Document doc = dumpXml(id);
@@ -1013,7 +1014,7 @@ public long snapshotCount(String id) throws CleverException{
     }
     
     
-    public boolean attackInterface(String id, String inf,String mac,String type) {
+    public boolean attachInterface(String id, String inf,String mac,String type) {
             Document doc = dumpXml(id);
             Element interf=new Element("interface");
             interf.setAttribute("type", type);
@@ -1035,5 +1036,33 @@ public long snapshotCount(String id) throws CleverException{
             java.util.logging.Logger.getLogger(HvlibVirt.class.getName()).log(Level.SEVERE, null, ex);
         }
             return true;
+    }
+
+    @Override
+    public boolean startVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean destroyVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean shutDownVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean createVm(Map<String, VEDescription> ves) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean shutDownVm(String[] ids, Boolean poweroff) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    public void shutdownPluginInstance(){
+        
     }
  }

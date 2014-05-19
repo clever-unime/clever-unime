@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  Copyright (c) 2010 Filippo Bua
  *  Copyright (c) 2010 Maurizio Paone
  *  Copyright (c) 2010 Francesco Tusa
@@ -101,7 +115,8 @@ public class HostCoordinator implements CleverMessageHandler {
         //adding to the java.library.path the path containing CLEVER specific dynamic libraries
         //such path is read from the configuration file of the initiator within the node <librariespath>
         System.setProperty("java.library.path", pXML.getElementContent("librariespath") + ":" + System.getProperty("java.library.path"));
-
+        logger.debug("CLASSPATH= " + System.getProperty("java.class.path", null));
+            
         Field fieldSysPath = null;
         try {
             fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
@@ -210,8 +225,9 @@ public class HostCoordinator implements CleverMessageHandler {
 
 
 
-            mc = new ModuleCommunicator("HostCoordinator","HM");
-            logger.debug("Module Communicator instantiated");
+            mc = new ModuleCommunicator();
+            mc.init("HostCoordinator","HM");
+           
             logger.info("HostCoordinator created");
         } catch (Exception e) {
             logger.error("Error on HostCoordinator creation: " + e);
@@ -232,8 +248,12 @@ public class HostCoordinator implements CleverMessageHandler {
 
     @Override
     public synchronized void handleCleverMessage(final CleverMessage message) {
-        //TODO add check for messages: REQUEST, etc..
-        logger.debug("Message: " + message.toXML());
+        try {
+            //TODO add check for messages: REQUEST, etc..
+            logger.debug("Message: " + message.toXML());
+        } catch (CleverException ex) {
+             logger.error("Message " + message.getId() + " with errors !!"); 
+        }
         methodDispatcher(message);
     }
 

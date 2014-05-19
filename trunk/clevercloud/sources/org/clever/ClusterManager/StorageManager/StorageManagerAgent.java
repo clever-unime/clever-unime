@@ -1,3 +1,17 @@
+/*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
 package org.clever.ClusterManager.StorageManager;
 
 import java.io.IOException;
@@ -12,14 +26,14 @@ import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 
 /*
- * @author FValerio Barbera & Luca Ciarniello
+ * @author Valerio Barbera & Luca Ciarniello
  */
 public class StorageManagerAgent extends CmAgent {
     private Logger loger;
-    private Class cl;
+    //private Class cl;
     private StorageManagerPlugin StoragePlugin;
 
-    public StorageManagerAgent() {
+    public StorageManagerAgent() throws CleverException {
        /* logger = Logger.getLogger("StorageManagerAgent");
         //Load properties from XML file
         try {
@@ -31,7 +45,7 @@ public class StorageManagerAgent extends CmAgent {
             logger.error("Missing logger.properties");
         }*/
         super();
-        logger=Logger.getLogger("StorageManagerAgent");
+       
     }
 
     @Override
@@ -44,22 +58,24 @@ public class StorageManagerAgent extends CmAgent {
 
         try {
             logger.info("Read Configuration StorageManager!");
+            this.StoragePlugin = (StorageManagerPlugin) super.startPlugin("./cfg/configuration_StorageManager.xml","/org/clever/ClusterManager/StorageManager/configuration_StorageManager.xml");
+            /*
             InputStream inxml = getClass().getResourceAsStream("/org/clever/ClusterManager/StorageManager/configuration_StorageManager.xml");
             FileStreamer fs = new FileStreamer();
             ParserXML pars = new ParserXML(fs.xmlToString(inxml));
-
+             
             //Instantiate ModulCommunicator //the module communicator is istantiated in superclass Agent into function start()!
             //this.mc = new ModuleCommunicator(pars.getElementContent("moduleName"));
 
             //Instantiate StorageManager
             this.cl = Class.forName(pars.getElementContent("StorageManagerPlugin"));
-            this.StoragePlugin = (StorageManagerPlugin) this.cl.newInstance();
-            this.StoragePlugin.setModuleCommunicator(mc);
+            this.cl.newInstance();
+            //this.StoragePlugin.setModuleCommunicator(mc);
            // this.mc.setMethodInvokerHandler(this);
+            
+            */
+            
             this.StoragePlugin.setOwner(this);
-            
-            
-            
             logger.info("StorageManager Plugin instantiated !");
         } catch (Exception e) {
             logger.error("Error initializing StorageManager : " + e.getMessage());
@@ -73,7 +89,7 @@ public class StorageManagerAgent extends CmAgent {
 
     @Override
     public Object getPlugin() {
-        return StoragePlugin;
+        return this.pluginInstantiation;
     }
 
     @Override

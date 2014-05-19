@@ -7,12 +7,12 @@
         <username>root</username>
     </dbParams>
     <sensGenParams>
-        <sensName>Virtualsensortest</sensName>
+        <sensName>Virtualtestsensor</sensName>
         <compName>comprova</compName>
-        <phenName>Voltagefentest</phenName>
+        <phenName>Voltagetestfentest</phenName>
         <genInterval>5000</genInterval>
-        <sensid>4</sensid>
-        <phenid>4</phenid>
-        <sensorstatgeneration>false</sensorstatgeneration><!--if this field is true the Sensor acquisition generator software create a new sensor and phenomena entry in DB-->
+        <sensid>1</sensid>
+        <phenid>1</phenid>
+        <sensorstatgeneration>true</sensorstatgeneration><!--if this field is true the Sensor acquisition generator software create a new sensor and phenomena entry in DB-->
     </sensGenParams>
 </configuration>

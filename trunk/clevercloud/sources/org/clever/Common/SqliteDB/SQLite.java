@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  The MIT License
  * 
  *  Copyright 2013 Tricomi Giuseppe.
@@ -53,14 +67,14 @@ public class SQLite{
         {
             workdir.mkdirs();
         }
-        logger.debug("init 0");
+
         File db=new File(this.SQLiteDB+"MappingDB.db");
-        logger.debug("init 1");
+
         if(!db.exists())
         {
             if(this.openCon())
             {
-                logger.debug("init 2");
+         
                 try{
                     //non appena verrà stabilito con precisione cosa fanno queste mappe si potrà creare un db decente 
                     statement = this.SQLiteConnection.createStatement();
@@ -118,7 +132,7 @@ public class SQLite{
         }
         catch(ClassNotFoundException ce)
         {
-            logger.error("??XX2Exception caused by connection at the Mapping db:"+ce.getMessage());
+            logger.error("??XX2Exception caused by connection at the Mapping db:"+ce.getMessage(),ce);
             this.SQLiteConnection =null;
             res=false;
         }
@@ -251,11 +265,13 @@ public class SQLite{
         try{
             if(this.SQLiteConnection==null)
             {
+
                 this.openCon();
             }
             else if(this.SQLiteConnection.isClosed()){
                 this.openCon();
             }
+
             Statement statement = this.SQLiteConnection.createStatement();
             statement.executeUpdate("update map set "+set+" where "+condition);
             

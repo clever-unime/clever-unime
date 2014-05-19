@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  Copyright (c) 2010 Filippo Bua
  *  Copyright (c) 2010 Maurizio Paone
  *  Copyright (c) 2010 Francesco Tusa
@@ -30,26 +44,25 @@
  */
 package org.clever.HostManager.HyperVisor;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import org.apache.log4j.Logger;
 //import java.util.logging.Logger;
 import org.clever.Common.Communicator.Agent;
-import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 import java.io.FileInputStream;
+import org.apache.log4j.Logger;
 
 public class HyperVisorAgent extends Agent {
 
     private HyperVisorPlugin hypervisor;
-    private Class cl;
+    //private Class cl;
     
     
-    public HyperVisorAgent()  {
+    public HyperVisorAgent() throws CleverException  {
         super();
-        logger=Logger.getLogger("HypervisorAgent");  
+        
       
     }
 
@@ -58,35 +71,17 @@ public class HyperVisorAgent extends Agent {
         if (super.getAgentName().equals("NoName")) {
             super.setAgentName("HyperVisorAgent");
         }
-
         super.start();
-
-        FileStreamer fs = new FileStreamer();
-
-        try {
-            //InputStream inxml = getClass().getResourceAsStream("./cfg/configuration_hypervisor.xml");//("/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");
-            FileInputStream inxml = new FileInputStream("./cfg/configuration_hypervisor.xml");
-            if(inxml==null)
-                logger.debug("The variable inxml is null check configursarion file");
-            ParserXML pXML = new ParserXML(fs.xmlToString(inxml));
-            cl = Class.forName(pXML.getElementContent("HyperVisor"));
-            hypervisor = (HyperVisorPlugin) cl.newInstance();
-            hypervisor.init(pXML.getRootElement().getChild("pluginParams"), this); 
+        try 
+        {
+            
+            hypervisor = (HyperVisorPlugin) super.startPlugin("./cfg/configuration_hypervisor.xml","/org/clever/HostManager/HyperVisor/configuration_hypervisor.xml");        
             hypervisor.setOwner(this);
-            logger.debug("called init of " + pXML.getElementContent("HyperVisor"));
-
-            // agentName=pXML.getElementContent( "moduleName" );          
             logger.info("HyperVisorPlugin created ");
-        } catch (ClassNotFoundException ex) {
-            logger.error("Error: " + ex);
-        } catch (IOException ex) {
-            logger.error("Error: " + ex);
-        } catch (InstantiationException ex) {
-            logger.error("Error: " + ex);
-        } catch (IllegalAccessException ex) {
-            logger.error("Error: " + ex);
+            
         } catch (Exception ex) {
-            logger.error("HyperVisorPlugin creation failed: " + ex);
+            logger.error("HyperVisorPlugin creation failed: " + ex.getMessage());
+            this.errorStr=ex.getMessage();
         }
     }
 
@@ -97,7 +92,8 @@ public class HyperVisorAgent extends Agent {
 
     @Override
     public Object getPlugin() {
-        return hypervisor;
+         
+        return this.pluginInstantiation;
     }
 
     @Override

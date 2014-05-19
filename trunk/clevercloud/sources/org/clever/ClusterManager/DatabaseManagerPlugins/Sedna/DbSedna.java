@@ -1,4 +1,19 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+
+/*
  * The MIT License
  *
  * Copyright 2011 Alessio Di Pietro.
@@ -37,6 +52,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.clever.ClusterManager.DatabaseManager.DatabaseManagerPlugin;
 import org.clever.Common.Communicator.Agent;
+import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
 import org.jdom.Element;
 import org.xmldb.api.DatabaseManager;
@@ -108,7 +124,7 @@ public class DbSedna implements DatabaseManagerPlugin {
         Collection collect = null;
         String xpathHm = xpath + "/hm[@name='" + hostId + "']";
         String xpathAgent = xpathHm + "/agent[@name='" + agentId + "']";
-
+        
         /*
          * Element elem=new Element(node); elem.addContent(valore); XMLOutputter
          * outputter = new XMLOutputter(Format.getPrettyFormat()); String xmlNode=outputter.outputString(elem);
@@ -305,13 +321,13 @@ public class DbSedna implements DatabaseManagerPlugin {
     
 
     @Override
-    synchronized public void addHm(String hostId) {
+    synchronized public void addHm(String HostID) {
         Collection collect = null;
 
         try {
             collect = this.connect();
             SednaUpdateService serviceUpdate = (SednaUpdateService) collect.getService("SednaUpdateService", "1.0");
-            String updateStr = "update insert <hm name='" + hostId + "'></hm>"
+            String updateStr = "update insert <hm name='" + HostID+ "'></hm>"
                     + " into document(\"" + this.document + "\")/" + xpath;
             serviceUpdate.update(updateStr);
 
@@ -515,6 +531,7 @@ public class DbSedna implements DatabaseManagerPlugin {
                         + "into document('" + document + "')//clever";
                 serviceUpdate.update(updateStr);
             }
+            this.owner.setPluginState(true);
 
         } catch (XMLDBException ex) {
             logger.error("Check document failed: " + ex.getMessage());
@@ -965,12 +982,13 @@ public class DbSedna implements DatabaseManagerPlugin {
         boolean existsAgentNode = false;
         String filter = "";
         Collection collect = null;
+        logger.debug("checkagentnode");
         try {
 
             collect = this.connect();
             XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
             ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/cm/agent[@name='" + agentId + "']" + location);
-            ResourceIterator results = resultSet.getIterator();
+            ResourceIterator results = resultSet.getIterator(); 
             existsAgentNode = results.hasMoreResources();
 
 
@@ -1058,6 +1076,7 @@ public class DbSedna implements DatabaseManagerPlugin {
         }
         return a;
     }
+
    public boolean checkAgent(String agentId) throws CleverException {
         boolean existsAgent = false;
         Collection collect = null;
@@ -1389,5 +1408,11 @@ public class DbSedna implements DatabaseManagerPlugin {
              logger.debug("Esperimento2.2");
              this.insertNode(HostId,agentId,"<SASPubblicationHistory/>","into","");
          }
+    }
+    
+    @Override
+    public void shutdownPluginInstance(){
+        
+
     }
 }

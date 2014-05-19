@@ -25,11 +25,13 @@ THE SOFTWARE.
 
 
 <configuration>
+    <writeOnCfgFolder>yes</writeOnCfgFolder>
+    <moduleName>CM_SASAgent</moduleName>
     <dbParams>
         <server>localhost</server>
         <driver>com.mysql.jdbc.Driver</driver>
         <name>CleverResources</name>
         <username>root</username>
-        <password>francesco</password>
+        <password></password>
     </dbParams>   
 </configuration>

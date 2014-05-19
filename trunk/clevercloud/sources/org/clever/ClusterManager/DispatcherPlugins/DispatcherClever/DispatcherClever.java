@@ -1,4 +1,18 @@
- /*
+/*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  Copyright (c) 2010 Antonio Nastasi
  *  Copyright (c) 2011 Marco Sturiale
  *  Copyright (c) 2013 Giuseppe Tricomi
@@ -28,16 +42,17 @@
  */
 package org.clever.ClusterManager.DispatcherPlugins.DispatcherClever;
 
+import org.clever.Common.Communicator.RequestsManager;
+import org.clever.Common.Communicator.Request;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
+
 import org.apache.log4j.Logger;
-import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
+import org.clever.ClusterManager.Dispatcher.CLusterManagerDispatcherPlugin;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.MethodInvoker;
-import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.MessageFormatter;
@@ -54,73 +69,27 @@ import org.jdom.Element;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Packet;
-import org.jivesoftware.smack.util.StringUtils;
+//import org.jivesoftware.smack.util.StringUtils;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.safehaus.uuid.UUIDGenerator;
 
 
-class RequestThread implements Runnable {
-    private CleverMessage message;
-    private DispatcherPlugin dispatcher;
-    public RequestThread(DispatcherPlugin dispatcher, CleverMessage message)
-    {
-        this.message=message;
-       this.dispatcher = dispatcher;
-    }
-    @Override
-    public void run() {
-         switch( this.message.getType() )
+import org.clever.ClusterManager.Dispatcher.DispatcherAgent;
 
-        {
 
-                  case NOTIFY:
-                      Notification notification=this.message.getNotificationFromMessage();
-                      //Pass notification to dispatcher
-                      dispatcher.handleNotification(notification);
-
-                    break;
-                  case ERROR:
-                  case REPLY:
-                    dispatcher.handleMessage( this.message );
-                    break;
-                  case REQUEST:
-
-                    dispatcher.dispatch( this.message );
-                    break;
-                      
-
-                   
-        }
-       }
-
-}
-
-public class DispatcherClever implements DispatcherPlugin,PacketListener {
+public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketListener {
     private Agent owner;
     private String version = "0.0.1";
     private String description = "Clever Dispatcher";
     private String name = "DispatcherClever";
     private ConnectionXMPP connectionXMPP = null;
-    private ModuleCommunicator mc = null;
+    //private ModuleCommunicator mc = null;
     private RequestsManager requestsManager = null;
     private Logger logger = null;
     private Map<String, List<String>> notificationDelivery = new HashMap<String, List<String>>();
-    private Map<String, MultiUserChat> agentMucs=new HashMap<String, MultiUserChat>();
-    private UUIDGenerator uuidGenerator = UUIDGenerator.getInstance();
     private org.clever.ClusterManager.Brain.BrainInterface brain;
-    /**
-     * This method manage a received clevermessage launching a separate thread
-     *
-     * @param message
-     */
-
-    //@Override
-    public void scheduleMsg(CleverMessage msg)
-    {
-        //TODO: Check the number of active requestThreads;
-          new Thread(new RequestThread(this,msg),"requestThread").start();
-    }
-
+    private Map<String, MultiUserChat> agentMucs=new HashMap<String, MultiUserChat>();
+   private UUIDGenerator uuidGenerator = UUIDGenerator.getInstance();
 
     @Override
     public String getName() {
@@ -139,13 +108,17 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
 
     @Override
     public void init(Element params,Agent owner) throws CleverException {
-        requestsManager = new RequestsManager();
         logger = Logger.getLogger("DispatcherClever");
+        requestsManager = new RequestsManager();
+        if(this.connectionXMPP==null)
+            this.connectionXMPP=((DispatcherAgent)this.owner).connectionXMPP;
         this.connectionXMPP.addPresenceListener(ConnectionXMPP.ROOM.CLEVER_MAIN, this);
+
         this.brain= new org.clever.ClusterManager.Brain.SensorBrain(this);
+        this.owner.setPluginState(true);
     }
 
-    @Override
+   
     /**
      * This method will handle CleverMessage whose body is of 'exec' type
      * For other types of CleverMessage's body we plain to use other methods
@@ -170,7 +143,9 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
                 cleverMsg.setHasReply(false);
                 cleverMsg.setReplyToMsg(message.getId());
                 try {
-                    Object obj = mc.invoke(mi);
+                    //Object obj = mc.invoke(mi);
+                    
+                    Object obj = this.owner.invoke(mi);
                     if (message.needsForReply()) {
                         cleverMsg.setType( CleverMessage.MessageType.REPLY );
                         cleverMsg.setBody( new OperationResult( Result.ResultType.OBJECT,
@@ -202,7 +177,9 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
 
         } else {
             if (message.needsForReply()) {
-                int idPendingRequest = requestsManager.addRequestPending(message, Request.Type.EXTERNAL);
+                //TODO: timeout as parameter : now is 0 (infinity)
+                
+                int idPendingRequest = requestsManager.addSyncRequestPending(message, Request.Type.EXTERNAL, 0); 
                 message.setId(idPendingRequest);
             }
 
@@ -212,14 +189,17 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
         }
     }
 
-    @Override
     /**
      * Manage the reply message
      *
      * @param msg
      */
     public void handleMessage(final CleverMessage msg) {
-        logger.debug("Dispatcher handle message: " + msg.toXML());
+        try {
+            logger.debug("Dispatcher handle message: " + msg.toXML());
+        } catch (CleverException ex) {
+            logger.error("Message " + msg.getId() + " with errors !!"); 
+        }
         logger.debug("Module name: " + msg.getBodyModule() + " and operation: " + msg.getBodyOperation());
 
        
@@ -261,11 +241,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
         this.connectionXMPP = connectionXMPP;
     }
 
-    @Override
-    public void setCommunicator(ModuleCommunicator mc) {
-        this.mc = mc;
-    }
-
+   
     @Override
     public Object dispatchToExtern(MethodInvoker method, String to) throws CleverException{
         CleverMessage cleverMessage = new CleverMessage();
@@ -273,8 +249,8 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
                 to, true, method.getParams(), new ExecOperation(method.getMethodName(),
                 method.getParams(), method.getModule()), 0);
 
-
-        int id = requestsManager.addRequestPending(cleverMessage, Request.Type.INTERNAL);
+        //TODO: timeout as parameter : now is 0 (infinity)
+        int id = requestsManager.addSyncRequestPending(cleverMessage, Request.Type.INTERNAL, 0);
         cleverMessage.setId(id);
         connectionXMPP.sendMessage(cleverMessage.getDst(), cleverMessage);
         return requestsManager.getRequest(id).getReturnValue();
@@ -341,7 +317,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
         
         String result = message.getAttachment(0);
         String src=message.getSrc();
-        result= "<sourceHM name=\""+src+"\" >\n"+result+"\n</sourceHM>";
+        result= "<sourceHM name=\""+src+"\" type=\""+message.getTypeSrc()+"\">\n"+result+"\n</sourceHM>";
 
         
         logger.debug("Measure Received: "+ result);
@@ -362,7 +338,8 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
     
     
 
-    @Override
+
+    
     public void handleNotification(Notification notification) {
         //Send notification to corresponding agents using notificationId
         logger.debug("Start handle notification");
@@ -379,8 +356,11 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
                             "handleNotification",
                             true,
                             params);
-                    logger.debug("dispatcher clever, agent:"+(String) agent);
-                    mc.invoke(mi);
+
+                    //logger.debug("X?X 338 dispatcher clever, agent:"+(String) agent);
+                    //mc.invoke(mi);
+                    this.owner.invoke(mi);
+
                 } catch (CleverException ex) {
                     logger.error("Error invoking agent handleNotification method " + ex);
                 }
@@ -394,9 +374,12 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
     //registrati a quella notifica... mettere in coda e riprovarli almeno una volta dopo 30 secondi 
 
 
+    //Likely used only by SensorBrain 
     @Override
     public Object dispatchToIntern(MethodInvoker method) throws CleverException {
-        return mc.invoke(method);
+        
+        //return mc.invoke(method);
+        return this.owner.invoke(method);
     }
 
     @Override
@@ -409,6 +392,7 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
     public void setOwner(Agent owner){
         this.owner=owner;
     }
+
  // METODI AGGIUNTI PER SOS E SAS///////////////////////////////////////////////
     
     public String joinAgentRoom(String agentName,String roomName,String roomPassword){
@@ -447,4 +431,9 @@ public class DispatcherClever implements DispatcherPlugin,PacketListener {
     }
     
     
+
+    public void shutdownPluginInstance(){
+        
+    }
+
 }

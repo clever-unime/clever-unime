@@ -14,7 +14,7 @@
         <architecture>X86_64</architecture>
     </cpu>
     <mem>
-        <size>512</size>
+        <size>1024</size>
     </mem>
     <network>
         <org.clever.Common.VEInfo.NetworkSettings></org.clever.Common.VEInfo.NetworkSettings>

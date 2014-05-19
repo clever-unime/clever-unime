@@ -144,7 +144,7 @@ public class HostCoordinator implements CleverMessageHandler {
         
         //NEW MONITOR
         this.conn.getMultiUserChat().changeAvailabilityStatus("HM/Probe", Mode.available); //se l'hm viene istanziato cambia lo status che torna ad essere HM!
-        System.out.println("HM status changed");
+        //System.out.println("HM status changed");
     }
 
     // TODO add CC threshold checker!!!!
@@ -217,7 +217,8 @@ public class HostCoordinator implements CleverMessageHandler {
 
 
 
-            mc = new ModuleCommunicator("HostCoordinator","HM");
+            mc = new ModuleCommunicator();
+            mc.init("HostCoordinator","HM");
             logger.debug("Module Communicator instantiated");
             logger.info("HostCoordinator created");
         } catch (Exception e) {
@@ -241,8 +242,12 @@ public class HostCoordinator implements CleverMessageHandler {
 
     @Override
     public synchronized void handleCleverMessage(final CleverMessage message) {
-        //TODO add check for messages: REQUEST, etc..
-        logger.debug("Message: " + message.toXML());
+        try {
+            //TODO add check for messages: REQUEST, etc..
+            logger.debug("Message: " + message.toXML());
+        } catch (CleverException ex) {
+             logger.error("Message " + message.getId() + " with errors !!"); 
+        }
         methodDispatcher(message);
     }
 

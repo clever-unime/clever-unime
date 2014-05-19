@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/HostManager/Monitor/MonitorAgent.java</file>
+            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/ClusterManager/StorageManagerPlugins/StorageManagerClever/StorageManager.java</file>
+            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/HostManager/ImageManager/ImageManagerAgent.java</file>
+            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/HostManager/HyperVisor/HyperVisorAgent.java</file>
+            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/Common/CommunicatorPlugins/Dbus/CommunicatorDbus.java</file>
+        </group>
+        <group name="MergeDevelopAPI">
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitor/CloudMonitorAgent.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/ClusterManager/MonitorManager/MonitorManagerAgent.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/HyperVisorPlugins/VirtualBox/HvVirtualBox.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/SOS/SOSModuleTransactional/Readers/DBGenericReader.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/SOS/configuration_sosagent.xml</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/Common/CommunicatorPlugins/Dbus/CommunicatorDbus.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/SOS/SOSModuleTransactional/Readers/DBMeridionaleReader.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/ClusterManager/ClusterCoordinator/ClusterCoordinator.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/ImageManagerPlugins/ImageManagerClever/ImageManager.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/HyperVisor/HyperVisorAgent.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/SOS/SOSAgent.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/Dispatcher/DispatcherAgent.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/ClusterManager/VirtualizationManager/VirtualizationManagerAgent.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/HostCoordinator/HostCoordinator.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitorPlugins/Sigar/SigarCloudMonitor.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/Monitor/MonitorPlugin.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/ClusterManager/StorageManagerPlugins/StorageManagerClever/StorageManager.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/Common/SqliteDB/SQLite.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/ClusterManager/DatabaseManager/DatabaseManagerAgent.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/ClusterManager/DispatcherPlugins/DispatcherClever/DispatcherClever.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitor/CloudMonitorPlugin.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitor/ThSendMeasure.java</file>
+            <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/MonitorPlugins/Sigar/SigarMonitor.java</file>
+        </group>
+    </open-files>
+</project-private>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  
+  <!--<CleverClientCommandProviderClass>org.clever.administration.common.PerThreadCleverCommandClientProvider</CleverClientCommandProviderClass>-->
+    
+  <server>localhost</server>
+  <port>5222</port>
+  <username>peppe</username>
+  <password>peppe</password>
+  <nickname>peppe</nickname>
+  <room>SHELL-vision@conference.localhost</room>
+  
+</configuration>
+

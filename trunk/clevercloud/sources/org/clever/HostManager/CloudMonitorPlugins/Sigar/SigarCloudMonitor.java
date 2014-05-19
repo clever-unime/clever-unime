@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  The MIT License
  * 
  *  Copyright (c) 2013 Nicola Peditto
@@ -49,9 +63,9 @@ import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.logging.Level;
+//import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import static org.clever.Common.Communicator.Agent.logger;
+//import static org.clever.Common.Communicator.Agent.logger;
 import org.hyperic.sigar.CpuPerc;
 import org.hyperic.sigar.FileSystem;
 import org.hyperic.sigar.FileSystemUsage;
@@ -71,6 +85,16 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     ModuleCommunicator mc;
     private Agent owner;
     private Sigar sigar;
+    private boolean flag_monitor; 
+    private int freq_monitor;
+    Logger logger=Logger.getLogger("SigarCloudMonitor");
+    public boolean isFlag_monitor() {
+        return flag_monitor;
+    }
+
+    public int getFreq_monitor() {
+        return freq_monitor;
+    }
     
 
     public SigarCloudMonitor() throws IOException
@@ -81,7 +105,9 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     
 
     public void init(Element params, Agent owner) throws CleverException{
-        
+        this.flag_monitor=Boolean.parseBoolean(params.getChildText("active_monitor"));
+        this.freq_monitor=Integer.parseInt(params.getChildText("freq_monitor"));
+        this.owner.setPluginState(true);
     }
 
     
@@ -305,7 +331,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     * @return String of the measure in xml format
     */        
     public String getCpuUser(){
-
+        
         CpuPerc cpuperc=null;
         String xmlobj=null;
         CpuM obj = null;
@@ -342,7 +368,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     * @return String of the measure in human readable format
     */     
     public String getStorageStatus(){
-        
+        logger.debug("%%%%%%%%%plugin:");
         String xmlobj=null;
         
         StorageM obj = null;
@@ -377,7 +403,7 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
            logger.error(ex.getMessage(),ex);
         }
         
-        
+        logger.debug("%%%%%%%%%plugin:"+xmlobj);
         return xmlobj;
     }
     
@@ -972,6 +998,11 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     }
 
     */
+
+    @Override
+    public void shutdownPluginInstance() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 
 }

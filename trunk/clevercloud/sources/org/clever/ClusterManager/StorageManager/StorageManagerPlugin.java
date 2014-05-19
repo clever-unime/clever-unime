@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  * The MIT License
  *
  * Copyright 2012 giancarloalteri.
@@ -37,25 +51,9 @@ import org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile;
 
 public interface StorageManagerPlugin extends RunnerPlugin{
 
-  /**
-   * Setter allowing the Agent to pass its ModuleCommunicator to the plugin
-   * @param mc - the Agent's ModuleCommunicator
-   */
-  public void setModuleCommunicator(ModuleCommunicator mc);
-
-  /**
-   * Getter for the ModuleCommunicator
-   * @return the ModuleCommunicator
-   */
-  public ModuleCommunicator getModuleCommunicator();
   
-  /**
-   * This method runs through the hierarchical tree until you reach a mount mode
-   * @param path_dest
-   * @param cont_dest
-   * @return
-   * @throws Exception 
-   */
+
+  
   public VFSDescription discoveryNode(String path_dest,String cont_dest) throws Exception;  
   
   /**

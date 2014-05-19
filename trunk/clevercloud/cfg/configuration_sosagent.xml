@@ -16,7 +16,7 @@
         <driver>com.mysql.jdbc.Driver</driver>
         <name>sensorml</name>
         <username>root</username>
-        <password></password><!--insert your sql password -->
+        <password>mandrake</password><!--insert your sql password -->
     </dbParams>
     
     <test>

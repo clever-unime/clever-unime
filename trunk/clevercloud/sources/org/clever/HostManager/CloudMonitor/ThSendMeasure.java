@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  The MIT License
  * 
  *  Copyright (c) 2013 Nicola Peditto
@@ -32,9 +46,9 @@ package org.clever.HostManager.CloudMonitor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import static org.clever.Common.Communicator.Agent.logger;
+//import java.util.logging.Level;
+import org.apache.log4j.Logger;
+//import static org.clever.Common.Communicator.Agent.logger;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.MessageFormatter;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
@@ -51,7 +65,7 @@ public class ThSendMeasure implements Runnable{
     
     
     //boolean done=false;
-            
+    Logger log =Logger.getLogger("ThSendMeasure");        
     private int frequency = 0;
     private CloudMonitorPlugin monitorPlugin= null;
     private ConnectionXMPP conn=null;
@@ -78,11 +92,11 @@ public class ThSendMeasure implements Runnable{
         
         try {
                 this.params.add(measure);
-                this.ma.invoke("DispatcherAgent","sendMeasure", false, this.params);
+                this.ma.invoke("DispatcherAgentHm","sendMeasure", false, this.params);
                 this.params.clear();
 
         }catch (CleverException ex) {
-                logger.error("Error: "+ ex );
+                log.error("Error: ", ex );
         }
         
     }
@@ -93,16 +107,16 @@ public class ThSendMeasure implements Runnable{
     public void run() {
         
         
-        logger.debug("ThSendMeasure start!");
+        log.debug("ThSendMeasure start!");
         
         //Inizializzazione
         try {
             Thread.sleep(10000);
         } catch (InterruptedException ex) {
-            logger.debug("ThSendMeasure sleep failed: "+ex);
+            log.debug("ThSendMeasure sleep failed: "+ex);
         }
         
-        logger.debug("Start sending measure...");
+        log.debug("Start sending measure...");
         System.out.println("Start sending measure...");
         
         //TODO: It is necessary realize a mechanism to select a series of functionality from the configuration file, to trasform this static algoritm in a dinamic algoritm.
@@ -145,7 +159,7 @@ public class ThSendMeasure implements Runnable{
             try {
                 Thread.sleep(frequency*1000);
             } catch (InterruptedException ex) {
-                Logger.getLogger(ThSendMeasure.class.getName()).log(Level.SEVERE, null, ex);
+                log.error("ThSendMisur has caused an exception in thread sleep operation!", ex);
             }
             
             

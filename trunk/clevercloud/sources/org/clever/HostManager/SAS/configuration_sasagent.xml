@@ -10,6 +10,8 @@
 
 <configuration>
 <alertExpirationMinutes>100000</alertExpirationMinutes>
+<writeOnCfgFolder>yes</writeOnCfgFolder>
+<moduleName>SASAgent</moduleName>
 <test>
     <status>1</status>
     <dbParams>

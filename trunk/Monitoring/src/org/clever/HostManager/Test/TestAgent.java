@@ -48,7 +48,7 @@ public class TestAgent extends Agent implements Runnable {
     public TestAgent() throws CleverException
     {        
          super();
-         logger=Logger.getLogger("TestAgent");
+         //logger=Logger.getLogger("TestAgent");
          logger.info("\n\nPROVA TEST AGENT HM\n");         
          
     }

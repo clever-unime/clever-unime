@@ -19,11 +19,11 @@
         <hostname>localhost</hostname>
         <DBName>sensordb</DBName>
         <UserName>root</UserName>
-        <Password></Password>
+        <Password>mandrake</Password>
         <!--insert your sql password -->
         <resettimeMillisec>150000</resettimeMillisec>
         <sensorNumber>1</sensorNumber>
-        <firstvalue>2014-01-27 19:13:35</firstvalue>
+        <firstvalue>2014-05-09 11:05:15</firstvalue>
       </pluginParams>
     </reader>
     <!--*********************************************************************-->

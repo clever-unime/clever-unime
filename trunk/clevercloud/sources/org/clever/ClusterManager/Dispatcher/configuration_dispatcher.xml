@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<Dispatcher>org.clever.ClusterManager.DispatcherPlugins.DispatcherClever.DispatcherClever</Dispatcher>
-	<moduleName>DispatcherAgent</moduleName>
+	<ClassPlugin>org.clever.ClusterManager.DispatcherPlugins.DispatcherClever.DispatcherClever</ClassPlugin>
+	<writeOnCfgFolder>yes</writeOnCfgFolder>
+        <moduleName>DispatcherAgent</moduleName>
 </configuration>

@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  * Copyright (c) 2013 Universita' degli studi di Messina
  *
  *  Permission is hereby granted, free of charge, to any person
@@ -140,11 +154,11 @@ public class DBGenericReader implements ReaderInterface{
                              
                              Enumeration e=line.elements();
                              while (e.hasMoreElements()){
-                                 //logger.debug("ciclo lettura osservazioni passo 1");
+                                 logger.debug("ciclo lettura osservazioni passo 1");
                                  String entry=(String)e.nextElement();
-                                 //logger.debug("ciclo lettura osservazioni passo 2. valore id osservazioni:"+entry);
+                                 logger.debug("ciclo lettura osservazioni passo 2. valore id osservazioni:"+entry);
                                  String sens=db.getMisure("sensore_anagrafica_idsensore_anagrafica",entry,"osservazioni","idosservazioni");
-                                 //logger.debug("ciclo lettura osservazioni passo 3.collegamento con il sensore che ha realizzato osservazione:"+sens);
+                                 logger.debug("ciclo lettura osservazioni passo 3.collegamento con il sensore che ha realizzato osservazione:"+sens);
                                  parseIncomingLine(entry,sens,"osservazioni",null);
                              }
                         }
@@ -251,7 +265,8 @@ public class DBGenericReader implements ReaderInterface{
         String time2;
         time2=time.split(" ")[0]+"T"+time.split(" ")[1]+"Z";
         //logger.debug("cparse incoming passo 6:time"+time2);
-        //logger.debug("(/)Sens_nodeid"+sens_nodeid.size());misura_anagrafica_idtipomisura
+        //logger.debug("(/)Sens_nodeid"+sens_nodeid.size());
+        //misura_anagrafica_idtipomisura
         InsertObservationXml ios = new InsertObservationXml(sens_nodeid.elementAt(sensboardIndex), idsens, sosModule);
         //logger.debug("cparse incoming passo 7");
         //////controllare da qui

@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  * The MIT License
  *
  * Copyright 2011 alessiodipietro.
@@ -79,74 +93,7 @@ public class SASAgent extends Agent {
     
     public SASAgent() throws CleverException {
             super();
-        try {
-            super.setAgentName("SASAgentHm");
-           
-            logger = Logger.getLogger("SASAgentHm");
-            logger.debug("SASAgentHm start");
-            Properties prop = new Properties();
-            InputStream in = getClass().getResourceAsStream( "/org/clever/Common/Shared/logger.properties" );
-            prop.load( in );
-            PropertyConfigurator.configure( prop );
-            File cfgFile = new File( cfgPath );
-            InputStream inxml=null;
-            if( !cfgFile.exists() )
-            {
-                inxml = getClass().getResourceAsStream( "/org/clever/HostManager/SAS/configuration_sasagent.xml" );
-                try
-                {
-                    Support.copy( inxml, cfgFile );
-                }
-                catch( IOException ex )
-                {
-                    logger.error( "Copy file failed" + ex );
-                    System.exit( 1 );
-                }
-            }
-            try
-      {
-          inxml = new FileInputStream( cfgPath );
-      }
-      catch( FileNotFoundException ex )
-      {
-          logger.error( "File not found: " + ex );
-      }
-      
-          FileStreamer fs = new FileStreamer();
-          ParserXML pXML = new ParserXML( fs.xmlToString( inxml ) );
-            
-            
-            alertExpirationMinutes=Long.parseLong(pXML.getRootElement().getChildText("alertExpirationMinutes"));
-            
-            ParameterContainer parameterContainer=ParameterContainer.getInstance();
-            Element dbParams=pXML.getRootElement().getChild("test").getChild("dbParams");
-            parameterContainer.setDbDriver(dbParams.getChildText("driver"));
-            parameterContainer.setDbServer(dbParams.getChildText("server"));
-            parameterContainer.setDbPassword(dbParams.getChildText("password"));
-            parameterContainer.setDbUsername(dbParams.getChildText("username"));
-            parameterContainer.setDbName(dbParams.getChildText("name"));
-            
-            //this.agentName = agentName;
-            
-            mc = new ModuleCommunicator(this.getAgentName(),"HM");
-            mc.setMethodInvokerHandler(this);
-           Notification presenceNotification = new Notification();
-            presenceNotification.setId("SAS/Presence");
-            presenceNotification.setAgentId("SASAgentHm");
-            this.sendNotification(presenceNotification);
-            
-            
-            
-        } catch (InstantiationException ex) {
-            throw new CleverException(ex, "Missing logger.properties or configuration not found");
-        } catch (IllegalAccessException ex) {
-            throw new CleverException(ex, "Access Error");
-        } catch (ClassNotFoundException ex) {
-            throw new CleverException(ex, "Plugin Class not found");
-        } catch (IOException ex) {
-            throw new CleverException(ex, "Error on reading logger.properties");
-        }
-
+        
     }
 
     public Document sendExpirationAdvertiseRequest(Element expirationAdvertiseRequestElement){
@@ -640,7 +587,38 @@ public class SASAgent extends Agent {
 
     @Override
     public void initialization() throws Exception {
-       
+        try {
+            super.setAgentName("SASAgentHm");
+            super.start();
+            
+          ParserXML pXML =this.getconfiguration(cfgPath,"/org/clever/HostManager/SAS/configuration_sasagent.xml");//= new ParserXML( fs.xmlToString( inxml ) );
+            
+            
+            alertExpirationMinutes=Long.parseLong(pXML.getRootElement().getChildText("alertExpirationMinutes"));
+            
+            ParameterContainer parameterContainer=ParameterContainer.getInstance();
+            Element dbParams=pXML.getRootElement().getChild("test").getChild("dbParams");
+            parameterContainer.setDbDriver(dbParams.getChildText("driver"));
+            parameterContainer.setDbServer(dbParams.getChildText("server"));
+            parameterContainer.setDbPassword(dbParams.getChildText("password"));
+            parameterContainer.setDbUsername(dbParams.getChildText("username"));
+            parameterContainer.setDbName(dbParams.getChildText("name"));
+            
+            //this.agentName = agentName;
+            
+            //mc = new ModuleCommunicator(this.getAgentName(),"HM");
+            //mc.setMethodInvokerHandler(this);
+            Notification presenceNotification = new Notification();
+            presenceNotification.setId("SAS/Presence");
+            presenceNotification.setAgentId("SASAgentHm");
+            this.sendNotification(presenceNotification);
+            
+            
+            
+        }  catch (CleverException ex) {
+            throw new CleverException(ex, "Error on retrieve Agent configuration");
+        }
+
     }
 
     @Override

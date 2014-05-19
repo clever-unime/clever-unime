@@ -31,7 +31,7 @@ file
 
 
 
-
+delete
 2012-06-11T16:54:24.000000Z
 0452ea8e7e00b40db87f83f717cf7572
 2011-05-10T10:56:47.130664Z
@@ -96,6 +96,10 @@ maurizio.paone
 
 commands
 dir
+
+
+
+delete
 
 config
 dir

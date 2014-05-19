@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  * The MIT License
  *
  * Copyright 2011 giovalenti.
@@ -24,13 +38,14 @@
  */
 package org.clever.ClusterManager.VirtualizationManager;
 
+import java.util.HashMap;
+import java.util.List;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Plugins.RunnerPlugin;
 import org.clever.Common.VEInfo.DesktopVirtualization;
 import org.clever.Common.VEInfo.VEDescription;
-import java.util.List;
 /**
  *
  * @author giovalenti
@@ -59,7 +74,7 @@ public interface VirtualizationManagerPlugin extends RunnerPlugin{
      * @return
      * @throws CleverException
      */
-    public String createVM(String id,String targetHM,org.clever.Common.Communicator.Utils.IstantiationParams param) throws CleverException;
+    public HashMap createVM(String id,String targetHM,org.clever.Common.Communicator.Utils.IstantiationParams param) throws CleverException;
     
     /**
      * Starting VM
@@ -77,17 +92,6 @@ public interface VirtualizationManagerPlugin extends RunnerPlugin{
      */
     public boolean stopVm(String id) throws CleverException;
     
-    /**
-   * Setter allowing the Agent to pass its ModuleCommunicator to the plugin
-   * @param mc - the Agent's ModuleCommunicator
-   */
-  public void setModuleCommunicator(ModuleCommunicator mc);
-
-  /**
-   * Getter for the ModuleCommunicator
-   * @return the ModuleCommunicator
-   */
-  public ModuleCommunicator getModuleCommunicator();
   
   
   public boolean stopVm(String id,Boolean poweroff) throws CleverException;
@@ -104,7 +108,7 @@ public interface VirtualizationManagerPlugin extends RunnerPlugin{
   
   public boolean deleteVm(String id) throws CleverException;
   
-  public boolean attackInterface(String id,String inf,String mac,String type) throws CleverException;
+  public boolean attachInterface(String id,String inf,String mac,String type) throws CleverException;
   
   public List listVm(String targetHM,Boolean running,Boolean hypvr)throws CleverException;
   

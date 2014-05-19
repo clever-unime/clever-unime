@@ -153,15 +153,15 @@ public class DispatcherAgent extends Agent
     private int notificationsThreshold;    
    
 
-    public DispatcherAgent(ConnectionXMPP connectionXMPP, int notificationsThreshold)
+    public DispatcherAgent(ConnectionXMPP connectionXMPP, int notificationsThreshold) throws CleverException
     {   super();
-        logger = Logger.getLogger("DispatcherAgentHM");
+        //logger = Logger.getLogger("DispatcherAgentHM");
         this.connectionXMPP = connectionXMPP;
         this.notificationsThreshold = notificationsThreshold;
     }
-    public DispatcherAgent(){
+    public DispatcherAgent()throws CleverException{
         super();
-        logger=Logger.getLogger("DispatcherAgentHM");
+        //logger=Logger.getLogger("DispatcherAgentHM");
     }
     
      @Override
@@ -177,8 +177,8 @@ public class DispatcherAgent extends Agent
         Notification notification=new Notification();
         
         //NEWMONITOR
-        notification.setId("PRESENCE/Probe");
-        
+        notification.setId("PRESENCE");
+        notification.setType("PROBE");
         logger.debug("?=)** hostId= "+hostid);
         notification.setHostId(hostid);
 
@@ -194,7 +194,7 @@ public class DispatcherAgent extends Agent
         CleverMessage cleverMsg = new CleverMessage();
         List attachments=new ArrayList();
         attachments.add(notification.getBody());
-        cleverMsg.fillMessageFields(CleverMessage.MessageType.NOTIFY, this.connectionXMPP.getUsername(), attachments, new NotificationOperation(connectionXMPP.getUsername(), notification.getAgentId(), notification.getId()));
+        cleverMsg.fillMessageFields(CleverMessage.MessageType.NOTIFY, this.connectionXMPP.getUsername(), attachments, new NotificationOperation(connectionXMPP.getUsername(), notification.getAgentId(), notification.getId(),notification.getType()));
         
         
         
@@ -247,8 +247,9 @@ public class DispatcherAgent extends Agent
         CleverMessage cleverMsg = new CleverMessage();
         
         cleverMsg.setDst(this.connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN));
-        cleverMsg.setSrc("probe-"+this.connectionXMPP.getUsername());
+        cleverMsg.setSrc(this.connectionXMPP.getUsername());
         cleverMsg.setHasReply(false);
+        cleverMsg.setTypeSrc("Probe");
         cleverMsg.setType( CleverMessage.MessageType.MEASURE );
         cleverMsg.setBody(
                             "    <measure useAttachementId=\"true\">\n" +

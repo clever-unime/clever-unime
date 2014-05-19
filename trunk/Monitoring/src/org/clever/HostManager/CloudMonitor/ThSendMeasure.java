@@ -30,9 +30,7 @@ package org.clever.HostManager.CloudMonitor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import static org.clever.Common.Communicator.Agent.logger;
+import org.apache.log4j.Logger;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.MessageFormatter;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
@@ -40,16 +38,13 @@ import org.clever.Common.XMPPCommunicator.CleverMessage;
 
 import org.clever.HostManager.CloudMonitorPlugins.Sigar.*;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
-import org.clever.Common.XMPPCommunicator.ErrorResult;
-import org.clever.Common.XMPPCommunicator.OperationResult;
-import org.clever.Common.XMPPCommunicator.Result;
 
 //NEWMONITOR
 public class ThSendMeasure implements Runnable{
     
     
     //boolean done=false;
-            
+    private Logger logger=Logger.getLogger("ThSendMeasure")       ; 
     private int frequency = 0;
     private CloudMonitorPlugin monitorPlugin= null;
     private ConnectionXMPP conn=null;
@@ -164,7 +159,7 @@ public class ThSendMeasure implements Runnable{
             try {
                 Thread.sleep(frequency*1000);
             } catch (InterruptedException ex) {
-                Logger.getLogger(ThSendMeasure.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error(ex);
             }
             
             

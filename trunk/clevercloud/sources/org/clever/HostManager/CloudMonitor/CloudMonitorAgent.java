@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  The MIT License
  * 
  *  Copyright (c) 2013 Nicola Peditto
@@ -31,10 +45,10 @@ package org.clever.HostManager.CloudMonitor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
+//import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
-import static org.clever.Common.Communicator.Agent.logger;
+//import static org.clever.Common.Communicator.Agent.logger;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
@@ -45,21 +59,21 @@ import org.clever.HostManager.CloudMonitor.ThSendMeasure;
 public class CloudMonitorAgent extends Agent{
     
     private CloudMonitorPlugin monitorPlugin;
-    private Class cl;
+    //private Class cl;
     
     
     private int freq_monitor;
-    private boolean flag_monitor; //se true viene attivato il monitoring continuo
+    //private boolean flag_monitor; //se true viene attivato il monitoring continuo
     
     
     
-    public CloudMonitorAgent()  {
-        
+    public CloudMonitorAgent() throws CleverException {
         super();
-
-        logger=Logger.getLogger("CloudMonitorAgent");  
         
-        flag_monitor = true;
+
+        //logger=Logger.getLogger("CloudMonitorAgent");  
+        
+        //flag_monitor = true;
       
     }
     
@@ -73,10 +87,11 @@ public class CloudMonitorAgent extends Agent{
         }
 
         super.start();
-        
-     
+        try
+        {
+            this.startPlugin();
 
-        FileStreamer fs = new FileStreamer();
+       /* FileStreamer fs = new FileStreamer();
 
         try {
             
@@ -98,13 +113,15 @@ public class CloudMonitorAgent extends Agent{
             
             
             flag_monitor = Boolean.parseBoolean(pXML.getElementContent("active_monitor"));
+   */         
             
-            if(flag_monitor){
+            if(this.monitorPlugin.isFlag_monitor()){
                 
                 logger.info("Monitoring active!");
                 
-                freq_monitor= Integer.parseInt( pXML.getElementContent( "freq_monitor" ) ); 
+                freq_monitor= this.monitorPlugin.getFreq_monitor(); 
 
+            
                 logger.info("Sample frequency: "+freq_monitor+" sec");
 
 
@@ -117,15 +134,9 @@ public class CloudMonitorAgent extends Agent{
             
             
             
-        } catch (ClassNotFoundException ex) {
-            
-            logger.error("Error: " + ex);
+       
         } catch (IOException ex) {
-            logger.error("Error: " + ex);
-        } catch (InstantiationException ex) {
-            logger.error("Error: " + ex);
-        } catch (IllegalAccessException ex) {
-            logger.error("Error: " + ex);
+            logger.error("Error: " + ex);        
         } catch (Exception ex) {
             logger.error("CloudMonitorPlugin creation failed: " + ex,ex);
         }
@@ -146,7 +157,24 @@ public class CloudMonitorAgent extends Agent{
     public void shutDown() {
     }
 
-    
+    public void startPlugin()throws CleverException, IOException{
+        try
+        {
+            this.monitorPlugin = ( CloudMonitorPlugin )super.startPlugin("./cfg/configuration_cloudmonitor.xml","/org/clever/HostManager/CloudMonitor/configuration_cloudmonitor.xml");
+            this.monitorPlugin.setOwner(this);
+     
+            logger.info( "CloudMonitorPlugin created " );
+            
+        }
+        catch( java.lang.NullPointerException e )
+        { 
+            throw new CleverException( e, "Missing logger.properties or configuration not found" );       
+        }
+        catch( Exception e )
+        {
+            throw new CleverException( e );
+        }
+    }
     
     
 }

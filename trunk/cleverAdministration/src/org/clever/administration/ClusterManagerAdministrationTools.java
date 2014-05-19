@@ -5,9 +5,11 @@
 package org.clever.administration;
 
 import java.util.*;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import org.clever.ClusterManager.DispatcherPlugins.DispatcherClever.Request;
+import org.clever.Common.Communicator.Request;
 import org.clever.Common.Exceptions.CleverException;
+
 import org.clever.Common.XMPPCommunicator.CleverMessage.MessageType;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.CleverMessageHandler;
@@ -65,35 +67,30 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler
                           String room,
                           String nickname )
   {
-    try
-    {
+  
 
       adminHostName = username;
+      try
+      {
+                conn = new ConnectionXMPP();
+                conn.connect(XMPPServer, port);
+                conn.authenticate(username, passwd);
 
-      conn = new ConnectionXMPP();
-      conn.connect(XMPPServer, port);
-      conn.authenticate(username, passwd);
-
-      conn.joinInRoom( room, ConnectionXMPP.ROOM.SHELL, nickname );
-      conn.addChatManagerListener( this );
-      return true;
-    }
-    catch( CleverException e )
-    {
-      return false;
-
-    }
-    catch( Exception ex )
-    {
-      System.out.println( ex );
-      return false;
-    }
+                conn.joinInRoom( room, ConnectionXMPP.ROOM.SHELL, nickname );
+                conn.addChatManagerListener( this );
+                return true;
+      }
+      catch (CleverException e)
+      {
+          logger.debug("Error in connection : " + e.getMessage());
+          return false;
+      }
 
   }
 
 
 
-  private void sendRequest( final CleverMessage msg )
+  private void sendRequest( final CleverMessage msg ) throws CleverException
   {
     try
     {
@@ -170,7 +167,11 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler
   @Override
   public void handleCleverMessage( final CleverMessage cleverMessage )
   {
-    logger.debug( "Received:\n" + cleverMessage.toXML() );
+      try {
+          logger.debug( "Received:\n" + cleverMessage.toXML() );
+      } catch (CleverException ex) {
+          java.util.logging.Logger.getLogger(ClusterManagerAdministrationTools.class.getName()).log(Level.SEVERE, null, ex);
+      }
     CleverCommand cleverCommand = null;
     try
     {

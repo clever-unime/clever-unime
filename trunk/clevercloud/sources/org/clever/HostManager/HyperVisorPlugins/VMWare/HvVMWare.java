@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  * The MIT License
  *
  * Copyright 2011 giovalenti.
@@ -68,14 +82,12 @@ import com.vmware.vim25.VirtualLsiLogicController;
 import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.VirtualMachineConfigOption;
 import com.vmware.vim25.VirtualMachineConfigSpec;
-import com.vmware.vim25.VirtualMachineConfigSummary;
 import com.vmware.vim25.VirtualMachineDatastoreInfo;
 import com.vmware.vim25.VirtualMachineFileInfo;
 import com.vmware.vim25.VirtualMachinePowerState;
 import com.vmware.vim25.VirtualMachineRuntimeInfo;
 import com.vmware.vim25.VirtualMachineSnapshotInfo;
 import com.vmware.vim25.VirtualMachineSnapshotTree;
-import com.vmware.vim25.VirtualMachineSummary;
 import com.vmware.vim25.VirtualPCNet32;
 import com.vmware.vim25.VirtualSCSISharing;
 import com.vmware.vim25.VmConfigFault;
@@ -130,12 +142,11 @@ import org.clever.Common.VEInfo.NetworkSettings.NetworkType;
 import org.clever.Common.VEInfo.StorageSettings;
 import org.clever.Common.VEInfo.StorageSettings.DiskMode;
 import org.clever.Common.VEInfo.VEDescription;
+import org.clever.Common.VEInfo.VEState;
 import org.clever.Common.VEInfo.VMWrapper;
 import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
 import org.clever.HostManager.NetworkManager.AdapterInfo;
-import org.clever.HostManager.NetworkManager.IPAddress;
 import org.jdom.Element;
-import org.libvirt.LibvirtException;
 
 
 /**
@@ -302,7 +313,7 @@ public class HvVMWare implements HyperVisorPlugin{
      * @return The state of operation
      * @throws Exception
      */
-    private boolean shutDownVm(String id, Boolean OSguest) throws Exception {
+    public boolean shutDownVm(String id, Boolean OSguest) throws Exception {
         String vmname = id;
         boolean status = false;
 
@@ -1132,14 +1143,14 @@ public class HvVMWare implements HyperVisorPlugin{
             logger.error("Error on updateMap: "+ex);  
         }
     }
-    
+    //TODO: the method MUST return List of VEState , no List of String
     @Override
     /**
      * List listVMs() si avvale dell'HashMap di Clever
      * @return List of Virtual Machines and its port into this HostManager of Clever
      * @throws Exception
      */
-    public List listVms() throws Exception {
+    public List<VEState> listVms() throws Exception {
         VMWrapper wrap = null;
         String s = null;
         ArrayList ret = new ArrayList();
@@ -1189,7 +1200,7 @@ public class HvVMWare implements HyperVisorPlugin{
         this.logger.info("List HVMs returned: " + l.size() + " Virtual Machines");
         return l;
     }
-    
+    //TODO: the method MUST return List of VEState , no List of String
     @Override
     /**
      * List listRunningVms si avvale dell'HashMap di Clever (VM registrate in Clever)
@@ -1197,7 +1208,7 @@ public class HvVMWare implements HyperVisorPlugin{
      * @return List of running Virtual Machines and its port into this Host Manager of Clever
      * @throws Exception
      */
-    public List listRunningVms() throws Exception {
+    public List<VEState> listRunningVms() throws Exception {
         
         VMWrapper wrap = null;
         String s = null;
@@ -2154,7 +2165,7 @@ public class HvVMWare implements HyperVisorPlugin{
     }
 
     
-    @Override
+  
     /**
      * Register new Virtual Machine into Hypervisor's Inventory
      * @parm id Name of virtual machine
@@ -2242,7 +2253,7 @@ public class HvVMWare implements HyperVisorPlugin{
 
     }
 
-    @Override
+   
     /**
      * unRegister a Virtual Machine from Hypervisor's Inventory
      * @parm id Name of virtual machine
@@ -2674,13 +2685,41 @@ public class HvVMWare implements HyperVisorPlugin{
        this.owner=owner;
     }
 
-    @Override
+    
     public String getLocalPath(String id) throws HyperVisorException{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public boolean attackInterface(String id, String inf, String mac, String type) {
+    public boolean attachInterface(String id, String inf, String mac, String type) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean startVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean destroyVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean shutDownVm(String[] ids) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean createVm(Map<String, VEDescription> ves) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean shutDownVm(String[] ids, Boolean poweroff) throws Exception {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    public void shutdownPluginInstance(){
+        
     }
 }

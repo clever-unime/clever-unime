@@ -222,14 +222,15 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
      {               
          try //provo a creare un oggetto ConnectionXMPP con il quale gestirò la connessione als erver XMPP e l'accesso alla stanza!                
          {                   
-             conn = new ConnectionXMPP();               
+             conn = new ConnectionXMPP(); 
+             conn.connect(server, port);//effettuo una connessione al serverXMPP 
          }               
-         catch(CleverException Cexec)               
+         catch(Exception Cexec)               
          {                   
              Cexec.printStackTrace();               
          }               
                
-         conn.connect(server, port);//effettuo una connessione al serverXMPP               
+                       
                
          if( username.isEmpty() || password.isEmpty() )               
          {   

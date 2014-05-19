@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  * The MIT License
  *
  * Copyright 2011 Alessio Di Pietro.
@@ -53,6 +67,7 @@ import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Shared.Support;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
+import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.HostManager.SAS.AdvertiseRequestEntry;
 import org.clever.HostManager.SAS.AdvertisementExpirationTask;
 import org.clever.HostManager.SAS.SensorAlertMessage;
@@ -67,7 +82,7 @@ import org.safehaus.uuid.UUIDGenerator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-
+import org.clever.Common.Communicator.ThreadMessageDispatcher;
 class PublishDeliveryEntry {
 
     public String mucName = "";
@@ -105,7 +120,7 @@ public class SASAgent extends CmAgent {
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
     private String agentPrefix;
     private ThreadMessageDispatcher threadMessageDispatcher;
-    private String agentName;
+    
     private FileStreamer fs = new FileStreamer();
     private Database db;
     private ParameterDbContainer parameterContainer;
@@ -113,29 +128,10 @@ public class SASAgent extends CmAgent {
      
      
      
-    public SASAgent(/*String agentName*/) throws CleverException {
-        try {
-            super.setAgentName("SASAgent");
-            agentName="SASAgent";
-            
-            logger = Logger.getLogger(agentName);
-            logger.info("SASAgent CM !!!!");
-            mc = new ModuleCommunicator(agentName,"CM");
-            mc.setMethodInvokerHandler(this);
-
-            spf = SAXParserFactory.newInstance();
-            sp = spf.newSAXParser();
-            xr = sp.getXMLReader();
-
-            init();
-            initCleverResouces();
-            this.threadMessageDispatcher = new ThreadMessageDispatcher(this, 100, 10); //TODO: retrieve parameters from configuration file
-            this.threadMessageDispatcher.start();
-        } catch (ParserConfigurationException ex) {
-            throw new CleverException(ex, "Parser Configuration Exception: " + ex);
-        } catch (SAXException ex) {
-            throw new CleverException(ex, "SAX Exception: " + ex);
-        } catch (InstantiationException ex) {
+    public SASAgent() throws CleverException {
+        super();
+        
+       /* } catch (InstantiationException ex) {
             throw new CleverException(ex, "Missing logger.properties or configuration not found");
         } catch (IllegalAccessException ex) {
             throw new CleverException(ex, "Access Error");
@@ -143,7 +139,8 @@ public class SASAgent extends CmAgent {
             throw new CleverException(ex, "Plugin Class not found");
         } catch (IOException ex) {
             throw new CleverException(ex, "Error on reading logger.properties");
-        }
+      */ 
+    //}
 
     }
 
@@ -155,28 +152,28 @@ public class SASAgent extends CmAgent {
         initSoiPublications();
         initPublishDelivery();
         List params = new ArrayList();
-            params.add(agentName);
+            params.add(this.getAgentName());
             params.add("SAS/Presence");
             this.invoke("DispatcherAgent", "subscribeNotification", true, params);
 
             params.clear();
-            params.add(agentName);
+            params.add(this.getAgentName());
             params.add("SAS/Advertise");
             this.invoke("DispatcherAgent", "subscribeNotification", true, params);
 
             params.clear();
-            params.add(agentName);
+            params.add(this.getAgentName());
             params.add("SAS/Publish");
             this.invoke("DispatcherAgent", "subscribeNotification", true, params);
             
 
             params.clear();
-            params.add(agentName);
+            params.add(this.getAgentName());
             params.add("SAS/CancelAdvertisement");
             this.invoke("DispatcherAgent", "subscribeNotification", true, params);
 
             params.clear();
-            params.add(agentName);
+            params.add(this.getAgentName());
             params.add("SAS/RenewAdvertisement");
             this.invoke("DispatcherAgent", "subscribeNotification", true, params);
      }
@@ -254,7 +251,7 @@ public class SASAgent extends CmAgent {
                         //join the room
                         try {
                             List<String> joinParameters = new ArrayList();
-                            joinParameters.add(agentName);
+                            joinParameters.add(this.getAgentName());
                             joinParameters.add(publishDeliveryEntry.mucName);
                             joinParameters.add(publishDeliveryEntry.mucPassword);
                             this.invoke("DispatcherAgent", "joinAgentRoom", true, joinParameters);
@@ -297,8 +294,8 @@ public class SASAgent extends CmAgent {
         try {
             //init hashtable
             List<String> params = new ArrayList();
-            logger.debug("***Agent Name= "+this.agentName);
-            params.add(this.agentName);
+            logger.debug("***Agent Name= "+this.getAgentName());
+            params.add(this.getAgentName());
             params.add(location);
             result = (String) this.invoke("DatabaseManagerAgent", "query", true, params);
         } catch (CleverException ex) {
@@ -328,7 +325,7 @@ public class SASAgent extends CmAgent {
         try {
             //init hashtable
             List<String> params = new ArrayList();
-            params.add(this.agentName);
+            params.add(this.getAgentName());
             params.add(location1);
             params.add(location2);
             result = (String) this.invoke("DatabaseManagerAgent", "queryJoin", true, params);
@@ -342,7 +339,7 @@ public class SASAgent extends CmAgent {
     private Boolean checkAgent() {
         List<String> params = new ArrayList();
         Boolean existsAgent = false;
-        params.add(this.agentName);
+        params.add(this.getAgentName());
         try {
             existsAgent = (Boolean) this.invoke("DatabaseManagerAgent", "checkAgent", true, params);
         } catch (CleverException ex) {
@@ -355,7 +352,7 @@ public class SASAgent extends CmAgent {
     private Boolean checkAgentNode(String location) {
         List<String> params = new ArrayList();
         Boolean existsNode = false;
-        params.add(this.agentName);
+        params.add(this.getAgentName());
         params.add(location);
         try {
             existsNode = (Boolean) this.invoke("DatabaseManagerAgent", "checkAgentNode", true, params);
@@ -367,7 +364,7 @@ public class SASAgent extends CmAgent {
 
     private void insertNode(String node, String where, String location) {
         List<String> params = new ArrayList();
-        params.add(this.agentName);
+        params.add(this.getAgentName());
         params.add(node);
         params.add(where);
         params.add(location);
@@ -382,7 +379,7 @@ public class SASAgent extends CmAgent {
 
     private void deleteNode(String location) throws CleverException {
         List<String> params = new ArrayList();
-        params.add(this.agentName);
+        params.add(this.getAgentName());
         params.add(location);
         try {
             this.invoke("DatabaseManagerAgent", "deleteNode", true, params);
@@ -394,7 +391,7 @@ public class SASAgent extends CmAgent {
     
     private void replaceNode(String location, String node) throws CleverException {
         List<String> params = new ArrayList();
-        params.add(this.agentName);
+        params.add(this.getAgentName());
         params.add(location);
         params.add(node);
         try {
@@ -415,7 +412,7 @@ public class SASAgent extends CmAgent {
         Boolean existsAdv = false;
         if (!checkAgent()) {
             //insert agent
-            params.add(agentName);
+            params.add(this.getAgentName());
             try {
                 this.invoke("DatabaseManagerAgent", "addAgent", true, params);
             } catch (CleverException ex) {
@@ -447,7 +444,7 @@ public class SASAgent extends CmAgent {
 
         //get agent db prefix
         params = new ArrayList();
-        params.add(agentName);
+        params.add(this.getAgentName());
         try {
             this.agentPrefix = (String) this.invoke("DatabaseManagerAgent", "getAgentPrefix", true, params);
         } catch (CleverException ex) {
@@ -638,8 +635,9 @@ public class SASAgent extends CmAgent {
         return send;
     }
 
-    protected void deliverPublish(MucSensorAlertMessage message) {
-
+    protected void deliverPublish(CleverMessage cmessage) {
+        
+        MucSensorAlertMessage message=(MucSensorAlertMessage)cmessage;
         SensorAlertMessage sensorAlertMessage = message.getSensorAlertMessage();
         PublishDeliveryEntry publishDeliveryEntry = message.getPublishDeliveryEntry();
         Document alertMessageStructureDocument = this.stringToDom(sensorAlertMessage.getAlertMessageStructure());
@@ -899,7 +897,7 @@ public class SASAgent extends CmAgent {
                         //join the room
                         try {
                             List<String> joinParameters = new ArrayList();
-                            joinParameters.add(agentName);
+                            joinParameters.add(this.getAgentName());
                             joinParameters.add(publishDeliveryEntry.mucName);
                             joinParameters.add(publishDeliveryEntry.mucPassword);
                             this.invoke("DispatcherAgent", "joinAgentRoom", true, joinParameters);
@@ -971,7 +969,7 @@ public class SASAgent extends CmAgent {
         if (soiList.size() > 0) {
             //assign the muc
             List<String> joinParameters = new ArrayList();
-            joinParameters.add(agentName);
+            joinParameters.add(this.getAgentName());
             String mucPassword = Support.generatePassword(7);
             joinParameters.add(mucPassword);
             String mucName = "";
@@ -1389,8 +1387,28 @@ public class SASAgent extends CmAgent {
 
     @Override
     public void initialization() throws Exception {
-        
-        
+        try {
+            super.setAgentName("SASAgent");
+            super.start();
+            //agentName="SASAgent";
+            
+            logger = Logger.getLogger(this.getAgentName());
+            logger.info("SASAgent CM !!!!");
+            //mc.setMethodInvokerHandler(this);
+
+            spf = SAXParserFactory.newInstance();
+            sp = spf.newSAXParser();
+            xr = sp.getXMLReader();
+
+            init();
+            initCleverResouces();
+            this.threadMessageDispatcher = new ThreadMessageDispatcher(this, 100, 10); //TODO: retrieve parameters from configuration file
+            this.threadMessageDispatcher.start();
+        } catch (ParserConfigurationException ex) {
+            throw new CleverException(ex, "Parser Configuration Exception: " + ex);
+        } catch (SAXException ex) {
+            throw new CleverException(ex, "SAX Exception: " + ex);
+        }
     }
 
     @Override

@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  * The MIT License
  *
  * Copyright 2011 Alessio Di Pietro.
@@ -27,6 +41,7 @@ package org.clever.ClusterManager.Brain;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 //import java.util.logging.Level;
@@ -44,7 +59,7 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.Format.TextMode;
 import org.jdom.output.XMLOutputter;
-import org.clever.ClusterManager.Dispatcher.DispatcherPlugin;
+import org.clever.ClusterManager.Dispatcher.CLusterManagerDispatcherPlugin;
 /**
  *
  * @author alessiodipietro
@@ -54,9 +69,9 @@ public class SensorBrain implements BrainInterface {
    
     Logger logger;
     DispatcherAgent dispatcherAgent;
-    DispatcherPlugin dispatcherPlugin;
+    CLusterManagerDispatcherPlugin dispatcherPlugin;
     
-    public SensorBrain(DispatcherPlugin dispatcherPlugin) {
+    public SensorBrain(CLusterManagerDispatcherPlugin dispatcherPlugin) {
         logger = Logger.getLogger("SensorBrain");
         this.dispatcherPlugin = dispatcherPlugin;
     }
@@ -112,7 +127,10 @@ public class SensorBrain implements BrainInterface {
             Element xmlNotification = new Element("notification");
             xmlNotification.setAttribute("id", notification.getId());
             xmlNotification.setAttribute("timestamp", new Date().toString());
-
+            xmlNotification.addContent(new Element("type").addContent(notification.getType()));
+            Calendar calendar = Calendar.getInstance();
+            calendar.getTimeInMillis();
+            xmlNotification.addContent(new Element("date").addContent(new Long(calendar.getTimeInMillis()).toString()));
             //StringReader stringReader = new StringReader((String) notification.getBody());
             StringReader stringReader = new StringReader(MessageFormatter.messageFromObject(notification.getBody()));
             SAXBuilder builder = new SAXBuilder();

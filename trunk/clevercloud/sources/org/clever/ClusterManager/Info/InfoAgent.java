@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  Copyright (c) 2011 Marco Sturiale
  *  Copyright (c) 2011 Alessio Di Pietro
  *  Copyright (c) 2012 Marco Carbone
@@ -32,9 +46,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
@@ -55,7 +67,6 @@ public class InfoAgent extends CmAgent
     
     public InfoAgent( ConnectionXMPP connectionXMPP ) throws CleverException
     {   super();
-        logger = Logger.getLogger( "InfoAgent" );
         this.connectionXMPP= connectionXMPP;
     }
     
@@ -114,6 +125,7 @@ public class InfoAgent extends CmAgent
     * @return a list of HostEntityInfo object (VM probes)
     */      
     public List listProbe(){
+        logger.debug("listProbe is called!");
         Collection <Occupant>  list_HC=connectionXMPP.getProbesInRoom(ConnectionXMPP.ROOM.CLEVER_MAIN);
         Occupant occupant = null;
         ArrayList l2 = new ArrayList();

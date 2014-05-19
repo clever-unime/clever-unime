@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  * The MIT License
  *
  * Copyright 2012 Marco Carbone
@@ -51,18 +65,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
      
      private final String cfgPath_CM = "./cfg/configuration_clustercoordinator.xml";
      
-     //block realized to move all configuration file in cfg folder
-     private final String cfgPath_Storage= "./cfg/configuration_StorageManager.xml";
-     private final String cfgPath_DbManager= "./cfg/configuration_dbManagerPlugin.xml";
-     private final String cfgPath_Dispatcher= "./cfg/configuration_dispatcher.xml";
-     private final String cfgPath_VirtManager= "./cfg/configuration_VirtualizationManager.xml";
-     private final String cfgPath_ModulFactory= "./cfg/configuration_module_factory.xml";
-     private final String cfgPath_Communicator= "./cfg/configuration_communicator.xml";
-     private final String cfgPath_Hypervisor= "./cfg/configuration_hypervisor.xml";
-     private final String cfgPath_ImageManager= "./cfg/configuration_ImageManager.xml";
-     private final String cfgPath_NetworkManager= "./cfg/configuration_networkManager.xml";
-     private final String cfgPath_Monitor= "./cfg/configuration_monitor.xml";
-     private final String cfgPath_ServiceManager= "./cfg/configuration_ServiceManager.xml";
+    
      
      private ConnectionXMPP conn; 
      
@@ -133,7 +136,9 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
      }
   
      public void init() //funzione di inizializzazione
-     {   String cfgpath= System.getProperty("user.dir")+"/cfg";
+     {   logger.debug("init");
+         String cfgpath= System.getProperty("user.dir")+"/cfg";
+         logger.debug("init1");
          File fl=new File(cfgpath);
          if(!fl.exists())
              fl.mkdir();
@@ -166,7 +171,8 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
          
          try //ad ogni modo adesso il file di configurazione dovrebbe essere pronto            
          {                
-             FileStreamer fs = new FileStreamer();        	
+             FileStreamer fs = new FileStreamer();  
+logger.debug("init2");             
              pXML = new ParserXML( fs.xmlToString( inxml ) );            
          }            
          catch( IOException ex )            
@@ -189,6 +195,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
          if(!fl2.exists())
              fl2.mkdir();
          
+/*<<<<<<< HEAD
          //IF THIS IS THE FIRST START OF CLEVER WE MAKE THE CONFIG FILE IN CFG FOLDER 
          cfgFile = new File( cfgPath_Hypervisor ); //apro il riferimento al file
          if( !cfgFile.exists() ) //se il file di configurazione non esiste: siamo alla prima esecuzione dell'initiator!                          
@@ -356,21 +363,25 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
                  System.exit( 1 );            	
              }            
          }
+=======
+         
+>>>>>>> api*/
      }
 	
      public void connectionManagement()//questa funzione gestisce la connessione con il server XMPP	
      {               
-         try //provo a creare un oggetto ConnectionXMPP con il quale gestirò la connessione als erver XMPP e l'accesso alla stanza!                
-         {                   
-             conn = new ConnectionXMPP();               
+                         
+         conn = new ConnectionXMPP();               
+                      
+         try
+         {
+            conn.connect(server, port);//effettuo una connessione al serverXMPP               
          }               
          catch(CleverException Cexec)               
          {                   
              Cexec.printStackTrace();               
-         }               
-               
-         conn.connect(server, port);//effettuo una connessione al serverXMPP               
-               
+         }
+         
          if( username.isEmpty() || password.isEmpty() )               
          {   
              username = nickname = conn.getHostName(); //genero il nickname e la username con il quale l'initiator si collega al server XMPP                   
@@ -393,7 +404,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
      } 
      
      
-     public boolean VerificaNecessitaCM(ConnectionXMPP connect)	//torna true se il numero di CM in clever Main è < della soglia!
+     private boolean VerificaNecessitaCM(ConnectionXMPP connect)	//torna true se il numero di CM in clever Main è < della soglia!
      {        
          int tmp = connect.getNum_CCsInRoom(ROOM.CLEVER_MAIN); //questa nuova funzione di connection XMPP l'ho fatta io!
          

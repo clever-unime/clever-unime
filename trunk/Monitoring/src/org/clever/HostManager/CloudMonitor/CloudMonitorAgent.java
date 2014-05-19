@@ -32,10 +32,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
-import static org.clever.Common.Communicator.Agent.logger;
+
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
@@ -53,11 +52,10 @@ public class CloudMonitorAgent extends Agent{
     
     
     
-    public CloudMonitorAgent()  {
-        
+    public CloudMonitorAgent() throws CleverException {
         super();
-
-        logger=Logger.getLogger("CloudMonitorAgent");  
+        
+        Logger logger=Logger.getLogger("CloudMonitorAgent");  
         
         flag_monitor = true;
         

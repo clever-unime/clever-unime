@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  * The MIT License
  *
  * Copyright 2011 Alessio Di Pietro.
@@ -85,10 +99,14 @@ class NotificationThread extends Thread implements PacketListener
         String target = null;
         while (true) {
             //no messages
+            logger.info("Start NotificationThread run!1");
             if (queue.isEmpty()) {
                 try {
+                    logger.info("Start NotificationThread run!2");
                     queueNotEmpty = false;
+                    logger.info("Start NotificationThread run!3");
                     while (!queueNotEmpty) {
+                        logger.info("Start NotificationThread run!4");
                         this.wait();
                     }
                 } catch (InterruptedException ex) {
@@ -96,7 +114,7 @@ class NotificationThread extends Thread implements PacketListener
                 }
             }
             target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
-            logger.debug("dispatcherHM"+target);
+            logger.debug("dispatcherHM  "+target);
             //no active cc
             if (target == null) {
                 try {
@@ -106,13 +124,14 @@ class NotificationThread extends Thread implements PacketListener
                         this.processPacket(null);
                     }
                     target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
-                    logger.debug("dispatcherHM"+target);
+                    logger.debug("dispatcherHM  "+target);
                 } catch (InterruptedException ex) {
                     logger.error("InterruptedException: "+ex);
                 }
             }
             CleverMessage msg = queue.poll();
             msg.setDst(target);
+            logger.debug("Send notification:"+msg.getNotificationFromMessage());
             connectionXMPP.sendMessage(target, msg);
 
         }
@@ -131,39 +150,42 @@ class NotificationThread extends Thread implements PacketListener
 
 public class DispatcherAgent extends Agent 
 {    
-    private Class cl = null;
+    //private Class cl = null;
     private ConnectionXMPP connectionXMPP = null;
     private NotificationThread notificationThread;
     private int notificationsThreshold;    
    
 
-    public DispatcherAgent(ConnectionXMPP connectionXMPP, int notificationsThreshold)
+    public DispatcherAgent(ConnectionXMPP connectionXMPP, int notificationsThreshold) throws CleverException
     {   super();
-        logger = Logger.getLogger("DispatcherAgentHM");
+        
         this.connectionXMPP = connectionXMPP;
         this.notificationsThreshold = notificationsThreshold;
     }
-    public DispatcherAgent(){
+    public DispatcherAgent() throws CleverException{
         super();
-        logger=Logger.getLogger("DispatcherAgentHM");
+       
     }
     
      @Override
-    public void initialization() throws CleverException
-    {
-    super.setAgentName("DispatcherAgent");    
-        super.start();
 
-        notificationThread = new NotificationThread(connectionXMPP, notificationsThreshold);
-        notificationThread.start();    
+public void initialization() throws CleverException
+{
+    super.setAgentName("DispatcherAgentHm");    
+    super.start();
+    
+    notificationThread = new NotificationThread(connectionXMPP, notificationsThreshold);
+    notificationThread.start();    
+    
+    String hostid=this.connectionXMPP.getHostName();
+    Notification notification=new Notification();
+    notification.setId("PRESENCE");
+    notification.setType("HM");
+    logger.debug("?=)** hostId= "+hostid+" "+notification.getType());
+    notification.setHostId(hostid);
+    this.sendNotification(notification);
+}
 
-        String hostid=this.connectionXMPP.getHostName();
-        Notification notification=new Notification();
-        notification.setId("PRESENCE/HM");
-        logger.debug("hostId= "+hostid);
-        notification.setHostId(hostid);
-        this.sendNotification(notification);
-    }
 
     @Override
     public void sendNotification(Notification notification) {
@@ -174,7 +196,7 @@ public class DispatcherAgent extends Agent
         CleverMessage cleverMsg = new CleverMessage();
         List attachments=new ArrayList();
         attachments.add(notification.getBody());
-        cleverMsg.fillMessageFields(CleverMessage.MessageType.NOTIFY, this.connectionXMPP.getUsername(), attachments, new NotificationOperation(connectionXMPP.getUsername(), notification.getAgentId(), notification.getId()));
+        cleverMsg.fillMessageFields(CleverMessage.MessageType.NOTIFY, this.connectionXMPP.getUsername(), attachments, new NotificationOperation(connectionXMPP.getUsername(), notification.getAgentId(), notification.getId(),notification.getType()));
         
         
         
@@ -198,7 +220,7 @@ public class DispatcherAgent extends Agent
 
     @Override
     public Object getPlugin() {
-        return this;
+        return this.pluginInstantiation;
     }
 
     /**
@@ -223,15 +245,18 @@ public class DispatcherAgent extends Agent
     public void sendMeasure(String measure) {
          
         CleverMessage cleverMsg = new CleverMessage();
-
-        cleverMsg.setDst(this.connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN));
+        String cc=this.connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
+        logger.debug("clustercoordinator for sendMeasure is "+cc);
+        cleverMsg.setDst(cc);
         cleverMsg.setSrc(this.connectionXMPP.getUsername());
         cleverMsg.setHasReply(false);
+        cleverMsg.setTypeSrc("Physical");
         cleverMsg.setType( CleverMessage.MessageType.MEASURE );
-
+        
         cleverMsg.setBody(
                             "    <measure useAttachementId=\"true\">\n" +
                             "      <HM>"+this.connectionXMPP.getUsername()+"</HM>\n" +
+                            "      <type>PhisicHost</type>\n"+
                             "      <agentId>CloudMonitorAgent</agentId>\n" +
                             "      <measureId></measureId>\n" +
                             "      <timestamp></timestamp>\n" +
@@ -240,11 +265,11 @@ public class DispatcherAgent extends Agent
 
         cleverMsg.addAttachment( measure );
 
-        //logger.debug("ZZZ " + cleverMsg.getDst() +" "+cleverMsg.getSrc()+"\n");
+        logger.debug("ZZZ " + cleverMsg.getDst() +" "+cleverMsg.getSrc()+"\n");
 
         //cleverMsg.setReplyToMsg(message.getId());
-
-        connectionXMPP.sendMessage(connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN), cleverMsg);
+        notificationThread.sendCleverMsg(cleverMsg);
+        //connectionXMPP.sendMessage(connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN), cleverMsg);
                 
 
     }

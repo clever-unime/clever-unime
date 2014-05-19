@@ -1,4 +1,18 @@
- /*
+/*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  Copyright (c) 2010 Antonio Nastasi
  *  Copyright (c) 2011 Marco Sturiale
  *  Copyright (c) 2012 Marco Carbone
@@ -26,15 +40,15 @@
  */
 package org.clever.ClusterManager.Dispatcher;
 
-import java.io.InputStream;
+//import org.clever.Common.XMLTools.FileStreamer;
+//import org.clever.Common.XMLTools.ParserXML;
+//import java.io.InputStream;
 import org.apache.log4j.Logger;
 import org.clever.ClusterManager.Brain.BrainInterface;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Communicator.ThreadMessageDispatcher;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.XMLTools.FileStreamer;
-import org.clever.Common.XMLTools.ParserXML;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.CleverMessageHandler;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
@@ -43,20 +57,19 @@ import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 
 public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
 {
-    private DispatcherPlugin dispatcherPlugin = null;
-    private Class cl = null;
+    private CLusterManagerDispatcherPlugin dispatcherPlugin = null;
+    //private Class cl = null;
     private BrainInterface brainInterface;
     private ThreadMessageDispatcher threadMessageDispatcher;
-    private ConnectionXMPP connectionXMPP = null;
+    public ConnectionXMPP connectionXMPP = null;
     
-    public DispatcherAgent( ConnectionXMPP connectionXMPP ) 
-    {   super();
-        logger = Logger.getLogger("DispatcherAgent");
+    public DispatcherAgent( ConnectionXMPP connectionXMPP ) throws CleverException 
+    {   
+        super();
         this.connectionXMPP = connectionXMPP;   
     }
-    public DispatcherAgent(){
+    public DispatcherAgent() throws CleverException{
         super();
-        logger= Logger.getLogger("DispatcherAgent");
     }
     
     @Override
@@ -67,17 +80,12 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
         
         try
         {
-            InputStream inxml = getClass().getResourceAsStream( "/org/clever/ClusterManager/Dispatcher/configuration_dispatcher.xml" );
-            FileStreamer fs = new FileStreamer();
-            ParserXML pars = new ParserXML( fs.xmlToString( inxml ) );
-            cl = Class.forName( pars.getElementContent( "Dispatcher" ) );
-            dispatcherPlugin = ( DispatcherPlugin ) cl.newInstance();
-            dispatcherPlugin.setConnectionXMMP( this.connectionXMPP );
-            dispatcherPlugin.init( null,this );
-            logger.info( "Dispatcher created" );
-            //agentName=pars.getElementContent( "moduleName" );
-            dispatcherPlugin.setCommunicator( this.mc );
+            
+            dispatcherPlugin = ( CLusterManagerDispatcherPlugin )super.startPlugin("./cfg/configuration_dispatcher.xml","/org/clever/ClusterManager/Dispatcher/configuration_dispatcher.xml");
             dispatcherPlugin.setOwner(this);
+            dispatcherPlugin.setConnectionXMMP( this.connectionXMPP );
+            logger.info( "Dispatcher created" );
+            
             this.threadMessageDispatcher = new ThreadMessageDispatcher(dispatcherPlugin,2000, 20); //TODO: retrieve parameters from configuration file
             this.threadMessageDispatcher.start();
         }
@@ -85,24 +93,9 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
         {
             throw new CleverException( e, "Missing logger.properties or configuration not found" );
         }
-        catch( java.io.IOException e )
-        {
-            throw new CleverException( e, "Error on reading logger.properties" );
-        }
-        catch( ClassNotFoundException e )
-        {
-            throw new CleverException( e, "Plugin Class not found" );
-        }
-        catch( InstantiationException e )
-        {
-            throw new CleverException( e, "Plugin Instantiation error" );
-        }
-        catch( IllegalAccessException e )
-        {
-            throw new CleverException( e, "Error Access" );
-        }
         catch( Exception e )
         {
+            logger.error("errore generico dispatcherAgent CC");
             throw new CleverException( e );
         }
     }
@@ -114,7 +107,7 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
     return cl;
   }
 
-  public DispatcherPlugin getDispatcherPlugin()
+  public CLusterManagerDispatcherPlugin getDispatcherPlugin()
   {
     return dispatcherPlugin;
   }
@@ -124,7 +117,7 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
   @Override
   public Object getPlugin()
   {
-    return dispatcherPlugin;
+    return this.pluginInstantiation;
   }
 
     @Override

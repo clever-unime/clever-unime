@@ -238,3 +238,103 @@ sassubscribe -f /media/dati/XML/subscribeRequest.xml
 statusprocvm -h giusimone -p java
 statusprocvm -h giusimone -p chrome
 createvm -tn UbuVirt -h giusimone -clonable
+HAM.acm()
+HAM.listSessionParams()
+listSessionParams()
+print(sf.getProperties());
+HAM.lhms();
+VMM.createvm("giusimone","test","UbuVirt","nodo2/HDDxHypvr/ubuntuVBOX.vdi")
+help
+?
+ham help
+HAM help
+help vmm.startVM_HOST
+help startVM_HOST
+help vmm
+exit
+vmm.createVM_HOST("giusimone","UbuVirt","EX")
+VMM.createvm("giusimone","UbuVirt","CR")
+VMM.getVMM()
+vmm.getVMM()
+a=vmm.createVM_HOST("giusimone","UbuVirt","EX")
+print(a)
+a=vmm.createVM_HOST("giusimone","UbuVirt","EX")
+a=vmm.createVM("giusimone","UbuVirt","EX")
+print(a)
+a=vmm.startVM("165c62d6109744e7b1746abb2eef6dd2")
+a=vmm.createVM("giusimone","UbuVirt","EX")
+print(a)
+a=vmm.createVM("giusimone","UbuVirt","EX")
+a=sma.Mount("nodo2","","wizard")
+print(a)
+ls nodo2
+a=sma.ls("nodo2")
+print(a)
+a=vmm.createVM("giusimone","UbuVirt","EX")
+vmm.registervm()
+vmm.registervm("default")
+a=vmm.createVM("giusimone","UbuVirt","EX")
+print(a)
+a=vmm.createVM("giusimone","UbuVirt","PR")
+print(a)
+a=vmm.startVM("f94244d57ef64cc4bebc7b4049d5349e")
+a=vmm.stopVM("f94244d57ef64cc4bebc7b4049d5349e",true)
+print(a)
+a=vmm.deleteVM("f94244d57ef64cc4bebc7b4049d5349e")
+print(a)
+mam.GetMeasureCpu("giusimone")
+mam.GetStorageStatus("giusimone")
+mam.GetMeasureCpu("giusimone")
+a=vmm.createVM("giusimone","UbuVirt","EX")
+mam.GetMeasureCpu("giusimone")
+mam.GetStorageStatus("giusimone")
+a=vmm.createVM("giusimone","UbuVirt","EX")
+mam.GetStorageStatus("giusimone")
+mam.GetMeasureCpu("giusimone")
+a=mam.GetMeasureCpu("giusimone")
+print(a)
+a=mam.GetStorageStatus("giusimone")
+print(a)
+a=mam.GetProcStatus("giusimone","java")
+print(a)
+exit
+a=mam.GetStorageStatus("giusimone")
+print(a)
+:help vmm.stopVM
+:help vmm stopVM
+:help vmm createvm
+:help vmm createVM
+:exit
+vmm.listVMs_HOST("giusimone")
+:exit
+a=ham.restartAgent("giusimone","SASAgent")
+print(a)
+a=ham.restartAgent("giusimone","SASAgentHm")
+print(a)
+a=ham.restartAgent("giusimone","SASAgentHm")
+print(a)
+a=seam.SOSGetObservation("/media/dati/XML/getObservationRequest.xml","giusimone")
+print(a)
+:help vmm.listVMs()
+:help vmm.listVMs
+a=vmm.listVMs("giusimone",true,false)
+print(a)
+a=vmm.listVMs("giusimone",true,false)
+print(a)
+a=vmm.listMAConVM("giusimone","ppppp")
+:exit
+a=vmm.listMAConVM("giusimone","ppppp")
+a=vmm.ListMAConVM("giusimone","ppppp")
+print(a)
+a=vmm.ListMAConVM("giusimone","ppppp")
+print(a)
+a=mam.GetMeasureCpu("giusimone")
+print(a)
+a=mam.GetStorageStatus("giusimone")
+print(a)
+print(vmm.ListProbe())
+a=vmm.ListProbe()
+print(a)
+a=vmm.ListProbe()
+print(a)
+a=vmm.attachDevice("giusimone","cd9fa7d457bd4ee0b94a986a98bfb5ef","/home/giusimone/VirtualBox VMs/Fedora-17-x86.vdi")

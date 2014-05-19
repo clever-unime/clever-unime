@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  The MIT License
  * 
  *  Copyright 2011 brady.
@@ -27,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
+import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 import org.jdom.Element;
@@ -38,11 +53,11 @@ import org.jdom.Element;
 public class ServiceManagerAgent extends Agent {
 
     private ServiceManagerPlugin service_manager;
-    private Class cl;
+    //private Class cl;
 
-    public ServiceManagerAgent() {
+    public ServiceManagerAgent() throws CleverException {
         super();
-        logger = Logger.getLogger("ServiceManager");
+       
     }
 
     @Override
@@ -52,36 +67,16 @@ public class ServiceManagerAgent extends Agent {
 
     @Override
     public Object getPlugin() {
-        return this.service_manager;
+        return this.pluginInstantiation;
     }
 
     @Override
     public void initialization() throws Exception {
-        //TODO: implement initialization
-         FileStreamer fs = new FileStreamer();
+          
        try {
-            InputStream inxml = getClass().getResourceAsStream("/org/clever/HostManager/ServiceManager/configuration_ServiceManager.xml");
-            ParserXML pXML = new ParserXML(fs.xmlToString(inxml));
-            cl = Class.forName(pXML.getElementContent("ServiceManager"));
-            service_manager = (ServiceManagerPlugin) cl.newInstance();
-            service_manager.setOwner(this);
-            Element pp = pXML.getRootElement().getChild("pluginParams");
-            if (pp != null) {
-                service_manager.init(pp, this);
-            } else {
-                service_manager.init(null, this);
-            }
-
-            logger.debug("called init of " + pXML.getElementContent("ServiceManager"));
-            logger.info("ServiceManagerAgent created ");
-        } catch (ClassNotFoundException ex) {
-            logger.error("Error: " + ex);
-        } catch (IOException ex) {
-            logger.error("Error: " + ex);
-        } catch (InstantiationException ex) {
-            logger.error("Error: " + ex);
-        } catch (IllegalAccessException ex) {
-            logger.error("Error: " + ex);
+           service_manager = (ServiceManagerPlugin) super.startPlugin("./cfg/configuration_ServiceManager.xml","/org/clever/HostManager/ServiceManager/configuration_ServiceManager.xml");
+           service_manager.setOwner(this);
+           logger.info("ServiceManagerAgent created ");
         } catch (Exception ex) {
             logger.error("ServiceManagerPlugin creation failed: " + ex);
         }

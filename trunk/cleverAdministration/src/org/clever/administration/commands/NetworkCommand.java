@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.HostManager.NetworkManager.AdapterInfo;
+//import org.clever.HostManager.NetworkManager.AdapterInfo;
 import org.clever.administration.ClusterManagerAdministrationTools;
 
 
@@ -56,7 +56,7 @@ public class NetworkCommand extends CleverCommand
       ArrayList params = new ArrayList();
       params.add( commandLine.getOptionValue( "I" ) );
       String target = commandLine.getOptionValue( "h" );
-      System.out.println((AdapterInfo)ClusterManagerAdministrationTools.instance().execSyncAdminCommand( this, target, "NetworkManagerAgent", "getAdapterInfo", params, commandLine.hasOption( "xml" ) ));
+     System.out.println(ClusterManagerAdministrationTools.instance().execSyncAdminCommand( this, target, "NetworkManagerAgent", "getAdapterInfo", params, commandLine.hasOption( "xml" ) ).toString());
     }
     catch( CleverException ex )
     {

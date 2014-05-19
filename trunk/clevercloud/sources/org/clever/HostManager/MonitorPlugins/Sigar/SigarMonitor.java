@@ -1,4 +1,32 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  *  Copyright (c) 2010 Filippo Bua
  *  Copyright (c) 2010 Maurizio Paone
  *  Copyright (c) 2010 Francesco Tusa
@@ -34,9 +62,11 @@ import org.clever.HostManager.Monitor.MonitorPlugin;
 import java.util.List;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.ModuleCommunicator;
+import org.clever.Common.Exceptions.CleverException;
 import org.clever.HostManager.Monitor.MemoryInfo;
 import org.clever.HostManager.Monitor.OSInfo;
 import org.clever.HostManager.Monitor.ResourceState;
+import org.jdom.Element;
 
 
 public class SigarMonitor implements MonitorPlugin{
@@ -47,9 +77,12 @@ public class SigarMonitor implements MonitorPlugin{
 
 
     //public void init() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-    public void init() {
+    @Override
+    public void init(Element params, Agent owner) throws CleverException {
+        this.owner=owner;
         HwMonitorFactory HwMonitorFactory = new HwMonitorFactory();
         this.setHwMonitor(HwMonitorFactory.getHwMonitor());
+        
     }
 
     private void setHwMonitor(HWMonitor hwMonitor) {
@@ -150,6 +183,8 @@ public class SigarMonitor implements MonitorPlugin{
     public void setOwner(Agent owner) {
         this.owner=owner;
     }
-
+    public void shutdownPluginInstance(){
+        
+    }
 
 }

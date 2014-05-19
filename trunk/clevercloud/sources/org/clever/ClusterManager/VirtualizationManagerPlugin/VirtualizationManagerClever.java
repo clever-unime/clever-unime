@@ -1,4 +1,18 @@
 /*
+ * Copyright [2014] [Università di Messina]
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
+/*
  * The MIT License
  *
  * Copyright 2011 giovalenti.
@@ -27,6 +41,7 @@ package org.clever.ClusterManager.VirtualizationManagerPlugin;
 import java.io.StreamTokenizer;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -49,7 +64,7 @@ import org.jdom.Element;
 
 
 public class VirtualizationManagerClever implements VirtualizationManagerPlugin {
-    private ModuleCommunicator mc;
+//    private ModuleCommunicator mc;
     private Agent owner;
     private String version = "0.0.1";
     private String description = "Plugin per HTML5 remote desktop";
@@ -80,18 +95,33 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
     @Override
     public void init(Element params, Agent owner) throws CleverException {
         if(params!=null){
-            //Read param from configuration_networkManager.xml
             this.HostManagerServiceGuacaTarget = params.getChildText("HostManagerServiceGuacaTarget");
         }
+        
         //this.owner = owner;
-        //If the data struct, for matching between VM and HM, isen't into DB then init it.
-       if(!this.checkMatchingVmHMNode())
-            this.initVmHMNodeDB();
-         if(!this.checkVmRunningNode())
-            this.initVmRunningDB();
-       if(!this.checkVEDVMNode())
-            this.initVEDVMDB(); 
+        while(!this.owner.isPluginState())
+        {
+            //If the data struct, for matching between VM and HM, isen't into DB then init it.
+            this.owner.setPluginState(true);
+            try {
+            //If the data struct, for matching between VM and HM, isen't into DB then init it.
+                if (!this.checkMatchingVmHMNode()) {
+                    this.initVmHMNodeDB();
+                }
+                if (!this.checkVmRunningNode()) {
+                    this.initVmRunningDB();
+                }
+                if(!this.checkVEDVMNode()){
+                    this.initVEDVMDB();
+                }
+                this.owner.setPluginState(true);
+                }
+            catch (Exception e) {
+                logger.error(e.getMessage(),e);
+                this.owner.setPluginState(false);
 
+            }
+        }
     }
     private boolean checkVEDVMNode() throws CleverException{
        List params = new ArrayList();
@@ -101,7 +131,8 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
     }
     
     private boolean checkVmRunningNode() throws CleverException{
-       List params = new ArrayList();
+         
+        List params = new ArrayList();
         params.add("VirtualizationManagerAgent");
         params.add("/"+this.nodoVmRunning); //XPath location with eventual predicate
         return (Boolean)this.owner.invoke("DatabaseManagerAgent", "checkAgentNode", true, params); 
@@ -111,7 +142,12 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         List params = new ArrayList();
         params.add("VirtualizationManagerAgent");
         params.add("/"+this.nodoMatchingVmHM); //XPath location with eventual predicate
-        return (Boolean)this.owner.invoke("DatabaseManagerAgent", "checkAgentNode", true, params);
+        try{
+            return (Boolean)this.owner.invoke("DatabaseManagerAgent", "checkAgentNode", true, params);
+        }catch(Exception e){
+            logger.error(e.getMessage());
+            return false;
+        }
     }
     
     private void initVEDVMDB() throws CleverException{
@@ -132,7 +168,7 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         params.add("into");
         params.add(""); //XPath location with eventual predicate
         this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
-         
+        
      }
     private void initVmHMNodeDB() throws CleverException{
         String node="<"+this.nodoMatchingVmHM+"/>";
@@ -142,6 +178,8 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         params.add("into");
         params.add(""); //XPath location with eventual predicate
         this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
+        
+        
     }
 
     private void dispatchToExtern(String host_manager, String agent, String OS_service, ServiceObject serviceobject) throws Exception{
@@ -279,6 +317,23 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         params.add("");           
         this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
     }
+ 
+public HashMap createVM(String id,String targetHM,String lock) throws CleverException{
+     org.clever.Common.Communicator.Utils.IstantiationParams param=new org.clever.Common.Communicator.Utils.IstantiationParams(org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.EX);
+        if(lock.equals("PR"))
+            param=new org.clever.Common.Communicator.Utils.IstantiationParams(org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.PR);
+        else if(lock.equals("CR"))
+                param=new org.clever.Common.Communicator.Utils.IstantiationParams(org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.CR);
+            else if(lock.equals("CW"))
+                param=new org.clever.Common.Communicator.Utils.IstantiationParams(org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.CW);
+                else if(lock.equals("PW"))
+                    param=new org.clever.Common.Communicator.Utils.IstantiationParams(org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.PW);
+                    else if(lock.equals("NL"))
+                        param=new org.clever.Common.Communicator.Utils.IstantiationParams(org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.NL);
+                        else if(lock.equals("EX"))
+                            param=new org.clever.Common.Communicator.Utils.IstantiationParams(org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.EX);
+        return this.createVM(id, targetHM, param);
+}
 
 /**
   * Creation and/or registration of a virtual machine
@@ -289,9 +344,9 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
   * @throws CleverException
   */
     @Override
-    public String createVM(String id,String targetHM,org.clever.Common.Communicator.Utils.IstantiationParams param) throws CleverException{
-        boolean result=false; 
-        String vmname=java.util.UUID.randomUUID().toString();
+    public HashMap createVM(String id,String targetHM,org.clever.Common.Communicator.Utils.IstantiationParams param) throws CleverException{
+        boolean result=false;
+       String vmname=java.util.UUID.randomUUID().toString();
          vmname=vmname.replace("-", "");//this replacement is necessary because if we don't eliminate the "-" the VirtuaslBox "findmachine" function don't work finely 
          if((param.getLock().equals(LockFile.lockMode.PR))&&((CmAgent)this.owner).remoteInvocation(targetHM,"HyperVisorAgent", "getHYPVRName", true, new ArrayList()).equals("LibVirt")){
              this.TakeEasySnapshot(id, vmname, "Snapshot created by CLEVER for a clonable image.", targetHM);
@@ -361,9 +416,17 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
            a = (String) ((CmAgent) this.owner).remoteInvocation(targetHM,"TestAgentHm","fittizioHM", true, params2);
           */
          if(!result){
-             return "creating VM "+vmname+" failed!";
+             HashMap res=new HashMap();
+             res.put("result", new Boolean(false));
+             res.put("name", vmname);
+             return res;
          }
-         return "VM " +vmname+ " created!";
+         else{
+             HashMap res=new HashMap();
+             res.put("result", new Boolean(true));
+             res.put("name", vmname);
+             return res;
+         }
      }
 
     /**
@@ -386,7 +449,8 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
             throw new LogicalCatalogException("VM name not exist");
         
         // insert intoDB
-        String node="<VM name=\""+id+"\" request=\""+new Date().toString()+"\" started=\"\">"+HMTarget+"</VM>";
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        String node="<VM name=\""+id+"\" request=\""+new Date().toString()+"\" started=\"\">"+HMTarget+"<date>"+new Long(calendar.getTimeInMillis()).toString()+"</date></VM>";
         params = new ArrayList();
         params.add("VirtualizationManagerAgent");
         params.add(node);
@@ -450,15 +514,7 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         return this.description;
     }
 
-    @Override
-    public void setModuleCommunicator(ModuleCommunicator mc) {
-        this.mc = mc;
-    }
-
-    @Override
-    public ModuleCommunicator getModuleCommunicator() {
-        return this.mc;
-    }
+    
 
     @Override
     public void setOwner(Agent owner) {
@@ -790,7 +846,7 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
      return true;
  }
  
-public boolean attackInterface(String id,String inf,String mac,String type) throws CleverException{
+public boolean attachInterface(String id,String inf,String mac,String type) throws CleverException{
   List params = new ArrayList();
         params.add("VirtualizationManagerAgent");
         String location="/Matching_VM_HM/VM[@name='"+id+"']/host/text()";
@@ -803,7 +859,7 @@ public boolean attackInterface(String id,String inf,String mac,String type) thro
         params.add(inf);
         params.add(mac);
         params.add(type);
-        ((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","attackInterface", true, params); 
+        ((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","attachInterface", true, params); 
         boolean result=insertNetInterfaceIntoDb(id,inf,mac,type);
         return result;
  }
@@ -1003,6 +1059,10 @@ public String listMac_address(String id) throws CleverException{
     this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
     }
     
+     
+    public void shutdownPluginInstance(){
+        
+    }
 }
 
  

@@ -5,5 +5,6 @@
         <group/>
         <group name="integration"/>
         <group name="test"/>
+        <group name="MergeDevelopAPI"/>
     </open-files>
 </project-private>
