@@ -1415,4 +1415,36 @@ public class DbSedna implements DatabaseManagerPlugin {
         
 
     }
+    
+    synchronized public List querytemplate() throws CleverException {
+        ArrayList result = new ArrayList<XMLResource>();
+        
+        Collection collect = null;
+        try {
+            collect = this.connect();
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet= serviceXQuery.queryResource(document, xpath + "/cm/agent/org.clever.Common.VEInfo.VEDescription");
+            ResourceIterator results = resultSet.getIterator();
+            logger.debug("Executing query xpath=" + this.xpath + "/cm/agent/org.clever.Common.VEInfo.VEDescription");
+            while (results.hasMoreResources()) {
+                XMLResource resource = (XMLResource) results.nextResource();
+                
+                result.add(resource.toString());
+                
+            }
+
+        } catch (XMLDBException ex) {
+            logger.error("Execute query failed: " + ex);
+            throw new CleverException("Error executing query: " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+            }
+        }
+        return result;
+    }
 }

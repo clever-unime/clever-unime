@@ -266,7 +266,32 @@ public class VMAdministrationModule extends AdministrationModule{
         
     }
     
-    
+    /**
+     * Return the list of VM probe connected
+     * @return
+     */
+    @ShellCommand
+    public String ListTemplate () throws CleverException
+    {
+        
+        
+        try{
+            List res=(List)this.execSyncCommand(this.session.getHostAdministrationModule().getActiveCM(),
+                    "DatabaseManagerAgent",
+                    "querytemplate",
+                    this.emptyParams,
+                    false);
+            Iterator ir=res.iterator();
+            String result="\n--------List Probe--------\n";
+            while(ir.hasNext())
+                result=result+(String)ir.next()+"\n";
+            result=result+"\n-------------------------------";
+            return result;
+        }catch(Exception e){
+            throw new CleverException(e);
+        }
+        
+    }
     /**
      * This Function attach a Network interface to Virtual Machine
      * @param VMName String, Name for Virtual Machine
