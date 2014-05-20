@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-        <ClassPlugin>org.clever.HostManager.MonitorPlugins.Sigar.SigarMonitor</ClassPlugin>
-	<writeOnCfgFolder>yes</writeOnCfgFolder>
-        <moduleName>MonitorAgent</moduleName>
+    <writeOnCfgFolder>yes</writeOnCfgFolder>
+        
+    <ClassPlugin>org.clever.HostManager.MonitorPlugins.Sigar.SigarMonitor</ClassPlugin>
+    <moduleName>MonitorAgent</moduleName>
 </configuration>

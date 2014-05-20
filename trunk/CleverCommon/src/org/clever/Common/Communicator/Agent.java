@@ -264,6 +264,7 @@ public abstract class Agent implements MethodInvokerHandler {
                         this.logger.error( "The copy of the file 'configuration_template.xml' is failed; " + ex  );                    
                         throw new CleverException("The copy of the file 'configuration_template.xml' is failed; " + ex.getMessage() );     	
                     }
+                    return pXML;
                 }
             }
             if(inxml==null){

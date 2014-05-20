@@ -9,7 +9,8 @@
 -->
 
 <configuration>
+    <writeOnCfgFolder>yes</writeOnCfgFolder>
+        
         <ClassPlugin>org.clever.HostManager.ServiceManagerPlugins.Linux.ServiceManagerLinux</ClassPlugin>
-	<writeOnCfgFolder>yes</writeOnCfgFolder>
-        <moduleName>ServiceManagerAgent</moduleName>
+	<moduleName>ServiceManagerAgent</moduleName>
 </configuration>

@@ -104,9 +104,9 @@ public class ParserXML
             document = (Document) builder.build( file );
             rootElement = document.getRootElement();
         } catch (JDOMException ex) {
-            logger.error( "Error while opening the file xml: " + ex );
+            logger.error( "Error while opening the file xml: " + ex,ex );
         } catch (IOException ex) {
-            logger.error( "Error while opening the file xml: " + ex );
+            logger.error( "Error while opening the file xml: " + ex,ex );
         }
   }
 
@@ -119,9 +119,9 @@ public class ParserXML
             rootElement = document.getRootElement();
             
         } catch (JDOMException ex) {
-            logger.error( "Error while opening the file xml: " + ex );
+            logger.error( "Error while opening the file xml: " + ex, ex );
         } catch (IOException ex) {
-            logger.error( "Error while opening the file xml: " + ex );
+            logger.error( "Error while opening the file xml: " + ex,ex );
         }
   }
   
@@ -139,11 +139,11 @@ public class ParserXML
     }
     catch ( JDOMException ex )
     {
-     logger.error( "Error while opening the file xml: " + ex );
+     logger.error( "Error while opening the file xml: " + ex,ex );
     }
     catch ( IOException ex )
     {
-     logger.error( "Error while opening the file xml: " + ex );
+     logger.error( "Error while opening the file xml: " + ex,ex );
     }
     
   }
