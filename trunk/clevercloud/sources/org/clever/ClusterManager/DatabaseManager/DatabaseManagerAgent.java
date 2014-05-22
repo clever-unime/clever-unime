@@ -113,6 +113,11 @@ public class DatabaseManagerAgent extends CmAgent
         return this.pluginInstantiation;
     }
     
+    
+    public boolean isCorrectedStarted(){
+        return this.isPluginState();
+    } 
+    
     @Override
     public void handleNotification(Notification notification) throws CleverException {
         if(notification.getId().equals("PRESENCE")){            
