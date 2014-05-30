@@ -13,11 +13,11 @@
 <test>
     <status>1</status>
     <dbParams>
-        <server>localhost</server>
+        <server>127.0.0.1</server>
         <driver>com.mysql.jdbc.Driver</driver>
         <name>observation</name>
         <username>root</username>
-        <password>mandrake</password>
+        <password>sigma</password>
     </dbParams>
 </test>
 

@@ -284,4 +284,44 @@ public class ParserXML
             logger.debug("text "+((Element)this.rootElement.getChildren().get(i)).getText());
         }
     }
+    
+    /**
+     * search recursuvely the element and returns the contents
+     * @param element name of element
+     * @return value of element, null if element don't exist
+     */
+    public String getElementContentInStructure( String element ){
+        
+        String value= rootElement.getChildText( element );
+        if(value==null){
+            value=this.searchElement(rootElement.getChildren(), element);
+     
+        }
+    
+        return value;
+  }
+    
+   
+   
+   private String searchElement(List<Element> listChildren,String elementName){
+        
+       Iterator iterElem;
+        String value=null;
+        Element tmp;
+                
+        if(!listChildren.isEmpty()){
+            iterElem=listChildren.iterator();
+            while(iterElem.hasNext()&&value==null){
+                tmp=((Element)iterElem.next());
+                value=tmp.getChildText(elementName);
+                if(value==null){
+                    value=searchElement(tmp.getChildren(),elementName);
+                    }
+                 }
+         }
+        
+         return value;
+        
+        
+    }
 }

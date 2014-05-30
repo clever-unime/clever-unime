@@ -75,6 +75,7 @@ import org.safehaus.uuid.UUIDGenerator;
 
 
 import org.clever.ClusterManager.Dispatcher.DispatcherAgent;
+import org.clever.Common.Utils.TypeOfElement;
 
 
 public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketListener {
@@ -324,13 +325,20 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
         
         List params1 = new ArrayList();
         params1.add(result);
-        
+      /*codice per sedna  
         try {
             owner.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
         } catch (CleverException ex) {
             logger.error("Send Measure to DatabaseManagerAgent failed: "+ ex);
         }
+        */
         
+        params1.add(TypeOfElement.STRINGXML);
+        try {
+            owner.invoke("BigDataAgent", "insertVMState", true, params1);
+        } catch (CleverException ex) {
+            logger.error("Send Measure to DatabaseManagerAgent failed: "+ ex);
+        }
         
     }
     
@@ -340,6 +348,7 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
 
 
     
+    @Override
     public void handleNotification(Notification notification) {
         //Send notification to corresponding agents using notificationId
         logger.debug("Start handle notification");

@@ -2,6 +2,7 @@ package org.clever.administration.api;
 
 import org.clever.administration.annotations.GetShellModule;
 import org.clever.administration.api.modules.AdministrationModule;
+import org.clever.administration.api.modules.BigDataModule;
 import org.clever.administration.api.modules.HostAdministrationModule;
 import org.clever.administration.api.modules.MonitoringAdministrationModule;
 import org.clever.administration.api.modules.StrorageAdministrationModule;
@@ -20,12 +21,14 @@ final public class Session {
     final StrorageAdministrationModule SMAdministrationModule;
     final MonitoringAdministrationModule monitoringAdministrationModule;
     final SensingAdministrationModule sensingAdministrationModule;
-    
+    final BigDataModule bigDataModule;
     final Settings settings;
 
     public Settings getSettings() {
         return settings;
     }
+    
+    
     
     //per ora faccio un meccanismo molto spartano non considerando il modulo passato
     public Session(Settings s)
@@ -37,6 +40,7 @@ final public class Session {
         SMAdministrationModule= new StrorageAdministrationModule(this);
         monitoringAdministrationModule = new MonitoringAdministrationModule(this);
         sensingAdministrationModule= new SensingAdministrationModule(this);
+        bigDataModule=new BigDataModule(this);
     }
     
     /**
@@ -61,6 +65,7 @@ final public class Session {
     public HostAdministrationModule getHostAdministrationModule() {
         return hostAdministrationModule;
     }
+    
     
     /**
      * Ritorna un VMAdministrationModule per gestire le VM
@@ -99,5 +104,14 @@ final public class Session {
     @GetShellModule(name="seam", comment="Low level module for Sensing Administration Module")
     public SensingAdministrationModule getSensingAdministrationModule() {
         return sensingAdministrationModule;
+    }
+    /**
+     * Ritorna un BIGAdministrationModule per gestire le entita' clever a livello di host
+     * per es.: getActiveCM, listHostManagers,ecc.
+     * @return 
+     */ 
+    @GetShellModule(name="bdm", comment="Low level module for clever host administration")
+    public BigDataModule getBIGAdministrationModule() {
+        return bigDataModule;
     }
 }

@@ -2,11 +2,11 @@
 <configuration>
  
  <!--<CleverClientCommandProviderClass>org.clever.administration.common.PerThreadCleverCommandClientProvider</CleverClientCommandProviderClass>-->
- <server>localhost</server>
+ <server>agalletta-PC</server>
  <port>5222</port>
- <username>peppe</username>
- <password>peppe</password>
- <nickname>peppe</nickname>
- <room>SHELL-vision@conference.localhost</room>
+ <username>agalletta</username>
+ <password>password</password>
+ <nickname>agalletta</nickname>
+ <room>SHELL-vision@conference.agalletta-PC</room>
  
 </configuration>

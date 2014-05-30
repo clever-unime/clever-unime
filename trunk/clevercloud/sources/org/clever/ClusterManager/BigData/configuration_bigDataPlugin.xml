@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <writeOnCfgFolder>yes</writeOnCfgFolder> 
+  <ClassPlugin>org.clever.ClusterManager.BigDataPlugin.Mongo.DBMongo</ClassPlugin>
+  <moduleName>BigDataAgent</moduleName>
+  <pluginParams>
+    <dbName>admin</dbName>
+    <user>SYSTEM</user>
+    <password>manager</password>
+    <serverUrl>localhost</serverUrl>
+    <port>27017</port>
+    <!-- <serverURL>ing-clever-master.me.trigrid.it</serverURL> -->  
+  </pluginParams>
+</root>

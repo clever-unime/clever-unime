@@ -46,6 +46,10 @@
       <class>org.clever.ClusterManager.WebAgent.WebAgent</class>
       <name />
     </agent>
+    <agent>
+      <class>org.clever.ClusterManager.BigData.BigDataAgent</class>
+     <name>BigDataAgent</name>
+    </agent>
   </agents>
   <brain>
     <class>org.clever.ClusterManager.Brain.SensorBrain</class>

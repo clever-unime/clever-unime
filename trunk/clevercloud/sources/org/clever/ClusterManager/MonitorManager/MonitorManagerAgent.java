@@ -42,31 +42,13 @@
 
 package org.clever.ClusterManager.MonitorManager;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import org.apache.log4j.Logger;
-import org.clever.Common.Communicator.Agent;
 //import static org.clever.Common.Communicator.Agent.logger;
 import org.clever.Common.Communicator.CmAgent;
-import org.clever.Common.Communicator.MethodInvoker;
-import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.Exceptions.LogicalCatalogException;
-import org.clever.Common.Initiator.ModuleFactory.ModuleFactory;
-import org.clever.Common.Shared.HostEntityInfo;
-import org.clever.Common.XMLTools.MessageFormatter;
-import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
-import org.jivesoftware.smackx.muc.Occupant;
-
-
-import org.clever.ClusterManager.MonitorManager.SendMeasureRequest;
-import org.clever.Common.Measure.*;
+import org.clever.Common.Utils.TypeOfElement;
 
 
 public class MonitorManagerAgent extends CmAgent
@@ -98,7 +80,8 @@ public class MonitorManagerAgent extends CmAgent
         
         super.start();
         
-        
+        /*
+        codice commentato da Antonio Galletta, utile solo se bisogna inserire in Sedna
         //check "measure" node into sedna db
         checkdb=(Boolean)this.invoke("DatabaseManagerAgent", "checkMeasure", true, params);
 
@@ -111,7 +94,7 @@ public class MonitorManagerAgent extends CmAgent
             logger.error("MonitorManagerAgent: Measure DB node exist!");
         
         
-
+        */
         
     }
     
@@ -197,9 +180,14 @@ public class MonitorManagerAgent extends CmAgent
         
         List params1 = new ArrayList();
         params1.add(result);
+       
 
+        /* metodo utilizzato per effettuare inserimenti in Sedna
         this.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
-
+        */
+         params1.add(TypeOfElement.STRINGXML);
+         this.invoke("BigDataAgent", "insertHostState", false, params);
+        
         
         return result;
     } 
