@@ -256,7 +256,6 @@ public class DBMongo implements BigDataPlugin {
    
        String docJSON=(String)elemToInsert;
        DBCollection collection;
-       //ParserXML parser=new ParserXML(docJSON);
        BasicDBObject obj=(BasicDBObject) JSON.parse(docJSON);
        String collName=null;
       

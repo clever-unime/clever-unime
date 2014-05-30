@@ -990,7 +990,9 @@ public class DbSedna implements DatabaseManagerPlugin {
             ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/cm/agent[@name='" + agentId + "']" + location);
             ResourceIterator results = resultSet.getIterator(); 
             existsAgentNode = results.hasMoreResources();
+
           logger.debug("query eseguita per "+agentId+" "+location);
+
 
         } catch (XMLDBException ex) {
             logger.error("Check Agent node failed: " + ex.getMessage());

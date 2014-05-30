@@ -105,32 +105,38 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
             this.owner.setPluginState(true);
             try {
             //If the data struct, for matching between VM and HM, isen't into DB then init it.
-               if (this.checkDBAgent()){
-                     if (!this.checkMatchingVmHMNode()) {
-                         this.initVmHMNodeDB();
-                     }
-                     if (!this.checkVmRunningNode()) {
-                         this.initVmRunningDB();
-                     }
-                     if(!this.checkVEDVMNode()){
-                         this.initVEDVMDB();
-                     }
-                     this.owner.setPluginState(true);
+
+               
+
+                if (this.checkDBAgent()){
+                    if (!this.checkMatchingVmHMNode()) {
+                        this.initVmHMNodeDB();
+                    }
+                    if (!this.checkVmRunningNode()) {
+                        this.initVmRunningDB();
+                    }
+                    if(!this.checkVEDVMNode()){
+                        this.initVEDVMDB();
+                    }
+                    this.owner.setPluginState(true);
                 }
-            }
-               catch (Exception e) {
+                }
+            catch (Exception e) {
+
                 logger.error(e.getMessage(),e);
                 this.owner.setPluginState(false);
 
             }
         }
     }
-     
-     private boolean checkDBAgent()throws CleverException{
-         List params = new ArrayList();
-         return (Boolean)this.owner.invoke("DatabaseManagerAgent", "isCorrectedStarted", true, params); 
-     
-     }
+
+    
+    private boolean checkDBAgent()throws CleverException{
+        List params = new ArrayList();
+        return (Boolean)this.owner.invoke("DatabaseManagerAgent", "isCorrectedStarted", true, params); 
+    
+    }
+
     private boolean checkVEDVMNode() throws CleverException{
        List params = new ArrayList();
         params.add("VirtualizationManagerAgent");
@@ -177,9 +183,10 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         params.add("into");
         params.add(""); //XPath location with eventual predicate
         this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
-             }
-  
-     private void initVmHMNodeDB() throws CleverException{
+
+     }
+     
+    private void initVmHMNodeDB() throws CleverException{
         String node="<"+this.nodoMatchingVmHM+"/>";
         List params = new ArrayList();
         params.add("VirtualizationManagerAgent");
