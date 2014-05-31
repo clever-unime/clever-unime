@@ -44,7 +44,11 @@ public interface BigDataPlugin extends RunnerPlugin {
     public void insertSensing(Object elementToInsert, TypeOfElement type);
     public void insertVMLog(Object elementToInsert, TypeOfElement type);
     public void insertHostState(Object elementToInsert, TypeOfElement type);
-    // aggiungi le find per collezione
+    public BasicDBList getListFieldName(String nameDB, String nameField,String collectionName):
+    public DBObject findByObjId(String nameDB,String nameCollection,ObjectId id);
+    public DBObject findByIdString(String nameDB,String nameCollection,String id);
+    public void insertOnDB(String dbName,Object elementToInsert, TypeOfElement type);
+    public void insertOnDB(BigDataParameterContainer container);
     
     
 
