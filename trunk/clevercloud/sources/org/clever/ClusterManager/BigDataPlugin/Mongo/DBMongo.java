@@ -443,7 +443,7 @@ public class DBMongo implements BigDataPlugin {
       * @param id id dell'oggetto da cercare
       * @return l'oggetto
       */
-   private DBObject findByIdString(String nameDB,String nameCollection,String id){
+   public DBObject findByIdString(String nameDB,String nameCollection,String id){
 
        logger.debug("dentro find");
       return this.getDB(nameDB).getCollection(nameCollection).findOne(new BasicDBObject("_id",id));
@@ -457,7 +457,7 @@ public class DBMongo implements BigDataPlugin {
       * @param id id dell'oggetto da cercare
       * @return l'oggetto
       */
-   private DBObject findByObjId(String nameDB,String nameCollection,ObjectId id){
+   public DBObject findByObjId(String nameDB,String nameCollection,ObjectId id){
       
        logger.debug("dentro find");
       return this.getDB(nameDB).getCollection(nameCollection).findOne(id);
@@ -1017,7 +1017,7 @@ public class DBMongo implements BigDataPlugin {
        
    }
   
-   private BasicDBList getListFieldName(String nameDB, String nameField,String collectionName){
+   public BasicDBList getListFieldName(String nameDB, String nameField,String collectionName){
   
       BasicDBList listFieldName=null;
       DBObject oggetto=this.findByIdString(nameDB, collectionName, "campi");
