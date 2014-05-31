@@ -95,7 +95,7 @@ public class UtilityJson {
     }
     
   }
-*/
+*//*
     public BasicDBObject XMLMultiLevelToJSON(String XMLString){
       
       Document document;
@@ -118,7 +118,7 @@ public class UtilityJson {
           entry=itEntry.next();
           obj.append((String)entry.getKey(), entry.getValue());
            }*/
-        }
+  /*      }
     catch ( IOException ex )
     {
  //    logger.error( "Error while opening the file xml: " + ex );
@@ -134,7 +134,7 @@ public class UtilityJson {
     }
     
   }
-
+*/
     public ArrayList XMLMultiLevelToJSON2(String XMLString) throws FileNotFoundException, IOException{
       
       Document document;
@@ -194,7 +194,7 @@ public class UtilityJson {
             return obj;
     }
     
-    //metodo che faccia l'update dell'array
+    //metodo che fa l'update dell'array
     private BasicDBObject createDBFieldOBject(HashMap mapField){
         Entry entry;
         Iterator<Map.Entry> itEntry;
