@@ -35,28 +35,29 @@
             <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/MonitorPlugins/Sigar/SigarMonitor.java</file>
         </group>
         <group name="BigData">
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/BigData/BigDataAgent.java</file>
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/BigData/BigDataPlugin.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/BigData/configuration_bigDataPlugin.xml</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/SOS/SOSAgent.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/SAS/SASAgent.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/SAS/SASAgent.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/SAS/AdvertiseRequestEntry.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/SAS/GetObservationThread.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/MonitorManager/MonitorManagerAgent.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitor/ThSendMeasure.java</file>
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/Dispatcher/DispatcherAgent.java</file>
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/VirtualizationManager/VirtualizationManagerAgent.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitor/CloudMonitorAgent.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitorPlugins/Sigar/SigarCloudMonitor.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitor/CloudMonitorPlugin.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/Monitor/MonitorAgent.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/Common/Utils/UtilityJson.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/VirtualizationManagerPlugin/VirtualizationManagerClever.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/DatabaseManager/DatabaseManagerAgent.java</file>
-            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/DatabaseManager/DatabaseManagerPlugin.java</file>
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/BigDataPlugin/Mongo/DBMongo.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/DatabaseManager/DatabaseManagerAgent.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitor/ThSendMeasure.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/Monitor/MonitorAgent.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/SAS/SASAgent.java</file>
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/DatabaseManagerPlugins/Sedna/DbSedna.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/VirtualizationManagerPlugin/VirtualizationManagerClever.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/SAS/GetObservationThread.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/MonitorManager/MonitorManagerAgent.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitorPlugins/Sigar/SigarCloudMonitor.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/BigData/configuration_bigDataPlugin.xml</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitor/CloudMonitorAgent.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/BigData/BigDataAgent.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitor/CloudMonitorPlugin.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/SAS/SASAgent.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/SAS/AdvertiseRequestEntry.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/DispatcherPlugins/DispatcherClever/DispatcherClever.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/SOS/SOSAgent.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/ClusterCoordinator/ClusterCoordinator.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/DatabaseManager/DatabaseManagerPlugin.java</file>
         </group>
     </open-files>
 </project-private>

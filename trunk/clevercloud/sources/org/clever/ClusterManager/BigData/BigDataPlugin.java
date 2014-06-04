@@ -24,11 +24,14 @@
 
 package org.clever.ClusterManager.BigData;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
 import java.util.List;
+import org.bson.types.ObjectId;
 import org.clever.Common.Plugins.RunnerPlugin;
 import org.clever.Common.Utils.TypeOfElement;
 import org.clever.Common.Utils.BigDataMethodName;
+import org.clever.Common.Utils.BigDataParameterContainer;
 
 /**
  *
@@ -44,7 +47,7 @@ public interface BigDataPlugin extends RunnerPlugin {
     public void insertSensing(Object elementToInsert, TypeOfElement type);
     public void insertVMLog(Object elementToInsert, TypeOfElement type);
     public void insertHostState(Object elementToInsert, TypeOfElement type);
-    public BasicDBList getListFieldName(String nameDB, String nameField,String collectionName):
+    public BasicDBList getListFieldName(String nameDB, String nameField,String collectionName);
     public DBObject findByObjId(String nameDB,String nameCollection,ObjectId id);
     public DBObject findByIdString(String nameDB,String nameCollection,String id);
     public void insertOnDB(String dbName,Object elementToInsert, TypeOfElement type);
