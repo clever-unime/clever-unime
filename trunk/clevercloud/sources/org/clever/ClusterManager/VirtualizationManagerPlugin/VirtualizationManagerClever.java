@@ -863,7 +863,8 @@ public boolean TakeEasySnapshot(String id,String nameS,String description,String
  }
  
 public boolean attachInterface(String id,String inf,String mac,String type) throws CleverException{
-  List params = new ArrayList();
+        List params = new ArrayList();
+        boolean result=false;
         params.add("VirtualizationManagerAgent");
         String location="/Matching_VM_HM/VM[@name='"+id+"']/host/text()";
         params.add(location);
@@ -875,8 +876,8 @@ public boolean attachInterface(String id,String inf,String mac,String type) thro
         params.add(inf);
         params.add(mac);
         params.add(type);
-        ((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","attachInterface", true, params); 
-        boolean result=insertNetInterfaceIntoDb(id,inf,mac,type);
+        if((Boolean)((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","attachInterface", true, params))
+            result=insertNetInterfaceIntoDb(id,inf,mac,type);
         return result;
  }
       
