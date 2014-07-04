@@ -57,6 +57,7 @@ import java.util.Map;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 import org.clever.Common.Communicator.Agent;
 import org.jdom.Element;
 
