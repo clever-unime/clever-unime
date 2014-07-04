@@ -306,27 +306,34 @@ public class VMAdministrationModule extends AdministrationModule{
     @ShellParameter(name="TypeName", comment="[VirtualBox Case:]Network Interface Type used for VM") String TypeName,
     @ShellParameter(name="Mac", comment="MAC Address that will be assigned to Network Interface,[VirtualBox case:] if this field is \"\" then VBOX create automatically the MAC Address") String Mac) throws CleverException
     {
-        
-        Boolean returnResponse;
-        ArrayList params = new ArrayList();
-        params.add(VMName);
-        if (TypeName.equals("NAT")) {
-            interfaceName="";
-        } else if (TypeName.equals("")) {
-            TypeName="NAT";
-            interfaceName="";
+        String regex = "[a-fA-F0-9]{12}";
+        if (!Pattern.matches(regex, Mac) && !Mac.equals(""))
+        {
+            System.err.println("Mac Address is wrong! Check the Mac Address passed to function");
+            return false;
         }
-        params.add(interfaceName);
-        params.add(Mac);
-        params.add(TypeName);
-        returnResponse = ( Boolean )
-                this.execSyncCommand(
-                this.session.getHostAdministrationModule().getActiveCM(),
-                "VirtualizationManagerAgent",
-                "attachInterface",
-                params,
-                false);
-        return returnResponse;
+        else{
+            Boolean returnResponse;
+            ArrayList params = new ArrayList();
+            params.add(VMName);
+            if (TypeName.equals("NAT")) {
+                interfaceName="";
+            } else if (TypeName.equals("")) {
+                TypeName="NAT";
+                interfaceName="";
+            }
+            params.add(interfaceName);
+            params.add(Mac);
+            params.add(TypeName);
+            returnResponse = ( Boolean )
+                    this.execSyncCommand(
+                    this.session.getHostAdministrationModule().getActiveCM(),
+                    "VirtualizationManagerAgent",
+                    "attachInterface",
+                    params,
+                    false);
+            return returnResponse;
+        }
     }
     
     

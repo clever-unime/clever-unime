@@ -1031,18 +1031,29 @@ public class HvVirtualBox implements HyperVisorPlugin {
     
     @Override
     public boolean attachInterface(String id, String inf, String mac, String type) {
-        if (type.equals("NAT")) {
-            return attachInterface(id, inf, mac, NetType.NAT);
-        } else if (type.equals("Bridged")) {
-            return attachInterface(id, inf, mac, NetType.Briged);
-        } else if (type.equals("Internal")) {
-            return attachInterface(id, inf, mac, NetType.Internal);
-        } else if (type.equals("HostOnly")) {
-            return attachInterface(id, inf, mac, NetType.HostOnly);
-        } else if (type.equals("Generic")) {
-            return attachInterface(id, inf, mac, NetType.Generic);
+        boolean result=false;
+        String regex = "[a-fA-F0-9]{12}";
+        if (Pattern.matches(regex, mac)||mac.equals(""))
+        {
+	        if (type.equals("NAT")) {
+	            return attachInterface(id, inf, mac, NetType.NAT);
+	        } else if (type.equals("Bridged")) {
+	            return attachInterface(id, inf, mac, NetType.Briged);
+	        } else if (type.equals("Internal")) {
+	            return attachInterface(id, inf, mac, NetType.Internal);
+	        } else if (type.equals("HostOnly")) {
+	            return attachInterface(id, inf, mac, NetType.HostOnly);
+	        } else if (type.equals("Generic")) {
+	            return attachInterface(id, inf, mac, NetType.Generic);
+	        } else {
+	                logger.error("The interface type don't match with available case. It will be pass default interface type: NAT");
+	                result= attachInterface(id, inf, mac, NetType.NAT);
+            	}
         }
-        return false;
+        else{
+            logger.error("The MAC Address passed for the function AttachInterface is wrong.Check the MAC Address before retry!");
+        }
+        return result;
     }
     
     private boolean attachInterface(String id, String inf, String mac, NetType type) {
