@@ -24,6 +24,7 @@
 
 package org.clever.ClusterManager.BigDataPlugin.Mongo;
 
+import com.mongodb.AggregationOutput;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -40,10 +41,13 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.bson.types.ObjectId;
 import org.clever.ClusterManager.BigData.BigDataPlugin;
@@ -54,6 +58,8 @@ import org.clever.Common.Utils.UtilityJson;
 import org.clever.Common.XMLTools.ParserXML;
 import org.clever.Common.Utils.BigDataMethodName;
 import org.clever.Common.Utils.BigDataParameterContainer;
+import org.clever.Common.Utils.CalculateOnFieldParameterContainer;
+import org.clever.Common.Utils.OperationName;
 import org.jdom.Element;
 
 /**
@@ -84,6 +90,11 @@ public class DBMongo implements BigDataPlugin {
     
     private void init(){
         this.connect();
+        
+        // logger.debug("prima inserimento");
+        //String sens1="<sensor name=\"sensor-981\"><VirtualSensor1><ss2><TMP>"+"988"+"</TMP></ss2><UMD>"+"123"+"</UMD><PRS>"+"333"+"</PRS><timeStamp>"+System.currentTimeMillis()+"</timeStamp></VirtualSensor1><VirtualSensor2><TMP>"+"ax"+"</TMP><UMD>"+"456"+"</UMD><PRS>"+"44554"+"</PRS><timeStamp>"+System.currentTimeMillis()+"</timeStamp></VirtualSensor2></sensor>";     
+           // System.out.println(sens1);
+          //  this.insertSensing(sens1, TypeOfElement.STRINGXML);
     }
     
     @Override
@@ -192,16 +203,42 @@ public class DBMongo implements BigDataPlugin {
     * metodo che scrive le informazioni sul db
     * 
     * @param collection collezione in cui inserire l'elemento
-    * @param obj elemento json da inserire
+    * @param objNew elemento json da inserire
     */
-   private void inserisci(DBCollection collection, BasicDBObject obj) {
-      
+   private void inserisci(DBCollection collection, BasicDBObject objNew) {
+        BasicDBObject objOld=null,objUpd;
+       boolean b=false;
+       String idObjNew=objNew.getString("_id");
+        logger.debug("dentro metodo inserisci:"+objNew.toString());
        
-        logger.debug("dentro metodo inserisci");
-        try{
+       try{
+            if(idObjNew!=null&&(idObjNew.equals("campi")||idObjNew.equals("attributi"))){
             
-            collection.insert(obj);
+                objOld=(BasicDBObject) collection.findOne(new BasicDBObject("_id",idObjNew));
+               // logger.debug(objNew.toString());
+                if(objOld!=null){
+                    
+              //  logger.debug(objOld.toString());
+                b=objNew.equals(objOld);
+                if(!b){
+                    logger.debug("diversi");
+                    objUpd=composeDocuments(objOld, objNew);
+                    //logger.debug("qwe "+objUpd.toString());
+                    //logger.debug("tre "+objNew.toString());
+                     
+                        collection.save(objUpd);
+                   
+                }
             
+            }else{
+                collection.insert(objNew);
+                }
+            
+            }
+            else{
+                logger.debug("not present"+objNew.toString());
+            collection.insert(objNew);
+            }
         }
         catch(MongoException ex){
             logger.error("Error in operation: ", ex);
@@ -242,10 +279,12 @@ public class DBMongo implements BigDataPlugin {
             logger.error("Error in operation: ", ex);
         }
        
-       collection=dataBase.getCollection(collName);
+         collection=this.getCollection(dataBase, collName);
+     //  collection=dataBase.getCollection(collName);
      //  inizio=System.currentTimeMillis();
-       this.inserisci(collection, list.get(0));
-       collection.save(list.get(1));
+      for(int numElem=0;numElem<list.size();numElem++){
+       this.inserisci(collection, list.get(numElem));
+       }
      //  fine=System.currentTimeMillis();
      //  str="tempo inserimento: "+(fine-inizio)+"\n";
      //  fos.write(str.getBytes());
@@ -266,8 +305,8 @@ public class DBMongo implements BigDataPlugin {
     //   long inizio, fine;
     //   String str;
     //   FileOutputStream fos= new FileOutputStream("inserimento.csv", true);
-        
-       collection=dataBase.getCollection(collName);
+        collection=this.getCollection(dataBase, collName);
+     //  collection=dataBase.getCollection(collName);
      //  inizio=System.currentTimeMillis();
        this.inserisci(collection, obj);
       
@@ -277,13 +316,17 @@ public class DBMongo implements BigDataPlugin {
        
        }
    
+    @Override
+   public void insertSensing(BigDataParameterContainer container){
+       this.insertSensing(container.getElemToInsert(),container.getType());
+    }
    /**
     * metodo che viene utilizzato dalla parte di sensoristica per l'inserimeno di documenti
     * @param elementToInsert elemento da inserire
     * @param type questa variabile viene utilizzata per distinguere i vari tipi di oggetti da inserire
     */
-    @Override
-   public void insertSensing(Object elementToInsert, TypeOfElement type){
+    
+   private void insertSensing(Object elementToInsert, TypeOfElement type){
        
        String dbName="sensing";
        logger.debug("dentro metodo insertSensing, nome del db della sensoristica: "+dbName);
@@ -308,7 +351,8 @@ public class DBMongo implements BigDataPlugin {
        
    }   
    
-   public void insertOnDB(String dbName,Object elementToInsert, TypeOfElement type){
+   // @Override
+   private void insertOnDB(String dbName,Object elementToInsert, TypeOfElement type){
        
       
        logger.debug("dentro metodo insertinDB, nome del db: "+dbName);
@@ -333,23 +377,28 @@ public class DBMongo implements BigDataPlugin {
        
    }   
    
+    @Override
    public void insertOnDB(BigDataParameterContainer container){
        this.insertOnDB(container.getDbName(), container.getElemToInsert(), container.getType());
       
        
    }   
      
+    @Override
+    public void insertVMLog(BigDataParameterContainer container){
+       this.insertVMLog(container.getElemToInsert(),container.getType());
+    }
         /**
     * metodo che viene utilizzato dalla parte di monitoring per l'inserimeno di documenti riguardanti il logging delle macchine
     * @param elementToInsert elemento da inserire
     * @param type questa variabile viene utilizzata per distinguere i vari tipi di oggetti da inserire
     */
-    @Override
-   public void insertVMLog(Object elementToInsert, TypeOfElement type){
+    
+   private void insertVMLog(Object elementToInsert, TypeOfElement type){
        
-       String dbName="VMLogging";
-       logger.debug("dentro metodo insertVMLog, nome del db della sensoristica: "+dbName);
-       DB dataBase=mongoClient.getDB(dbName);
+       String nomeDB="VMLogging";
+       logger.debug("dentro metodo insertVMLog, nome del db della sensoristica: "+nomeDB);
+       DB dataBase=mongoClient.getDB(nomeDB);
        
        switch(type){
        
@@ -369,17 +418,22 @@ public class DBMongo implements BigDataPlugin {
        
    }   
      
+    @Override
+   public void insertHostState(BigDataParameterContainer container){
+       this.insertHostState(container.getElemToInsert(),container.getType());
+    }
+   
      /**
     * metodo che viene utilizzato dalla parte di monitoring per l'inserimeno di documenti riguardanti lo stato delle macchine
     * @param elementToInsert elemento da inserire
     * @param type questa variabile viene utilizzata per distinguere i vari tipi di oggetti da inserire
     */
-    @Override
-   public void insertHostState(Object elementToInsert, TypeOfElement type){
+   
+   private void insertHostState(Object elementToInsert, TypeOfElement type){
        
-        String dbName="VMState";
-       logger.debug("dentro metodo insertVMLog, nome del db della sensoristica: "+dbName);
-       DB dataBase=mongoClient.getDB(dbName);
+        String nomeDB="VMState";
+       logger.debug("dentro metodo insertVMLog, nome del db dello stato degli host: "+nomeDB);
+       DB dataBase=mongoClient.getDB(nomeDB);
        
        switch(type){
        
@@ -443,10 +497,13 @@ public class DBMongo implements BigDataPlugin {
       * @param id id dell'oggetto da cercare
       * @return l'oggetto
       */
+    @Override
    public DBObject findByIdString(String nameDB,String nameCollection,String id){
 
        logger.debug("dentro find");
-      return this.getDB(nameDB).getCollection(nameCollection).findOne(new BasicDBObject("_id",id));
+       return  this.getCollection(this.getDB(nameDB), nameCollection).findOne(new BasicDBObject("_id",id));
+   
+//  return this.getDB(nameDB).getCollection(nameCollection).findOne(new BasicDBObject("_id",id));
    
    }
    
@@ -457,10 +514,11 @@ public class DBMongo implements BigDataPlugin {
       * @param id id dell'oggetto da cercare
       * @return l'oggetto
       */
+    @Override
    public DBObject findByObjId(String nameDB,String nameCollection,ObjectId id){
       
        logger.debug("dentro find");
-      return this.getDB(nameDB).getCollection(nameCollection).findOne(id);
+      return  this.getCollection(this.getDB(nameDB), nameCollection).findOne(id);
    
    }
    
@@ -474,7 +532,7 @@ public class DBMongo implements BigDataPlugin {
    private DBCursor findAllElementInCollection(String nameDB,String nameCollection){
        
         logger.debug("dentro find");
-       return this.getDB(nameDB).getCollection(nameCollection).find();
+      return  this.getCollection(this.getDB(nameDB), nameCollection).find();
    
    }
    
@@ -496,14 +554,15 @@ public class DBMongo implements BigDataPlugin {
         
  
     logger.debug("dentro findLessThanOnCollection chiamato su: "+nameDB);
-         collezione=database.getCollection(nameCollection);
+       collezione=this.getCollection(database, nameCollection);
+// collezione=database.getCollection(nameCollection);
          listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
        if(listFieldName!=null){ 
          for(int index=0;index<listFieldName.size();index++){
             orList.add(new BasicDBObject((String)listFieldName.get(index), new BasicDBObject("$lt", threshold)));
             }
        }
-       orList.add(new BasicDBObject(nameField, new BasicDBObject("$lt", threshold)));
+     //  orList.add(new BasicDBObject(nameField, new BasicDBObject("$lt", threshold)));
       query=new BasicDBObject("$or", orList);
         return collezione.find(query);
     }
@@ -526,14 +585,15 @@ public class DBMongo implements BigDataPlugin {
         
  
     logger.debug("dentro findLessThanOnCollection chiamato su: "+nameDB);
-         collezione=database.getCollection(nameCollection);
+        collezione=this.getCollection(database, nameCollection);
+//  collezione=database.getCollection(nameCollection);
          listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
        if(listFieldName!=null){ 
          for(int index=0;index<listFieldName.size();index++){
             orList.add(new BasicDBObject((String)listFieldName.get(index), new BasicDBObject("$lt", threshold)));
             }
        }
-       orList.add(new BasicDBObject(nameField, new BasicDBObject("$lt", threshold)));
+    //   orList.add(new BasicDBObject(nameField, new BasicDBObject("$lt", threshold)));
       query=new BasicDBObject("$or", orList);
         return collezione.find(query).toArray();
     }
@@ -548,14 +608,15 @@ public class DBMongo implements BigDataPlugin {
         
  
     logger.debug("dentro findLessThanOnCollection chiamato su: "+nameDB);
-         collezione=database.getCollection(nameCollection);
+        collezione=this.getCollection(database, nameCollection);
+//     collezione=database.getCollection(nameCollection);
          listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
        if(listFieldName!=null){ 
          for(int index=0;index<listFieldName.size();index++){
             orList.add(new BasicDBObject((String)listFieldName.get(index), threshold));
             }
        }
-       orList.add(new BasicDBObject(nameField, threshold));
+      // orList.add(new BasicDBObject(nameField, threshold));
       query=new BasicDBObject("$or", orList);
         return collezione.find(query).toArray();
     }
@@ -579,14 +640,15 @@ public class DBMongo implements BigDataPlugin {
         
  
     logger.debug("dentro findGreaterThanOnCollection chiamato su: "+nameDB);
-         collezione=database.getCollection(nameCollection);
+        collezione=this.getCollection(database, nameCollection);
+//   collezione=database.getCollection(nameCollection);
          listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
        if(listFieldName!=null){ 
          for(int index=0;index<listFieldName.size();index++){
             orList.add(new BasicDBObject((String)listFieldName.get(index), new BasicDBObject("$gt", threshold)));
             }
        }
-       orList.add(new BasicDBObject(nameField, new BasicDBObject("$gt", threshold)));
+   //    orList.add(new BasicDBObject(nameField, new BasicDBObject("$gt", threshold)));
       query=new BasicDBObject("$or", orList);
         return collezione.find(query);
    }
@@ -609,14 +671,15 @@ public class DBMongo implements BigDataPlugin {
         
  
     logger.debug("dentro findGreaterThanOnCollection chiamato su: "+nameDB);
-         collezione=database.getCollection(nameCollection);
+        collezione=this.getCollection(database, nameCollection);
+//     collezione=database.getCollection(nameCollection);
          listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
        if(listFieldName!=null){ 
          for(int index=0;index<listFieldName.size();index++){
             orList.add(new BasicDBObject((String)listFieldName.get(index), new BasicDBObject("$gt", threshold)));
             }
        }
-       orList.add(new BasicDBObject(nameField, new BasicDBObject("$gt", threshold)));
+     //  orList.add(new BasicDBObject(nameField, new BasicDBObject("$gt", threshold)));
       query=new BasicDBObject("$or", orList);
         return collezione.find(query).toArray();
    }
@@ -639,14 +702,15 @@ public class DBMongo implements BigDataPlugin {
         
  
     logger.debug("dentro findLessOrEqualThanOnCollection chiamato su: "+nameDB);
-         collezione=database.getCollection(nameCollection);
+        collezione=this.getCollection(database, nameCollection);
+//    collezione=database.getCollection(nameCollection);
          listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
        if(listFieldName!=null){ 
          for(int index=0;index<listFieldName.size();index++){
             orList.add(new BasicDBObject((String)listFieldName.get(index), new BasicDBObject("$lte", threshold)));
             }
        }
-       orList.add(new BasicDBObject(nameField, new BasicDBObject("$lte", threshold)));
+      // orList.add(new BasicDBObject(nameField, new BasicDBObject("$lte", threshold)));
       query=new BasicDBObject("$or", orList);
         return collezione.find(query);
    }
@@ -669,14 +733,16 @@ public class DBMongo implements BigDataPlugin {
         
  
     logger.debug("dentro findLessOrEqualThanOnCollection chiamato su: "+nameDB);
-         collezione=database.getCollection(nameCollection);
+     
+        collezione=this.getCollection(database, nameCollection);
+//    collezione=database.getCollection(nameCollection);
          listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
        if(listFieldName!=null){ 
          for(int index=0;index<listFieldName.size();index++){
             orList.add(new BasicDBObject((String)listFieldName.get(index), new BasicDBObject("$lte", threshold)));
             }
        }
-       orList.add(new BasicDBObject(nameField, new BasicDBObject("$lte", threshold)));
+     //  orList.add(new BasicDBObject(nameField, new BasicDBObject("$lte", threshold)));
       query=new BasicDBObject("$or", orList);
         return collezione.find(query).toArray();
    }
@@ -698,14 +764,15 @@ public class DBMongo implements BigDataPlugin {
         
  
     logger.debug("dentro findGreaterOrEqualThanOnCollection chiamato su: "+nameDB);
-         collezione=database.getCollection(collectionName);
+        collezione=this.getCollection(database, collectionName);
+//  collezione=database.getCollection(collectionName);
          listFieldName=this.getListFieldName(nameDB, nameField, collectionName);
        if(listFieldName!=null){ 
          for(int index=0;index<listFieldName.size();index++){
             orList.add(new BasicDBObject((String)listFieldName.get(index), new BasicDBObject("$gte", threshold)));
             }
        }
-       orList.add(new BasicDBObject(nameField, new BasicDBObject("$gte", threshold)));
+      // orList.add(new BasicDBObject(nameField, new BasicDBObject("$gte", threshold)));
       query=new BasicDBObject("$or", orList);
         return collezione.find(query);
    }
@@ -727,14 +794,15 @@ public class DBMongo implements BigDataPlugin {
         
  
     logger.debug("dentro findGreaterOrEqualThanOnCollection chiamato su: "+nameDB);
-         collezione=database.getCollection(collectionName);
+         collezione=this.getCollection(database, collectionName);
+//  collezione=database.getCollection(collectionName);
          listFieldName=this.getListFieldName(nameDB, nameField, collectionName);
        if(listFieldName!=null){ 
          for(int index=0;index<listFieldName.size();index++){
             orList.add(new BasicDBObject((String)listFieldName.get(index), new BasicDBObject("$gte", threshold)));
             }
        }
-       orList.add(new BasicDBObject(nameField, new BasicDBObject("$gte", threshold)));
+      // orList.add(new BasicDBObject(nameField, new BasicDBObject("$gte", threshold)));
       query=new BasicDBObject("$or", orList);
         return collezione.find(query).toArray();
    }
@@ -763,14 +831,15 @@ public class DBMongo implements BigDataPlugin {
     
     int index;
     logger.debug("dentro findOnRangeWithBorderOnDB chiamato su: "+nameDB);
-        collezione=database.getCollection(nameCollection);
+         collezione=this.getCollection(database, nameCollection);
+//  collezione=database.getCollection(nameCollection);
         listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
         if(listFieldName!=null){
             for(index=0;index<listFieldName.size();index++){
                 queryBuilder=queryBuilder.start();
                 orList.add((BasicDBObject)(queryBuilder.put((String)listFieldName.get(index)).greaterThanEquals(minThreshold).and((String)listFieldName.get(index)).lessThanEquals(maxThreshold)).get());
                 }  }
-            orList.add((BasicDBObject)(queryBuilder.put(nameField).greaterThanEquals(minThreshold).and(nameField).lessThanEquals(maxThreshold)).get());
+          //  orList.add((BasicDBObject)(queryBuilder.put(nameField).greaterThanEquals(minThreshold).and(nameField).lessThanEquals(maxThreshold)).get());
             query=new BasicDBObject("$or", orList);
           return collezione.find(query);
        
@@ -800,14 +869,15 @@ public class DBMongo implements BigDataPlugin {
     
     int index;
     logger.debug("dentro findOnRangeWithBorderOnDB chiamato su: "+nameDB);
-        collezione=database.getCollection(nameCollection);
+        collezione=this.getCollection(database, nameCollection);
+//   collezione=database.getCollection(nameCollection);
         listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
         if(listFieldName!=null){
             for(index=0;index<listFieldName.size();index++){
                 queryBuilder=queryBuilder.start();
                 orList.add((BasicDBObject)(queryBuilder.put((String)listFieldName.get(index)).greaterThanEquals(minThreshold).and((String)listFieldName.get(index)).lessThanEquals(maxThreshold)).get());
                 }  }
-            orList.add((BasicDBObject)(queryBuilder.put(nameField).greaterThanEquals(minThreshold).and(nameField).lessThanEquals(maxThreshold)).get());
+          //  orList.add((BasicDBObject)(queryBuilder.put(nameField).greaterThanEquals(minThreshold).and(nameField).lessThanEquals(maxThreshold)).get());
             query=new BasicDBObject("$or", orList);
           return collezione.find(query).toArray();
        
@@ -834,15 +904,15 @@ public class DBMongo implements BigDataPlugin {
    
    logger.debug("dentro findOnRangeWithoutBorderOnDB chiamato su: "+nameDB);
    
-    
-        collezione=database.getCollection(nameCollection);
+        collezione=this.getCollection(database, nameCollection);
+        //collezione=database.getCollection(nameCollection);
         listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
         if(listFieldName!=null){
             for(int index=0;index<listFieldName.size();index++){
                queryBuilder=queryBuilder.start();
                 orList.add((BasicDBObject) queryBuilder.put((String)listFieldName.get(index)).greaterThan(minThreshold).and((String)listFieldName.get(index)).lessThan(maxThreshold).get());
                 }}
-         orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThan(minThreshold).and(nameField).lessThan(maxThreshold).get());
+        // orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThan(minThreshold).and(nameField).lessThan(maxThreshold).get());
             query=new BasicDBObject("$or", orList);
             return collezione.find(query);
         
@@ -868,15 +938,15 @@ public class DBMongo implements BigDataPlugin {
     
    logger.debug("dentro findOnRangeWithoutBorderOnDB chiamato su: "+nameDB);
    
-    
-        collezione=database.getCollection(nameCollection);
+        collezione=this.getCollection(database, nameCollection);
+       // collezione=database.getCollection(nameCollection);
         listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
         if(listFieldName!=null){
             for(int index=0;index<listFieldName.size();index++){
                queryBuilder=queryBuilder.start();
                 orList.add((BasicDBObject) queryBuilder.put((String)listFieldName.get(index)).greaterThan(minThreshold).and((String)listFieldName.get(index)).lessThan(maxThreshold).get());
                 }}
-         orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThan(minThreshold).and(nameField).lessThan(maxThreshold).get());
+        // orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThan(minThreshold).and(nameField).lessThan(maxThreshold).get());
             query=new BasicDBObject("$or", orList);
             return collezione.find(query).toArray();
         
@@ -902,17 +972,17 @@ public class DBMongo implements BigDataPlugin {
     
     logger.debug("dentro findOnRangeWithBorderInfOnDB chiamato su: "+nameDB);
    
-    
-        collezione=database.getCollection(nameCollection);
+        collezione=this.getCollection(database, nameCollection);
+       // collezione=database.getCollection(nameCollection);
         listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
         if(listFieldName!=null){
             for(int index=0;index<listFieldName.size();index++){
                 queryBuilder=queryBuilder.start();
                 orList.add((BasicDBObject) queryBuilder.put((String)listFieldName.get(index)).greaterThanEquals(minThreshold).and((String)listFieldName.get(index)).lessThan(maxThreshold).get());
                 }}
-            orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThanEquals(minThreshold).and(nameField).lessThan(maxThreshold).get());
+           // orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThanEquals(minThreshold).and(nameField).lessThan(maxThreshold).get());
             query=new BasicDBObject("$or", orList);
-            System.out.println(query);
+          //  System.out.println(query);
             return collezione.find(query);
         
    }
@@ -936,17 +1006,17 @@ public class DBMongo implements BigDataPlugin {
     
     logger.debug("dentro findOnRangeWithBorderInfOnDB chiamato su: "+nameDB);
    
-    
-        collezione=database.getCollection(nameCollection);
+        collezione=this.getCollection(database, nameCollection);
+      //  collezione=database.getCollection(nameCollection);
         listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
         if(listFieldName!=null){
             for(int index=0;index<listFieldName.size();index++){
                 queryBuilder=queryBuilder.start();
                 orList.add((BasicDBObject) queryBuilder.put((String)listFieldName.get(index)).greaterThanEquals(minThreshold).and((String)listFieldName.get(index)).lessThan(maxThreshold).get());
                 }}
-            orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThanEquals(minThreshold).and(nameField).lessThan(maxThreshold).get());
+          //  orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThanEquals(minThreshold).and(nameField).lessThan(maxThreshold).get());
             query=new BasicDBObject("$or", orList);
-            System.out.println(query);
+           // System.out.println(query);
             return collezione.find(query).toArray();
         
    }
@@ -969,17 +1039,18 @@ public class DBMongo implements BigDataPlugin {
     DB database=this.getDB(nameDB);
    DBCollection collezione;
    logger.debug("dentro findOnRangeWithBorderInfOnDB chiamato su: "+nameDB);
-     
-        collezione=database.getCollection(nameCollection);
+        
+        collezione=this.getCollection(database, nameCollection);
+       // collezione=database.getCollection(nameCollection);
         listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
         if(listFieldName!=null){
             for(int index=0;index<listFieldName.size();index++){
                 queryBuilder=queryBuilder.start();
                 orList.add((BasicDBObject) queryBuilder.put((String)listFieldName.get(index)).greaterThan(minThreshold).and((String)listFieldName.get(index)).lessThanEquals(maxThreshold).get());
                 }}
-         orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThan(minThreshold).and(nameField).lessThanEquals(maxThreshold).get());
+        // orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThan(minThreshold).and(nameField).lessThanEquals(maxThreshold).get());
             query=new BasicDBObject("$or", orList);
-            System.out.println(query);
+         //   System.out.println(query);
              return collezione.find(query);
        
    }
@@ -1003,34 +1074,25 @@ public class DBMongo implements BigDataPlugin {
    DBCollection collezione;
    logger.debug("dentro findOnRangeWithBorderInfOnDB chiamato su: "+nameDB);
      
-        collezione=database.getCollection(nameCollection);
+        collezione=this.getCollection(database, nameCollection);
+       // collezione=database.getCollection(nameCollection);
         listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
         if(listFieldName!=null){
             for(int index=0;index<listFieldName.size();index++){
                 queryBuilder=queryBuilder.start();
                 orList.add((BasicDBObject) queryBuilder.put((String)listFieldName.get(index)).greaterThan(minThreshold).and((String)listFieldName.get(index)).lessThanEquals(maxThreshold).get());
                 }}
-         orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThan(minThreshold).and(nameField).lessThanEquals(maxThreshold).get());
+         //orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThan(minThreshold).and(nameField).lessThanEquals(maxThreshold).get());
             query=new BasicDBObject("$or", orList);
-            System.out.println(query);
+          //  System.out.println(query);
              return collezione.find(query).toArray();
        
    }
   
-   public BasicDBList getListFieldName(String nameDB, String nameField,String collectionName){
-  
-      BasicDBList listFieldName=null;
-      DBObject oggetto=this.findByIdString(nameDB, collectionName, "campi");
-      
-      logger.debug("getListFieldName:: "+nameField);
-      
-      if(oggetto!=null&&oggetto.containsField(nameField)){
-          logger.debug("aaaaaaaaaaaa"+oggetto.get(nameField));
-          listFieldName=(BasicDBList)oggetto.get(nameField);
-         }
-      return listFieldName;
-  }
    
+  public BasicDBList getListFieldName(String nameDB, String nomeField,String collectionName){
+      return this.getListField( nameDB, nomeField, collectionName,"campi");
+  } 
    /**
     * metodo che viene utilizzato per restituire un cursore contenenti tutti gli oggetti(contenuti in un DataBase) minori di una soglia
     * @param nameDB nome del dataBase
@@ -1056,14 +1118,15 @@ public class DBMongo implements BigDataPlugin {
  
     while(it.hasNext()){
         collectionName=(String)it.next();
-        collezione=database.getCollection(collectionName);
+        collezione=this.getCollection(database, collectionName);
+// collezione=database.getCollection(collectionName);
         listFieldName=this.getListFieldName(nameDB, nameField, collectionName);
       if(listFieldName!=null){ 
         for(int index=0;index<listFieldName.size();index++){
             orList.add(new BasicDBObject((String)listFieldName.get(index), new BasicDBObject("$lt", Threshold)));
             }
       }
-        orList.add(new BasicDBObject(nameField, new BasicDBObject("$lt", Threshold)));
+     //   orList.add(new BasicDBObject(nameField, new BasicDBObject("$lt", Threshold)));
         query=new BasicDBObject("$or", orList);
         cursor=collezione.find(query);
         listElem.addAll(cursor.toArray());
@@ -1089,14 +1152,15 @@ public class DBMongo implements BigDataPlugin {
  
     while(it.hasNext()){
         collectionName=(String)it.next();
-        collezione=database.getCollection(collectionName);
+        collezione=this.getCollection(database, collectionName);
+    // collezione=database.getCollection(collectionName);
         listFieldName=this.getListFieldName(nameDB, nameField, collectionName);
       if(listFieldName!=null){ 
         for(int index=0;index<listFieldName.size();index++){
             orList.add(new BasicDBObject((String)listFieldName.get(index),Threshold));
             }
       }
-        orList.add(new BasicDBObject(nameField, Threshold));
+       // orList.add(new BasicDBObject(nameField, Threshold));
         query=new BasicDBObject("$or", orList);
         cursor=collezione.find(query);
         listElem.addAll(cursor.toArray());
@@ -1131,7 +1195,8 @@ public class DBMongo implements BigDataPlugin {
         
     while(it.hasNext()){
         collectionName=(String)it.next();
-        collezione=database.getCollection(collectionName);
+        collezione=this.getCollection(database, collectionName);
+//collezione=database.getCollection(collectionName);
         listFieldName=this.getListFieldName(nameDB, nameField, collectionName);
        if(listFieldName!=null){ 
          for(int index=0;index<listFieldName.size();index++){
@@ -1139,7 +1204,7 @@ public class DBMongo implements BigDataPlugin {
             }
       
        }
-         orList.add(new BasicDBObject(nameField, new BasicDBObject("$gt", Threshold)));
+       //  orList.add(new BasicDBObject(nameField, new BasicDBObject("$gt", Threshold)));
           
          query=new BasicDBObject("$or", orList);
         cursor=collezione.find(query);
@@ -1174,7 +1239,8 @@ public class DBMongo implements BigDataPlugin {
         
     while(it.hasNext()){
         collectionName=(String)it.next();
-        collezione=database.getCollection(collectionName);
+        collezione=this.getCollection(database, collectionName);
+    // collezione=database.getCollection(collectionName);
         listFieldName=this.getListFieldName(nameDB, nameField, collectionName);
        if(listFieldName!=null){ 
          for(int index=0;index<listFieldName.size();index++){
@@ -1182,7 +1248,7 @@ public class DBMongo implements BigDataPlugin {
             }
         query=new BasicDBObject("$or", orList);
        }
-        orList.add(new BasicDBObject(nameField, new BasicDBObject("$lte", Threshold)));
+      //  orList.add(new BasicDBObject(nameField, new BasicDBObject("$lte", Threshold)));
        query=new BasicDBObject("$or", orList);
         cursor=collezione.find(query);
         listElem.addAll(cursor.toArray());
@@ -1217,7 +1283,8 @@ public class DBMongo implements BigDataPlugin {
     
     while(it.hasNext()){
         collectionName=(String)it.next();
-        collezione=database.getCollection(collectionName);
+        collezione=this.getCollection(database, collectionName);
+//collezione=database.getCollection(collectionName);
         listFieldName=this.getListFieldName(nameDB, nameField, collectionName);
        if(listFieldName!=null){ 
          for(int index=0;index<listFieldName.size();index++){
@@ -1225,7 +1292,7 @@ public class DBMongo implements BigDataPlugin {
             }
         
        }
-       orList.add(new BasicDBObject(nameField, new BasicDBObject("$gte", Threshold)));
+   //    orList.add(new BasicDBObject(nameField, new BasicDBObject("$gte", Threshold)));
       query=new BasicDBObject("$or", orList);
         cursor=collezione.find(query);
         listElem.addAll(cursor.toArray());
@@ -1260,14 +1327,15 @@ public class DBMongo implements BigDataPlugin {
     logger.debug("dentro findOnRangeWithBorderOnDB chiamato su: "+nameDB);
     while(it.hasNext()){
         collectionName=(String)it.next();
-        collezione=database.getCollection(collectionName);
+        collezione=this.getCollection(database, collectionName);
+//collezione=database.getCollection(collectionName);
         listFieldName=this.getListFieldName(nameDB, nameField, collectionName);
         if(listFieldName!=null){
             for(index=0;index<listFieldName.size();index++){
                 queryBuilder=queryBuilder.start();
                 orList.add((BasicDBObject)(queryBuilder.put((String)listFieldName.get(index)).greaterThanEquals(minThreshold).and((String)listFieldName.get(index)).lessThanEquals(maxThreshold)).get());
                 }  }
-            orList.add((BasicDBObject)(queryBuilder.put(nameField).greaterThanEquals(minThreshold).and(nameField).lessThanEquals(maxThreshold)).get());
+        //    orList.add((BasicDBObject)(queryBuilder.put(nameField).greaterThanEquals(minThreshold).and(nameField).lessThanEquals(maxThreshold)).get());
             query=new BasicDBObject("$or", orList);
             cursor=collezione.find(query);
         listElem.addAll(cursor.toArray());
@@ -1303,14 +1371,15 @@ public class DBMongo implements BigDataPlugin {
    
     while(it.hasNext()){
         collectionName=(String)it.next();
-        collezione=database.getCollection(collectionName);
+        collezione=this.getCollection(database, collectionName);
+// collezione=database.getCollection(collectionName);
         listFieldName=this.getListFieldName(nameDB, nameField, collectionName);
         if(listFieldName!=null){
             for(int index=0;index<listFieldName.size();index++){
                queryBuilder=queryBuilder.start();
                 orList.add((BasicDBObject) queryBuilder.put((String)listFieldName.get(index)).greaterThan(minThreshold).and((String)listFieldName.get(index)).lessThan(maxThreshold).get());
                 }}
-         orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThan(minThreshold).and(nameField).lessThan(maxThreshold).get());
+        // orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThan(minThreshold).and(nameField).lessThan(maxThreshold).get());
             query=new BasicDBObject("$or", orList);
             cursor=collezione.find(query);
         listElem.addAll(cursor.toArray());
@@ -1345,16 +1414,17 @@ public class DBMongo implements BigDataPlugin {
    
     while(it.hasNext()){
         collectionName=(String)it.next();
-        collezione=database.getCollection(collectionName);
+        collezione=this.getCollection(database, collectionName);
+//  collezione=database.getCollection(collectionName);
         listFieldName=this.getListFieldName(nameDB, nameField, collectionName);
         if(listFieldName!=null){
             for(int index=0;index<listFieldName.size();index++){
                 queryBuilder=queryBuilder.start();
                 orList.add((BasicDBObject) queryBuilder.put((String)listFieldName.get(index)).greaterThanEquals(minThreshold).and((String)listFieldName.get(index)).lessThan(maxThreshold).get());
                 }}
-            orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThanEquals(minThreshold).and(nameField).lessThan(maxThreshold).get());
+           // orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThanEquals(minThreshold).and(nameField).lessThan(maxThreshold).get());
             query=new BasicDBObject("$or", orList);
-            System.out.println(query);
+           // System.out.println(query);
             cursor=collezione.find(query);
         listElem.addAll(cursor.toArray());
         
@@ -1388,16 +1458,17 @@ public class DBMongo implements BigDataPlugin {
      
     while(it.hasNext()){
         collectionName=(String)it.next();
-        collezione=database.getCollection(collectionName);
+        collezione=this.getCollection(database, collectionName);
+// collezione=database.getCollection(collectionName);
         listFieldName=this.getListFieldName(nameDB, nameField, collectionName);
         if(listFieldName!=null){
             for(int index=0;index<listFieldName.size();index++){
                 queryBuilder=queryBuilder.start();
                 orList.add((BasicDBObject) queryBuilder.put((String)listFieldName.get(index)).greaterThan(minThreshold).and((String)listFieldName.get(index)).lessThanEquals(maxThreshold).get());
                 }}
-         orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThan(minThreshold).and(nameField).lessThanEquals(maxThreshold).get());
+         //orList.add((BasicDBObject) queryBuilder.put(nameField).greaterThan(minThreshold).and(nameField).lessThanEquals(maxThreshold).get());
             query=new BasicDBObject("$or", orList);
-            System.out.println(query);
+           // System.out.println(query);
             cursor=collezione.find(query);
         listElem.addAll(cursor.toArray());
         
@@ -1615,9 +1686,9 @@ public class DBMongo implements BigDataPlugin {
      * @param nameMtd nome del metodo
      * @return lista contente gli oggetti
      */
-      public List<DBObject> findOnDB(String nameDB,String nameFiled, Object thresholdMin, Object thresholdMax, BigDataMethodName nameMtd) {
+      private List<DBObject> findOnDB(String nameDB,String nameFiled, Object thresholdMin, Object thresholdMax, BigDataMethodName nameMtd) {
 
-        logger.debug("dentro findon Dbbbbbbbbbbb");
+        logger.debug("dentro findon Db");
         switch(nameMtd){
        
            case findLessThan:
@@ -1653,7 +1724,8 @@ public class DBMongo implements BigDataPlugin {
         }  
     }
    
-       public List<DBObject> findOnCollection(String nameDB,String nameCollection,String nameFiled, Object thresholdMin, Object thresholdMax, BigDataMethodName nameMtd) {
+    
+       private List<DBObject> findOnCollection(String nameDB,String nameCollection,String nameFiled, Object thresholdMin, Object thresholdMax, BigDataMethodName nameMtd) {
 
         logger.debug("dentro findon Dbbbbbbbbbbb");
         switch(nameMtd){
@@ -1692,7 +1764,8 @@ public class DBMongo implements BigDataPlugin {
     }
    
       
-      public List<DBObject> findOnDB(BigDataParameterContainer struct) {
+    @Override
+      public List<DBObject> find(BigDataParameterContainer struct) {
           
             ArrayList nameFields=struct.getFields();
             ArrayList thresholds=struct.getThresholds();
@@ -1718,60 +1791,7 @@ public class DBMongo implements BigDataPlugin {
        
     }
    
-      
-      //metodo di prova
-      public List<String> stampaOnDB(String nameDB,String nameFiled, Double thresholdMin, Double thresholdMax, BigDataMethodName nameMtd) {
-
-        logger.debug("dentro findon Dbbbbbbbbbbb");
-        switch(nameMtd){
-       
-           case findLessThan:
-                
-               ArrayList orList = new ArrayList(); 
-                BasicDBList listFieldName;  
-                 BasicDBObject query;
-                DB database=this.getDB(nameDB);
-                Set listCollection= database.getCollectionNames();
-                 Iterator it=listCollection.iterator();
-                DBCollection collezione;
-                    DBCursor cursor;
-                   // Set<String> set;
-                List listElem=new ArrayList();
-                 String collectionName;
-        
-        logger.debug("dentro stampaOnDB chiamato su: "+nameDB);
- 
-    while(it.hasNext()){
-        collectionName=(String)it.next();
-        collezione=database.getCollection(collectionName);
-        listFieldName=this.getListFieldName(nameDB, nameFiled, collectionName);
-      if(listFieldName!=null){ 
-        for(int index=0;index<listFieldName.size();index++){
-            orList.add(new BasicDBObject((String)listFieldName.get(index), new BasicDBObject("$lt", thresholdMin)));
-            }
-      }
-        orList.add(new BasicDBObject(nameFiled, new BasicDBObject("$lt", thresholdMin)));
-        query=new BasicDBObject("$or", orList);
-        cursor=collezione.find(query);
-       
-       Iterator iter=cursor.iterator();
-       while(iter.hasNext()){
-        listElem.add(iter.next().toString());
-       }
-    }
-    return listElem;
-                
-           
-               
-           default: 
-               logger.error("errore caso non riconosciuto");
-        
-        throw new UnsupportedOperationException("Not supported yet.");
-        }  
-    }
-    
-      
-      public List<DBObject> findOnDB(String nameDB,BasicDBObject query){
+    public List<DBObject> findOnDB(String nameDB,BasicDBObject query){
           
          DB database=this.getDB(nameDB);
          Set listCollection= database.getCollectionNames();
@@ -1784,7 +1804,8 @@ public class DBMongo implements BigDataPlugin {
    
     while(it.hasNext()){
         collectionName=(String)it.next();
-        collezione=database.getCollection(collectionName);
+        collezione=this.getCollection(database, collectionName);
+             //collezione=database.getCollection(collectionName);
         cursor=collezione.find(query);
         listElem.addAll(cursor.toArray());
         
@@ -1802,8 +1823,8 @@ public class DBMongo implements BigDataPlugin {
          List listElem=new ArrayList();
         
         logger.debug("dentro findOnCollection chiamato su: "+nameDB);
-   
-        collezione=database.getCollection(collectionName);
+             collezione=this.getCollection(database, collectionName);
+       // collezione=database.getCollection(collectionName);
         cursor=collezione.find(query);
         listElem.addAll(cursor.toArray());
         
@@ -1922,13 +1943,341 @@ public class DBMongo implements BigDataPlugin {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    public void getInInterval(String nameDB, String nameCollection, String nameField,Object minThreshold,Object maxThreshold){
-            
-        
     
+private ArrayList calcOnField(String nameDB,String collectionName, String nameField,long inizialTime, long finalTime,String opName,String operation){
     
-    
+    collectionName=collectionName.replaceAll("-", "__");
+    DB database=this.getDB(nameDB);
+    DBCollection collezione;
+    BasicDBList listFieldName=this.getListFieldName(nameDB, nameField, collectionName);
+    ArrayList<DBObject> list=new ArrayList();
+    int index;
+    DBObject match,fields,project,groupFields,group,elemToinsert;
+    List<DBObject> pipeline;
+    AggregationOutput output;
+    Iterator cursore;
+
+    try{ 
+     collezione=this.getCollection(database, collectionName);
+   //  collezione=database.getCollection(collectionName);
+     match = new BasicDBObject("$match",new BasicDBObject("insertTimestamp", new BasicDBObject("$gt", inizialTime).append("$lte", finalTime)));
+     fields = new BasicDBObject("_id", 0);
+logger.debug("elem match "+match.toString());
+for( index=0;index<listFieldName.size();index++){
+            fields.put((String)listFieldName.get(index),1);
+            }
+ project = new BasicDBObject("$project", fields );
+ 
+for(index=0;index<listFieldName.size();index++){
+        groupFields = new BasicDBObject("_id",(String)listFieldName.get(index) );
+        groupFields.put(opName, new BasicDBObject( operation, "$"+(String)listFieldName.get(index)));
+        group = new BasicDBObject("$group", groupFields);
+        pipeline = Arrays.asList(match, project, group);
+        output = collezione.aggregate(pipeline);
+        //Iterable<DBObject> cursor= output.results();
+        cursore=output.results().iterator();
+   while(cursore.hasNext()){
+        elemToinsert=(DBObject) cursore.next();
+        logger.debug(elemToinsert.toString());
+        if(elemToinsert.get(opName)!=null){
+            logger.debug("put");
+        elemToinsert.put("start interval",new Date(inizialTime).toGMTString() );
+        elemToinsert.put("end interval",new Date(finalTime).toGMTString() );
+        list.add(elemToinsert);
+   }else{
+        logger.debug("not put");
+        }
+   }
+   
     }
+
+return list;
+    }
+    catch(Exception ex){
+        logger.error("error in calcOnField",ex);
+        return null;
+    }
+}
+
+private ArrayList operaSuiCampi(String nameDB,String collectionName, String nameField,long inizialTime, long finalTime,OperationName opName){
+    
+    switch(opName){
+        
+        case maximum:
+            return this.calcOnField(nameDB, collectionName, nameField, inizialTime, finalTime, "maximum", "$max");
+           
+        case minimum:
+            return this.calcOnField(nameDB, collectionName, nameField, inizialTime, finalTime, "minimum", "$min");
+        
+        case average:
+            return this.calcOnField(nameDB, collectionName, nameField, inizialTime, finalTime, "average", "$avg");
+        
+        case first:
+            return this.calcOnField(nameDB, collectionName, nameField, inizialTime, finalTime, "first", "$first");
+        
+        case last:
+            return this.calcOnField(nameDB, collectionName, nameField, inizialTime, finalTime, "last", "$last");
+       
+        case sum:
+            return this.calcOnField(nameDB, collectionName, nameField, inizialTime, finalTime, "sum", "$sum");
+            
+        default:
+            logger.error("case not recognized");
+            
+            return null;
+                 
+    }
+    
+}
+
+/**
+ * 
+ * @param container
+ * @return null if an error is occurred, an empty arrayList if there aren't elements in MongoDB in that interval time, an ArrayList within DBObjects which contain the query results 
+ */
+    @Override
+    public ArrayList calculateOnField(CalculateOnFieldParameterContainer container){
+    
+    String nameDB=container.getDbName();
+    String collectionName=container.getCollectionName();
+    String nameField=container.getFieldName();
+    long inizialTime=container.getStartDate();
+    long finalTime=container.getEndDate();
+    OperationName opName=container.getOpName();
+    long range=container.getRange();
+    TimeUnit unitRange=container.getUnitRange();
+    long step=container.getStep();
+    TimeUnit unitStep=container.getUnitStep();
+    ArrayList result=new ArrayList();
+    long finalTmp=0;
+    boolean flag=true;
+   // logger.debug("quiiiiiiiiii");
+    if(nameDB==null||collectionName==null||nameField==null||opName==null){
+        logger.error("bad parameter");
+        return null;
+        }
+    else
+        {
+            if(inizialTime==-1&&finalTime==-1){
+                if(range!=0){
+                    inizialTime=System.currentTimeMillis()- TimeUnit.MILLISECONDS.convert(range,unitRange); 
+                    finalTime=System.currentTimeMillis();
+                    }
+                else{
+                    //todo: lanciare eccezione? 
+                    logger.error("error: start date and final date are equal");
+                    return null;
+                    }
+            }
+            else
+                if(inizialTime!=-1&&finalTime==-1){
+                    if(range!=0){
+                        finalTime=inizialTime+TimeUnit.MILLISECONDS.convert(range,unitRange);
+                      }
+                    else{
+                        finalTime=System.currentTimeMillis();
+                    }
+                }
+            else
+                if(inizialTime==-1&&finalTime!=-1){
+                    if(range!=0){
+                        inizialTime=finalTime-TimeUnit.MILLISECONDS.convert(range,unitRange);
+                    }
+                    else{
+                        inizialTime=0;
+                    }
+                }
+        if(step==0){
+            result.addAll(this.operaSuiCampi(nameDB, collectionName, nameField, inizialTime, finalTime, opName));
+            }
+        else{
+            step=TimeUnit.MILLISECONDS.convert(step,unitStep);
+            
+            while(flag){
+                finalTmp=inizialTime+step;
+                logger.debug("inizio:"+new Date(inizialTime).toGMTString()+"  fine:"+new Date(finalTmp).toGMTString());
+                   if(finalTmp<finalTime){
+                        result.addAll(this.operaSuiCampi(nameDB, collectionName, nameField, inizialTime, finalTmp, opName));
+                        inizialTime=finalTmp;
+                        }
+                    else{
+                        flag=false;
+                        result.addAll(this.operaSuiCampi(nameDB, collectionName, nameField, inizialTime, finalTime, opName));
+                    }
+                }
+            }
+        }
+        
+    return result;
+    }
+
   
     
+private DBCursor findElement(String nameDB, String nameCollection, String nameField,boolean isPresent){
+       
+        ArrayList orList = new ArrayList(); 
+        BasicDBList listFieldName;  
+        BasicDBObject query;// = new BasicDBObject(nameField, new BasicDBObject("$gte", Threshold));
+        DB database=this.getDB(nameDB);
+        DBCollection collezione;
+        
+ 
+  //  logger.debug("dentro findLessThanOnCollection chiamato su: "+nameDB);
+         collezione=this.getCollection(database, nameCollection);
+// collezione=database.getCollection(nameCollection);
+         listFieldName=this.getListFieldName(nameDB, nameField, nameCollection);
+       if(listFieldName!=null){ 
+         for(int index=0;index<listFieldName.size();index++){
+            orList.add(new BasicDBObject((String)listFieldName.get(index), new BasicDBObject("$exists", isPresent)));
+            }
+       }
+      // orList.add(new BasicDBObject(nameField, threshold));
+      query=new BasicDBObject("$or", orList);
+        return collezione.find(query);
+    }
+  
+private DBCursor findIfPresentOnCollectionToCursor(String nameDB, String nameCollection, String nameField){
+      return this.findElement(nameDB, nameCollection, nameField, true);
+  
+  }
+
+private DBCursor findIfNotPresentOnCollectionToCursor(String nameDB, String nameCollection, String nameField){
+      return this.findElement(nameDB, nameCollection, nameField, false);
+  
+  }
+  
+    
+public List<DBObject> findIfPresentOnCollectionToArray(String nameDB, String nameCollection, String nameField){
+      return this.findElement(nameDB, nameCollection, nameField, true).toArray();
+  
+  }
+
+    
+public List<DBObject> findIfNotPresentOnCollectionToArray(String nameDB, String nameCollection, String nameField){
+      return this.findElement(nameDB, nameCollection, nameField, false).toArray();
+  
+  }
+  
+private List<DBObject> findIfNotPresentOnDB(String nameDB,String nameField){  
+    
+        DB database=this.getDB(nameDB);
+        Set listCollection= database.getCollectionNames();
+        Iterator it=listCollection.iterator();
+        List listElem=new ArrayList();
+        String collectionName;
+        
+     //   logger.debug("dentro findLessThanOnDB chiamato su: "+nameDB);
+ 
+    while(it.hasNext()){
+        collectionName=(String)it.next();
+        listElem.addAll(this.findElement(nameDB, collectionName, nameField, false).toArray());
+        
+    }
+    return listElem;
+   }
+  
+  
+private List<DBObject> findIfPresentOnDB(String nameDB,String nameField){  
+    
+        DB database=this.getDB(nameDB);
+        Set listCollection= database.getCollectionNames();
+        Iterator it=listCollection.iterator();
+        List listElem=new ArrayList();
+        String collectionName;
+        
+     //   logger.debug("dentro findLessThanOnDB chiamato su: "+nameDB);
+ 
+    while(it.hasNext()){
+        collectionName=(String)it.next();
+        listElem.addAll(this.findElement(nameDB, collectionName, nameField, true).toArray());
+        
+    }
+    return listElem;
+   }
+  
+    
+public BasicDBList getListAttributeName(String nameDB, String attrName,String collectionName){
+      return this.getListField( nameDB, attrName, collectionName,"attributi");
+  }
+  
+private BasicDBList getListField(String nameDB, String nomeField,String collectionName,String id){
+  
+      BasicDBList listFieldName;
+      DBObject oggetto=this.findByIdString(nameDB, collectionName, id);
+      String nameField=nomeField.replace(".", "<_>");
+      
+     // logger.debug("getListFieldName:: "+nameField);
+      
+      if(oggetto!=null&&oggetto.containsField(nameField)){
+        //  logger.debug("aaaaaaaaaaaa"+oggetto.get(nameField));
+          listFieldName=(BasicDBList)oggetto.get(nameField);
+         }
+      else{
+            listFieldName=new BasicDBList();
+            listFieldName.add(nameField);
+        }
+      return listFieldName;
+  }
+  
+/**
+      * this method is used to merge 2 documents JSON, in this first version, the structure of documents 
+      * can be a field which contain the id of this object and some field whose type is to be BasicDBList
+      * @param vecchio old document
+      * @param nuovo new document
+      * @return old document whith the changes
+      */
+    private BasicDBObject composeDocuments(BasicDBObject vecchio,BasicDBObject nuovo){
+         
+         
+        Set setNew= nuovo.entrySet();
+        Iterator itNew=setNew.iterator(),itObj;
+        Map.Entry<String,Object> entry;
+        String fieldName;
+        Object oggetto=null,objToAdd;
+        BasicDBList oldList,newList;
+      
+        while(itNew.hasNext()){
+            entry= (Map.Entry<String, Object>) itNew.next();
+            fieldName=entry.getKey();
+                
+                    oggetto=vecchio.get(fieldName);
+                    if(oggetto==null){
+                      //  logger.debug("campo "+ fieldName+" non presente");
+                        vecchio.append(fieldName, entry.getValue());
+                        }
+                    else{
+                        if(oggetto instanceof BasicDBList){
+                            //logger.debug(fieldName+ " è un'istanza di BasicDBList");
+                            oldList=(BasicDBList)oggetto;
+                            newList=((BasicDBList)nuovo.get(fieldName));
+                            //logger.debug("old list "+oldList.toString());
+                            //logger.debug("new list "+newList.toString());
+                            itObj=newList.iterator();
+                            while(itObj.hasNext()){
+                                objToAdd=itObj.next();
+                                if(!oldList.contains(objToAdd)){
+                                    //logger.debug("oggetto da aggiungere "+objToAdd);
+                                    oldList.add(objToAdd);
+                                }
+                            }
+                           // logger.debug("lista aggiornata "+oldList.toString());
+                         vecchio.append(fieldName, oldList);
+                        }
+                    }
+                    
+                 
+        
+        }
+         //logger.debug("valore di ritorno "+vecchio.toString());
+     return vecchio;
+     }
+  
+  public DBCollection getCollection(DB nameDB, String nameCollection){
+    
+        nameCollection=nameCollection.replaceAll("-", "__");
+    
+       return nameDB.getCollection(nameCollection);
+        
+        }
+  
 }

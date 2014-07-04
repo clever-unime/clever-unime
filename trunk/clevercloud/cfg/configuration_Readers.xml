@@ -18,11 +18,11 @@
         <port>3306</port>
         <hostname>localhost</hostname>
         <DBName>sensordb</DBName>
-        <UserName>root</UserName>
-        <Password>sigma</Password>
+        <UserName></UserName>
+        <Password></Password>
         <resettimeMillisec>150000</resettimeMillisec>
         <sensorNumber>1</sensorNumber>
-        <firstvalue>2014-02-18 18:08:36</firstvalue>
+        <firstvalue>2013-12-05 12:48:20</firstvalue>
       </pluginParams>
     </reader>
   </readers>

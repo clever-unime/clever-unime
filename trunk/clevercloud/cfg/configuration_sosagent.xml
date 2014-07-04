@@ -15,8 +15,8 @@
         <server>127.0.0.1</server>
         <driver>com.mysql.jdbc.Driver</driver>
         <name>sensorml</name>
-        <username>root</username>
-        <password>sigma</password>
+        <username></username>
+        <password></password>
     </dbParams>
     
     <test>
@@ -25,8 +25,8 @@
             <server>127.0.0.1</server>
             <driver>com.mysql.jdbc.Driver</driver>
             <name>observation</name>
-            <username>root</username>
-            <password>sigma</password>
+            <username></username>
+            <password></password>
         </dbParams>
     </test>
 </configuration>

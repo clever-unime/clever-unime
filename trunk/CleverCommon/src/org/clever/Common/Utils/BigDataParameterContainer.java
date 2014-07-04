@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Antonio Galletta 2014
  */
 public class BigDataParameterContainer {
-    private ArrayList nameFields,thresholds;
+    private final ArrayList nameFields,thresholds;
     private BigDataMethodName method;
     private String dbName, collectionName;
     private TypeOfElement type;

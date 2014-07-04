@@ -140,6 +140,7 @@ public class SOSmodule implements SOSinterface {
         } catch (Exception e) {
            logger.error("funzione non riconosciuta",e);
         }
+        logger.debug(response);
         return response;
         //  controllo il nodo radice del file di input, in cui è decritto il tipo di operazione invocata
 

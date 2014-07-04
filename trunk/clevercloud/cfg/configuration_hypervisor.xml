@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <writeOnCfgFolder>yes</writeOnCfgFolder>
+	<HyperVisor>org.clever.HostManager.HyperVisorPlugins.VirtualBox.HvVirtualBox</HyperVisor>
+	<moduleName>HyperVisorAgent</moduleName>
         
-    <ClassPlugin>org.clever.HostManager.HyperVisorPlugins.VirtualBox.HvVirtualBox</ClassPlugin>
-    <moduleName>HyperVisorAgent</moduleName>
-
-        
-    <pluginParams>
-        <librarypath>/usr/lib/virtualbox</librarypath>
-    </pluginParams>
+        <pluginParams>
+                <librarypath>/usr/lib/virtualbox</librarypath>
+        </pluginParams>
 </configuration>

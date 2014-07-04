@@ -30,7 +30,7 @@ package org.clever.Common.Utils;
  */
 public enum TypeOfElement {
         STRINGXML(1),DOCJSON(2);
-        private int value;
+        private final int value;
 
         private TypeOfElement(int value) {
                 this.value = value;

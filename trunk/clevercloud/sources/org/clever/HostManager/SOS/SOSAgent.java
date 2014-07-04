@@ -149,6 +149,7 @@ public class SOSAgent extends Agent{
         ArrayList<String> response=new ArrayList<String>();
         org.clever.HostManager.SOS.SOSModuleCore.SOSmodule sos=new org.clever.HostManager.SOS.SOSModuleCore.SOSmodule();
         response=sos.SOSservice(request);
+      
         return response;
     }
     

@@ -35,8 +35,14 @@ gldb() {
         }
 }
 
-//aggiungi metodo contaElementi
 
+osf(dbname,collectionName,fieldName, opName,step, unitStep, initialDate, initialTime, finalDate, finalTime, timeZone, range, unitRange) {
+        for (vm : getBDM().calculateOnField(dbname,collectionName,fieldName, opName,step, unitStep, initialDate, initialTime, finalDate, finalTime, timeZone, range, unitRange))
+        {
+            print(vm);
+        }
+}
+    
  getBDM()
  {
     return sf.getSession().getBIGAdministrationModule();

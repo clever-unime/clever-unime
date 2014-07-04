@@ -8,27 +8,26 @@ package org.clever.Common.Utils;
 
 /**
  *
- * @author Antonio Galletta
+ * @author Antonio Galletta 2014
  */
-public enum BigDataMethodName {
-     findLessThan(1),
-     findGreaterThan(2),
-     findLessOrEqualThan(3),
-     findGreaterOrEqualThan(4),
-     findOnRangeWithBorder(5),
-     findOnRangeWithoutBorder(6),
-     findOnRangeWithBorderSup(7),
-     findOnRangeWithBorderInf(8),
-     equal(9);
+public enum OperationName {
+    maximum(1),
+    minimum(2),
+    average(3),
+    first(4),
+    last(5),
+    sum(6);
+     
      
      private final int value;
 
-        private BigDataMethodName(int value) {
+        private OperationName(int value) {
                 this.value = value;
         }
        
         public int getValue(){
             return value;
         }
+    
     
 }

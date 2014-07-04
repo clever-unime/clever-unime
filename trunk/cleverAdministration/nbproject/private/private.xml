@@ -28,6 +28,22 @@
             <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/commands/DownloadCommand.java</file>
             <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/cleverAdministration/src/org/clever/administration/test/TestApi.java</file>
         </group>
+        <group name="prova">
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/scripts/big.bsh</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/HostAdministrationModule.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/scripts/vmm.bsh</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/BigDataModule.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/VMAdministrationModule.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/SessionFactoryImpl.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/StrorageAdministrationModule.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/MonitoringAdministrationModule.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/SensingAdministrationModule.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/Session.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/AdministrationModule.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/SessionFactory.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/scripts/init.bsh</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/nbproject/build-impl.xml</file>
+        </group>
         <group name="BigData">
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/scripts/big.bsh</file>
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/HostAdministrationModule.java</file>

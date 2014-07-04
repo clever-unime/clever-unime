@@ -9,6 +9,8 @@ package org.clever.administration.api.modules;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Utils.TypeOfElement;
@@ -18,6 +20,8 @@ import org.clever.administration.annotations.ShellParameter;
 import org.clever.administration.api.Session;
 import org.clever.Common.Utils.BigDataMethodName;
 import org.clever.Common.Utils.BigDataParameterContainer;
+import org.clever.Common.Utils.CalculateOnFieldParameterContainer;
+import org.clever.Common.Utils.OperationName;
 
 /**
  *
@@ -140,6 +144,46 @@ public class BigDataModule extends AdministrationModule{
                      throw new CleverException(ex);}
         
             }
-
-}
     
+
+  @ShellCommand
+  public List calculateOnField(String dbName,String collectionName,String fieldName, String opName,long step,String unitStep,String initialDate,String initialTime,String finalDate,String finalTime,String timeZone,long range,String unitRange) throws CleverException{
+ String datainizio = null,dataFine = null,oraInizio = null,OraFine = null;
+ TimeZone fusoOrario = null;
+ if(!initialDate.equals("null")){
+     datainizio=initialDate;
+ }
+ logger.debug(initialDate);
+ if(!initialTime.equals("null")){
+     oraInizio=initialTime.replace("-", ":");
+ }
+ logger.debug(initialTime+"asd"+oraInizio);
+ if(!finalDate.equals("null")){
+     dataFine=finalDate;
+ }
+ logger.debug(finalDate);
+ 
+ if(!finalTime.equals("null")){
+     OraFine=finalTime.replace("-", ":");
+ }
+ logger.debug(finalTime+"asd"+OraFine);
+ if(!timeZone.equals("null")){
+     fusoOrario=TimeZone.getTimeZone(timeZone);
+ }
+
+      
+      CalculateOnFieldParameterContainer container=new CalculateOnFieldParameterContainer( dbName, collectionName, fieldName, OperationName.valueOf(opName), step, TimeUnit.valueOf(unitStep), datainizio,oraInizio,dataFine,OraFine, fusoOrario, range, TimeUnit.valueOf(unitRange));
+ Logger logger=Logger.getLogger("BigDataModule");
+                 logger.debug(container.getEndDate()+"sssssss"+container.getStartDate());
+   // CalculateOnFieldParameterContainer c=new CalculateOnFieldParameterContainer("sensing","sensor1","TMP",OperationName.maximum,0,TimeUnit.MINUTES,null,"16:00:00",null,"16:15:00",null,10,TimeUnit.MINUTES);
+ logger.debug("bbbbbbbbbbbbbbb");
+    ArrayList params = new ArrayList();
+                 params.add(container);
+                 
+  try{
+                return(List) this.execSyncCommand(this.session.getHostAdministrationModule().getActiveCM(),"BigDataAgent","calculateOnField", params,false);
+             }
+             catch(Exception ex){
+                     throw new CleverException(ex);}
+}
+}

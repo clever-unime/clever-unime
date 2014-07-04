@@ -31,6 +31,7 @@ import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.Utils.BigDataParameterContainer;
 import org.clever.Common.Utils.TypeOfElement;
 
 /**
@@ -109,16 +110,20 @@ public class BigDataAgent extends CmAgent {
     public void handleNotification(Notification notification) throws CleverException {
         
         logger.debug("Received notification type: "+notification.getId());
+        BigDataParameterContainer container= new BigDataParameterContainer();
+        container.setElemToInsert(notification.getBody());
+        container.setType(TypeOfElement.STRINGXML);
         if(notification.getId().equalsIgnoreCase("SENSING/NOTIFICATION")){
-            this.bigDataPlugin.insertSensing(notification.getBody(), TypeOfElement.STRINGXML);
+            
+            this.bigDataPlugin.insertSensing(container);
             }
         else
             if(notification.getId().equalsIgnoreCase("VMLOG/NOTIFICATION")){
-            this.bigDataPlugin.insertVMLog(notification.getBody(), TypeOfElement.STRINGXML);
+            this.bigDataPlugin.insertVMLog(container);
             }
         else
             if(notification.getId().equalsIgnoreCase("VMSTATE/NOTIFICATION")){
-            this.bigDataPlugin.insertHostState(notification.getBody(), TypeOfElement.STRINGXML);
+            this.bigDataPlugin.insertHostState(container);
             }
         else
                 logger.error("notification type unknown");

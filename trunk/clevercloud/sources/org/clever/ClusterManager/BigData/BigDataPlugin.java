@@ -25,13 +25,16 @@
 package org.clever.ClusterManager.BigData;
 
 import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+import java.util.ArrayList;
 import java.util.List;
 import org.bson.types.ObjectId;
 import org.clever.Common.Plugins.RunnerPlugin;
 import org.clever.Common.Utils.TypeOfElement;
 import org.clever.Common.Utils.BigDataMethodName;
 import org.clever.Common.Utils.BigDataParameterContainer;
+import org.clever.Common.Utils.CalculateOnFieldParameterContainer;
 
 /**
  *
@@ -44,16 +47,20 @@ public interface BigDataPlugin extends RunnerPlugin {
     public List<DBObject> findOnVMLogDB(String nameFiled, Object thresholdMin, Object thresholdMax,BigDataMethodName name);
     public List<DBObject> findOnHostStateDB(String nameFiled, Object thresholdMin, Object thresholdMax,BigDataMethodName name);
     public void shutdown();
-    public void insertSensing(Object elementToInsert, TypeOfElement type);
-    public void insertVMLog(Object elementToInsert, TypeOfElement type);
-    public void insertHostState(Object elementToInsert, TypeOfElement type);
-    public BasicDBList getListFieldName(String nameDB, String nameField,String collectionName);
+   // public BasicDBList getListFieldName(String nameDB, String nameField,String collectionName);
     public DBObject findByObjId(String nameDB,String nameCollection,ObjectId id);
     public DBObject findByIdString(String nameDB,String nameCollection,String id);
-    public void insertOnDB(String dbName,Object elementToInsert, TypeOfElement type);
+    //public void insertOnDB(String dbName,Object elementToInsert, TypeOfElement type);
     public void insertOnDB(BigDataParameterContainer container);
-    
-    
-
-
+    public void insertSensing(BigDataParameterContainer container);
+    public void insertVMLog(BigDataParameterContainer container);
+    public void insertHostState(BigDataParameterContainer container);
+   // public BasicDBList getListAttributeName(String nameDB, String attrName,String collectionName);
+   // public List<DBObject> findIfPresentOnCollectionToArray(String nameDB, String nameCollection, String nameField);
+   // public List<DBObject> findIfNotPresentOnCollectionToArray(String nameDB, String nameCollection, String nameField);
+   //public List<DBObject> findOnDB(String nameDB,BasicDBObject query);
+    public List<DBObject> find(BigDataParameterContainer struct);
+   // public List<DBObject> findOnCollection(String nameDB,String nameCollection,String nameFiled, Object thresholdMin, Object thresholdMax, BigDataMethodName nameMtd);
+   //public List<DBObject> findOnDB(String nameDB,String nameFiled, Object thresholdMin, Object thresholdMax, BigDataMethodName nameMtd);
+    public ArrayList calculateOnField(CalculateOnFieldParameterContainer container);
 }

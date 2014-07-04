@@ -19,6 +19,7 @@
  *  Copyright (c) 2010 Massimo Villari
  *  Copyright (c) 2010 Antonio Celesti
  *  Copyright (c) 2010 Antonio Nastasi
+ *  Copyright (c) 2013 Antonio Galletta
  *
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
@@ -42,6 +43,14 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.clever.Common.XMLTools;
+
+/**
+ * 
+ * 
+ * @author Antonio Galletta (2013)
+ * 
+ * 
+ */
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -136,6 +145,7 @@ public class ParserXML
     {
       document = builder.build( new StringReader( XMLString ) );
       rootElement = document.getRootElement();
+      
     }
     catch ( JDOMException ex )
     {
@@ -232,6 +242,7 @@ public class ParserXML
   public Document getDocument(){
       return this.document;
   }
+
     //OVERLOADS
     public String getElementContent(String element, String defaultValue) {
         String returnV = "";
@@ -276,7 +287,6 @@ public class ParserXML
         return returnV;
     }
     
-    
     public void printElementContentText(){
         for(int i =0;i<this.rootElement.getChildren().size();i++)
         {
@@ -284,7 +294,33 @@ public class ParserXML
             logger.debug("text "+((Element)this.rootElement.getChildren().get(i)).getText());
         }
     }
-    
+
+    public static Element getElementByAttribute(Document document, String attributeId,String attributeValue){
+   Element root, elemento;
+   List listaElementi;
+  
+   
+   root=document.getRootElement();
+   listaElementi=root.getChildren();
+
+   
+   for(int i=0;i<listaElementi.size();i++){
+       
+        elemento=(Element)listaElementi.get(i);
+        try{
+            if(elemento.getAttributeValue(attributeId).equals(attributeValue)){
+       
+                return elemento;
+            }
+        }
+        catch(NullPointerException ex){
+        return null;
+        }
+   }
+  return null;
+  }
+
+  
     /**
      * search recursuvely the element and returns the contents
      * @param element name of element
@@ -293,27 +329,28 @@ public class ParserXML
     public String getElementContentInStructure( String element ){
         
         String value= rootElement.getChildText( element );
+        Element result;
         if(value==null){
-            value=this.searchElement(rootElement.getChildren(), element);
-     
+            result=this.searchElement(rootElement.getChildren(), element);
+            if(result!=null){
+                    value=result.getText();
+            }
         }
     
         return value;
   }
-    
-   
-   
-   private String searchElement(List<Element> listChildren,String elementName){
+ 
+    private Element searchElement(List<Element> listChildren,String elementName){
         
        Iterator iterElem;
-        String value=null;
+        Element value=null;
         Element tmp;
                 
         if(!listChildren.isEmpty()){
             iterElem=listChildren.iterator();
             while(iterElem.hasNext()&&value==null){
                 tmp=((Element)iterElem.next());
-                value=tmp.getChildText(elementName);
+                value=tmp.getChild(elementName);
                 if(value==null){
                     value=searchElement(tmp.getChildren(),elementName);
                     }
@@ -324,4 +361,311 @@ public class ParserXML
         
         
     }
+   
+   public Element getElementInStructure( String element ){
+        
+        Element value= rootElement.getChild(element);
+        if(value==null){
+            value=this.searchElement(rootElement.getChildren(), element);
+     
+        }
+    
+        return value;
+  }
+   
+  public ParserXML( Element rootElement ){ 
+      
+      this.rootElement =rootElement;
+      
+    } 
+
+   public Element getElementByAttribute( String attributeId,String attributeValue){
+   Element  elemento;
+   List listaElementi;
+  
+   
+   listaElementi=rootElement.getChildren();
+
+   
+   for(int i=0;i<listaElementi.size();i++){
+       
+        elemento=(Element)listaElementi.get(i);
+        try{
+            if(elemento.getAttributeValue(attributeId).equals(attributeValue)){
+       
+                return elemento;
+            }
+        }
+        catch(NullPointerException ex){
+        return null;
+        }
+   }
+  return null;
+  }
+   
+    /**
+     * search recursuvely the element and returns the contents
+     * @param root
+     * @param element name of element
+     * @return value of element, null if element don't exist
+     */
+    public static String getElementContentInStructure(Element root, String element ){
+        
+        String value= root.getChildText( element );
+        Element result;
+        if(value==null){
+            result=ParserXML.searchElementStatic(root.getChildren(), element);
+            if(result!=null){
+                    value=result.getText();
+            }
+        }
+    
+        return value;
+  }
+ 
+    private static Element searchElementStatic(List<Element> listChildren,String elementName){
+        
+       Iterator iterElem;
+        Element value=null;
+        Element tmp;
+                
+        if(!listChildren.isEmpty()){
+            iterElem=listChildren.iterator();
+            while(iterElem.hasNext()&&value==null){
+                tmp=((Element)iterElem.next());
+                value=tmp.getChild(elementName);
+                if(value==null){
+                    value=searchElementStatic(tmp.getChildren(),elementName);
+                    }
+                 }
+         }
+        
+         return value;
+        
+        
+    }
+   
+   public static Element getElementInStructure(Element root, String element ){
+        
+        Element value= root.getChild(element);
+        if(value==null){
+            value=ParserXML.searchElementStatic(root.getChildren(), element);
+     
+        }
+    
+        return value;
+  }
+   
+  public static Element getElementByAttribute(Element root, String attributeId,String attributeValue){
+   Element elemento;
+   List listaElementi;
+  
+   
+   listaElementi=root.getChildren();
+
+   
+   for(int i=0;i<listaElementi.size();i++){
+       
+        elemento=(Element)listaElementi.get(i);
+        try{
+            if(elemento.getAttributeValue(attributeId).equals(attributeValue)){
+       
+                return elemento;
+            }
+        }
+        catch(NullPointerException ex){
+        return null;
+        }
+   }
+  return null;
+  }
+
+  
+    public static Element getElementByAttribute(Document document, String attributeId,String attributeValue,Namespace namespace){
+   Element root, elemento;
+   List listaElementi;
+  
+   
+   root=document.getRootElement();
+   listaElementi=root.getChildren();
+
+   
+   for(int i=0;i<listaElementi.size();i++){
+       
+        elemento=(Element)listaElementi.get(i);
+        try{
+            if(elemento.getAttributeValue(attributeId, namespace).equals(attributeValue)){
+       
+                return elemento;
+            }
+        }
+        catch(NullPointerException ex){
+        return null;
+        }
+   }
+  return null;
+  }
+
+  
+    /**
+     * search recursuvely the element and returns the contents
+     * @param element name of element
+     * @return value of element, null if element don't exist
+     */
+    public String getElementContentInStructure( String element, Namespace namespace ){
+        
+        String value= rootElement.getChildText( element,namespace );
+        Element result;
+        if(value==null){
+            result=this.searchElement(rootElement.getChildren(), element, namespace);
+            if(result!=null){
+                    value=result.getText();
+            }
+        }
+    
+        return value;
+  }
+ 
+    private Element searchElement(List<Element> listChildren,String elementName,Namespace namespace){
+        
+       Iterator iterElem;
+        Element value=null;
+        Element tmp;
+                
+        if(!listChildren.isEmpty()){
+            iterElem=listChildren.iterator();
+            while(iterElem.hasNext()&&value==null){
+                tmp=((Element)iterElem.next());
+                value=tmp.getChild(elementName, namespace);
+                if(value==null){
+                    value=searchElement(tmp.getChildren(),elementName, namespace);
+                    }
+                 }
+         }
+        
+         return value;
+        
+        
+    }
+   
+   public Element getElementInStructure( String element,Namespace namespace ){
+        
+        Element value= rootElement.getChild(element, namespace);
+        if(value==null){
+            value=this.searchElement(rootElement.getChildren(), element, namespace);
+     
+        }
+    
+        return value;
+  }
+   
+   
+  public Element getElementByAttribute( String attributeId,String attributeValue,Namespace namespace){
+   Element  elemento;
+   List listaElementi;
+  
+   
+   listaElementi=rootElement.getChildren();
+
+   
+   for(int i=0;i<listaElementi.size();i++){
+       
+        elemento=(Element)listaElementi.get(i);
+        try{
+            if(elemento.getAttributeValue(attributeId, namespace).equals(attributeValue)){
+       
+                return elemento;
+            }
+        }
+        catch(NullPointerException ex){
+        return null;
+        }
+   }
+  return null;
+  }
+  
+  
+    /**
+     * search recursuvely the element and returns the contents
+     * @param root
+     * @param element name of element
+     * @param namespace
+     * @return value of element, null if element don't exist
+     */
+    public static String getElementContentInStructure(Element root, String element,Namespace namespace ){
+        
+        String value= root.getChildText( element, namespace );
+        Element result;
+        if(value==null){
+            result=ParserXML.searchElementStatic(root.getChildren(), element, namespace);
+            if(result!=null){
+                    value=result.getText();
+            }
+        }
+    
+        return value;
+  }
+ 
+    private static Element searchElementStatic(List<Element> listChildren,String elementName, Namespace namespace){
+        
+       Iterator iterElem;
+        Element value=null;
+        Element tmp;
+            
+        if(!listChildren.isEmpty()){
+            
+            iterElem=listChildren.iterator();
+            while(iterElem.hasNext()&&value==null){
+                
+                tmp=((Element)iterElem.next());
+                value=tmp.getChild(elementName, namespace);
+              
+                if(value==null){
+                    value=searchElementStatic(tmp.getChildren(),elementName, namespace);
+                    }
+                 }
+         }
+        
+         return value;
+        
+        
+    }
+   
+   public static Element getElementInStructure(Element root, String element, Namespace namespace ){
+        
+        Element value= root.getChild(element, namespace);
+        if(value==null){
+            value=ParserXML.searchElementStatic(root.getChildren(), element, namespace);
+            
+        }
+    
+        return value;
+  }
+   
+  public static Element getElementByAttribute(Element root, String attributeId,String attributeValue,Namespace namespace){
+   Element elemento;
+   List listaElementi;
+  
+   
+   listaElementi=root.getChildren();
+
+   
+   for(int i=0;i<listaElementi.size();i++){
+       
+        elemento=(Element)listaElementi.get(i);
+        try{
+            if(elemento.getAttributeValue(attributeId, namespace).equals(attributeValue)){
+       
+                return elemento;
+            }
+        }
+        catch(NullPointerException ex){
+        return null;
+        }
+   }
+  return null;
+  }
+
+
+  
 }
