@@ -56,7 +56,7 @@ import org.clever.administration.annotations.HasScripts;
 import org.clever.administration.annotations.ShellCommand;
 import org.clever.administration.annotations.ShellParameter;
 import org.clever.administration.api.Session;
-
+import java.util.regex.Pattern;
 
 /**
  * Modulo per gestire le VM
