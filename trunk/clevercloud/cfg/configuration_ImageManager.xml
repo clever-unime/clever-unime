@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <ClassPlugin>org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.ImageManager</ClassPlugin>
+  <writeOnCfgFolder>yes</writeOnCfgFolder>
+  <moduleName>ImageManagerAgent</moduleName>
+</root>

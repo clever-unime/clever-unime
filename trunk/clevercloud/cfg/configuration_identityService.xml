@@ -6,7 +6,8 @@
     <moduleName>IdentityServiceAgent</moduleName>
     
     <pluginParams>
-        <ipAddress>172.17.2.26</ipAddress>
+      <!--  <ipAddress>10.0.2.15</ipAddress> -->
+       <ipAddress>172.17.2.26</ipAddress>
         <port>35357</port>
         
     <user>admin</user>

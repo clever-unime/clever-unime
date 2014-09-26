@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <writeOnCfgFolder>yes</writeOnCfgFolder>
+        
+    <ClassPlugin>org.clever.HostManager.CloudMonitorPlugins.Sigar.SigarCloudMonitor</ClassPlugin>
+    <moduleName>CloudMonitorAgent</moduleName>
+    <pluginParams>
+        <freq_monitor>60</freq_monitor> <!-- imposto la frequenza di campionamento delle misure in secondi -->
+        <active_monitor>true</active_monitor> <!-- attiva/disattiva il monitoring continuo -->
+    </pluginParams>
+</configuration>

@@ -159,6 +159,7 @@ public abstract class Agent implements MethodInvokerHandler {
         {
             ParserXML pXML = getconfiguration(cfgFile,classpath);
             this.pluginInstantiation=this.startPlugin(pXML);
+            logger.debug("PEPPE");
             this.setPluginState(true);
         }
         catch( Exception e )

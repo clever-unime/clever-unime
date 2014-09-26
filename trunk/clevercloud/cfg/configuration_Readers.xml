@@ -18,8 +18,8 @@
         <port>3306</port>
         <hostname>localhost</hostname>
         <DBName>sensordb</DBName>
-        <UserName></UserName>
-        <Password></Password>
+        <UserName />
+        <Password />
         <resettimeMillisec>150000</resettimeMillisec>
         <sensorNumber>1</sensorNumber>
         <firstvalue>2013-12-05 12:48:20</firstvalue>

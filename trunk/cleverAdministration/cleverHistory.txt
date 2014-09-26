@@ -1,365 +1,3 @@
-listhostmanager 
-ls
-listhostmanager 
-registervm -tn
-registervm -d
-help
-registervm -d
-help
-listGlobalvms 
-listclustermanager 
-listvms 
-registervm -d
-registervm -tn VEDescription.xml
-help
-registervm -d -debug
-registervm -debug
-registervm -d
-listhostmanager 
-registervm -d
-mount ing-clever-05
-mount -wizard ing-clever-05
-help
-mount -p /root/ubuQCOW.qcow
-mount -p /root/
-mount -p /root/vmimages
-help
-mount -p /root/vmimages
-mount -debug -p /root/vmimages
-mount -p /root/vmimages/
-mount -p /
-mount -wizard
-help
-mount nodo -wizard
-mount -debug -wizard
-ls
-mount -p nodo -wizard
-mount -debug -p nodo -wizard
-help
-mount -p /nodo -wizard
-mount -p nodo -wizard
-ls
-cd nodo
-help
-ls -p nodo
-registervm -d
-ls -p nodo
-registervm -d
-help
-listhostmanger
-listhostmanager 
-createvm -n UbuVirt -h ing-clever-05
-help
-createvm UbuVirt -h ing-clever-05
-listvms 
-help
-listvms -h ing-clever-05
-listGlobalvms -h ing-clever-05
-listvms -h ing-clever-05
-startvm -n UbuVirt
-registervm -d
-createvm -h ing-clever-05 -tn UbuVirt
-ls -p nodo
-listGlobalvms -h ing-clever-05
-network -h ing-clever-05
-unregistervm -n UbuVirt
-ls -p nodo
-registervm -d
-unregistervm -n UbuVirt
-registervm -d
-tree
-createvm UbuVirt -h ing-clever-05
-ls -p nodo
-listvms -h ing-clever-05
-listGlobalvms 
-ls -p nodo
-listmacaddress 
-startvm -n UbuVirt
-ls -p nodo
-createvm -debug-h ing-clever-05
-createvm -debug -h ing-clever-05
-createvm -h ing-clever-05 -tn UbuVirt
-createvm -tn UbuVirt -h ing-clever-05
-unregistervm -n UbuVirt
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-ls -p nodo
-unregistervm -n UbuVirt
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-unregistervm -n UbuVirt
-registervm -d
-unregistervm -n UbuVirt
-registervm -d
-unregistervm -n UbuVirt
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05 -exclusive
-createvm -n UbuVirt -h ing-clever-05
-clearUbuVirt -h ing-clever-05 -e
-createvm -tn UbuVirt -h ing-clever-05
-ls -p nodo
-createvm -tn UbuVirt -h ing-clever-05
-unregistervm -n UbuVirt
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-ls -p nodo
-createvm -tn UbuVirt -h ing-clever-05
-ls -p nodo
-unregistervm -n UbuVirt
-mount -p nodo -wizard
-mount -p nodo_clever -wizard
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-unregistervm -n UbuVirt
-mount -p clever_node -wizard
-ls -p clever_node
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-unregistervm -n UbuVirt
-mount -p clever05 -wizard
-ls -p clever05
-unregistervm -n UbuVirt
-mount -p clever05node -wizard
-ls -p clever05node
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-ls -p clever05node
-unregistervm -n UbuVirt
-mount -p nodo -wizard
-ls -p nodo
-unregistervm -n UbuVirt
-mount -p nodoC -wizard
-ls -p nodoC
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-ls -p nodoC
-createvm -tn UbuVirt -h ing-clever-05
-ls -p nodoC
-ls -p nodoC/dir
-unregistervm -n UbuVirt
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-unregistervm -n UbuVirt
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-mount -p peppe -wizard
-ls -p peppe
-registervm -d
-unregistervm -n UbuVirt
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-ls -p nodoC
-unregistervm -n UbuVirt
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-unregistervm -n UbuVirt
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-unregistervm -n UbuVirt
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-ls -p nodeC
-ls -p node
-mount 
-ls -p nodoC
-ls -p nodoC/dir
-createvm -tn UbuVirt -h ing-clever-05
-help
-createvm -tn UbuVirt -h ing-clever-05
-unregistervm -n UbuVirt
-registervm -d
-createvm -tn UbuVirt -h ing-clever-05
-unregistervm -n UbuVirt
-registervm -d
-createvm -tn UbuVirt -h giusimone
-startvm -n 48bdc4090b7f409ba76d397d981c3e93
-stopvm -n 48bdc4090b7f409ba76d397d981c3e93
-deletevm -n 48bdc4090b7f409ba76d397d981c3e93
-sosgetcapabilities -f /home/giuseppe/XML/getCapabilitiesRequest.xml -h giuseppe-HP-620
-sasgetcapabilities -s Contents
-sosgetcapabilities -f /home/giusimone/XML/getObservationRequest.xml -h giusimone
-SOSGetObservation -h giusimone -f /home/giusimone/Scrivania/tesi_manera/XML/getObservationRequest.xmlSOSGetObservation -h giusimone -f /home/giusimone/XML/getObservationRequest.xml
-SOSGetObservation -h giusimone -f /home/iusimone -f /home/giusimone/XML/getObservationRequest.xml
-SOSGetObservation -h giusimone -f /home/giusimone/XML/getObservationRequest.xml
-sosgetobservation -h giusimone -f /home/giusimone/XML/getObservationRequest.xml
-sassubscribe -f/home/giusimone/XML/subscribeRequest.xml
-sosgetobservation -h giusimone -f /home/giusimone/XML/getObservationRequest.xml
-createvm -tn UbuVirt -h giusimone
-startvm -n 8ec411424d2a4b3eb4f22d44a7266994
-stopvm -n 8ec411424d2a4b3eb4f22d44a7266994
-deletevm -n 8ec411424d2a4b3eb4f22d44a7266994
-cpustatus -h giusimone
-listhostmanager 
-cpustatus -h giusimone
-listhostmanager 
-createvm -tn UbuVirt -h giusimone
-registervm -d
-ls
-ls nodo
-tree
-mount -p nodo1 -wizard
-tree
-registervm -d
-ls nodo1
-ls nodo
-mount -p nodo2 -wizard
-registervm -d
-createvm -tn UbuVirt -h giusimone
-startvm -n cc05f09f0f0c4ec9958bcb97a26094c5
-stopvm -n cc05f09f0f0c4ec9958bcb97a26094c5
-deletevm -n cc05f09f0f0c4ec9958bcb97a26094c5
-listvms 
-listvms -h giusimone 
-createvm -tn UbuVirt -h giusimone
-listvms -h giusimone 
-startvm -n 23da0069e52b427fbb008750ce8a98b0
-stopvm -n 23da0069e52b427fbb008750ce8a98b0 -poweroff
-deletevm -n 23da0069e52b427fbb008750ce8a98b0
-createvm -tn UbuVirt -h giusimone -clonable
-startvm -n ceac80d69298478faa177b60920a6d96
-stopvm -n ceac80d69298478faa177b60920a6d96 -poweroff
-startvm -n ceac80d69298478faa177b60920a6d96
-stopvm -n ceac80d69298478faa177b60920a6d96 -poweroff
-sosgetobservation -h giusimone -f /media/dati/XML/getObservationRequest.xml
-sassubscribe -f /media/dati/XML/subscribeRequest.xml
-storagestatus -h giusimone
-help
-statusprocvm -h giusimone -p gnome-screensaver
-statusprocvm -h giusimone -p chrome
-cpustatus -h giusimone
-cpustatus -h webuntu
-storagestatus -h webuntu
-cpustatus -h webuntu
-listprobe
-cpustatus -h webuntu
-storagestatus -h webuntu
-cpustatus -h webuntu
-sassubscribe -f /media/dati/XML/subscribeRequest.xml
-statusprocvm -h giusimone -p java
-statusprocvm -h giusimone -p chrome
-createvm -tn UbuVirt -h giusimone -clonable
-HAM.acm()
-HAM.listSessionParams()
-listSessionParams()
-print(sf.getProperties());
-HAM.lhms();
-VMM.createvm("giusimone","test","UbuVirt","nodo2/HDDxHypvr/ubuntuVBOX.vdi")
-help
-?
-ham help
-HAM help
-help vmm.startVM_HOST
-help startVM_HOST
-help vmm
-exit
-vmm.createVM_HOST("giusimone","UbuVirt","EX")
-VMM.createvm("giusimone","UbuVirt","CR")
-VMM.getVMM()
-vmm.getVMM()
-a=vmm.createVM_HOST("giusimone","UbuVirt","EX")
-print(a)
-a=vmm.createVM_HOST("giusimone","UbuVirt","EX")
-a=vmm.createVM("giusimone","UbuVirt","EX")
-print(a)
-a=vmm.startVM("165c62d6109744e7b1746abb2eef6dd2")
-a=vmm.createVM("giusimone","UbuVirt","EX")
-print(a)
-a=vmm.createVM("giusimone","UbuVirt","EX")
-a=sma.Mount("nodo2","","wizard")
-print(a)
-ls nodo2
-a=sma.ls("nodo2")
-print(a)
-a=vmm.createVM("giusimone","UbuVirt","EX")
-vmm.registervm()
-vmm.registervm("default")
-a=vmm.createVM("giusimone","UbuVirt","EX")
-print(a)
-a=vmm.createVM("giusimone","UbuVirt","PR")
-print(a)
-a=vmm.startVM("f94244d57ef64cc4bebc7b4049d5349e")
-a=vmm.stopVM("f94244d57ef64cc4bebc7b4049d5349e",true)
-print(a)
-a=vmm.deleteVM("f94244d57ef64cc4bebc7b4049d5349e")
-print(a)
-mam.GetMeasureCpu("giusimone")
-mam.GetStorageStatus("giusimone")
-mam.GetMeasureCpu("giusimone")
-a=vmm.createVM("giusimone","UbuVirt","EX")
-mam.GetMeasureCpu("giusimone")
-mam.GetStorageStatus("giusimone")
-a=vmm.createVM("giusimone","UbuVirt","EX")
-mam.GetStorageStatus("giusimone")
-mam.GetMeasureCpu("giusimone")
-a=mam.GetMeasureCpu("giusimone")
-print(a)
-a=mam.GetStorageStatus("giusimone")
-print(a)
-a=mam.GetProcStatus("giusimone","java")
-print(a)
-exit
-a=mam.GetStorageStatus("giusimone")
-print(a)
-:help vmm.stopVM
-:help vmm stopVM
-:help vmm createvm
-:help vmm createVM
-:exit
-vmm.listVMs_HOST("giusimone")
-:exit
-a=ham.restartAgent("giusimone","SASAgent")
-print(a)
-a=ham.restartAgent("giusimone","SASAgentHm")
-print(a)
-a=ham.restartAgent("giusimone","SASAgentHm")
-print(a)
-a=seam.SOSGetObservation("/media/dati/XML/getObservationRequest.xml","giusimone")
-print(a)
-:help vmm.listVMs()
-:help vmm.listVMs
-a=vmm.listVMs("giusimone",true,false)
-print(a)
-a=vmm.listVMs("giusimone",true,false)
-print(a)
-a=vmm.listMAConVM("giusimone","ppppp")
-:exit
-a=vmm.listMAConVM("giusimone","ppppp")
-a=vmm.ListMAConVM("giusimone","ppppp")
-print(a)
-a=vmm.ListMAConVM("giusimone","ppppp")
-print(a)
-a=mam.GetMeasureCpu("giusimone")
-print(a)
-a=mam.GetStorageStatus("giusimone")
-print(a)
-print(vmm.ListProbe())
-a=vmm.ListProbe()
-print(a)
-a=vmm.ListProbe()
-print(a)
-a=vmm.attachDevice("giusimone","cd9fa7d457bd4ee0b94a986a98bfb5ef","/home/giusimone/VirtualBox VMs/Fedora-17-x86.vdi")
-ham.getActiveCM()
-a=ham.getActiveCM()
-print(a)
-BDM.lvms("sensing")
-BDM.gcn("sensing")
-BDM.fodb("carappolo","vm1","value",55,44,"findLessThan")
-BDM.fodb("carappolo","vm1","value",56,44,"findLessThan")
-BDM.fodb("carappolo","vm1","value",56,44,"findOnRangeWithBorderInf")
-BDM.fodb("carappolo","vm1","value",11,56,"findOnRangeWithBorderInf")
-BDM.fodb("carappolo","vm1","value",33,56,"findOnRangeWithBorderInf")
-BDM.fodb("carappolo","vm1","value",33,55,"findOnRangeWithBorderInf")
-BDM.fodb("sensing","vm11","TMP",33,55,"findOnRangeWithBorderInf")
-BDM.fodb("sensing","vm11","TMP",0,111,"findOnRangeWithBorderInf")
-BDM.fodb("sensing","vm11","TMP",56,44,"findLessThan")
-BDM.cof("sensing","sensor1","TMP","maximum",0,"MINUTES",null,"16:00:00",null,"16:15:00",null,10,"MINUTES")
-BDM.gldb()
-BDM.cof("sensing","sensor1","TMP","maximum",0,"MINUTES",null,"16:00:00",null,"16:15:00",null,10,"MINUTES")
-BDM.ccf()
-BDM.gldb()
-BDM.ccf()
-BDM.gldb()
-BDM.ccf()
 BDM.cof("sensing","sensor1","TMP","maximum",0,"MINUTES",null,"16:00:00",null,"16:15:00",null,10,"MINUTES")
 BDM.ccf()
 BDM.cof("sensing","sensor1","TMP","maximum",0,"MINUTES",null,"16:00:00",null,"16:15:00",null,10,"MINUTES")
@@ -429,3 +67,434 @@ BDM.osf("sensing","sensor1","TMP","last",1,"MINUTES","null","null","null","null"
 BDM.osf("sensing","sensor1","TMP","last",1,"MINUTES","null","null","null","null","null",10,"DAYS")
 BDM.osf("sensing","sensor1","TMP","last",1,"DAYS","null","null","null","null","null",10,"DAYS")
 BDM.osf("sensing","sensor1","TMP","sum",1,"DAYS","null","null","null","null","null",10,"DAYS")
+help ham 
+HAM.lhms()
+HAM.lcms()
+print(ham.listActiveAgents("hmricky"))
+HAM.lhms()
+print(ham.listActiveAgents("riccardo"))
+print(ham.listActiveAgents("cmriccardo"))
+clear
+print(ham.listActiveAgents("cmriccardo"))
+print(ham.listActiveAgents("riccardo"))
+:help ham listActiveAgents
+print(ham.listActiveAgents("riccardo"))
+HAM.lhms()
+swf.showAccountDetailsAndListContainers()
+print(showAccountDetailsAndListContainers())
+print(swf.showAccountDetailsAndListContainers("riccardo"))
+print(swf.showAccountDetailsAndListContainers("cmriccardo"))
+SWF.lhms()
+SWF
+print(swf.showAccountDetailsAndListContainers())
+print(ham.listActiveAgents("riccardo"))
+print(swf.showAccountDetailsAndListContainers())
+print(ham.listActiveAgents("riccardo"))
+print(swf.showAccountDetailsAndListContainers())
+swf.showAccountDetailsAndListContainers()
+print(swf.showAccountDetailsAndListContainers())
+swf.showAccountDetailsAndListContainers()
+print(swf.showAccountDetailsAndListContainers())
+print(showAccountDetailsAndListContainers())
+print(swf.showAccountDetailsAndListContainers())
+print(swf.showAccountDetailsAndListContainers("riccardo"))
+print(swf.createAccountMetadata("riccardo","dip","dip", "dip", "dip"))
+print(swf.createAccountMetadata("dip","dip", "dip", "dip"))
+print(swf.createAccountMetadata("riccardo","dip","dip", "dip","dip"))
+print(swf.showAccountDetailsAndListContainers("riccardo"))
+print(swf.createAccountMetadata("riccardo","dip","dip", "dip","dip"))
+HAM.lhms() 
+print(ham.listActiveAgents("riccardo")) 
+print(ham.listActiveAgents("cmriccardo")) 
+print(swf.showAccountDetailsAndListContainers(“riccardo”)) 
+print(swf.showAccountDetailsAndListContainers("riccardo")) 
+clear
+print(swf.showAccountDetailsAndListContainers("riccardo")) 
+print(swf.createAccountMetadata("riccardo","dip","dip", "dip","dip"))
+print(swf.createAccountMetadata("riccardo","Comune","Messina", "Rischio","idrogeologico"))
+print(swf.updateAccountMetadata("riccardo","Rischio","terremoto"))
+print(swf.deleteAccountMetadata("riccardo","Rischio","terremoto"))
+print(swf.showAccountDetailsAndListContainers("riccardo")) 
+print(swf.createContainer("riccardo","unime")) 
+print(swf.createContainer("riccardo","unime","null","null")) 
+print(swf.createContainer("riccardo","unime2","null","null")) 
+print(swf.deleteContainer("riccardo","unime2")) 
+print(swf.createContainer("riccardo","unime2","null","null")) 
+print(swf.deleteContainer("riccardo","unime2")) 
+print(swf.createContainer("riccardo","unime2","null","null")) 
+print(swf.showContainerMetadata("riccardo","unime2")) 
+print(swf.createAccountMetadata("riccardo","Comune","Catania", null,null))
+print(swf.createAccountMetadata("riccardo","Comune","Catania", "",""))
+print(swf.createAccountMetadata("riccardo","Comune","Catania", "q","q"))
+print(swf.createAccountMetadata("riccardo","Comune","Catania", null , null))
+print(swf.createAccountMetadata("riccardo","Comune2","Catania2", null , null))
+print(swf.showContainerMetadata("riccardo","unime2")) 
+print(swf.createContainerMetadata("riccardo","unime2","anno","2014")) 
+print(swf.updateContainerMetadata("riccardo","unime2","anno","2014")) 
+print(swf.createContainerMetadata("riccardo","unime2","anno","2014")) 
+print(swf.showContainerMetadata("riccardo","unime2")) 
+print(swf.createContainerMetadata("riccardo","unime2","anno","2014")) 
+print(swf.showContainerMetadata("riccardo","unime2")) 
+print(swf.updateContainerMetadata("riccardo","unime2","anno","2015")) 
+print(swf.showContainerMetadata("riccardo","unime2")) 
+print(swf.deleteContainerMetadata("riccardo","unime2","anno","2014")) 
+print(swf.createContainerMetadata("riccardo","unime2","anno","2014")) 
+print(swf.createContainerMetadata("riccardo","unime2","anno","2015")) 
+print(swf.createContainerMetadata("riccardo","unime2","anno","2016")) 
+print(swf.updateContainerMetadata("riccardo","unime2","anno","2017")) 
+print(swf.updateContainerMetadata("riccardo","unime2","anno","2018")) 
+print(swf.updateContainerMetadata("riccardo","unime2","anno1","2018")) 
+print(swf.deleteContainerMetadata("riccardo","unime2","anno1","2018")) 
+print(swf.deleteContainerMetadata("riccardo","unime2","anno11","2018")) 
+print(swf.createObject("riccardo","unime2","/home/riccardo/bob")) 
+print(swf.getObjectContent("riccardo","unime2","/home/riccardo/bob")) 
+print(swf.getObjectContent("riccardo","unime2","home/riccardo/bob")) 
+print(swf.replaceObjectContent("riccardo","unime2","/home/riccardo/bob")) 
+print(swf.replaceObject("riccardo","unime2","/home/riccardo/bob")) 
+print(swf.getObjectContent("riccardo","unime2","home/riccardo/bob")) 
+print(swf.Object("riccardo","unime2","/home/riccardo/bob")) 
+print(swf.Object("riccardo","unime2","home/riccardo/bob")) 
+clear
+print(swf.deleteObject("riccardo","unime2","home/riccardo/bob")) 
+print(swf.createObject("riccardo","unime2","/home/riccardo/bob")) 
+print(swf.showContainer("riccardo","unime3")) 
+print(swf.createContainer("riccardo","unime3")) 
+print(swf.copyObject("riccardo","unime2","home/riccardo/bob","unime3","bob")) 
+print(swf.//204("riccardo","unime2","home/riccardo/bob","unime3","bob")) 
+            if(stringa.equals("204")){
+print(swf.showObjectMetadata("riccardo","unime3","bob")) 
+print(swf.createObjectMetadata("riccardo","unime3","bob","cognome"," marley")) 
+print(swf.createObjectMetadata("riccardo","unime3","bob","cognome2"," marley")) 
+print(swf.showObjectMetadata("riccardo","unime3","bob")) 
+print(swf.updateObjectMetadata("riccardo","unime3","bob","cognome2"," OBAMA")) 
+print(swf.showObjectMetadata("riccardo","unime3","bob")) 
+print(swf.downloadObject("riccardo","steven","qwe.txt","/home/riccardo/Desktop/"))
+print(swf.downloadObject("riccardo","steven","qwe.txt","/home/riccardo/Desktop"))
+print(swf.downloadObject("riccardo","steven","qwe.txt","/home/riccardo/Deskt"))
+print(swf.downloadObject("riccardo","steven","qwe.txt","/home/riccardo/Desktop/"))
+print(swf.showAccountDetailsAndListContainers("riccardo"))
+print(swf.createAccountMetadata("riccardo", "Rischio11","idrogeologico11")) 
+print(swf.showAccountDetailsAndListContainers("riccardo"))
+print(swf.showAccountDetailsAndListContainers("riccardo", "http://10.0.2.15:35357","adrmin","admin","admin"))
+print(swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","adrmin","admin","admin"))
+:help
+:help ham
+:help HAM
+HAM.lhms()
+print(swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","adrmin","admin","admin"))
+:help swf
+print(swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","adrmin","admin","admin"))
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","adrmin","admin","admin")
+print(swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","adrmin","admin","admin"))
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","adrmin","admin","admin")
+print(ham.listActiveAgents("riccardo"))
+print(ham.listActiveAgents("cmriccardo"))
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","adrmin","admin","admin")
+swf.createAccountMetadata("riccardo","","")
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","adrmin","admin","admin")
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","admin","admin","admin")
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","admin","admin")
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","admin","admin","admin")
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","admin","admin")
+swf.showAccountDetailsAndListContainers()
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","admin","admin")
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","admin","admin","admin")
+swf.createAccountMetadata("riccardo","","")
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","admin","admin","admin","book","peter pan")
+swf.createAccountMetadata("riccardo", "http://172.17.2.26:35357","admin","admin","admin","book","peter pan")
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","admin","admin","admin","book","peter pan")
+swf.createAccountMetadata("riccardo","","")
+swf.showAccountDetailsAndListContainers("riccardo", "http://172.17.2.26:35357","admin","admin","admin","book","peter pan")
+swf.createAccountMetadata("riccardo", "http://172.17.2.26:35357","admin","admin","admin","book","peter pan")
+swf.updateAccountMetadata("riccardo", "172.17.2.26","admin","admin","admin","book","peter pan")
+swf.createAccountMetadata("riccardo", "admin","admin","admin","book2","peter pan")
+swf.updateAccountMetadata("riccardo", "admin","admin","admin","book","peter pan")
+swf.updateAccountMetadata("riccardo", "admin","admin","admin","book","peter pan2")
+swf.deleteAccountMetadata("riccardo", "admin","admin","admin","book","peter pan2")
+swf.updateAccountMetadata("riccardo", "admin","admin","admin","book","peter pan")
+swf.updateAccountMetadata("riccardo", "admin","admin","admin","book","peter pan2")
+swf.deleteAccountMetadata("riccardo", "admin","admin","admin","book","peter pan2")
+swf.showAccountDetailsAndListContainers("riccardo", "admin","admin","admin")
+swf.createContainer("riccardo", "admin","admin","admin","pippo")
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo")
+swf.createContainer("riccardo", "admin","admin","admin","pippo")
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo")
+swf.createContainer("riccardo", "admin","admin","admin","pippo")
+swf.createContainerMetadata("riccardo", "admin","admin","admin","pippo", "Book", "sandokan")
+swf.updateContainerMetadata("riccardo", "admin","admin","admin","pippo", "Book", "sandokan2")
+swf.deleteContainerMetadata("riccardo", "admin","admin","admin","pippo", "Book", "sandokan2")
+swf.deleteContainerMetadata("riccardo", "admin","admin","admin","myfiles")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.replaceObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.replaceObject("riccardo", "admin","admin","admin","pippo","pippo.txt")
+swf.getObjectContent("riccardo", "admin","admin","admin","pippo","pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")
+swf.showContainerMetadata("riccardo", "admin","admin","admin","myfiles")
+swf.getObjectContent("riccardo", "admin","admin","admin","myfiles","test.txt")
+swf.getObjectContent("riccardo", "admin","admin","admin","myfiles","x.txt")
+swf.getObjectContent("riccardo", "admin","admin","admin","steven","qwe.txt")
+swf.createContainer("riccardo", "admin","admin","admin","pippo")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.getObjectContent("riccardo", "admin","admin","admin","pippo","pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")
+swf.createContainer("riccardo", "admin","admin","admin","pippo2")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.copyObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/pippo.txt","pippo2","pippo2.txt")
+swf.copyObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/pippo.txt","pippo2","pippo.txt")
+swf.createContainer("riccardo", "admin","admin","admin","pippo3")
+swf.createContainer("riccardo", "admin","admin","admin","pippo5")
+swf.copyObject("riccardo", "admin","admin","admin","pippo","pippo.txt","pippo5","pippo.txt")
+swf.createContainer("riccardo", "admin","admin","admin","pippo5","pippo.txt","pippo","pippo")
+swf.createObjectMetadata("riccardo", "admin","admin","admin","pippo5","pippo.txt","pippo","pippo")
+swf.updateObjectMetadata("riccardo", "admin","admin","admin","pippo5","pippo.txt","pippo","pippo2")
+swf.showObjectMetadata("riccardo", "admin","admin","admin","pippo5","pippo.txt")
+swf.showObjectMetadata("riccardo", "admin","admin","admin","pippo5","pippo.txt","/home/riccardo/Desktop/")
+swf.showObjectMetadata("riccardo", "admin","admin","admin","pippo5","pippo.txt","/home/riccardo/Desktop/pippo1,txt")
+swf.showObjectMetadata("riccardo", "admin","admin","admin","pippo5","pippo.txt","/home/riccardo/Desktop/")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo5","pippo.txt","/home/riccardo/Desktop/")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.showAccountDetailsAndListContainers("riccardo", "admin","admin","admin")
+swf.createAccountMetadata("riccardo", "admin","admin","admin","Rischio","Idrogeologico") 
+swf.createAccountMetadata("riccardo", "admin","admin","admin","Rischio","Terremoto") 
+swf.deleteAccountMetadata ("riccardo", "admin","admin","admin","Rischio","Terremoto") 
+swf.createContainer ("riccardo", "admin","admin","admin","mdslab")  
+swf.deleteContainer ("riccardo", "admin","admin","admin","unime")  
+swf.deleteContainer ("riccardo", "admin","admin","admin","unime22")  
+swf.deleteContainer ("riccardo", "admin","admin","admin","primo.txt")  
+swf.deleteContainer ("riccardo", "admin","admin","admin","pippo")  
+swf.deleteContainer ("riccardo", "admin","admin","admin","myfiles111.avi")  
+swf.deleteContainer ("riccardo", "admin","admin","admin","mdslab")  
+swf.deleteContainer ("riccardo", "admin","admin","admin","pippo")  
+swf.deleteContainer ("riccardo", "admin","admin","admin","mdslab")  
+swf.deleteContainer ("riccardo", "admin","admin","admin","pippo")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo")  
+swf.createContainer("riccardo", "admin","admin","admin","pippo2")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo2")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo")  
+swf.createContainer("riccardo", "admin","admin","admin","pippo2")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo2")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo")  
+swf.createContainer("riccardo", "admin","admin","admin","pippo2")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo")  
+swf.showAccountDetailsAndListContainers("riccardo", "admin","admin","admin")
+swf.createAccountMetadata("riccardo", "admin","admin","admin","Rischio","Idrogeologico") 
+swf.updateAccountMetadata("riccardo", "admin","admin","admin","Rischio","Terremoto") 
+swf.deleteAccountMetadata("riccardo", "admin","admin","admin","Rischio","Idrogeologico") 
+swf.createContainer("riccardo", "admin","admin","admin","pippo2")  
+swf.createContainer("riccardo", "admin","admin","admin","pippo")  
+swf.createContainer("riccardo", "admin","admin","admin","pippo3")  
+swf.createContainer("riccardo", "admin","admin","admin","pippo4")  
+swf.createContainer("riccardo", "admin","admin","admin","pippo5")  
+swf.createContainer("riccardo", "admin","admin","admin","pippo6")  
+swf.createContainer("riccardo", "admin","admin","admin","pippo7")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo2")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo3")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo4")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo5")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo6")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo")  
+swf.deleteContainer("riccardo", "admin","admin","admin","pippo7")  
+swf.createContainerMetadata("riccardo", "admin","admin","admin","pippo","aaa","bbb")  
+swf.updateContainerMetadata("riccardo", "admin","admin","admin","pippo","aaa","ccc")  
+swf.deleteContainerMetadata("riccardo", "admin","admin","admin","pippo","aaa","ccc")  
+swf.createContainerMetadata("riccardo", "admin","admin","admin","pippo","aaa","bbb")  
+swf.showContainerMetadata("riccardo", "admin","admin","admin","pippo")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/leonardo.avi")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","leonardo.avi")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/leonardo.avi")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","leonardo.avi")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/leonardo.avi")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/file.txt")  
+swf.replaceObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/file.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/file.txt")
+swf.replaceObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/file.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","file.txt","/home/riccardo/Desktop/")
+swf.copyObject("riccardo", "admin","admin","admin","pippo","file.txt","myfiles","file_copiato.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","myfiles","file_copiato.txt","/home/riccardo/Desktop/")
+swf.getObjectContent("riccardo", "admin","admin","admin","myfiles","file_copiato.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","myfiles","file2.txt","/home/riccardo/Desktop/")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","file2.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","file2.txt")  
+swf.replaceObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/file2.txt")
+swf.copyObject("riccardo", "admin","admin","admin","pippo","file.txt","myfiles","file2_copiato.txt")
+swf.copyObject("riccardo", "admin","admin","admin","pippo","file2.txt","myfiles","file2_copiato.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","myfiles","file2_copiato.txt","/home/riccardo/Desktop/")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","file2.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","file2.txt")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","file.txt")  
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","file2.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","myfiles","file_copiato.txt")  
+swf.deleteObject("riccardo", "admin","admin","admin","myfiles","file2_copiato.txt")  
+swf.copyObject("riccardo", "admin","admin","admin","pippo","file2.txt","myfiles","file2.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","myfiles","file2.txt","/home/riccardo/Desktop/")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","file2.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","myfiles","file2.txt")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","file2.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/file.txt")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/file2.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","file2.txt")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","file.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/file2.txt")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/file.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","file2.txt","/home/riccardo/Desktop/")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","file.txt","/home/riccardo/Desktop/")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/file2.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","file2.txt","/home/riccardo/Desktop/")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","prova.txt","/home/riccardo/Desktop/")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/last.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","last.txt","/home/riccardo/Desktop/")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","file.txt")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","file2.txt")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","last.txt")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","prova.txt")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","xpippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","xpippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/logojpg")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/logo.jpg")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","logo.jpg","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","logo.jpg")  
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","logo.jpg","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","logo.jpg")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.downloadObject("riccardo", "admin","admin","admin","pippo","pippo.txt","/home/riccardo/Desktop/")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/leonardo.avi")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","leonardo.avi")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/leonardo.avi")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","leonardo.avi")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/leonardo.avi")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","leonardo.avi")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/leonardo.avi")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","leonardo.avi")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/unime.jpg")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","leonardo.avi")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","unime.jpg")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","leonardo.avi")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","leonardo.avi")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","unime.jpg")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","leonardo.avi")  
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/pippo.txt")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/unime.jpg")
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/leonardo.avi")
+swf.deleteObject("riccardo", "admin","admin","admin","pippo","pippo.txt")  
+swf.createObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/leonardo.avi")
+swf.replaceObject("riccardo", "admin","admin","admin","pippo","/home/riccardo/Desktop/leonardo.avi")
+swf.copyObject("riccardo", "admin","admin","admin","pippo","leonardo.avi","myfiles","leonardo.avi")
+swf.createObjectMetadata("riccardo", "admin","admin","admin","pippo","leonardo.avi","Cognome","DI PIETRO")  
+swf.showObjectMetadata("riccardo", "admin","admin","admin","pippo","leonardo.avi")  
+swf.replaceObjectMetadata("riccardo", "admin","admin","admin","pippo","leonardo.avi","Cognome","DI PIETRO2")  
+swf.updateObjectMetadata("riccardo", "admin","admin","admin","pippo","leonardo.avi","Cognome","DI PIETRO2")  
+swf.getObjectContent("riccardo", "admin","admin","admin","pippo","leonardo.avi")  
+swf.getObjectContent("riccardo", "admin","admin","admin","pippo","unime.jpg")  
+ swf.downloadObject("riccardo", "admin","admin","admin","myfiles","leonardo.avi","/home/riccardo/Desktop/")
+ swf.showAccountDetailsAndListContainers("riccardo", "admin","admin","admin","pippo")
+ swf.showAccountDetailsAndListContainers("riccardo", "admin","admin","admin")
+ swf.downloadObject("riccardo", "admin","admin","admin","pippo","","/home/riccardo/Desktop/ubuVM.qcow2")
+ swf.downloadObject("riccardo", "admin","admin","admin","pippo","ubuVM.qcow2","/home/riccardo/Desktop/")
+swf.deleteContainer("riccardo","admin","admin","admin","1cecf36486404a0099cda8daafe5a8f2portatileATEST")
+swf.deleteContainer("riccardo","admin","admin","admin","1cecf36486404a0099cda8daafe5a8f2portatile")
+swf.deleteContainer("riccardo","admin","admin","admin","1cecf36486404a0099cda8daafe5a8f2portatileA")
+ swf.downloadObject("riccardo", "admin","admin","admin","1cecf36486404a0099cda8daafe5a8f2portatileA","ubuVM.qcow2","/home/riccardo/Desktop/")
+swf.deleteObject("riccardo","admin","admin","admin","1cecf36486404a0099cda8daafe5a8f2portatileA","ubuVM.qcow2")
+swf.deleteContainer("riccardo","admin","admin","admin","1cecf36486404a0099cda8daafe5a8f2portatileA")
+swf.deleteObject("riccardo","admin","admin","admin","1cecf36486404a0099cda8daafe5a8f2portatileA","ubuVM.qcow2")
+swf.deleteContainer("riccardo","admin","admin","admin","1cecf36486404a0099cda8daafe5a8f2portatileA")
+swf.deleteObject("riccardo","admin","admin","admin","1cecf36486404a0099cda8daafe5a8f2portatileA","ubuVM.qcow2")
+swf.deleteContainer("riccardo","admin","admin","admin","1cecf36486404a0099cda8daafe5a8f2portatileA")
+swf.deleteObject("riccardo","admin","admin","admin","prova","peppe.txt")
+swf.deleteObject("riccardo","admin","admin","admin","prova","pippo.txt")
+swf.deleteObject("riccardo","admin","admin","admin","prova","peppe.txt")
+swf.createObjectMetadata("riccardo","admin","admin","admin","/home/riccardo/Desktop/peppe.txt","STATO","ITALIA")
+swf.createObjectMetadata("riccardo","admin","admin","admin","dip","/home/riccardo/Desktop/peppe.txt","STATO","ITALIA")
+swf.updateObjectMetadata("riccardo","admin","admin","admin","dip","/home/riccardo/Desktop/peppe.txt","STATO","ITALIA")
+swf.createObjectMetadata("riccardo","admin","admin","admin","dip","/home/riccardo/Desktop/peppe.txt","STATO","ITALIA")
+swf.updateObjectMetadata("riccardo","admin","admin","admin","dip","/home/riccardo/Desktop/peppe.txt","STATO","ITALIA")
+swf.updateObjectMetadata("riccardo","admin","admin","admin","dip","/home/riccardo/Desktop/peppe.txt","STATO","SPAGNA")
+swf.createObjectMetadata("riccardo","admin","admin","admin","dip","/home/riccardo/Desktop/peppe.txt","STATO","ITALIA")
+swf.showObjectMetadata("riccardo","admin","admin","admin","dip","peppe.txt")
+swf.deleteObject("riccardo","admin","admin","admin","dip","/home/riccardo/Desktop/peppe.txt")
+swf.deleteContainer("riccardo","admin","admin","admin","bua")
