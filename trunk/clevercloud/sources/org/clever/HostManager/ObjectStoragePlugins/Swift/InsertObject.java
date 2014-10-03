@@ -6,6 +6,9 @@
 package org.clever.HostManager.ObjectStoragePlugins.Swift;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.security.MessageDigest;
 import java.util.HashMap;
 
 /**
@@ -230,6 +233,71 @@ public void elaboraInfo(){
 }//elaboraInfoDaUrlSwiftPresoDalToken
 
 
+public void elaboraInfoFromUrlComplete(){
+   
+   if(this.getUrlMigration()!=""){ 
+    
+  //#### Ricavo l'oggetto
+  //#inizio
+  int index = this.getUrlMigration().lastIndexOf("/");
+  String objectName = this.getUrlMigration().substring(index + 1);
+  this.setObject(objectName);
+  //debug
+  System.out.println("objectName : "+objectName);
+  //#fine 
+  
+  //#### Ricavo il container
+  //#inizio
+  String tmp=this.getUrlMigration().replace("/"+objectName, "");
+  index = tmp.lastIndexOf("/");
+  String containerName = tmp.substring(index + 1);
+  this.setContainer(containerName);
+  //debug
+  System.out.println("containerName : "+containerName);
+  //#fine 
+  
+  //#### Ricavo l'account
+  //#inizio
+  tmp=tmp.replace("/"+containerName, "");
+  index = tmp.lastIndexOf("/");
+  String accountName = tmp.substring(index + 1);
+  this.setAccount(accountName);
+  //debug
+  System.out.println("accountName : "+accountName);
+  //#fine
+  
+   //#### Ricavo l'urlBase
+  //#inizio
+  String urlBase = tmp.replace(accountName,"");
+  this.setBase(urlBase);
+  //debug
+  System.out.println("urlBase : "+urlBase);
+  //#fine 
+   }
+  
+  if(this.getPathObject()!=""){
+  
+  //#### Ricavo il nome dell'object
+  //#inizio
+  String comodo2 =this.getPathObject();
+  int index2 = comodo2.lastIndexOf("/");
+  String objectName = comodo2.substring(index2 + 1);
+  this.setObject(objectName);
+  //debug
+  //System.out.println("objectName : "+objectName);
+  //#fine 
+  
+  //#### Ricavo il il content length del file
+  //#inizio
+  File file = new File(this.getPathObject());
+  this.setObjectLength(file.length());
+  //debug
+  //System.out.println("La memoria occupata dal file è: "+file.length());
+  } 
+    
+}//elaboraInfoDaUrlSwiftPresoDalToken
+
+
 
 
 
@@ -394,7 +462,49 @@ public void elaboraInfo(){
     }
     
     
+   //############################################################################
     
+/**
+ * Funzione secondaria. Viene richiamata all'interno di getMD5Checksum()
+ * @param filename
+ * @return
+ * @throws Exception 
+ */
+private static byte[] createChecksum(String filename) throws Exception {
+       InputStream fis =  new FileInputStream(filename);
+
+       byte[] buffer = new byte[1024];
+       MessageDigest complete = MessageDigest.getInstance("MD5");
+       int numRead;
+
+       do {
+           numRead = fis.read(buffer);
+           if (numRead > 0) {
+               complete.update(buffer, 0, numRead);
+           }
+       } while (numRead != -1);
+
+       fis.close();
+       return complete.digest();
+   }
+
+
+/**
+ * Questa funzione restituisce l'md5 del file di input.
+ * @param filename
+ * @return
+ * @throws Exception 
+ */
+public static String getMD5Checksum(String filename) throws Exception {
+       byte[] b = createChecksum(filename);
+       String result = "";
+       for (int i=0; i < b.length; i++) {
+           result += Integer.toString( ( b[i] & 0xff ) + 0x100, 16).substring( 1 );
+       }
+       return result;
+   }
+  
+//############################################################################ 
    
     
 }//class

@@ -90,5 +90,9 @@
         <group>
             <file>file:/home/riccardo/NetBeansProjects/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/ObjectStoragePlugins/Swift/Swift.java</file>
         </group>
+        <group name="test">
+            <file>file:/home/riccardo/NetBeansProjects/backup_cl/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/ObjectStoragePlugins/Swift/InsertAccount.java</file>
+            <file>file:/home/riccardo/NetBeansProjects/backup_cl/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/ObjectStoragePlugins/Swift/Swift.java</file>
+        </group>
     </open-files>
 </project-private>

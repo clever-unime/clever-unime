@@ -60,5 +60,25 @@ public class SwiftParameterInput {
     
     public tipoObjectInput type;
     public Object ogg;
+
+    public tipoObjectInput getType() {
+        return type;
+    }
+
+    public void setType(tipoObjectInput type) {
+        this.type = type;
+    }
+
+    public Object getOgg() {
+        return ogg;
+    }
+
+    public void setOgg(Object ogg) {
+        this.ogg = ogg;
+    }
+ 
+    
+    
+    
     
 }

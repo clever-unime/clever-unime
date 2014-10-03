@@ -70,6 +70,8 @@ public class Swift implements ObjectStoragePlugin{
      Logger logger = Logger.getLogger("Swift - Plugin");
 
     //#################################################
+    
+     
     //################################
     // COSTRUTTORI
     //################################
@@ -84,7 +86,7 @@ public class Swift implements ObjectStoragePlugin{
      
     
     //################################
-    // METODI SETTER E GETTER
+    // SETTER E GETTER METHODS
     //################################
      
  /*    
@@ -115,12 +117,12 @@ public void debug(){
      
      
 //################################
-//    METODI DELLA CLASSE
+// METHODS OF CLASS
 //################################
 
 
 //############################################################################
-//Operazione su Account
+// Account Operation
 //########################
 
 
@@ -150,14 +152,14 @@ public SwiftParameterOutput createAccountMetadata(SwiftParameterInput swiftParam
     
    if(swiftParameterInput.type == SwiftParameterInput.tipoObjectInput.InsertAccount){
        
-      //debug
+       //debug
      //System.out.println("Ho caricato un giusto oggetto di input. "+SwiftParameterInput.tipoObjectInput.InsertAccount);
-       
+             
     //creo questo oggetto di comodo
     InsertAccount insertAccount = new InsertAccount();
 
     //eseguo il dowcasting
-    insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
+    insertAccount = (InsertAccount)swiftParameterInput.getOgg();
     
         
     insertAccount.setOperazione("create metadata");
@@ -186,7 +188,8 @@ public SwiftParameterOutput createAccountMetadata(SwiftParameterInput swiftParam
    }//if
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+       //System.out.println("Ho caricato un oggetto di input errato.");
+       logger.error("Ho caricato un oggetto di input errato.");
        return null;
    }
     
@@ -292,7 +295,8 @@ public SwiftParameterOutput updateAccountMetadata(SwiftParameterInput swiftParam
     //creo questo oggetto di comodo
     InsertAccount insertAccount = new InsertAccount();
     //eseguo il dowcasting
-    insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
+    //insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
+    insertAccount = (InsertAccount)swiftParameterInput.getOgg();
     
     insertAccount.setOperazione("update metadata");
     
@@ -338,11 +342,16 @@ public SwiftParameterOutput updateAccountMetadata(SwiftParameterInput swiftParam
  */
 public SwiftParameterOutput deleteAccountMetadata( SwiftParameterInput swiftParameterInput) throws IOException{
   
+    if(swiftParameterInput.type == SwiftParameterInput.tipoObjectInput.InsertAccount){
+       
+      //debug
+     //System.out.println("Ho caricato un giusto oggetto di input. "+SwiftParameterInput.tipoObjectInput.InsertAccount);
+        
     //creo questo oggetto di comodo
     InsertAccount insertAccount = new InsertAccount();
 
     //eseguo il dowcasting
-    insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
+    insertAccount = (InsertAccount)swiftParameterInput.getOgg(); //<----######
     
     insertAccount.setOperazione("delete metadata");
     
@@ -366,6 +375,12 @@ public SwiftParameterOutput deleteAccountMetadata( SwiftParameterInput swiftPara
    }
    
     return risposta;
+    }//if
+   else{
+      
+       logger.error("Ho caricato un oggetto di input errato.");
+       return null;
+   } 
         
 }//deleteAccountMetadata
 
@@ -475,7 +490,8 @@ public SwiftParameterOutput showAccountDetailsAndListContainers(SwiftParameterIn
     InsertAccount insertAccount = new InsertAccount();
 
     //eseguo il dowcasting
-    insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
+    //insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
+    insertAccount = (InsertAccount)swiftParameterInput.getOgg();
     
     insertAccount.setOperazione("list container information");
     
@@ -503,7 +519,7 @@ public SwiftParameterOutput showAccountDetailsAndListContainers(SwiftParameterIn
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+       logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
     
@@ -680,15 +696,15 @@ public SwiftParameterOutput createContainer(SwiftParameterInput swiftParameterIn
     InsertContainer insertContainer = new InsertContainer();
 
     //eseguo il dowcasting
-    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
-   
+    //insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+    insertContainer = (InsertContainer)swiftParameterInput.getOgg();
     
     
     //######################
     String url=insertContainer.getBase()+insertContainer.getAccount()+"/"+insertContainer.getContainer();
     //######################
     //debug
-    System.out.println(url);
+    //System.out.println(url);
     
    InfoContainerForMongoDb risposta = httpPut(url,insertContainer.getTokenId());
    
@@ -711,7 +727,7 @@ public SwiftParameterOutput createContainer(SwiftParameterInput swiftParameterIn
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+       logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
     
@@ -835,13 +851,14 @@ public SwiftParameterOutput deleteContainer(SwiftParameterInput swiftParameterIn
     InsertContainer insertContainer = new InsertContainer();
 
     //eseguo il dowcasting
-    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+    //insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+    insertContainer = (InsertContainer)swiftParameterInput.getOgg();
     
     //######################
     String url=insertContainer.getBase()+insertContainer.getAccount()+"/"+insertContainer.getContainer();
     //######################
     //debug
-    System.out.println(url);
+    //System.out.println(url);
     
    InfoContainerForMongoDb risposta = httpDeleteContainer(url,insertContainer.getTokenId());
    
@@ -860,7 +877,7 @@ public SwiftParameterOutput deleteContainer(SwiftParameterInput swiftParameterIn
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+       logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
     
@@ -968,7 +985,8 @@ public SwiftParameterOutput createContainerMetadata(SwiftParameterInput swiftPar
     InsertContainer insertContainer = new InsertContainer();
 
     //eseguo il dowcasting
-    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+    //insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+    insertContainer = (InsertContainer)swiftParameterInput.getOgg();
     
     insertContainer.setOperazione("create container metadata");
 
@@ -1004,7 +1022,7 @@ public SwiftParameterOutput createContainerMetadata(SwiftParameterInput swiftPar
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+       logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
     
@@ -1111,7 +1129,8 @@ public SwiftParameterOutput updateContainerMetadata(SwiftParameterInput swiftPar
     InsertContainer insertContainer = new InsertContainer();
 
     //eseguo il dowcasting
-    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+    //insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+    insertContainer = (InsertContainer)swiftParameterInput.getOgg();
     
     insertContainer.setOperazione("update container metadata");
 
@@ -1148,7 +1167,7 @@ public SwiftParameterOutput updateContainerMetadata(SwiftParameterInput swiftPar
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+       logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
     
@@ -1184,7 +1203,7 @@ public SwiftParameterOutput deleteContainerMetadata(SwiftParameterInput swiftPar
     InsertContainer insertContainer = new InsertContainer();
 
     //eseguo il dowcasting
-    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+    insertContainer = (InsertContainer)swiftParameterInput.getOgg(); //  <----######
     
     insertContainer.setOperazione("delete container metadata");
 
@@ -1222,7 +1241,7 @@ public SwiftParameterOutput deleteContainerMetadata(SwiftParameterInput swiftPar
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+       logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
     
@@ -1329,7 +1348,8 @@ public SwiftParameterOutput showContainerMetadata(SwiftParameterInput swiftParam
     InsertContainer insertContainer = new InsertContainer();
 
     //eseguo il dowcasting
-    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+    //insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+    insertContainer = (InsertContainer)swiftParameterInput.getOgg();
     
     insertContainer.setOperazione("show container metadata");
     
@@ -1366,7 +1386,7 @@ public SwiftParameterOutput showContainerMetadata(SwiftParameterInput swiftParam
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+        logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
     
@@ -1524,7 +1544,8 @@ public SwiftParameterOutput createObject(SwiftParameterInput swiftParameterInput
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+    //insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+   insertObject = (InsertObject)swiftParameterInput.getOgg();
         
    insertObject.setOperazione("create object");
     
@@ -1566,7 +1587,7 @@ public SwiftParameterOutput createObject(SwiftParameterInput swiftParameterInput
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+        logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
     
@@ -1690,7 +1711,8 @@ public SwiftParameterOutput replaceObject(SwiftParameterInput swiftParameterInpu
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+    //insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+    insertObject = (InsertObject)swiftParameterInput.getOgg();
     
    insertObject.setOperazione("replace object"); 
      
@@ -1726,7 +1748,7 @@ public SwiftParameterOutput replaceObject(SwiftParameterInput swiftParameterInpu
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+        logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
    
@@ -1789,7 +1811,8 @@ public SwiftParameterOutput copyObject(SwiftParameterInput swiftParameterInput) 
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----###### 
+    //insertObject = (InsertObject) swiftParameterInput.ogg; // <----###### 
+    insertObject = (InsertObject)swiftParameterInput.getOgg();
     
    insertObject.setOperazione("copy object"); 
      
@@ -1830,7 +1853,7 @@ public SwiftParameterOutput copyObject(SwiftParameterInput swiftParameterInput) 
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+        logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
     
@@ -1948,7 +1971,8 @@ public SwiftParameterOutput deleteObject(SwiftParameterInput swiftParameterInput
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+    //insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+    insertObject = (InsertObject)swiftParameterInput.getOgg();
     
    insertObject.setOperazione("delete object"); 
      
@@ -1976,7 +2000,6 @@ public SwiftParameterOutput deleteObject(SwiftParameterInput swiftParameterInput
    SwiftParameterOutput swiftParameterOutput = new SwiftParameterOutput();
    
    //effettuo l'upcasting
-   
    swiftParameterOutput = (SwiftParameterOutput) risposta;
    
  return swiftParameterOutput;  
@@ -1985,7 +2008,7 @@ public SwiftParameterOutput deleteObject(SwiftParameterInput swiftParameterInput
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+        logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
    
@@ -2078,7 +2101,8 @@ public SwiftParameterOutput downloadObject(SwiftParameterInput swiftParameterInp
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----###### 
+    //insertObject = (InsertObject) swiftParameterInput.ogg; // <----###### 
+    insertObject = (InsertObject)swiftParameterInput.getOgg();
     
    insertObject.setOperazione("download object"); 
      
@@ -2114,7 +2138,7 @@ public SwiftParameterOutput downloadObject(SwiftParameterInput swiftParameterInp
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+        logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
    
@@ -2253,7 +2277,8 @@ public SwiftParameterOutput  showObjectMetadata(SwiftParameterInput swiftParamet
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+    //insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+    insertObject = (InsertObject)swiftParameterInput.getOgg();
     
     insertObject.setOperazione("list object metadata");
     
@@ -2291,7 +2316,7 @@ public SwiftParameterOutput  showObjectMetadata(SwiftParameterInput swiftParamet
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+        logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
    
@@ -2413,7 +2438,8 @@ public SwiftParameterOutput  createObjectMetadata(SwiftParameterInput swiftParam
     InsertObject insertObject = new InsertObject();
 
    //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----###### 
+    //insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+    insertObject = (InsertObject)swiftParameterInput.getOgg();
     
    insertObject.setOperazione("create object metadata");
     
@@ -2452,9 +2478,9 @@ public SwiftParameterOutput  createObjectMetadata(SwiftParameterInput swiftParam
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+        logger.error("Ho caricato un oggetto di input errato.");
        return null;
-   } 
+} 
   
 }//createObjectMetadata
 
@@ -2570,7 +2596,8 @@ public SwiftParameterOutput  updateObjectMetadata(SwiftParameterInput swiftParam
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+    //insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+    insertObject = (InsertObject)swiftParameterInput.getOgg();
     
     insertObject.setOperazione("update object metadata");
     
@@ -2608,7 +2635,7 @@ public SwiftParameterOutput  updateObjectMetadata(SwiftParameterInput swiftParam
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+       logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
     
@@ -2649,9 +2676,10 @@ public SwiftParameterOutput createObjectMetadataMONGO(SwiftParameterInput swiftP
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput; 
+    //insertObject = (InsertObject) swiftParameterInput.ogg; // <----######  
+    insertObject = (InsertObject)swiftParameterInput.getOgg();
     
-   insertObject.setOperazione("create object metadata");
+   insertObject.setOperazione("create object metadata MONGO");
     
    String urlFinale=insertObject.getBase()+insertObject.getAccount()+"/"+insertObject.getContainer()+"/"+insertObject.getObject();
    
@@ -2679,7 +2707,7 @@ public SwiftParameterOutput createObjectMetadataMONGO(SwiftParameterInput swiftP
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+        logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
   

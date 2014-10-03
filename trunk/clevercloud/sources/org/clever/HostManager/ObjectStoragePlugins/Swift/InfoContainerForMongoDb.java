@@ -96,7 +96,7 @@ return json;
 }
 
 //########################
-//Metodi Setter e Getter
+// SETTER E GETTER METHODS
 //########################
 
     public String getAccount() {
