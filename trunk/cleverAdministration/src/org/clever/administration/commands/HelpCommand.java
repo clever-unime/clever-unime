@@ -33,7 +33,7 @@ import org.apache.commons.cli.Options;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 
 

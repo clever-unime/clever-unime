@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -47,8 +47,8 @@ import org.clever.Common.VEInfo.DesktopVirtualization;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
 import org.clever.HostManager.ServiceManager.ServiceObject;
-import org.jdom.Attribute;
-import org.jdom.Element;
+import org.jdom2.Attribute;
+import org.jdom2.Element;
 
 /**
  *

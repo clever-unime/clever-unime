@@ -15,5 +15,7 @@
     <moduleName>VirtualizationManagerAgent</moduleName>
     <pluginParams>
         <HostManagerServiceGuacaTarget>brady-desktop</HostManagerServiceGuacaTarget>
+        <ShareTecnologyAdopted>SWIFT</ShareTecnologyAdopted>
+        <VFSNODESHARED>sharednode</VFSNODESHARED>
     </pluginParams>
 </configuration>

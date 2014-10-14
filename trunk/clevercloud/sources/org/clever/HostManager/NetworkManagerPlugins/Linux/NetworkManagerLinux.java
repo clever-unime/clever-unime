@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -52,7 +52,7 @@ import org.clever.Common.Exceptions.CleverException;
 import org.clever.HostManager.NetworkManager.*;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 
 
@@ -124,17 +124,19 @@ public class NetworkManagerLinux implements NetworkManagerPlugin
             }
             else
             {
-                System.out.println( "Cannot start Network Manager" );
+                logger.error( "Cannot start Network Manager" );
+                this.owner.setPluginState(false);
             }
         }
         else
         {
             this.setAdaptersInfo();
-            System.out.println( "Your're not root -> need root privileges" );
+            logger.error( "Your're not root -> need root privileges" );
         }
 
         pluginDescription = new PluginDescription( "Network Manager", "0.9", "Network management tool", "java+bridge-utils+ethtool", "" );
         logger.info( "NetworkManager plugin initialized");
+        this.owner.setPluginState(true);
     }
 
   private void setAdaptersInfo()

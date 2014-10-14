@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -71,13 +71,13 @@ import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.HostManager.SAS.AdvertiseRequestEntry;
 import org.clever.HostManager.SAS.AdvertisementExpirationTask;
 import org.clever.HostManager.SAS.SensorAlertMessage;
-import org.jdom.CDATA;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.CDATA;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.safehaus.uuid.UUIDGenerator;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -1471,7 +1471,7 @@ public class SASAgent extends CmAgent {
             String rAd="<adv>"+this.query(checkpub)+"</adv>";
            //logger.info("?=)%* Advertise result:\n"+rAd);
             
-            org.jdom.Document docSol = this.stringToDom(rAd);
+            Document docSol = this.stringToDom(rAd);
             Element getCapabilitiesElement = docSol.detachRootElement();
             
             List adv = getCapabilitiesElement.getChildren();
@@ -1542,7 +1542,7 @@ public class SASAgent extends CmAgent {
             String rpu = (String) this.invoke("DatabaseManagerAgent", "query", true, params);
             //logger.info("?=)%* Publication result:\n"+rpu);
             String rpu2="<pub>"+rpu+"</pub>";
-            org.jdom.Document docpub = this.stringToDom(rpu2);
+            Document docpub = this.stringToDom(rpu2);
             Element publicat = docpub.detachRootElement();
             List puc = publicat.getChildren();
             Iterator pubi = puc.iterator();
@@ -1623,7 +1623,7 @@ public class SASAgent extends CmAgent {
            // logger.info("?=) query result:\n"+qresult);
             db=Database.getNewInstance(parameterContainer);
            // logger.info("DB: "+parameterContainer.getDbName());
-            org.jdom.Document docSol = this.stringToDom(qresult);
+            Document docSol = this.stringToDom(qresult);
             Element getCapabilitiesElement = docSol.detachRootElement();
             
             
@@ -1844,7 +1844,7 @@ public class SASAgent extends CmAgent {
         
             db=Database.getNewInstance(this.parameterContainer);
            // logger.info("DB: "+this.parameterContainer.getDbName());
-            org.jdom.Document docAdv = this.stringToDom(rAd);
+            Document docAdv = this.stringToDom(rAd);
             Element getCapabilitiesElement = docAdv.detachRootElement();
             
             List adv = getCapabilitiesElement.getChildren();
@@ -1983,7 +1983,7 @@ public class SASAgent extends CmAgent {
               
             String subreq="<?xml version=\"1.0\" encoding=\"UTF-8\"?><Subscribe><SubscriptionOfferingId>"+soId+"</SubscriptionOfferingId></Subscribe>";  
             String response = subscribe(subreq);
-            org.jdom.Document docsub = this.stringToDom(response);
+            Document docsub = this.stringToDom(response);
             Element subelem = docsub.detachRootElement();
             String subId=subelem.getAttributeValue("SubscriptionID");
             String subexpT=subelem.getAttributeValue("expires");

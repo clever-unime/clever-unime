@@ -48,8 +48,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 import javax.swing.JOptionPane;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
@@ -200,13 +199,17 @@ public class StrorageAdministrationModule extends AdministrationModule{
      * @return 
      */
     @ShellCommand
-    public String upload (@ShellParameter(name="src", comment="Local Logical Path") String src,
+    public String upload (@ShellParameter(name="src", comment="Physical Path") String src,
                           @ShellParameter(name="dst", comment="Remote Logical Path") String dst  ) throws CleverException
     {
+        
+        //src=System.getProperty("user.dir")+"/"+src.split("./")[1];
+        //Logger logger=Logger.getLogger("SMA");
         ArrayList params = new ArrayList();
+        //logger.debug(src);
         File f = new File(src);
         if (!f.exists())
-            throw new CleverException("Error. Local file not found");
+            throw new CleverException("Error. Local file not found:"+src);
         params.add(dst);
         params.add("");
         try{
@@ -221,12 +224,39 @@ public class StrorageAdministrationModule extends AdministrationModule{
             FileSystemManager mgr = VFS.getManager();
             FileObject file_s = mgr.resolveFile(src);
             dest.cp(file_s, file_d);
+            
         }  catch (FileSystemException ex) {
             throw new CleverException(ex,"Error in file upload!");
         }
         
         String result="\n--------Logical Catalog--------\n"+"File upload success"+"\n-------------------------------";
         return result;
+    }
+    
+    @ShellCommand
+    public String cp (@ShellParameter(name="src", comment="Source Logical Path") String src,
+                          @ShellParameter(name="dst", comment="Remote Logical Path") String dst) throws CleverException
+    {
+        ArrayList params = new ArrayList();
+        
+            params.add(src);
+            params.add("");
+            params.add(dst);
+            params.add("");
+            try{
+                if((Boolean)this.execSyncCommand(this.session.getHostAdministrationModule().getActiveCM(),
+                                                "StorageManagerAgent",
+                                                "cp",
+                                                params,
+                                                false))
+                    return "File copy is completed successfully";
+                else
+                    return "File copy is not completed because a problem is occurred";
+                
+            }  catch (Exception ex) {
+                throw new CleverException(ex,"Error in file copy!");
+            }
+       
     }
     
 }

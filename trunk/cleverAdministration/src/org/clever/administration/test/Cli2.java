@@ -58,7 +58,7 @@ import org.clever.administration.exceptions.CleverClientException;
 import org.clever.administration.test.TestApi;
 import org.clever.administration.api.Session;
 import org.clever.administration.api.SessionFactory;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 
 

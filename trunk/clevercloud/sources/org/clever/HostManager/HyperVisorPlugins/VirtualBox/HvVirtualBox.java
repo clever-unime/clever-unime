@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -57,9 +57,8 @@ import java.util.Map;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
 import org.clever.Common.Communicator.Agent;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import org.virtualbox_4_1.*;
 
@@ -126,10 +125,12 @@ public class HvVirtualBox implements HyperVisorPlugin {
         catch( VBoxException e ){
             e.getWrapped().printStackTrace();
              logger.error( "Error: "+e );
+             this.owner.setPluginState(false);
         }
          catch(Exception e){
             logger.error("Exception in HvVirtualBox. :"+e, e);
             e.printStackTrace();
+            this.owner.setPluginState(false);
         }
        
     }
@@ -163,7 +164,13 @@ public class HvVirtualBox implements HyperVisorPlugin {
      }
 
 
-
+     /**
+      * This function set property for virtual Machine, if in the VEDescriptor is indicated a 
+      * network configuration then will be create, instead if no network configuration are setted in 
+      * VED descriptor then the new VM don't have a network adapter.
+      * @param vm
+      * @param vmD 
+      */
      private void setMachine (IMachine vm, VEDescription vmD){
         try{
             int numCpu = vmD.getCpu().getNumCpu();
@@ -171,10 +178,19 @@ public class HvVirtualBox implements HyperVisorPlugin {
             Long n = Long.parseLong(num);
             vm.setCPUCount(n);
             vm.setMemorySize(vmD.getMemorySettings().getSize());
+            if(!vmD.getNetwork().isEmpty()){
+                String mac=vmD.getNetwork().get(0).getMac();
+                if(mac!=""&&mac!=null)
+                    vm.getNetworkAdapter(new Long(0)).setMACAddress(mac);
+            }
+            else{
+                logger.debug("SetMachien");
+                vm.getNetworkAdapter(new Long(0)).setEnabled(Boolean.FALSE);
+            }
             vm.saveSettings();
          }
         catch(VBoxException ex){
-            logger.error("Error: " + ex);
+            logger.error("Error: " + ex,ex);
         }
      }
 
@@ -1032,29 +1048,18 @@ public class HvVirtualBox implements HyperVisorPlugin {
     
     @Override
     public boolean attachInterface(String id, String inf, String mac, String type) {
-        boolean result=false;
-        String regex = "[a-fA-F0-9]{12}";
-        if (Pattern.matches(regex, mac)||mac.equals(""))
-        {
-	        if (type.equals("NAT")) {
-	            return attachInterface(id, inf, mac, NetType.NAT);
-	        } else if (type.equals("Bridged")) {
-	            return attachInterface(id, inf, mac, NetType.Briged);
-	        } else if (type.equals("Internal")) {
-	            return attachInterface(id, inf, mac, NetType.Internal);
-	        } else if (type.equals("HostOnly")) {
-	            return attachInterface(id, inf, mac, NetType.HostOnly);
-	        } else if (type.equals("Generic")) {
-	            return attachInterface(id, inf, mac, NetType.Generic);
-	        } else {
-	                logger.error("The interface type don't match with available case. It will be pass default interface type: NAT");
-	                result= attachInterface(id, inf, mac, NetType.NAT);
-            	}
+        if (type.equals("NAT")) {
+            return attachInterface(id, inf, mac, NetType.NAT);
+        } else if (type.equals("Bridged")) {
+            return attachInterface(id, inf, mac, NetType.Briged);
+        } else if (type.equals("Internal")) {
+            return attachInterface(id, inf, mac, NetType.Internal);
+        } else if (type.equals("HostOnly")) {
+            return attachInterface(id, inf, mac, NetType.HostOnly);
+        } else if (type.equals("Generic")) {
+            return attachInterface(id, inf, mac, NetType.Generic);
         }
-        else{
-            logger.error("The MAC Address passed for the function AttachInterface is wrong.Check the MAC Address before retry!");
-        }
-        return result;
+        return false;
     }
     
     private boolean attachInterface(String id, String inf, String mac, NetType type) {
@@ -1201,7 +1206,13 @@ public class HvVirtualBox implements HyperVisorPlugin {
                         break;
                     }
                     case 4: {//enabled
-                        isc.setEnabled((Boolean) par.get(1));
+                        logger.debug("abilitazione scheda");
+                        try{
+                            isc.setEnabled((Boolean) par.get(1));
+                        }
+                        catch(Exception e){
+                            logger.error("errore abilitazione scheda",e);
+                        }
                         break;
                     }
                     case 5: {//promiscuedmode
@@ -1232,6 +1243,16 @@ public class HvVirtualBox implements HyperVisorPlugin {
         logger.error("addAdapter Not supported yet ");
         throw new UnsupportedOperationException("Not supported yet.");
     }
-
+    
+    public boolean test(){
+        ArrayList<ArrayList> par= new ArrayList();
+        ArrayList<Object> p=new ArrayList();
+        int ind=4;
+        p.add(ind);
+        p.add(true);
+        par.add(p);
+        this.modifyInterface(par,"b4c862affdaa4c9fac9b19d54be77a5d" , Chipset.PIIX3, "");
+        return true;
+    }
     //</editor-fold>
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -544,8 +544,8 @@ public class DBMeridionaleReader2 implements ReaderInterface{
     private void setLastAcquireTime(String time){
         //logger.debug("modifica partita");
         ParserXML p=new ParserXML(new java.io.File("./cfg/configuration_Readers.xml"));
-        org.jdom.Document doc=p.getDocument();
-        org.jdom.Element d=doc.getRootElement().getChild("readers").getChild("reader").getChild("pluginParams").getChild("firstvalue");
+        org.jdom2.Document doc=p.getDocument();
+        org.jdom2.Element d=doc.getRootElement().getChild("readers").getChild("reader").getChild("pluginParams").getChild("firstvalue");
         d.setText(time.toString());   
         //logger.debug("modifica eseguita");
         p.saveXML("./cfg/configuration_Readers.xml");

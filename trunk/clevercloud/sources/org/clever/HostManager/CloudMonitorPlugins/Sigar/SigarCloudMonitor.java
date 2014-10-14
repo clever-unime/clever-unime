@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -53,7 +53,7 @@ import org.clever.Common.Exceptions.CleverException;
 import org.hyperic.sigar.Mem;
 import org.hyperic.sigar.Sigar;
 import org.hyperic.sigar.SigarException;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 import org.clever.Common.Measure.*;
 import org.clever.Common.XMLTools.MessageFormatter;
@@ -105,9 +105,16 @@ public class SigarCloudMonitor implements CloudMonitorPlugin{
     
 
     public void init(Element params, Agent owner) throws CleverException{
-        this.flag_monitor=Boolean.parseBoolean(params.getChildText("active_monitor"));
-        this.freq_monitor=Integer.parseInt(params.getChildText("freq_monitor"));
-        this.owner.setPluginState(true);
+        try{
+            this.flag_monitor=Boolean.parseBoolean(params.getChildText("active_monitor"));
+            this.freq_monitor=Integer.parseInt(params.getChildText("freq_monitor"));
+            this.owner.setPluginState(true);
+        }
+        catch(Exception e)
+        {
+            logger.error("Error occurred in initialization process of SigarCloudMonitor:",e);
+            this.owner.setPluginState(false);
+        }
     }
 
     

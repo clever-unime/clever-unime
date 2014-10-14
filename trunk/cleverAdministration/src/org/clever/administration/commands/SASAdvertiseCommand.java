@@ -16,7 +16,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.administration.ClusterManagerAdministrationTools;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  *

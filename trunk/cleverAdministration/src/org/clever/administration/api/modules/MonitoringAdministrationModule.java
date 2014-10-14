@@ -83,11 +83,13 @@ public class MonitoringAdministrationModule extends AdministrationModule{
      */
     @ShellCommand
     public String GetProcStatus (@ShellParameter(name="CEname", comment="Name of the Clever Element HostManager/Probe") String name,
-                                @ShellParameter(name="Procname", comment="Name of the Clever Element HostManager/Probe") String Procname) throws CleverException
+                                @ShellParameter(name="Procname", comment="Name of the Clever Element HostManager/Probe") String Procname,
+                                @ShellParameter(name="type", comment="Typer of parameter measured") String type) throws CleverException
     {
         ArrayList params = new ArrayList();
         params.add(name);
         params.add(Procname);
+        params.add(type);
         try{
         String result="\n--------Measures--------\n"+(String)this.execSyncCommand(this.session.getHostAdministrationModule().getActiveCM(),
                                         "MonitorManagerAgent",

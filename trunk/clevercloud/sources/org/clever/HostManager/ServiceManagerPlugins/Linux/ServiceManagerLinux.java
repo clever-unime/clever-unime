@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -44,7 +44,7 @@ import org.clever.Common.Exceptions.CleverException;
 import org.clever.HostManager.ServiceManager.ServiceManagerPlugin;
 import org.clever.HostManager.ServiceManager.ServiceObject;
 
-import org.jdom.Element;
+import org.jdom2.Element;
 
 
 /**
@@ -75,6 +75,7 @@ public class ServiceManagerLinux implements ServiceManagerPlugin{
             //Read param from configuration_networkManager.xml
         }
         this.owner = owner;
+        this.owner.setPluginState(true);
     }
 
    

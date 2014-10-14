@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -64,7 +64,7 @@ import org.clever.Common.XMPPCommunicator.*;
 import org.clever.HostManager.Dispatcher.DispatcherAgent;
 import org.clever.HostManager.Info.InfoAgent;
 import org.clever.HostManager.Test.TestAgent;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.jivesoftware.smack.packet.Presence.Mode;
 
 public class HostCoordinator implements CleverMessageHandler {

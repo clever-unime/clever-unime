@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -56,6 +56,7 @@ import org.apache.log4j.*;
 import java.io.InputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -74,7 +75,7 @@ import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP.ROOM;
 import org.clever.Common.XMPPCommunicator.RoomListener;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.jivesoftware.smack.packet.Presence.Mode;
 
 
@@ -338,7 +339,7 @@ public class ClusterCoordinator implements CleverMessageHandler
       
       ModuleFactory.setActiveReplaceAgent(this.replaceAgents);
       
-       //setto i valori x il monitor sul rilancio!
+      //setto i valori x il monitor sul rilancio!
       moduleFactory.setReplacementVariable(this.timeReload, this.numReload);
      
       Element agents = pXML.getRootElement().getChild("agents");
@@ -529,7 +530,31 @@ public class ClusterCoordinator implements CleverMessageHandler
             logger.error( "Error while inserting message listener: " + ex );
         }
         
-
+        try {
+            ArrayList params = new ArrayList();
+            params.add(new Boolean(true));
+            /*MODIFICA terzo parametro invoke, poichè il metodo setAsActiveCM della classe FederationListenerAgent
+            ritorna void*/
+            //this.dispatcherAgent.invoke("FederationListenerAgent", "setAsActiveCM", true, params);
+            
+            this.dispatcherAgent.invoke("FederationManagerAgent", "setAsActiveCM", false, params);
+            logger.info("active CM setted in federation room by FederationListenerAgent");
+    } catch (Exception e) {
+        logger.error("ERROR setting active CM in FederationListenerAgent: " + e.getMessage());
+        //Retry after 10 second
+        try{
+            this.wait(10000);
+            ArrayList params = new ArrayList();
+            params.add(new Boolean(true));
+            this.dispatcherAgent.invoke("FederationManagerAgent", "setAsActiveCM", false, params);
+            logger.info("active CM setted in federation room by FederationListenerAgent");
+    
+        }
+        catch(Exception ex){
+            logger.error("ERROR setting active CM in FederationListenerAgent: " + e.getMessage());
+            throw new CleverException (ex.getMessage()+" Started from "+ex.getMessage());
+        }
+    }
         //int tmp = conn.getNum_CCsInRoom(ROOM.CLEVER_MAIN);
         //logger.info("The number of CM in room CLEVER_MAIN is now: "+tmp);
 

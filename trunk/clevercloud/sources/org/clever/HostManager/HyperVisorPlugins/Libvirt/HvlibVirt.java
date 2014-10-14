@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -53,10 +53,10 @@ import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Exceptions.*;
 import org.clever.Common.VEInfo.*;
 import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 import org.libvirt.*;
 import org.libvirt.jna.ConnectionPointer;
 import org.libvirt.jna.DomainPointer;
@@ -64,8 +64,8 @@ import org.libvirt.jna.Libvirt.VirConnectDomainEventGenericCallback;
 import org.clever.Common.VEInfo.CpuSettings.Architecture;
 import org.clever.Common.XMLTools.ParserXML;
 import org.libvirt.jna.Libvirt;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
 
 
 
@@ -161,11 +161,12 @@ public class HvlibVirt implements HyperVisorPlugin , VirConnectDomainEventGeneri
       */
       logger.info( "LibVirt plugin initialized: " + "connected to qemu:///system" );
       updateMap();
-      
+      this.owner.setPluginState(true);
     }
     catch( LibvirtException e )
     {
-      logger.error( "Error: " + e );
+      logger.error( "Error in intialization process of HvlibVirt: " + e,e  );
+      this.owner.setPluginState(false);
     }
   }
 

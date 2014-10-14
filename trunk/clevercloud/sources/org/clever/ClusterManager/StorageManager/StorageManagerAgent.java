@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -59,21 +59,7 @@ public class StorageManagerAgent extends CmAgent {
         try {
             logger.info("Read Configuration StorageManager!");
             this.StoragePlugin = (StorageManagerPlugin) super.startPlugin("./cfg/configuration_StorageManager.xml","/org/clever/ClusterManager/StorageManager/configuration_StorageManager.xml");
-            /*
-            InputStream inxml = getClass().getResourceAsStream("/org/clever/ClusterManager/StorageManager/configuration_StorageManager.xml");
-            FileStreamer fs = new FileStreamer();
-            ParserXML pars = new ParserXML(fs.xmlToString(inxml));
-             
-            //Instantiate ModulCommunicator //the module communicator is istantiated in superclass Agent into function start()!
-            //this.mc = new ModuleCommunicator(pars.getElementContent("moduleName"));
-
-            //Instantiate StorageManager
-            this.cl = Class.forName(pars.getElementContent("StorageManagerPlugin"));
-            this.cl.newInstance();
-            //this.StoragePlugin.setModuleCommunicator(mc);
-           // this.mc.setMethodInvokerHandler(this);
             
-            */
             
             this.StoragePlugin.setOwner(this);
             logger.info("StorageManager Plugin instantiated !");

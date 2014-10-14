@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -65,7 +65,7 @@ import org.clever.Common.XMPPCommunicator.ExecOperation;
 import org.clever.Common.XMPPCommunicator.MethodConfiguration;
 import org.clever.Common.XMPPCommunicator.OperationResult;
 import org.clever.Common.XMPPCommunicator.Result;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Packet;
@@ -196,6 +196,7 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
      *
      * @param msg
      */
+    @Override
     public void handleMessage(final CleverMessage msg) {
         try {
             logger.debug("Dispatcher handle message: " + msg.toXML());
@@ -319,30 +320,35 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
         
         String result = message.getAttachment(0);
         String src=message.getSrc();
-       result= "<sourceHM name=\""+src+"\" type=\""+message.getTypeSrc()+"\">\n"+result+"\n</sourceHM>";
-        
+        result= "<sourceHM name=\""+src+"\" type=\""+message.getTypeSrc()+"\">\n"+result+"\n</sourceHM>";
+
         
         logger.debug("Measure Received: "+ result);
         
-        List params1 = new ArrayList();
-        BigDataParameterContainer container=new BigDataParameterContainer();
-        container.setElemToInsert(result);
-        container.setType(TypeOfElement.STRINGXML);
-        params1.add(container);
-      /*codice per sedna  
+         List params1 = new ArrayList();
+         
+        /*codice per sedna  
         try {
             owner.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
         } catch (CleverException ex) {
             logger.error("Send Measure to DatabaseManagerAgent failed: "+ ex);
         }
-        */
+        */ 
+         
+         
+        BigDataParameterContainer container=new BigDataParameterContainer();
+        container.setElemToInsert(result);
+        container.setType(TypeOfElement.STRINGXML);
+        params1.add(container);
+      
         
-        //params1.add(TypeOfElement.STRINGXML);
+        params1.add(TypeOfElement.STRINGXML);
         try {
             owner.invoke("BigDataAgent", "insertHostState", true, params1);
         } catch (CleverException ex) {
             logger.error("Send Measure to DatabaseManagerAgent failed: "+ ex);
         }
+        
         
     }
     
@@ -352,7 +358,6 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
 
 
     
-    @Override
     public void handleNotification(Notification notification) {
         //Send notification to corresponding agents using notificationId
         logger.debug("Start handle notification");
@@ -448,5 +453,24 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
     public void shutdownPluginInstance(){
         
     }
+    
 
+    
+//<editor-fold defaultstate="collapsed" desc="Function used for connection with SELEX Policy-Engine">
+        public Object sendRequestonPE(Object obj,String typeRequest)throws CleverException{
+            logger.debug("IN sendRequestonPE");
+            String jidPE=this.connectionXMPP.getActivePE(ROOM.CLEVER_MAIN);
+            //message composition for PE 
+            CleverMessage requestMsg = new CleverMessage();
+            ArrayList params=new ArrayList();
+            params.add(obj);
+            requestMsg.fillMessageFields( MessageType.REQUEST, this.connectionXMPP.getActiveCC(ROOM.SHELL), jidPE, true, params, new ExecOperation( typeRequest, params, "PolicyEngine" ), 0 );    
+            int id = requestsManager.addSyncRequestPending(requestMsg, Request.Type.INTERNAL, 0);
+            requestMsg.setId(id);
+            connectionXMPP.sendMessage(requestMsg.getDst(), requestMsg);
+            return requestsManager.getRequest(id).getReturnValue();
+        }
+        
+        
+//</editor-fold>
 }

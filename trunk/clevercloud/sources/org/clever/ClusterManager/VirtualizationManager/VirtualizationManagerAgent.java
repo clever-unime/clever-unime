@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -54,7 +54,7 @@ import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.VEInfo.DesktopVirtualization;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 /**
  * @author 2013 Giuseppe Tricomi
@@ -84,7 +84,7 @@ public class VirtualizationManagerAgent extends CmAgent {
         try {
             List params = null;
            //Load properties from XML file
-            if(super.getAgentName().equals("NoName"))
+            if(super.getAgentName().equals("NoName")|| super.getAgentName().equals(""))
                super.setAgentName("VirtualizationManagerAgent");
             
             super.start();
@@ -93,25 +93,6 @@ public class VirtualizationManagerAgent extends CmAgent {
                 this.logger.info("Read Configuration VirtualManager!");
                 VirtualizationManager=(VirtualizationManagerPlugin)super.startPlugin("./cfg/configuration_VirtualizationManager.xml","/org/clever/ClusterManager/VirtualizationManager/configuration_VirtualizationManager.xml");
                 this.VirtualizationManager.setOwner(this);
-                /*
-                FileStreamer fs = new FileStreamer();
-                InputStream inxml = getClass().getResourceAsStream("/org/clever/ClusterManager/VirtualizationManager/configuration_VirtualizationManager.xml");
-                ParserXML pXML = new ParserXML(fs.xmlToString(inxml));
-                
-                this.cl = Class.forName(pXML.getElementContent("VirtualizationManager"));
-                VirtualizationManager=(VirtualizationManagerPlugin)this.cl.newInstance();
-                this.agentName=pXML.getElementContent( "moduleName" );
-
-            
-             //   this.mc.setMethodInvokerHandler(this);
-
-                this.VirtualizationManager.setOwner(this);
-                
-                VirtualizationManager.init(pXML.getRootElement().getChild("pluginParams"), this);   
-                 
-              
-                logger.debug("called init of " + pXML.getElementContent("VirtualizationManager"));
-                * */ 
                 params= new ArrayList();
                 params.add(this.agentName);
                 params.add(this.notificatioPresenceHM);

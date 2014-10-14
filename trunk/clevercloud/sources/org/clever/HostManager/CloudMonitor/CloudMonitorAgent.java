@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -91,29 +91,7 @@ public class CloudMonitorAgent extends Agent{
         {
             this.startPlugin();
 
-       /* FileStreamer fs = new FileStreamer();
-
-        try {
-            
-            InputStream inxml=getClass().getResourceAsStream("/org/clever/HostManager/CloudMonitor/configuration_cloudmonitor.xml");
-            
-            if(inxml==null)
-                logger.debug("The variable inxml is null check configursarion file");
-            
-            ParserXML pXML = new ParserXML(fs.xmlToString(inxml));
-            
-            cl = Class.forName(pXML.getElementContent("PluginName"));
-            monitorPlugin = (CloudMonitorPlugin) cl.newInstance();
-            
-            monitorPlugin.init( null,this );
-            monitorPlugin.setOwner(this);
-
-            logger.info("CloudMonitorPlugin created!");
-            
-            
-            
-            flag_monitor = Boolean.parseBoolean(pXML.getElementContent("active_monitor"));
-   */         
+       
             
             if(this.monitorPlugin.isFlag_monitor()){
                 

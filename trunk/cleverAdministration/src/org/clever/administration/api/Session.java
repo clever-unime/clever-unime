@@ -8,10 +8,14 @@ import org.clever.administration.api.modules.MonitoringAdministrationModule;
 import org.clever.administration.api.modules.StrorageAdministrationModule;
 import org.clever.administration.api.modules.VMAdministrationModule;
 import org.clever.administration.api.modules.SensingAdministrationModule;
+import org.clever.administration.api.modules.ObjectStorageSwiftModule;
 /**
  * Classe che permette di invocare le API
  * @author maurizio
- *
+ * @author giuseppe
+ * @author antonio
+ * @author riccardo
+ * 
  */
 final public class Session {
     
@@ -22,6 +26,7 @@ final public class Session {
     final MonitoringAdministrationModule monitoringAdministrationModule;
     final SensingAdministrationModule sensingAdministrationModule;
     final BigDataModule bigDataModule;
+    final ObjectStorageSwiftModule  swiftAdministrationModule;
     final Settings settings;
 
     public Settings getSettings() {
@@ -40,6 +45,7 @@ final public class Session {
         SMAdministrationModule= new StrorageAdministrationModule(this);
         monitoringAdministrationModule = new MonitoringAdministrationModule(this);
         sensingAdministrationModule= new SensingAdministrationModule(this);
+        swiftAdministrationModule= new ObjectStorageSwiftModule(this);
         bigDataModule=new BigDataModule(this);
     }
     
@@ -113,5 +119,12 @@ final public class Session {
     @GetShellModule(name="bdm", comment="Low level module for clever host administration")
     public BigDataModule getBIGAdministrationModule() {
         return bigDataModule;
+    }
+    
+    
+    
+    @GetShellModule(name="swf", comment="Low level module for Swift module")
+    public ObjectStorageSwiftModule getSWFdministrationModule() {
+        return swiftAdministrationModule;
     }
 }

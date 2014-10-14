@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -146,7 +146,7 @@ import org.clever.Common.VEInfo.VEState;
 import org.clever.Common.VEInfo.VMWrapper;
 import org.clever.HostManager.HyperVisor.HyperVisorPlugin;
 import org.clever.HostManager.NetworkManager.AdapterInfo;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 
 /**
@@ -204,28 +204,36 @@ public class HvVMWare implements HyperVisorPlugin{
      */
     @Override
     public void init(Element params, Agent owner) throws CleverException{
-        if(params!=null){
-            this.hypervisorType = params.getChildText("HypervisorType");
-            if(this.hypervisorType.equals("hosted"))
-                this.HypervisorHosted=true;
-            else if(this.hypervisorType.equals("native")){
-                this.HypervisorNative=true;
+        try{
+            if(params!=null){
+                this.hypervisorType = params.getChildText("HypervisorType");
+                if(this.hypervisorType.equals("hosted"))
+                    this.HypervisorHosted=true;
+                else if(this.hypervisorType.equals("native")){
+                    this.HypervisorNative=true;
+                }
+                this.ipHypervisor = params.getChildText("IP");
+                this.url = params.getChildText("URL");
+                this.user = params.getChildText("user");
+                this.password = params.getChildText("password");
+                this.datacenter = params.getChildText("datacenter");
+                this.datastore = params.getChildText("datastore");
+                this.netName = params.getChildText("NetworkNetName");
+                this.nicName = params.getChildText("NetworkNicName");
+                this.inf_port = Integer.parseInt(params.getChildText("inf_port_vnc"));
+                this.sup_port = Integer.parseInt(params.getChildText("sup_port_vnc"));
             }
-            this.ipHypervisor = params.getChildText("IP");
-            this.url = params.getChildText("URL");
-            this.user = params.getChildText("user");
-            this.password = params.getChildText("password");
-            this.datacenter = params.getChildText("datacenter");
-            this.datastore = params.getChildText("datastore");
-            this.netName = params.getChildText("NetworkNetName");
-            this.nicName = params.getChildText("NetworkNicName");
-            this.inf_port = Integer.parseInt(params.getChildText("inf_port_vnc"));
-            this.sup_port = Integer.parseInt(params.getChildText("sup_port_vnc"));
+            this.updateMap();
+            logger.info( "VMWare plugin initialized");
+            this.notification = new Notification();
+            this.owner = owner;
+            this.owner.setPluginState(true);
         }
-        this.updateMap();
-        logger.info( "VMWare plugin initialized");
-        this.notification = new Notification();
-        this.owner = owner;
+        catch(Exception e)
+        {
+            logger.error("Error in initialization process of HvVMWare: "+e.getMessage(),e);
+            this.owner.setPluginState(false);
+        }
     }
     
     public String getHYPVRName(){

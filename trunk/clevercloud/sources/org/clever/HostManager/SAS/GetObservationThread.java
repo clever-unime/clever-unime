@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -48,11 +48,11 @@ import org.apache.log4j.*;
 import java.util.regex.Pattern;
 import org.clever.HostManager.SOS.Database;
 import org.clever.HostManager.SOS.SOSModuleTransactional.StdRandom;
-import org.jdom.Content;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.IllegalAddException;
-import org.jdom.Namespace;
+import org.jdom2.Content;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.IllegalAddException;
+import org.jdom2.Namespace;
 import org.apache.log4j.*;
 /**
  *

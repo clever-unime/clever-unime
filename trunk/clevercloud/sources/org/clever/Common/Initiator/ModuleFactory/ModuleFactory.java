@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -54,7 +54,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import org.apache.log4j.*;
-import org.jdom.Element;
+import org.jdom2.Element;
 
 public abstract class ModuleFactory 
 {

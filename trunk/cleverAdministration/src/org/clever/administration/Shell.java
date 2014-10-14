@@ -250,10 +250,13 @@ public class Shell {
     private void initInterpreter(String file) {
       try {
           //interpreter.eval("import org.clever.administration.api.*;");
+           System.out.println("&&&");
+          System.out.println("&&&:"+file);
           interpreter.eval(new InputStreamReader(this.getClass().getResourceAsStream("api/modules/scripts/init.bsh")));
-          
+          System.out.println("AL1");
           Configuration conf = new Configuration();
           File f ;
+          System.out.println("AL2");
           //Settings settings = null;
           if (file!=null && ((f = new File(file)).exists()))
           {
@@ -265,7 +268,7 @@ public class Shell {
               
               conf.configure(); //altrimenti getSettings return null
           }
-          
+          System.out.println("AL3");
           //a rigore l'impostazione del prompt non andrebbe
           CleverCommandClientProvider cccp = conf.getSettings().getCleverCommandClientProvider();
        

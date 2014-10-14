@@ -282,7 +282,7 @@ public class VMAdministrationModule extends AdministrationModule{
                     this.emptyParams,
                     false);
             Iterator ir=res.iterator();
-            String result="\n--------List Probe--------\n";
+            String result="\n--------List Template--------\n";
             while(ir.hasNext())
                 result=result+(String)ir.next()+"\n";
             result=result+"\n-------------------------------";
@@ -307,7 +307,7 @@ public class VMAdministrationModule extends AdministrationModule{
     @ShellParameter(name="Mac", comment="MAC Address that will be assigned to Network Interface,[VirtualBox case:] if this field is \"\" then VBOX create automatically the MAC Address") String Mac) throws CleverException
     {
         String regex = "[a-fA-F0-9]{12}";
-        if (!Pattern.matches(regex, Mac) && !Mac.equals(""))
+        if (!Pattern.matches(regex, Mac)&&!Mac.equals(""))
         {
             System.err.println("Mac Address is wrong! Check the Mac Address passed to function");
             return false;
@@ -334,6 +334,7 @@ public class VMAdministrationModule extends AdministrationModule{
                     false);
             return returnResponse;
         }
+        
     }
     
     
@@ -341,14 +342,15 @@ public class VMAdministrationModule extends AdministrationModule{
      * Lista delle VM
      * @return true on success
      */
-    @ShellCommand(comment="Lista delle VM direttamente")
+    @ShellCommand(comment="This function returns the Virtual Machines list taken from CLEVER or from Hypervisor. It can also returns the running Virtual Machines list.")
     public String listVMs(@ShellParameter(name="host", comment="Name of the host manager selected") String host,
-    @ShellParameter(name="hypvr", comment="If this parameter is true is returned the list of all Virtual Machine registrated on Host Manager's hypervisor") boolean hypvr,
-    @ShellParameter(name="onlyrunning", comment="List only runing VM")  Boolean onlyrunning) throws CleverException
+                        @ShellParameter(name="onlyrunning", comment="List only runing VM")  Boolean onlyrunning,
+                        @ShellParameter(name="hypvr", comment="If this parameter is true is returned the list of all Virtual Machine registrated on Host Manager's hypervisor") boolean hypvr) throws CleverException
     {
         ArrayList al=new ArrayList();
         String returnResponse="------Virtual Machine list for VM "+host+"--------\n";
         List response;
+        //TODO: invertire i parametri
         al.add(host);
         al.add(onlyrunning);
         al.add(hypvr);
@@ -524,7 +526,8 @@ public class VMAdministrationModule extends AdministrationModule{
      * @return true on success
      */
     @ShellCommand(comment="Lista MAC Address della VM direttamente")
-    public String ListMAConVM(String host, String VMName) throws CleverException
+    public String ListMAConVM(@ShellParameter(name="host",comment="HOST target")String host, 
+            @ShellParameter(name="VMName",comment="Virtual Machine name of which you want know MAC address List for Network interface enabled")String VMName) throws CleverException
     {
         String returnResponse="------MAC Address list for VM "+VMName+"--------\n";
         List response;
@@ -592,26 +595,154 @@ public class VMAdministrationModule extends AdministrationModule{
       false);
       return returnResponse;
       }*/
-      //</editor-fold>
-     
+    /**
+     * This function take a snapshot for the selected Virtual Machine with the indicated Snapshot desccription.
+     * @param host, HOST target, this is a String 
+     * @param VMName, Virtual Machine name referred to a snapshot will be created, this is a String
+     * @param SName, Name for the Snapshot that will be created, this is a String
+     * @param snapshotDescription, Description for the snapshot taken, this is a String
+     * @return
+     * @throws CleverException 
+     */
+    @ShellCommand(comment="This function take a snapshot for the selected Virtual Machine with the indicated Snapshot desccription")
+    public boolean VMSnapshot(@ShellParameter(name="host",comment="HOST target")String host,
+                                @ShellParameter(name="SName",comment="Name for the Snapshot that will be created")String SName,
+                                @ShellParameter(name="VMName",comment="Virtual Machine name referred to a snapshot will be created")String VMName,
+                                @ShellParameter(name="snapshotDescription",comment="Description for the snapshot taken")String snapshotDescription) throws CleverException
+    {
+        Boolean returnResponse;
+        ArrayList params = new ArrayList();
+        params.add(VMName);
+        params.add(SName);
+        params.add(snapshotDescription);
+        returnResponse = ( Boolean )
+                this.execSyncCommand(
+                host,
+                "HyperVisorAgent",
+                "takeSnapshot",
+                params,
+                false);
+        return returnResponse;
+    }
     
-   /*
+    /**
+     * This function restore a snapshot for the selected Virtual Machine with the indicated Snapshot desccription.
+     * @param host, HOST target, this is a String 
+     * @param VMName, Virtual Machine name referred to a snapshot will be created, this is a String
+     * @param SName, Name for the Snapshot that will be created, this is a String
+     * @param snapshotDescription, Description for the snapshot taken, this is a String
+     * @return
+     * @throws CleverException 
+     */
+    /*@ShellCommand(comment="This function restore a snapshot for the selected Virtual Machine with the indicated Snapshot desccription")
+    public boolean RestoreSnapshot(@ShellParameter(name="host",comment="HOST target")String host,
+                                @ShellParameter(name="SName",comment="Name for the Snapshot that will be created")String SName,
+                                @ShellParameter(name="VMName",comment="Virtual Machine name referred to a snapshot will be created")String VMName) throws CleverException
+                                
+    {
+        Boolean returnResponse;
+        ArrayList params = new ArrayList();
+        params.add(VMName);
+        params.add(SName);
+        returnResponse = ( Boolean )
+                this.execSyncCommand(
+                host,
+                "HyperVisorAgent",
+                "restoreSnapshot",
+                params,
+                false);
+        return returnResponse;
+    }*/
+    
+      //</editor-fold>
+    /**
+     * This function rename the selected Virtual Machine stored in target host.
+     * @param host String, HOST target
+     * @param OldName String, Old Virtual Machine Name
+     * @param NewName String, New Virtual Machine Name
+     * @return
+     * @throws CleverException 
+     */
+     @ShellCommand(comment="This function rename the selected Virtual Machine stored in target host")
+    public boolean VMrename(@ShellParameter(name="host",comment="HOST target")String host,
+                                @ShellParameter(name="OldName",comment="Old Virtual Machine Name")String OldName,
+                                @ShellParameter(name="NewName",comment="New Virtual Machine Name")String NewName
+                                ) throws CleverException
+    {
+        Boolean returnResponse;
+        ArrayList params = new ArrayList();
+        params.add(OldName);
+        params.add(NewName);
+       
+        returnResponse = ( Boolean )
+                this.execSyncCommand(
+                host,
+                "HyperVisorAgent",
+                "renameVM",
+                params,
+                false);
+        return returnResponse;
+    }
+    
+     @ShellCommand(comment="This function rename the selected Virtual Machine stored in target host")
+    public String test(@ShellParameter(name="host",comment="HOST target")String host,
+                                @ShellParameter(name="Name",comment="Old Virtual Machine Name")String OldName
+                                ) throws CleverException
+    {
+        String returnResponse;
+        ArrayList params = new ArrayList();
+        params.add(OldName);
+        
+       
+        returnResponse = ( String )
+                this.execSyncCommand(
+                host,
+                "HyperVisorAgent",
+                "prova",
+                params,
+                false);
+        return returnResponse;
+    }
+    @ShellCommand
     public boolean attachDevice(String host, String VMName,String diskPath) throws CleverException
     {
         Boolean returnResponse;
         ArrayList params = new ArrayList();
         params.add(VMName);
-        params.add(diskPath);
-        params.add(false);
+        params.add("/media/dati/ProgettiRealizzati perTest/Nuova cartella/test2/clever-unime/trunk/clevercloud/repository/cv/Snapshots/{ac992571-4a14-4b41-8717-b49bea91cd26}.vdi");
+        params.add(true);
         returnResponse = ( Boolean )
                 this.execSyncCommand(
                 host,
                 "HyperVisorAgent",
-                "attachDevice",
+                "attach_Device",
                 params,
                 false);
         return returnResponse;
     }
-    */
-    
+    @ShellCommand 
+    public boolean modifyInterf(String host){
+       // 26a9ba603e3549bfaaf453525ff5b6d5
+        Boolean returnResponse=false;
+        /*ArrayList<ArrayList> par= new ArrayList();
+        ArrayList<Object> p=new ArrayList();
+        int ind=4;
+        p.add(ind);
+        p.add(false);
+        par.add(p);
+        */
+        ArrayList params = new ArrayList();
+        
+        
+  try{
+        returnResponse = ( Boolean )
+                this.execSyncCommand(
+                host,
+                "HyperVisorAgent",
+                "test",
+                params,
+                false);
+    }catch(Exception e){}
+        return returnResponse;
+    }
 }

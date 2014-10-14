@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -113,12 +113,11 @@ public class DatabaseManagerAgent extends CmAgent
         return this.pluginInstantiation;
     }
     
-
     
     public boolean isCorrectedStarted(){
         return this.isPluginState();
     } 
-
+    
     @Override
     public void handleNotification(Notification notification) throws CleverException {
         if(notification.getId().equals("PRESENCE")){            
@@ -130,37 +129,16 @@ public class DatabaseManagerAgent extends CmAgent
     }
    
     public void startPlugin()throws CleverException, IOException{
-        try
-        {
-         //   Properties prop = new Properties();
-         //   InputStream in = getClass().getResourceAsStream( "/org/clever/Common/Shared/logger.properties" );
-         //   prop.load( in );
-         //   PropertyConfigurator.configure( prop );
-            
-            DbManagerPlugin = ( DatabaseManagerPlugin )super.startPlugin("./cfg/configuration_dbManagerPlugin.xml","/org/clever/ClusterManager/DatabaseManager/configuration_dbManagerPlugin.xml");
-            /*InputStream inxml = getClass().getResourceAsStream( "/org/clever/ClusterManager/DatabaseManager/configuration_dbManagerPlugin.xml" );
-            ParserXML pXML = new ParserXML( fs.xmlToString( inxml ) );
-            
-            cl = Class.forName( pXML.getElementContent( "DbManagerPlugin" ) );
-             cl.newInstance();
-            
-            logger.debug( "called init of " + pXML.getElementContent( "DbManagerPlugin" ) );
-            
-            DbManagerPlugin.init( pXML.getRootElement().getChild( "pluginParams" ),this );
-            
-            //agentName=pXML.getElementContent( "moduleName" );
-            DbManagerPlugin.setOwner(this);*/
-           this.DbManagerPlugin.setOwner(this);
-            logger.info( "DbManagerPlugin created " );
-            
-        }
-        catch( java.lang.NullPointerException e )
-        { 
-            throw new CleverException( e, "Missing logger.properties or configuration not found" );       
-        }
-        catch( Exception e )
-        {
-            throw new CleverException( e );
+        try {
+            DbManagerPlugin = (DatabaseManagerPlugin) super.startPlugin("./cfg/configuration_dbManagerPlugin.xml", "/org/clever/ClusterManager/DatabaseManager/configuration_dbManagerPlugin.xml");
+
+            this.DbManagerPlugin.setOwner(this);
+            logger.info("DbManagerPlugin created ");
+
+        } catch (java.lang.NullPointerException e) {
+            throw new CleverException(e, "Missing logger.properties or configuration not found");
+        } catch (Exception e) {
+            throw new CleverException(e);
         }
     }
     

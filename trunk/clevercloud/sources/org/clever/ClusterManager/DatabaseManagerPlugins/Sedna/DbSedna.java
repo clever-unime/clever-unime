@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -46,15 +46,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import net.cfoster.sedna.SednaUpdateService;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.clever.ClusterManager.DatabaseManager.DatabaseManagerPlugin;
 import org.clever.Common.Communicator.Agent;
-import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.XMLResource;
@@ -596,19 +594,21 @@ public class DbSedna implements DatabaseManagerPlugin {
                 result.append(resource.toString());
                 result.append('\n');
             }
-
-
-        } catch (XMLDBException ex) {
+        } 
+        catch (XMLDBException ex) {
             logger.error("Error executing query: " + ex);
             throw new CleverException("Error executing query: " + ex);
-        } finally {
-            try {
+        } 
+        finally 
+        {
+            try 
+            {
                 if (collect != null) {
                     collect.close();
                 }
-            } catch (XMLDBException ex) {
-                logger.error("Error closing connection: " + ex.getMessage());
-            }
+            } 
+            catch (XMLDBException ex) 
+            {   logger.error("Error closing connection: " + ex.getMessage());  }
 
         }
         return result.toString();
@@ -661,6 +661,7 @@ public class DbSedna implements DatabaseManagerPlugin {
         Collection collect = null;
         try {
             collect = this.connect();
+            logger.debug("Executing query xpath=" + this.xpath + "/cm/agent[@name='" + agentId + "']" + location);
             XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
             ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/cm/agent[@name='" + agentId + "']" + location);
             ResourceIterator results = resultSet.getIterator();
@@ -685,6 +686,38 @@ public class DbSedna implements DatabaseManagerPlugin {
         }
         return result.substring(0);
     }
+    
+    synchronized public String queryWithSeparator(String agentId, String location) throws CleverException {
+        StringBuffer result = new StringBuffer();
+        Collection collect = null;
+        try {
+            collect = this.connect();
+            logger.debug("Executing query xpath=" + this.xpath + "/cm/agent[@name='" + agentId + "']" + location);
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/cm/agent[@name='" + agentId + "']" + location);
+            ResourceIterator results = resultSet.getIterator();
+            logger.debug("Executing query xpath=" + this.xpath + "/cm/agent[@name='" + agentId + "']" + location);
+            while (results.hasMoreResources()) {
+                XMLResource resource = (XMLResource) results.nextResource();
+                result.append(resource.toString()+"@@@");
+                //result.append('\n');
+            }
+
+        } catch (XMLDBException ex) {
+            logger.error("Execute query failed: " + ex);
+            throw new CleverException("Error executing query: " + ex);
+        } finally {
+            try {
+                if (collect != null) {
+                    collect.close();
+                }
+            } catch (XMLDBException ex) {
+                logger.error("Error closing connection: " + ex.getMessage());
+            }
+        }
+        return result.substring(0);
+    }
+    
      @Override
     synchronized public String querytab(String agentId, String location) throws CleverException {
         StringBuffer result = new StringBuffer();
@@ -753,7 +786,45 @@ public class DbSedna implements DatabaseManagerPlugin {
         return a;
 
     }
+    
+    /**
+     * This method returns the attribute of a node
+     *
+     * @param agentId
+     * @param location
+     * @param tipo
+     * @param retCond
+     * @return
+     * @throws XMLDBException
+     */
+    
+        synchronized public String getAttributeNode(String agentId,String location,String tipo,String retCond) throws XMLDBException{
+        String a="";   
+        String xpathAgent ="/agent[@name='" + agentId + "']";
+        Collection collect = this.connect();
+        String updateStr = "let $p := document(\"" + this.document + "\")/" + xpathAgent + "" + location + "[@" + tipo + "] return data($p/"+retCond+")";
+        logger.debug("Migration:"+updateStr);
+        XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+        ResourceSet resultSet = serviceXQuery.queryResource(document, updateStr);
+        ResourceIterator results = resultSet.getIterator();
 
+        if ("localpath".equals(tipo)) {
+            while (results.hasMoreResources()) {
+                Resource res = results.nextResource();
+                a = a + (String) res.getContent() + "\n";
+            }
+        } else {
+            while (results.hasMoreResources()) {
+                Resource res = results.nextResource();
+                a = (String) res.getContent();
+            }
+        }
+
+        collect.close();
+        //System.out.println(updateStr);
+        return a;
+
+    }
     /**
      * This method checks if the node exists
      *
@@ -990,9 +1061,7 @@ public class DbSedna implements DatabaseManagerPlugin {
             ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/cm/agent[@name='" + agentId + "']" + location);
             ResourceIterator results = resultSet.getIterator(); 
             existsAgentNode = results.hasMoreResources();
-
-          logger.debug("query eseguita per "+agentId+" "+location);
-
+            logger.debug("query eseguita per "+agentId+" "+location);
 
         } catch (XMLDBException ex) {
             logger.error("Check Agent node failed: " + ex.getMessage());
@@ -1448,5 +1517,53 @@ public class DbSedna implements DatabaseManagerPlugin {
             }
         }
         return result;
+    }
+    
+    synchronized public List getAttributeWithInternalCond(String agentId,String location,String condition,String ret){ 
+        ArrayList a=new ArrayList();     
+        String xpathAgent ="/agent[@name='" + agentId + "']";
+        try{
+            Collection collect = this.connect();
+            String updateStr = "for $p in document(\"" + this.document + "\")/" + xpathAgent + "" + location + " where $p/" + condition + " return data($p/@"+ret+")";
+            //logger.debug("%%%%"+updateStr);
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.queryResource(document, updateStr);
+            ResourceIterator results = resultSet.getIterator();
+            while (results.hasMoreResources()) {
+                Resource res = results.nextResource();
+                a.add(res.getContent());
+            }
+            
+            collect.close();
+
+        } catch (XMLDBException ex) {
+            logger.error("Retrieving attribute \"name\" failed:" + ex.getMessage());
+        }
+        return a;
+    
+    }
+    
+    
+  synchronized public String queryConditionated(String agentId,String location,String condition,String ret) {
+        String a="";     
+        String xpathAgent ="/agent[@name='" + agentId + "']";
+        try{
+            Collection collect = this.connect();
+            String updateStr = "for $r in document(\"" + this.document + "\")/" + xpathAgent + "" + location + " where $r/" + condition + " return data($r/"+ret+")";
+            
+            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
+            ResourceSet resultSet = serviceXQuery.queryResource(document, updateStr);
+            ResourceIterator results = resultSet.getIterator();
+            while (results.hasMoreResources()) {
+                Resource res = results.nextResource();
+                a=(String)res.getContent();
+            }
+            
+            collect.close();
+
+        } catch (XMLDBException ex) {
+            logger.error("Retrieving attribute \"name\" failed:" + ex.getMessage());
+        }
+        return a;
     }
 }

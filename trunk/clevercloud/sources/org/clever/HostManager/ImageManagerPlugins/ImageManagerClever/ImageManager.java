@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -73,7 +73,7 @@ import org.clever.HostManager.ImageManager.ImageManagerPlugin;
 import org.clever.HostManager.Monitor.ResourceState;
 import org.clever.HostManager.NetworkManager.AdapterInfo;
 import org.clever.HostManager.NetworkManager.IPAddress;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smackx.filetransfer.FileTransfer.Status;
 import org.jivesoftware.smackx.filetransfer.FileTransferListener;
@@ -156,6 +156,7 @@ public class ImageManager implements ImageManagerPlugin {
       this.hostName = java.net.InetAddress.getLocalHost().getHostName();
     } catch (java.net.UnknownHostException uhe) {
       logger.error("Error getting Ip address : " + uhe.getMessage());
+      this.owner.setPluginState(false);
       return;
     }
     Thread hook = new ThreadCloser(this);
@@ -922,4 +923,28 @@ public List SnapshotImageCreate(String localpath,VFSDescription vfsD,LockFile.lo
 
     public void shutdownPluginInstance() {
     }
+    
+    public boolean uploadDiskonVFS(VFSDescription res, String src) throws CleverException{
+        try{
+            File f = new File(src);
+            if (!f.exists())
+            {
+                throw new CleverException("Error. Local file not found:"+src);
+            }
+            else{
+                VirtualFileSystem dest=new VirtualFileSystem();
+                dest.setURI(res);
+                FileObject file_d=dest.resolver(res, dest.getURI(),res.getPath1());
+                FileSystemManager mgr = VFS.getManager();
+                FileObject file_s = mgr.resolveFile(src);
+                dest.cp(file_s, file_d);
+            }
+        }
+        catch(Exception e){
+            logger.error("It's impossible upload DISK on VFS!",e);
+            return false;
+        }
+        return true;
+    }
+    
 }
