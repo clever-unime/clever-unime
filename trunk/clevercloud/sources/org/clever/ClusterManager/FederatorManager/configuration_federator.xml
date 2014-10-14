@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+The MIT License
+
+Copyright (c) 2014 Giovanni Volpintesta
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+-->
+
+
+<configuration>
+        <writeOnCfgFolder>yes</writeOnCfgFolder>
+        <ClassPlugin>org.clever.ClusterManager.FederatorManagerPlugins.FederationManagerSimple</ClassPlugin>
+	<moduleName>FederationManagerAgent</moduleName>
+        <pluginParams>
+            <domain>dominioA</domain>
+            <!--<server>localhost</server>-->
+            <server>localhost</server>
+            <port>5222</port>
+            <!--<room>roomfederation@conference.localhost</room>
+            <username>cmgiovanni-K53SV</username>
+            <password>qwbbfma</password>
+            <nickname>cmgiovanni-K53SV</nickname>-->
+            <room>federation@conference.localhost</room>
+            <username></username>
+            <password></password>
+            <nickname></nickname>
+            <fedName>FederationName</fedName>
+            <defaultTimeout>60000</defaultTimeout>
+            <attempts>3</attempts>
+        </pluginParams>
+</configuration>

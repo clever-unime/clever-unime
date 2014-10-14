@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    
+    <writeOnCfgFolder>yes</writeOnCfgFolder>
+    <ClassPlugin>org.clever.HostManager.ObjectStoragePlugins.Swift.Swift</ClassPlugin>
+    <moduleName>ObjectStorageAgent</moduleName>
+
+    <pluginParams>
+        <ipAddress>172.17.2.26</ipAddress>
+        <port>8080</port>
+    </pluginParams>
+        
+    
+</configuration>

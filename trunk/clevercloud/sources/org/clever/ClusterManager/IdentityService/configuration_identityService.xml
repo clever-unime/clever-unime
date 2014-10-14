@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    
+    <writeOnCfgFolder>yes</writeOnCfgFolder>
+    <ClassPlugin>org.clever.ClusterManager.IdentityServicePlugins.Keystone.Keystone</ClassPlugin>
+    <moduleName>IdentityServiceAgent</moduleName>
+    
+    <pluginParams>
+        <ipAddress>172.17.2.26</ipAddress>
+        <port>35357</port>
+        
+    <user>admin</user>
+    <password>admin</password>
+    <tenant>admin</tenant> 
+        
+              
+        
+    </pluginParams>
+
+</configuration>
