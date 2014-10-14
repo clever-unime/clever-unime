@@ -1,13 +1,17 @@
-
 /*
- * Questo metodo contiene tutte le informazioni che si ricavano nel processo di  
- * inserimento di un oggetto su Swift. Tali informazioni verranno poi estrapolate
- * in un formato Json all'interno di una String. Il passo successivo sarà caricarle
- * si MongoDb.
+ * Copyright 2014 Università di Messina
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
  */
-
-package org.clever.HostManager.ObjectStoragePlugins.Swift;
-
 /**
  * The MIT License
  * 
@@ -33,6 +37,15 @@ package org.clever.HostManager.ObjectStoragePlugins.Swift;
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+/*
+ * Questo metodo contiene tutte le informazioni che si ricavano nel processo di  
+ * inserimento di un oggetto su Swift. Tali informazioni verranno poi estrapolate
+ * in un formato Json all'interno di una String. Il passo successivo sarà caricarle
+ * si MongoDb.
+ */
+
+package org.clever.HostManager.ObjectStoragePlugins.Swift;
+
 public class InfoCreateObjectForMongoDb extends SwiftParameterOutput {
    
 //########################    
