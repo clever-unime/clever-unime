@@ -5,6 +5,7 @@
 package org.clever.administration.api.modules;
 
 import java.util.ArrayList;
+import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.InvocationCallback;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.administration.api.CleverCommandClient;
@@ -12,6 +13,7 @@ import org.clever.administration.api.CleverCommandClientProvider;
 import org.clever.administration.api.Session;
 import org.clever.administration.api.Settings;
 import org.clever.administration.commands.CleverCommand;
+import org.clever.administration.api.Environment;
 
 /**
  * Contenitore di comandi dotato di identificatore di tipo stringa (per es. "Storage")
@@ -47,7 +49,9 @@ public class AdministrationModule {
       CleverCommandClientProvider c = se.getCleverCommandClientProvider();
       CleverCommandClient client = c.getClient();
       //return session.getSettings().getCleverCommandClientProvider().getClient().execSyncAdminCommand(cleverCommand, target, agent, command, params, showXML);
-      Object response = client.execSyncAdminCommand(target, agent, command, params, showXML);
+      String mode = se.getTransmissionMode();      
+      Logger.getLogger(AdministrationModule.class).debug("Transmission mode: " + mode);
+      Object response = client.execSyncAdminCommand(target, agent, command, params, showXML, mode);
       c.releaseClient();
       return response;
   }
@@ -72,7 +76,9 @@ public class AdministrationModule {
       CleverCommandClientProvider c = se.getCleverCommandClientProvider();
       CleverCommandClient client = c.getClient();
       //return session.getSettings().getCleverCommandClientProvider().getClient().execSyncAdminCommand(cleverCommand, target, agent, command, params, showXML);
-      client.execAdminCommand(cleverCommand, target, agent, command, params, showXML);
+      String mode = se.getTransmissionMode();      
+      Logger.getLogger(AdministrationModule.class).debug("Transmission mode: " + mode);
+      client.execAdminCommand(cleverCommand, target, agent, command, params, showXML, mode);
       c.releaseClient();
   }
 

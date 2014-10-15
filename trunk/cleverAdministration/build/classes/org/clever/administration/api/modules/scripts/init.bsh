@@ -1,0 +1,118 @@
+import org.clever.administration.api.*;
+
+
+
+  
+modules = new HashMap();
+   
+
+
+
+changeprompt() {
+        prompt = new StringBuilder(sf.getProperties().getProperty(Environment.XMPP_NICKNAME)).
+                                             append("@").
+                                             append(sf.getProperties().getProperty(Environment.XMPP_SERVER)).
+                                             append(":").
+                                             append(sf.getProperties().getProperty(Environment.XMPP_ROOM)).
+                                             append(" > ").
+                                             toString();
+}
+
+
+loadsf(name, filename) {
+        newsf = sfs.get(name);
+        if(newsf != null) {
+            print("SessionFactory with name " + name + " already exists ... switch to it");
+
+        }
+        else
+        {
+
+            Configuration conf = new Configuration();
+            file = new File(filename);
+            conf.configure(file);
+            newsf = conf.buildSessionFactory();
+            sfs.put(name,newsf);
+            
+            print("SessionFactory with name " + name + " created");
+        }
+        sf = newsf;
+        prompt=changeprompt();
+        set_modules();
+}
+
+listsf() {
+    for(entry : sfs.entrySet())
+    {
+        namesf = new StringBuilder(entry.getKey());
+        if(entry.getValue() == sf)
+        {
+            namesf.append(" *");
+        }
+        print(namesf.toString());
+    }
+}
+
+changesf(name){
+        newsf = sfs.get(name);
+        if(newsf == null) {
+            print("SessionFactory with name " + name + " does not exist");
+            
+        }
+        else
+        {
+
+            sf = newsf;
+            prompt=changeprompt();
+            print("Switched on SessionFactory with name " + name );
+            set_modules();
+        }
+        
+ } 
+
+closesf(name) {
+        if(name=="initial")
+        {
+            print("I can't destroy the initial Session Factory");
+            return; 
+        }
+        newsf = sfs.get(name);
+        if(newsf == null) {
+            print("SessionFactory with name " + name + " does not exist");
+            
+        }
+        else
+        {
+            if(newsf == sf)
+
+            {
+                print("You are trying to destroy the current SessionFactory: it is ok, but before I must switch to initial SessionFactory.");
+                changesf("initial");
+
+            }
+            newsf.closeAllSessions();
+            sfs.remove(name);
+
+        }
+}
+
+
+register_module(name,closureCreationModule) //oggetto (normalmente uno scripted object) con una funzione get_module() che ritorni un modulo di amministrazione
+{
+    modules.put(name,closureCreationModule);
+}
+
+
+
+
+set_modules()
+{
+    
+    for (e : modules.entrySet())
+    {
+        String c = "global." + e.getKey() + "=e.getValue().get_module()";   
+         //print (c);//String c = "print(e.getKey())"; 
+        eval(c);
+
+    }
+}

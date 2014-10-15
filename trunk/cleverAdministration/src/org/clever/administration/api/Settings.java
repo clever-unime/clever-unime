@@ -32,7 +32,17 @@ public class Settings {
         return this.cleverCommandClientProvider;
     }
 
-    
+    public String getTransmissionMode(){
+       if(properties != null)
+       {    
+           String mode = properties.getProperty(Environment.MESSAGE_MODE);
+           if (mode.equalsIgnoreCase(Environment.MSG_MODE_ENCRYPTED) || 
+                   mode.equalsIgnoreCase(Environment.MSG_MODE_SIGNED)){
+               return mode;
+           }
+       }
+       return Environment.MSG_MODE_PLAIN;
+    }
     
     
     

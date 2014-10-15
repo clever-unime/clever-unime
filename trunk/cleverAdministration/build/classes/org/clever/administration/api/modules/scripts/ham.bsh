@@ -1,0 +1,42 @@
+    
+    acm() {
+        print(getHam().getActiveCM());
+    }
+
+    lhms() {
+        for (hm : getHam().listHostManagers())
+                print(hm.getNick());
+    }
+
+    lcms() {
+        for (cm : getHam().listClusterManagers())
+        {
+    
+                print(cm.getNick() + " active: " + cm.isActive());
+        }
+    }
+
+    laas(target) {   
+        for (ag : getHam().listActiveAgents(target))
+        {
+            print(ag);
+        }
+    }
+
+    iplugin (target, agent) {
+        name = getHam().getPluginName(target,agent);
+        description = getHam().getPluginDescription(target,agent);
+        version = getHam().getPluginVersion(target,agent);
+        print("Plugin");
+        print(name);
+        print("********** Description ***********");
+        print(description);
+        print("********** Version ***********");
+        print(version);
+    }
+
+
+    getHam()
+    {
+        return sf.getSession().getHostAdministrationModule();
+    }

@@ -521,8 +521,8 @@ public class ClusterCoordinator implements CleverMessageHandler
         if(!activeAgents)
             this.launchAgents(this.conn);
         try
-        {
-            conn.getMultiUserChat( ROOM.SHELL ).addMessageListener( new RoomListener(this.dispatcherAgent) );
+        {            
+            conn.getMultiUserChat( ROOM.SHELL ).addMessageListener( new RoomListener(this.dispatcherAgent, conn) );
         }
         catch( CleverException ex )
         {

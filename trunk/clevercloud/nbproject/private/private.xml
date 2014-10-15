@@ -2,13 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/HostManager/Monitor/MonitorAgent.java</file>
-            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/ClusterManager/StorageManagerPlugins/StorageManagerClever/StorageManager.java</file>
-            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/HostManager/ImageManager/ImageManagerAgent.java</file>
-            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/HostManager/HyperVisor/HyperVisorAgent.java</file>
-            <file>file:/media/dati/mergeapi/mergeapi/trunk/clevercloud/sources/org/clever/Common/CommunicatorPlugins/Dbus/CommunicatorDbus.java</file>
-        </group>
         <group name="MergeDevelopAPI">
             <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/HostManager/CloudMonitor/CloudMonitorAgent.java</file>
             <file>file:/media/dati/ProgettiRealizzati%20perTest/mergedevelopAPI/clever-unime/trunk/clevercloud/sources/org/clever/ClusterManager/MonitorManager/MonitorManagerAgent.java</file>
@@ -94,5 +87,6 @@
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/DatabaseManager/DatabaseManagerPlugin.java</file>
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/SOS/SOSModuleCore/GetObservation.java</file>
         </group>
+        <group/>
     </open-files>
 </project-private>

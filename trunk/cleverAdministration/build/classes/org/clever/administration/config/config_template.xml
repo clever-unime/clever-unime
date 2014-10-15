@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <server>localhost</server>
+  <port>5222</port>
+  <username></username>
+  <password></password>
+  <nickname></nickname><!-- Username e nickname have to be equal-->
+  <room>SHELL-room@conference.localhost</room>
+</configuration>
+

@@ -60,5 +60,11 @@
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/src/org/clever/administration/api/modules/scripts/init.bsh</file>
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/cleverAdministration/nbproject/build-impl.xml</file>
         </group>
+        <group>
+            <file>file:/home/clever/clever-new/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/Environment.java</file>
+            <file>file:/home/clever/clever-new/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/SettingsFactory.java</file>
+            <file>file:/home/clever/clever-new/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/CleverCommandClient.java</file>
+            <file>file:/home/clever/clever-new/clever-unime/trunk/cleverAdministration/src/org/clever/administration/api/modules/AdministrationModule.java</file>
+        </group>
     </open-files>
 </project-private>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <server>localhost</server>
+    <port>389</port>
+    <rootContext>dc=clever,dc=unime,dc=it</rootContext>
+    <rootdn>cn=root,dc=clever,dc=unime,dc=it</rootdn>
+    <password>secret</password>
+</configuration>

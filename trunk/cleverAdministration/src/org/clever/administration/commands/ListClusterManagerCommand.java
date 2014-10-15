@@ -58,6 +58,7 @@ public class ListClusterManagerCommand extends CleverCommand{
 
             if (!target.equals("")) {
                 returnResponse = ( List<HostEntityInfo> ) ClusterManagerAdministrationTools.instance().execSyncAdminCommand(this, target, "InfoAgent", "listClusterManager", params, commandLine.hasOption("xml"));
+
                 System.out.println("\n---------ListCM----------");
 
                 for( int i = 0; i < returnResponse.size(); i++ )

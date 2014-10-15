@@ -36,6 +36,11 @@ public class Environment {
     public static String XMPP_PORT = "xmpp_port"; //porta tcp da utilizzare per la connessione XMPP
     public static String XMPP_ROOM = "xmpp_room"; //xmpp room per i client di Clever (CM + clients)
     public static String XMPP_NICKNAME = "xmpp_nickname"; //nickname con cui entrera' il client nella room
+    public static String MESSAGE_MODE = "message_mode"; //nickname con cui entrera' il client nella room
+    
+    public static final String MSG_MODE_PLAIN = "plain";
+    public static final String MSG_MODE_ENCRYPTED = "encrypted";
+    public static final String MSG_MODE_SIGNED = "signed";
     
     //VALORI di default
     public static String COMMAND_PROVIDER_DEFAULT = "org.clever.administration.api.SimpleCleverCommandClientProvider"; //provider di comandi clever di default
@@ -77,6 +82,7 @@ public class Environment {
         properties.setProperty(XMPP_PORT,pXML.getElementContent( "port" ));
         properties.setProperty(XMPP_ROOM,pXML.getElementContent( "room"));
         properties.setProperty(XMPP_NICKNAME,pXML.getElementContent( "nickname"));
+        properties.setProperty(MESSAGE_MODE, pXML.getElementContent( "mode"));
         
         String clientProvider = pXML.getElementContent( "CleverClientCommandProviderClass");
         if(clientProvider!=null)

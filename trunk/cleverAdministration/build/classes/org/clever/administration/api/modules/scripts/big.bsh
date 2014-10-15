@@ -1,0 +1,49 @@
+
+import org.clever.Common.VEInfo.*;
+
+
+gcn(target) {
+        for (vm : getBDM().getCollectionNames(target))
+        {
+            print(vm);
+        }
+}
+
+fodb( nameDB,collectionName,nameFiled, thresholdMin, thresholdMax, nameMtd) {
+        for (vm : getBDM().findOnDB( nameDB,collectionName,nameFiled, thresholdMin, thresholdMax, nameMtd))
+        {
+            print(vm);
+        }
+}
+glmsec( nameDB,collectionName,range) {
+        for (vm : getBDM().getLastmsec( nameDB,collectionName,range))
+        {
+            print(vm);
+        }
+}
+
+iodb( nameDB,elemToInsert, type) {
+        getBDM().insertOnDB( nameDB,elemToInsert, type);
+        
+}
+
+
+gldb() {
+        for (vm : getBDM().getListDB())
+        {
+            print(vm);
+        }
+}
+
+
+osf(dbname,collectionName,fieldName, opName,step, unitStep, initialDate, initialTime, finalDate, finalTime, timeZone, range, unitRange) {
+        for (vm : getBDM().calculateOnField(dbname,collectionName,fieldName, opName,step, unitStep, initialDate, initialTime, finalDate, finalTime, timeZone, range, unitRange))
+        {
+            print(vm);
+        }
+}
+    
+ getBDM()
+ {
+    return sf.getSession().getBIGAdministrationModule();
+ }
