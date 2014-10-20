@@ -46,6 +46,7 @@ import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.util.Date;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -71,15 +72,22 @@ public class CleverChatListener implements MessageListener {
     CleverChatListener(CleverMessageHandler msgHandler) {
         logger = Logger.getLogger("XMPPCommunicator");
         this.msgHandler = msgHandler;
+        this.sessionKey = new HashMap<String, byte[]>();
+        try {
+            this.ldapClient = new LDAPClient();
+        } catch (Exception ex) {
+            logger.error("Unable to configure LDAP", ex);
+            System.exit(1);
+        }
     }
 
     CleverChatListener(CleverMessageHandler msgHandler, LDAPClient ldapClient) {
         logger = Logger.getLogger("XMPPCommunicator");
         this.msgHandler = msgHandler;
         this.ldapClient = ldapClient;
-        this.sessionKey = null;
+        this.sessionKey = new HashMap<String, byte[]>();
     }
-        
+
     CleverChatListener(CleverMessageHandler msgHandler, LDAPClient ldapClient, Map<String, byte[]> sessionkey) {
         logger = Logger.getLogger("XMPPCommunicator");
         this.msgHandler = msgHandler;
@@ -93,124 +101,121 @@ public class CleverChatListener implements MessageListener {
         Security.addProvider(provider);
 
         //Recupero source
-        CleverMessage cleverMessage = null;
-        String to = message.getTo();
-        String dst = to.substring(0, to.indexOf("@"));
-        String from = message.getFrom();
-        String src = from.substring(0, from.indexOf("@"));
+        try {
+            CleverMessage cleverMessage = null;
+            String to = message.getTo();
+            String dst = to.substring(0, to.indexOf("@"));
+            String from = message.getFrom();
+            String src = from.substring(0, from.indexOf("@"));
 
-        boolean isEncrypted = false;
-        boolean isSigned = false;
-        String msg = null;
-        boolean isSessionKey = false;
+            boolean isEncrypted = false;
+            boolean isSigned = false;
+            String msg = null;
+            boolean isSessionKey = false;
 
-        String dstBaseName = "";
-        if (dst.indexOf("-") != -1) {
-            dstBaseName = dst.substring(0, dst.indexOf("-"));
-        } else {
-            dstBaseName = dst;
-        }
-
-        X509Utils utils = new X509Utils("./keystore/" + dstBaseName + ".p12", dstBaseName, dstBaseName.toCharArray());
-
-        final SecureExtension encryptedExtension = (SecureExtension) message.getExtension("x", "jabber:x:encrypted");
-        final SecureExtension sessionKeyExtension = (SecureExtension) message.getExtension("x", "jabber:x:sessionkey");
-        final SecureExtension signedExtension = (SecureExtension) message.getExtension("x", "jabber:x:signed");
-        final DelayInformation information = (DelayInformation) message.getExtension("x", "jabber:x:delay");
-
-        String sessionKey = null;
-        byte[] sessionKeyBytes = null;
-
-        if (sessionKeyExtension != null) {
-            isSessionKey = true;
-            sessionKey = utils.decryptToString(sessionKeyExtension.getData());
-            sessionKeyBytes = Hex.decode(sessionKey);
-            this.sessionKey.put(src, sessionKeyBytes);
-            //writeKey(sessionKeyBytes);
-        }
-
-        byte[] decryptedBytes = null;
-        String decrypted = null;
-        if (encryptedExtension != null) {
-            isEncrypted = true;
-            if (!isSessionKey) //sessionKeyBytes = readKey();
-            {
-                sessionKeyBytes = this.sessionKey.get(src);
-            }
-            byte[] rawInput = Hex.decode(encryptedExtension.getData());
-            decryptedBytes = utils.sEncrypt(false, rawInput, sessionKeyBytes);
-            decrypted = new String(decryptedBytes);
-        }
-
-        if (signedExtension != null) {
-            /*
-             * Al momento non funzionante: i digest, quello apposto al messaggio e quello 
-             * calcolato in ricezione, possono differire
-             */
-            boolean isVerified = false;
-            isSigned = true;
-            PublicKey pubKey = null;
-
-            X509Certificate cert;
-            cert = ldapClient.searchCert("", "uid=" + cleverMessage.getSrc());
-
-            if (cert == null) {
-                logger.debug(" ERROR - There is no Certificate in LDAP server ");
+            String dstBaseName = "";
+            if (dst.indexOf("-") != -1) {
+                dstBaseName = dst.substring(0, dst.indexOf("-"));
             } else {
-                pubKey = cert.getPublicKey();
-            }
-            //Calcolo il digest del corpo del messaggio ricevuto
-            MessageDigest md = null;
-            try {
-
-                md = MessageDigest.getInstance("SHA");
-
-            } catch (NoSuchAlgorithmException ex) {
-                java.util.logging.Logger.getLogger(CleverChatListener.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            md.reset();
-            try {
-                md.update(cleverMessage.toXML().getBytes("UTF-8"), 0, cleverMessage.toXML().length());
-            } catch (UnsupportedEncodingException ex) {
-                java.util.logging.Logger.getLogger(CleverChatListener.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (CleverException ex) {
-                java.util.logging.Logger.getLogger(CleverChatListener.class.getName()).log(Level.SEVERE, null, ex);
+                dstBaseName = dst;
             }
 
-            // String digest = new String(Hex.encode(md.digest()));
-            String digest = new String(Base64.encode(md.digest()));
+            X509Utils utils = new X509Utils("./keystore/" + dstBaseName + ".p12", dstBaseName, dstBaseName.toCharArray());
 
-            if (digest.equals(signedExtension.getData())) {
-                isVerified = true;
+            final SecureExtension encryptedExtension = (SecureExtension) message.getExtension("x", "jabber:x:encrypted");
+            final SecureExtension sessionKeyExtension = (SecureExtension) message.getExtension("x", "jabber:x:sessionkey");
+            final SecureExtension signedExtension = (SecureExtension) message.getExtension("x", "jabber:x:signed");
+            final DelayInformation information = (DelayInformation) message.getExtension("x", "jabber:x:delay");
+
+            String sessionKey = null;
+            byte[] sessionKeyBytes = null;
+
+            if (sessionKeyExtension != null) {
+                isSessionKey = true;
+                sessionKey = utils.decryptToString(sessionKeyExtension.getData());
+                sessionKeyBytes = Hex.decode(sessionKey);
+                this.sessionKey.put(src, sessionKeyBytes);
+                logger.debug("Saving session key: " + X509Utils.bytesToHex(sessionKeyBytes));
+                //writeKey(sessionKeyBytes);
+            }
+
+            byte[] decryptedBytes = null;
+            String decrypted = null;
+            if (encryptedExtension != null) {
+                isEncrypted = true;
+                if (!isSessionKey) //sessionKeyBytes = readKey();
+                {
+                    sessionKeyBytes = this.sessionKey.get(src);
+                }
+                byte[] rawInput = Hex.decode(encryptedExtension.getData());
+                logger.debug("Raw input: " + X509Utils.bytesToHex(rawInput));
+                logger.debug("Session key: " + X509Utils.bytesToHex(sessionKeyBytes));
+
+                decryptedBytes = utils.sEncrypt(false, rawInput, sessionKeyBytes);
+                decrypted = new String(decryptedBytes);
+            }
+
+            if (signedExtension != null) {
+                /*
+                 * Al momento non funzionante: i digest, quello apposto al messaggio e quello 
+                 * calcolato in ricezione, possono differire
+                 */
+                boolean isVerified = false;
+                isSigned = true;
+                PublicKey pubKey = null;
+
+                X509Certificate cert;
+                cert = ldapClient.searchCert("", "uid=" + src);
+
+                if (cert == null) {
+                    logger.debug(" ERROR - There is no Certificate in LDAP server ");
+                } else {
+                    pubKey = cert.getPublicKey();
+                }
+                //Calcolo il digest del corpo del messaggio ricevuto
+                MessageDigest md = null;
+                try {
+
+                    md = MessageDigest.getInstance("SHA");
+
+                } catch (NoSuchAlgorithmException ex) {
+                    java.util.logging.Logger.getLogger(CleverChatListener.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                md.reset();
+                cleverMessage = new CleverMessage(message.getBody());
+                try {
+                    md.update(cleverMessage.toXML().getBytes("UTF-8"), 0, cleverMessage.toXML().length());
+                } catch (UnsupportedEncodingException ex) {
+                    java.util.logging.Logger.getLogger(CleverChatListener.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (CleverException ex) {
+                    logger.error("Outputting message:\n", ex);
+                }
+
+                String digest = new String(Base64.encode(md.digest()));
+
+                if (digest.equals(signedExtension.getData())) {
+                    isVerified = true;
+                } else {
+                    isVerified = false;
+                }
+
+                if (isVerified) {
+                    logger.debug("[This message is signed]");
+                } else {
+                    logger.debug("[The signature in not verified]");
+                }
+                msgHandler.handleCleverMessage(cleverMessage);
+                return;
+            }
+
+            if (isEncrypted) {
+                cleverMessage = new CleverMessage(decrypted);
             } else {
-                isVerified = false;
+                cleverMessage = new CleverMessage(message.getBody());
             }
-
-            if (isVerified) {
-                logger.debug("[This message is signed]");
-            } else {
-                logger.debug("[The signature in not verified]");
-            }
-
+            msgHandler.handleCleverMessage(cleverMessage);
+        } catch (Exception ex) {
+            logger.error("Message Listener fails:\n", ex);
         }
-
-        Date date = null;
-        String timestamp = null;
-
-        if (information != null) {
-
-            date = information.getStamp();
-            timestamp = date.toString();
-
-        }
-        long timeStop = System.currentTimeMillis();
-        if (isEncrypted) {
-            cleverMessage = new CleverMessage(decrypted);
-        } /*else if( isSigned ){
-         this.cleverMessage = new CleverMessage( msg );       
-         }*/ else {
-            cleverMessage = new CleverMessage(message.getBody());
-        }
-        msgHandler.handleCleverMessage(cleverMessage);
     }
 }

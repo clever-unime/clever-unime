@@ -51,7 +51,7 @@ public class LDAPClient {
     private ParserXML pXML;
     private Logger logger;
     
-    public LDAPClient(){
+    public LDAPClient() throws FileNotFoundException {
         logger = Logger.getLogger(this.getClass());
         logger.debug("Creazione LDAPClient");
         init();
@@ -69,7 +69,7 @@ public class LDAPClient {
         this.connect();
     }
 
-    private void init(){
+    private void init() throws FileNotFoundException{
         
         try {
             cfgTemplatePath = "./cfg/configuration_ldapClient.xml";
@@ -77,6 +77,7 @@ public class LDAPClient {
             inxml = new FileInputStream(cfgTemplatePath);
         } catch (FileNotFoundException ex) {
             logger.error("Configuration file not found ", ex);
+            throw ex;
         }
         
         FileStreamer fs = new FileStreamer();        	

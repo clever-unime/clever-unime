@@ -4,7 +4,9 @@
  */
 package org.clever.administration.api;
 
+import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.X509Certificate;
@@ -27,16 +29,22 @@ import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.SecureXMPPCommunicator.LDAPClient;
 import org.clever.Common.SecureXMPPCommunicator.SecureExtension;
 import org.clever.Common.SecureXMPPCommunicator.X509Utils;
+import org.clever.Common.XMPPCommunicator.CleverChatListener;
 import org.clever.Common.XMPPCommunicator.CleverMessage.MessageType;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.CleverMessageHandler;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.clever.Common.XMPPCommunicator.ExecOperation;
+import org.clever.Common.XMPPCommunicator.RoomListener;
 import org.clever.administration.ClusterManagerAdministrationTools;
+import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.MessageListener;
 
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Packet;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.jivesoftware.smackx.packet.DelayInformation;
 
 /**
@@ -45,7 +53,7 @@ import org.jivesoftware.smackx.packet.DelayInformation;
  *
  * @author maurizio
  */
-public class CleverCommandClient implements CleverMessageHandler, CleverMessagesDispatcher {
+public class CleverCommandClient implements MessageListener, CleverMessageHandler, CleverMessagesDispatcher {
 
     private static final Logger log = Logger.getLogger(CleverCommandClient.class);
 
@@ -94,7 +102,8 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
             String passwd,
             int port,
             String room,
-            String nickname) {
+            String nickname,
+            ConnectionXMPP.TransmissionModes mode) {
         try {
 
             adminHostName = username;
@@ -111,18 +120,21 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
 
             utils = new X509Utils("./keystore/" + usr + ".p12", usr, usr.toCharArray());
 
-            connectionXMPP.connect(XMPPServer, port);
+            connectionXMPP.connect(XMPPServer, port, mode);
             connectionXMPP.authenticate(username, passwd);
 
-            connectionXMPP.joinInRoom(room, ConnectionXMPP.ROOM.SHELL, nickname);
+            MultiUserChat chat = connectionXMPP.joinInRoom(room, ConnectionXMPP.ROOM.SHELL, nickname);            
             connectionXMPP.addChatManagerListener(this);
             return true;
         } catch (CleverException e) {
             log.error("Error on connect : " + e);
             return false;
 
-        }
+        } catch (Exception ex) {
+            log.error("Error on connect : " + ex);
+            return false;
 
+        }
     }
 
     private void sendEncryptedRequest(final CleverMessage msg) {
@@ -160,10 +172,12 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
 
             if (connectionXMPP.getSessionKey().get(dst) != null) {
                 key = connectionXMPP.getSessionKey().get(dst);
+                log.debug("Session key exists:\nDst: " + dst + " key: " + X509Utils.bytesToHex(key));
             } else {
                 firstMsg = true;
                 key = utils.generateSecretKey();
                 connectionXMPP.getSessionKey().put(dst, key);
+                log.debug("Session key generated:\nDst: " + dst + " key: " + X509Utils.bytesToHex(key));
             }
 
             if (firstMsg) {
@@ -184,11 +198,14 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
             SecureExtension encryptedExtension = new SecureExtension();
             encryptedBytes = utils.sEncrypt(true, msg.toXML().getBytes(), key);
             encryptedMsg = new String(Hex.encode(encryptedBytes));
+            
             if (encryptedMsg != null) {
                 encryptedExtension.setData(encryptedMsg);
                 message.addExtension(encryptedExtension);
             }
             message.addExtension(delayInformation);
+            log.debug("CleverMessage to XML:\n " + msg.toXML());
+            log.debug("Message to XML:\n " + message.toXML());
             try {
                 connectionXMPP.getMultiUserChat(ConnectionXMPP.ROOM.SHELL).sendMessage(message);
             } catch (XMPPException ex) {
@@ -231,10 +248,11 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
 
             String endMessage = message.toXML();
             //String endMessage = utils.signXML(msg.toXML());
-            log.debug("CleverMessage to XML: " + msg.toXML());
-            log.debug("Message to XML: " + endMessage);
+            log.debug("CleverMessage to XML:\n " + msg.toXML());
+            log.debug("Message to XML:\n " + endMessage);
             try {
-                connectionXMPP.getMultiUserChat(ConnectionXMPP.ROOM.SHELL).sendMessage(message);
+                MultiUserChat chat = connectionXMPP.getMultiUserChat(ConnectionXMPP.ROOM.SHELL);
+                chat.sendMessage(message);
             } catch (XMPPException ex) {
                 System.out.println("Error in sending Clever Message. " + ex);
             }
@@ -381,14 +399,14 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
         requestMsg.setId(id);
 
         if (mode.equalsIgnoreCase(Environment.MSG_MODE_ENCRYPTED)) {
-            log.debug("Send encrypted message");
+            log.debug("Sending encrypted message");
             sendEncryptedRequest(requestMsg);
         } else if (mode.equalsIgnoreCase(Environment.MSG_MODE_SIGNED)) {
             //signed
-            log.debug("Send signed message");
+            log.debug("Sending signed message");
             sendSignedRequest(requestMsg);
         } else {
-            log.debug("Send plain message");
+            log.debug("Sending plain message");
             sendRequest(requestMsg);
         }
         log.debug("Clever Request Message: \n" + requestMsg.toXML());
@@ -415,7 +433,7 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
         } catch (CleverException ex) {
             java.util.logging.Logger.getLogger(CleverCommandClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-        dispatcher.pushMessage(cleverMessage); //insert in message queue
+        dispatcher.pushMessage(cleverMessage); //insert in message queue    
 
     }
 
@@ -428,12 +446,14 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
     @Override
     public void handleMessage(CleverMessage message) {
         Request request = requestManager.getRequest(message.getReplyToMsg()); // retrieve request using replytomsg  field
-        if (request == null) {
-            //no request for this reply or error
-            log.error("No request for message : " + message.getReplyToMsg());
-            return;
-        }
         try {
+            if (request == null) {
+                //no request for this reply or error
+                log.error("No request for message : " + message.getReplyToMsg());
+                log.error("Message : " + message.toXML());
+                return;
+            }
+
             if (request.isAsync()) {
                 log.debug("Async request serving ... ");
                 request.getCallback().handleMessage(message.getObjectFromMessage()); //TODO: handle error message
@@ -460,7 +480,9 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
 
     @Override
     public void dispatch(CleverMessage message) {
-        log.warn("Dispatch not implemented : received an unexpected REQUEST message ?");
+        //log.warn("Dispatch not implemented : received an unexpected REQUEST message ?");
+        log.debug("Dispatch message to handler");
+        handleMessage(message);
     }
 
     @Override
@@ -473,4 +495,127 @@ public class CleverCommandClient implements CleverMessageHandler, CleverMessages
 
     }
 
+    @Override
+    public void processMessage(Chat chat, Message message) {
+        BouncyCastleProvider provider = new BouncyCastleProvider();
+        Security.addProvider(provider);
+
+        //Recupero source
+        try {
+            CleverMessage cleverMessage = null;
+            String to = message.getTo();
+            String dst = to.substring(0, to.indexOf("@"));
+            String from = message.getFrom();
+            String src = from.substring(0, from.indexOf("@"));
+
+            boolean isEncrypted = false;
+            boolean isSigned = false;
+            String msg = null;
+            boolean isSessionKey = false;
+
+            String dstBaseName = "";
+            if (dst.indexOf("-") != -1) {
+                dstBaseName = dst.substring(0, dst.indexOf("-"));
+            } else {
+                dstBaseName = dst;
+            }
+
+            X509Utils utils = new X509Utils("./keystore/" + dstBaseName + ".p12", dstBaseName, dstBaseName.toCharArray());
+
+            final SecureExtension encryptedExtension = (SecureExtension) message.getExtension("x", "jabber:x:encrypted");
+            final SecureExtension sessionKeyExtension = (SecureExtension) message.getExtension("x", "jabber:x:sessionkey");
+            final SecureExtension signedExtension = (SecureExtension) message.getExtension("x", "jabber:x:signed");
+            final DelayInformation information = (DelayInformation) message.getExtension("x", "jabber:x:delay");
+
+            String sessionKey = null;
+            byte[] sessionKeyBytes = null;
+
+            if (sessionKeyExtension != null) {
+                isSessionKey = true;
+                sessionKey = utils.decryptToString(sessionKeyExtension.getData());
+                sessionKeyBytes = Hex.decode(sessionKey);
+                connectionXMPP.getSessionKey().put(src, sessionKeyBytes);
+                log.debug("Saving session key: " + X509Utils.bytesToHex(sessionKeyBytes));
+                //writeKey(sessionKeyBytes);
+            }
+
+            byte[] decryptedBytes = null;
+            String decrypted = null;
+            if (encryptedExtension != null) {
+                isEncrypted = true;
+                if (!isSessionKey) //sessionKeyBytes = readKey();
+                {
+                    sessionKeyBytes = connectionXMPP.getSessionKey().get(src);
+                }
+                byte[] rawInput = Hex.decode(encryptedExtension.getData());
+                log.debug("Raw input: " + X509Utils.bytesToHex(rawInput));
+                log.debug("Session key: " + X509Utils.bytesToHex(sessionKeyBytes));
+
+                decryptedBytes = utils.sEncrypt(false, rawInput, sessionKeyBytes);
+                decrypted = new String(decryptedBytes);
+            }
+
+            if (signedExtension != null) {
+                /*
+                 * Al momento non funzionante: i digest, quello apposto al messaggio e quello 
+                 * calcolato in ricezione, possono differire
+                 */
+                boolean isVerified = false;
+                isSigned = true;
+                PublicKey pubKey = null;
+
+                X509Certificate cert;
+                cert = ldapClient.searchCert("", "uid=" + src);
+
+                if (cert == null) {
+                    log.debug(" ERROR - There is no Certificate in LDAP server ");
+                } else {
+                    pubKey = cert.getPublicKey();
+                }
+                //Calcolo il digest del corpo del messaggio ricevuto
+                MessageDigest md = null;
+                try {
+
+                    md = MessageDigest.getInstance("SHA");
+
+                } catch (NoSuchAlgorithmException ex) {
+                    java.util.logging.Logger.getLogger(CleverChatListener.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                md.reset();
+                cleverMessage = new CleverMessage(message.getBody());
+                try {
+                    md.update(cleverMessage.toXML().getBytes("UTF-8"), 0, cleverMessage.toXML().length());
+                } catch (UnsupportedEncodingException ex) {
+                    java.util.logging.Logger.getLogger(CleverChatListener.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (CleverException ex) {
+                    log.error("Outputting message:\n", ex);
+                }
+
+                String digest = new String(Base64.encode(md.digest()));
+
+                if (digest.equals(signedExtension.getData())) {
+                    isVerified = true;
+                } else {
+                    isVerified = false;
+                }
+
+                if (isVerified) {
+                    log.debug("[This message is signed]");
+                } else {
+                    log.debug("[The signature in not verified]");
+                }
+                handleCleverMessage(cleverMessage);
+                return;
+            }
+
+            if (isEncrypted) {
+                cleverMessage = new CleverMessage(decrypted);
+            } else {
+                cleverMessage = new CleverMessage(message.getBody());
+            }
+            handleCleverMessage(cleverMessage);
+        } catch (Exception ex) {
+            log.error("Message Listener fails:\n", ex);
+        }
+    }
 }

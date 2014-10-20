@@ -41,7 +41,9 @@ package org.clever.Common.XMPPCommunicator;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import org.apache.log4j.Logger;
+import org.clever.Common.SecureXMPPCommunicator.LDAPClient;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
 
@@ -52,13 +54,20 @@ public class CleverChatManagerListener implements ChatManagerListener
   private Logger logger = null;
   private CleverMessageHandler msgHandler = null;
   private HashMap<String, Chat> chats = new HashMap<String, Chat>();
+  private LDAPClient mLdapClient;
+  private Map<String, byte[]> mSessionKeys;
 
 
-
-  CleverChatManagerListener( CleverMessageHandler msgHandler )
+  CleverChatManagerListener( CleverMessageHandler msgHandler, LDAPClient ldapClient, Map<String, byte[]> sessionKeys )
   {
     logger = Logger.getLogger( "XMPPCommunicator" );
     this.msgHandler = msgHandler;
+    if(ldapClient == null)
+        throw new IllegalArgumentException("ldapClient is null");
+    if(sessionKeys == null)
+        throw new IllegalArgumentException("sessionKeys is null");
+    mLdapClient = ldapClient;
+    mSessionKeys = sessionKeys;
   }
 
 
@@ -112,7 +121,7 @@ public class CleverChatManagerListener implements ChatManagerListener
       // Otherwhise one CleverChatListener is associated to received chat
       if ( ! createdLocally )
       {
-        chat.addMessageListener( new CleverChatListener( msgHandler ) );
+        chat.addMessageListener( new CleverChatListener( msgHandler, mLdapClient, mSessionKeys ) );
       }
   }
 }

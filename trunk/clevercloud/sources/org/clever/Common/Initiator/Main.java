@@ -38,6 +38,7 @@
 package org.clever.Common.Initiator;
 
 import java.util.logging.Logger;
+import java.io.FileNotFoundException;
 import org.clever.Common.Exceptions.CleverException;
 import org.apache.log4j.*;
 import org.clever.Common.Shared.LoggerInstantiator;
@@ -50,7 +51,7 @@ public class Main { //Questo è IL MAIN PRINCIPALE DI TUTTO IL PROGETTO CLEVER!!
     
     static Initiator in;
     
-    public static void main(String[] args) throws CleverException
+    public static void main(String[] args) throws CleverException, FileNotFoundException
     {              
         in = Initiator.getInstance(); //creo un oggetto Initiator
         in.start(); //faccio partire l'initiator        

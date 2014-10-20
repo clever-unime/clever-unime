@@ -460,3 +460,12 @@ HAM.chms()
 HAM.lcms()
 HAM.chms()
 HAM.lcms()
+HAM.chms()
+HAM.lcms()
+exit
+quit
+bye
+HAM.lcms()
+HAM.lhms()
+HAM.lcms()
+HAM.lhms()

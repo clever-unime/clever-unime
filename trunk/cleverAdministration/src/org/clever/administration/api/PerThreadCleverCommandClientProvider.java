@@ -61,7 +61,7 @@ class PerThreadCleverCommandClientProvider extends CleverCommandClientProviderIm
         
         //mi connetto
         
-        ccc.connect(servername, username, password, port, room, nickname);
+        ccc.connect(servername, username, password, port, room, nickname, mMode);
         //controllo se la connessione e' andata a buon fine
         //if(admintools.isActive())
         //{

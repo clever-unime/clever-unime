@@ -70,7 +70,8 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler {
             String passwd,
             int port,
             String room,
-            String nickname) {
+            String nickname, 
+            ConnectionXMPP.TransmissionModes mode) {
 
         adminHostName = username;
         this.XMPPServer = XMPPServer;
@@ -88,7 +89,7 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler {
             utils = new X509Utils("./keystore/" + usr + ".p12", usr, usr.toCharArray());
 
             conn = new ConnectionXMPP();
-            conn.connect(XMPPServer, port);
+            conn.connect(XMPPServer, port, mode);
             conn.authenticate(username, passwd);
 
             conn.joinInRoom(room, ConnectionXMPP.ROOM.SHELL, nickname);
@@ -98,7 +99,10 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler {
             logger.debug("Error in connection : " + e.getMessage());
             return false;
         }
-
+        catch (Exception ex){
+            logger.debug("Error in connection : " + ex.getMessage());
+            return false;
+        }
     }
 
     private void sendRequest(final CleverMessage msg) throws CleverException {

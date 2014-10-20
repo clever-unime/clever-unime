@@ -12,6 +12,7 @@
   <nickname></nickname>
  
   <room>room@conference.localhost</room>
+  <transmissionMode>plain</transmissionMode>
    <threshold>1</threshold> <!-- la threshold effettivamnte usata x istanziare i CC è questa!! -->
     <activatedCM>true</activatedCM><!--> questo flag specifica se l'initiator può istanziare Cluster manager <-->
     <activatedHM>true</activatedHM><!--questo flag specifica se l'initiator può istanziare Host manager -->

@@ -64,7 +64,7 @@ class SimpleCleverCommandClientProvider extends CleverCommandClientProviderImpl 
         
         //mi connetto
         
-        client.connect(servername, username, password, port, room, nickname);
+        client.connect(servername, username, password, port, room, nickname, mMode);
         //TODO: lanciare eccezione se la connessione non e' andata a buon fine
         //controllo se la connessione e' andata a buon fine
         //if(admintools.isActive())

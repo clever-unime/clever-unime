@@ -83,6 +83,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
      
      private String server;
      private String room;     
+     private ConnectionXMPP.TransmissionModes mMode;
      private int port;
      private String username;
      private String password;
@@ -112,6 +113,7 @@ public class Initiator //questa classe deve istanziarsi una sola volta!!
          cfgFile = null; 
          inxml = null;
          server = "";
+         mMode = ConnectionXMPP.TransmissionModes.Plain;
          room = "";        
          port = 0;
          username = "";
@@ -181,7 +183,8 @@ logger.debug("init2");
          }
             
          server = pXML.getElementContent("server" );            
-         room = pXML.getElementContent( "room" );           
+         room = pXML.getElementContent( "room" );     
+         mMode = ConnectionXMPP.parseMode(pXML.getElementContent("transmissionMode"));
          port = Integer.parseInt( pXML.getElementContent( "port" ) );            
          username = pXML.getElementContent( "username" );            
          password = pXML.getElementContent( "password" );
@@ -368,14 +371,14 @@ logger.debug("init2");
 >>>>>>> api*/
      }
 	
-     public void connectionManagement()//questa funzione gestisce la connessione con il server XMPP	
+     public void connectionManagement() throws FileNotFoundException //questa funzione gestisce la connessione con il server XMPP	
      {               
                          
          conn = new ConnectionXMPP();               
                       
          try
          {
-            conn.connect(server, port);//effettuo una connessione al serverXMPP               
+            conn.connect(server, port, mMode);//effettuo una connessione al serverXMPP               
          }               
          catch(CleverException Cexec)               
          {                   
@@ -493,7 +496,7 @@ logger.debug("init2");
     }
     
           
-    public void start() throws CleverException
+    public void start() throws CleverException, FileNotFoundException
     {
         this.init(); //si inizializza
         this.connectionManagement(); //si connette alla stanza Clever_main

@@ -6,6 +6,7 @@ package org.clever.administration.api;
 
 import java.util.Properties;
 import org.apache.log4j.Logger;
+import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 
 /**
  *
@@ -22,6 +23,7 @@ public abstract class CleverCommandClientProviderImpl implements CleverCommandCl
     protected  Integer port;
     protected  String nickname;
     protected  String room;
+    protected  ConnectionXMPP.TransmissionModes mMode;
     protected int maxMessages;
     protected int maxHandlers;
 
@@ -55,7 +57,7 @@ public abstract class CleverCommandClientProviderImpl implements CleverCommandCl
         port = Integer.parseInt(properties.getProperty(Environment.XMPP_PORT));
         room = properties.getProperty(Environment.XMPP_ROOM);
         nickname = properties.getProperty(Environment.XMPP_NICKNAME);
-        
+        mMode = ConnectionXMPP.parseMode(properties.getProperty(Environment.MESSAGE_MODE));
         if(properties.getProperty(Environment.MAX_LENGHT_MESSAGES_QUEUE)==null)
         {
             int m = Environment.MAX_LENGHT_MESSAGES_QUEUE_DEFAULT;

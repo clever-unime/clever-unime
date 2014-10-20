@@ -79,12 +79,11 @@ public class RoomListener implements PacketListener, Runnable {
         logger = Logger.getLogger("RoomListener");
         logger.debug("roomlistener added: ");
         this.conn = conn;
-        try{
+        try {
             //ldapClient = new LDAPClient("localhost",389,"dc=clever,dc=unime,dc=it","cn=root,dc=clever,dc=unime,dc=it","secret");
             ldapClient = this.conn.getLDAPClient();
-        logger.debug("ldapClient instance " + ldapClient);
-        }
-        catch(Exception ex){
+            logger.debug("ldapClient instance " + ldapClient);
+        } catch (Exception ex) {
             logger.error("RoomListener constructor", ex);
         }
     }
@@ -112,7 +111,7 @@ public class RoomListener implements PacketListener, Runnable {
         String src = from.substring(from.indexOf("/") + 1);
         logger.debug("src " + src);
 
-    //this.conn.writeTimeToFile(src, dst,"Received", timeStart);
+        //this.conn.writeTimeToFile(src, dst,"Received", timeStart);
         boolean isEncrypted = false;
         boolean isSigned = false;
         String msg = null;
@@ -221,17 +220,6 @@ public class RoomListener implements PacketListener, Runnable {
             } else {
                 srcBaseName = username;
             }
-            Date date = null;
-            String timestamp = null;
-
-            if (information != null) {
-
-                date = information.getStamp();
-                timestamp = date.toString();
-
-            }
-
-            long timeStop = System.currentTimeMillis();
 
             if (isEncrypted) {
                 this.cleverMessage = new CleverMessage(decrypted);
@@ -243,7 +231,7 @@ public class RoomListener implements PacketListener, Runnable {
             receiver.handleCleverMessage(this.cleverMessage);
 
         } catch (Exception e) {
-            logger.error("sono un povero stronzo?", e);
+            logger.error("Exception decoding message ", e);
         }
     }
 }

@@ -100,6 +100,10 @@ public class Main
                 System.exit( 1 );
             }
         }   
+        catch ( Exception ex){
+            logger.error( "Error launching ClusterCoordinator: " + ex.getMessage() );
+            System.exit( 1 );
+        }
     }
 
 

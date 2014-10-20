@@ -98,6 +98,7 @@ public class ClusterCoordinator implements CleverMessageHandler
   
   private String server;
   private String room;
+  private ConnectionXMPP.TransmissionModes mMode;
   private int port;
   private String username;
   private String password;
@@ -137,6 +138,7 @@ public class ClusterCoordinator implements CleverMessageHandler
       inxml = null;      
       server = "";
       room = "";
+      mMode = ConnectionXMPP.TransmissionModes.Plain;
       port = 0;
       username = "";
       password = "";
@@ -209,6 +211,7 @@ public class ClusterCoordinator implements CleverMessageHandler
       try {
           server = pXML.getElementContent("server");
           room = pXML.getElementContent("room");
+          mMode = ConnectionXMPP.parseMode(pXML.getElementContent("transmissionMode"));
           roomclients = pXML.getElementContent("roomclients");
           port = Integer.parseInt(pXML.getElementContent("port"));
           username = pXML.getElementContent("username");
@@ -262,7 +265,7 @@ public class ClusterCoordinator implements CleverMessageHandler
    * and a nickname, by which the registration will be performed on the server. 
    * These parameters are then saved in the xml configuration file for subsequent connections.
    */
-   public void connectionManagement(ROOM roomtype, ClusterCoordinator cc) throws CleverException
+   public void connectionManagement(ROOM roomtype, ClusterCoordinator cc) throws CleverException, FileNotFoundException
   {
       conn = new ConnectionXMPP();
             
@@ -273,7 +276,7 @@ public class ClusterCoordinator implements CleverMessageHandler
       else
       {
           logger.info("Connection to server XMPP: "+server +"at port: "+port);
-          conn.connect( server, port);
+          conn.connect( server, port, mMode);
       }
  
     
@@ -465,7 +468,7 @@ public class ClusterCoordinator implements CleverMessageHandler
    * 
    * @throws CleverException 
    */
-  public void start() throws CleverException
+  public void start() throws CleverException, FileNotFoundException
   {
       logger.info("START DI CC");
       

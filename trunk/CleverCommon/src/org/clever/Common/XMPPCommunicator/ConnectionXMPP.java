@@ -46,6 +46,7 @@
 package org.clever.Common.XMPPCommunicator;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Collection;
@@ -142,6 +143,13 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
         SHELL
     };
 
+    public enum TransmissionModes {
+
+        Plain,
+        Signed,
+        Encrypted
+    };
+
     /**
      * Resource name for XMPP login (unique)
      */
@@ -154,6 +162,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     private HashMap<ROOM, MultiUserChat> mucs = new HashMap<ROOM, MultiUserChat>(0);
     private Integer port;
     private Logger logger;
+    private TransmissionModes mMode;
     private CleverChatManagerListener cleverChatManagerListener = null;
     private CleverMessageHandler msgHandler = null;
 
@@ -168,14 +177,15 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
 
     public ConnectionXMPP() {
         logger = Logger.getLogger("XMPPCommunicator");
-        sessionKey = new HashMap<String,byte[]>();
+        sessionKey = new HashMap<String, byte[]>();
         resource = new Integer(new Random().nextInt()).toString();
     }
 
-    public void connect(final String servername, final Integer port)
-            throws CleverException {
+    public void connect(final String servername, final Integer port, TransmissionModes mode)
+            throws CleverException, FileNotFoundException {
         this.servername = servername;
         this.port = port;
+        mMode = mode;
 
         try {
             ConnectionConfiguration connectionConfiguration = new ConnectionConfiguration(servername, port);
@@ -195,20 +205,19 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
         ProviderManager.getInstance().addExtensionProvider("x", "jabber:x:sessionkey",
                 new SessionKeyProvider());
 
-
-        ldapClient = new LDAPClient("localhost", 389, "dc=clever,dc=unime,dc=it", "cn=admin,dc=clever,dc=unime,dc=it", "clever");
-        //ldapClient = new LDAPClient();  
+        //ldapClient = new LDAPClient("localhost", 389, "dc=clever,dc=unime,dc=it", "cn=admin,dc=clever,dc=unime,dc=it", "clever");
+        ldapClient = new LDAPClient();
         logger.info("ldapClient created");
         //utils = new X509Utils("./keystore/"this.+".p12","cmgaia","cmgaia".toCharArray());
     }
 
     public void connectTLS(final String servername, final Integer port,
             final String keystorePath, final String keystorePassword,
-            final String truststorePath, final String truststorePassword) {
+            final String truststorePath, final String truststorePassword, TransmissionModes mode) {
         this.servername = servername;
         this.port = port;
         this.isTLS = true;
-
+        mMode = mode;
         try {
             ConnectionConfiguration connectionConfiguration = new ConnectionConfiguration(servername, port);
             connectionConfiguration.setSecurityMode(SecurityMode.required);
@@ -276,8 +285,8 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
      * @param room
      * @param nickName
      */
-    public void joinInRoom(final String roomName, final ROOM roomType, final String nickName) {
-        this.joinInRoom(roomName, roomType, nickName, "");
+    public MultiUserChat joinInRoom(final String roomName, final ROOM roomType, final String nickName) {
+        return this.joinInRoom(roomName, roomType, nickName, "");
     }
 
     /**
@@ -286,7 +295,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
      * @param room
      * @param nickName
      */
-    public void joinInRoom(final String roomName, final ROOM roomType, final String nickName, final String status) //provo a fare sta funzione come sincronizzata!
+    public MultiUserChat joinInRoom(final String roomName, final ROOM roomType, final String nickName, final String status) //provo a fare sta funzione come sincronizzata!
     {
         DiscussionHistory history = new DiscussionHistory();
         history.setMaxStanzas(0);
@@ -302,6 +311,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
         } catch (XMPPException ex) {
             logger.error("Error while joing room: " + roomName + " " + ex);
         }
+        return mucTemp;
     }
 
     public MultiUserChat joinInRoom(final String roomName, final String password, final String nickName) {
@@ -347,7 +357,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
      */
     public void addChatManagerListener(final CleverMessageHandler msgHandler) {
         this.msgHandler = msgHandler;
-        cleverChatManagerListener = new CleverChatManagerListener(msgHandler);
+        cleverChatManagerListener = new CleverChatManagerListener(msgHandler, this.ldapClient, this.sessionKey);
         connection.getChatManager().addChatListener(cleverChatManagerListener);
     }
 
@@ -445,8 +455,19 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     }
 
     public LDAPClient getLDAPClient() {
-        logger.debug("return ldapClient " + ldapClient);
         return this.ldapClient;
+    }
+
+    public static TransmissionModes parseMode(String mode) {
+        Logger.getLogger("XMPPCommunicator").debug("Parsing mode: " + mode);
+        if (mode != null) {
+            if (mode.equalsIgnoreCase("encrypted")) {
+                return ConnectionXMPP.TransmissionModes.Encrypted;
+            } else if (mode.equalsIgnoreCase("signed")) {
+                return ConnectionXMPP.TransmissionModes.Signed;
+            }
+        }
+        return ConnectionXMPP.TransmissionModes.Plain;
     }
 
     /*
@@ -458,13 +479,30 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
      this.getMultiUserChat(ROOM.SHELL).getOccupantPresence( jid) != null);
      }
      */
+    public void sendMessage(String jid, final CleverMessage message) {
+        switch (mMode) {
+            case Plain:
+                sendPlainMessage(jid, message);
+                break;
+            case Signed:
+                sendSignedMessage(jid, message);
+                break;
+            case Encrypted:
+                sendEncryptedMessage(jid, message);
+                break;
+            default:
+                sendPlainMessage(jid, message);
+                break;
+        }
+    }
+
     /**
      * Send private message to an user
      *
      * @param jid
      * @param message
      */
-    public void sendMessage(String jid, final CleverMessage message) {
+    public void sendPlainMessage(String jid, final CleverMessage message) {
 
         try {
             //TODO: check if host is connected and throw a exception on sending failure 
@@ -480,12 +518,12 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
         Chat chat = cleverChatManagerListener.getChat(jid.toLowerCase());
         if (chat == null) {
             logger.debug("Chat toward " + jid + " not found");
-            chat = connection.getChatManager().createChat(jid, new CleverChatListener(msgHandler));
+            chat = connection.getChatManager().createChat(jid, new CleverChatListener(msgHandler, ldapClient, sessionKey));
         }
 
         // Send a message
         try {
-            logger.debug("sending message");
+            logger.debug("sending plain message: " + message.toXML());
             chat.sendMessage(message.toXML());
             logger.debug("message sent");
         } catch (XMPPException ex) {
@@ -549,10 +587,12 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
 
         if (this.sessionKey.get(message.getDst()) != null) {
             key = this.sessionKey.get(message.getDst());
+            logger.debug("Session key exists:\nDst: " + message.getDst() + " key: " + X509Utils.bytesToHex(key));
         } else {
             firstMsg = true;
             key = utils.generateSecretKey();
             this.sessionKey.put(message.getDst(), key);
+            logger.debug("Session key generated:\nDst: " + message.getDst() + " key: " + X509Utils.bytesToHex(key));
         }
 
         if (firstMsg) {
@@ -581,7 +621,6 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
             }
             packet.addExtension(delayInformation);
 
-            logger.debug("Sending an encrypted message: ");
             jid += "@" + this.getServer();
             // See if there is already a chat open
             Chat chat = cleverChatManagerListener.getChat(jid.toLowerCase());
@@ -591,9 +630,9 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
             }
 
             try {
-                logger.debug("sending message");
+                logger.debug("sending encrypted message: " + packet.toXML());
                 chat.sendMessage(packet);
-                logger.debug("message sent");
+                logger.debug("encrypted message sent");
             } catch (XMPPException ex) {
                 logger.error("Error while sending message: " + message.toXML() + " " + ex.getMessage());
             }
@@ -644,7 +683,6 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
             }
             packet.addExtension(delayInformation);
 
-            logger.debug("Sending a signed message: ");
             jid += "@" + this.getServer();
             // See if there is already a chat open
             Chat chat = cleverChatManagerListener.getChat(jid.toLowerCase());
@@ -654,9 +692,9 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
             }
             // Send a message
             try {
-                logger.debug("sending message");
+                logger.debug("sending signed message: " + packet.toXML());
                 chat.sendMessage(packet);
-                logger.debug("message sent");
+                logger.debug("signed message sent");
             } catch (XMPPException ex) {
                 logger.error("Error while sending message: " + message.toXML() + " " + ex.getMessage());
             }
@@ -987,7 +1025,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
         Chat chat = cleverChatManagerListener.getChat(jid.toLowerCase());
         if (chat == null) {
             logger.debug("Chat toward " + jid + " not found... creating it");
-            chat = connection.getChatManager().createChat(jid, new CleverChatListener(msgHandler));
+            chat = connection.getChatManager().createChat(jid, new CleverChatListener(msgHandler, ldapClient, sessionKey));
             logger.debug("Chat toward " + jid + " created");
         }
 

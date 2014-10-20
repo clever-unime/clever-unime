@@ -59,7 +59,7 @@ import org.clever.administration.test.TestApi;
 import org.clever.administration.api.Session;
 import org.clever.administration.api.SessionFactory;
 import org.jdom.Element;
-
+import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 
 
 public class Cli2 {
@@ -126,7 +126,9 @@ public class Cli2 {
                              pXML.getElementContent( "password" ),
                              Integer.parseInt( pXML.getElementContent( "port" ) ),
                              pXML.getElementContent( "room" ),
-                             pXML.getElementContent( "nickname" ) ) )
+                             pXML.getElementContent( "nickname" ),
+                             ConnectionXMPP.parseMode(pXML.getElementContent("mode"))
+    ) )
     {
       System.out.println( "Error in connecting the administrator. The server might be turned off or please verify the configuration file." );
       System.exit( 1 );
