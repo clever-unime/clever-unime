@@ -77,8 +77,8 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler {
         this.XMPPServer = XMPPServer;
         this.room = room;
         try {
-            ldapClient = new LDAPClient("localhost", 389, "dc=clever,dc=unime,dc=it", "cn=admin,dc=clever,dc=unime,dc=it", "clever");
-            //ldapClient = new LDAPClient();
+            //ldapClient = new LDAPClient("localhost", 389, "dc=clever,dc=unime,dc=it", "cn=admin,dc=clever,dc=unime,dc=it", "clever");
+            ldapClient = new LDAPClient();
             String usr = null;
             if (this.adminHostName.indexOf("-") != -1) {
                 usr = this.adminHostName.substring(0, this.adminHostName.indexOf("-"));

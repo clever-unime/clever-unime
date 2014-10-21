@@ -109,8 +109,8 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
             adminHostName = username;
             this.XMPPServer = XMPPServer;
             this.room = room;
-            ldapClient = new LDAPClient("localhost", 389, "dc=clever,dc=unime,dc=it", "cn=admin,dc=clever,dc=unime,dc=it", "clever");
-            //ldapClient = new LDAPClient();
+            //ldapClient = new LDAPClient("localhost", 389, "dc=clever,dc=unime,dc=it", "cn=admin,dc=clever,dc=unime,dc=it", "clever");
+            ldapClient = new LDAPClient();
             String usr;
             if (this.adminHostName.indexOf("-") != -1) {
                 usr = this.adminHostName.substring(0, this.adminHostName.indexOf("-"));
