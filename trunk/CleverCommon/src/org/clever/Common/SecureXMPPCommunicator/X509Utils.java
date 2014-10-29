@@ -106,7 +106,7 @@ public class X509Utils {
     
     private void init(){
         try {
-            cfgTemplatePath = "sources/org/clever/Common/SecureXMPPCommunicator/configuration_template_keystore.xml";
+            cfgTemplatePath = "./cfg/configuration_keystore.xml";
             inxml = new FileInputStream(cfgTemplatePath);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LDAPClient.class.getName()).log(Level.SEVERE, null, ex);
@@ -442,8 +442,8 @@ public class X509Utils {
         if(decryptedMessage != null)
             return new String(decryptedMessage);
         else return new String();
-    }
-    
+    }    
+            
     /**
      * TODO: introdurre la password per le chiavi private
      * @param inpstr

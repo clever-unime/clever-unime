@@ -181,30 +181,8 @@ public class RoomListener implements PacketListener, Runnable {
                 } else {
                     pubKey = cert.getPublicKey();
                 }
-
-                MessageDigest md = null;
-                try {
-                    md = MessageDigest.getInstance("SHA");
-
-                } catch (NoSuchAlgorithmException ex) {
-                    java.util.logging.Logger.getLogger(CleverChatListener.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                md.reset();
-                try {
-                    md.update(cleverMessage.toXML().getBytes("UTF-8"), 0, cleverMessage.toXML().length());
-                } catch (UnsupportedEncodingException ex) {
-                    java.util.logging.Logger.getLogger(RoomListener.class.getName()).log(Level.SEVERE, null, ex);
-                }
-
-                //String digest = new String(Hex.encode(md.digest()));
-                String digest = new String(Base64.encode(md.digest()));
-
-                if (digest.equals(signedExtension.getData())) {
-                    isVerified = true;
-                } else {
-                    isVerified = false;
-                }
-
+     
+                isVerified = utils.verify(cleverMessage.toXML(), signedExtension.getData(), pubKey);
                 if (isVerified) {
                     logger.debug("[This message is signed]");
                 } else {

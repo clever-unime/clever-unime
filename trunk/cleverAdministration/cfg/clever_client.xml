@@ -9,6 +9,6 @@
   <password>clever_admin</password>
   <nickname>clever_admin</nickname>
   <room>SHELL-room@conference.localhost</room>
-  <mode>encrypted</mode>
+  <mode>signed</mode>
 </configuration>
 

@@ -172,8 +172,6 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     private LDAPClient ldapClient = null;
     private X509Utils utils = null;
     private Map<String, byte[]> sessionKey;
-    private long timeStart;
-    private long timeStop;
 
     public ConnectionXMPP() {
         logger = Logger.getLogger("XMPPCommunicator");
@@ -208,7 +206,6 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
         //ldapClient = new LDAPClient("localhost", 389, "dc=clever,dc=unime,dc=it", "cn=admin,dc=clever,dc=unime,dc=it", "clever");
         ldapClient = new LDAPClient();
         logger.info("ldapClient created");
-        //utils = new X509Utils("./keystore/"this.+".p12","cmgaia","cmgaia".toCharArray());
     }
 
     public void connectTLS(final String servername, final Integer port,
@@ -386,7 +383,8 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
                         + " port: " + this.port
                         + "resource" + this.resource);
 
-                utils = new X509Utils("./keystore/" + username + ".p12", username, username.toCharArray());
+                utils = new X509Utils();
+                //utils = new X509Utils("./keystore/" + username + ".p12", username, username.toCharArray());
 
             } catch (XMPPException e) {
                 logger.error("XMPP login failed with username (try # " + i + ": "
@@ -545,8 +543,6 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
         String src = message.getSrc();
         String dst = message.getDst();
 
-        this.timeStart = System.currentTimeMillis();
-
         Message packet = new Message();
         packet.setType(Message.Type.normal);
         packet.setTo(message.getDst() + "@" + this.servername);
@@ -652,7 +648,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
 
             byte[] digestBytes = null;
             String signedDigest = null;
-
+            /*
             MessageDigest md = null;
             try {
 
@@ -667,16 +663,17 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
             } catch (UnsupportedEncodingException ex) {
                 java.util.logging.Logger.getLogger(ConnectionXMPP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
-
+            
             //String digest = new String(Hex.encode(md.digest()));
             String digest = new String(Base64.encode(md.digest()));
-
+            */
+            String digest = utils.signToString(message.toXML());
+            
             Date date = new Date();
             DelayInformation delayInformation = new DelayInformation(date);
 
             SecureExtension signedExtension = new SecureExtension("signed");
 
-            //signedDigest = utils.signToString(digest);
             if (digest != null) {
                 signedExtension.setData(digest);
                 packet.addExtension(signedExtension);

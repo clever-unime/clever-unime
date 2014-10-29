@@ -86,7 +86,7 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler {
                 usr = this.adminHostName;
             }
 
-            utils = new X509Utils("./keystore/" + usr + ".p12", usr, usr.toCharArray());
+            utils = new X509Utils();
 
             conn = new ConnectionXMPP();
             conn.connect(XMPPServer, port, mode);
@@ -187,7 +187,7 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler {
         }
     }
 
-    public void sendSignedRequest(final CleverMessage msg) {
+    private void sendSignedRequest(final CleverMessage msg) {
         this.timeStart = System.currentTimeMillis();
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);

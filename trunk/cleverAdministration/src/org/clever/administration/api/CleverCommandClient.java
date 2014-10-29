@@ -118,7 +118,7 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
                 usr = this.adminHostName;
             }
 
-            utils = new X509Utils("./keystore/" + usr + ".p12", usr, usr.toCharArray());
+            utils = new X509Utils();
 
             connectionXMPP.connect(XMPPServer, port, mode);
             connectionXMPP.authenticate(username, passwd);
@@ -216,7 +216,7 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
         }
     }
 
-    public void sendSignedRequest(final CleverMessage msg) {
+    private void sendSignedRequest(final CleverMessage msg) {
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
         try {
@@ -226,7 +226,7 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
             message.setBody(msg.toXML());
 
             SecureExtension signedExtension = new SecureExtension("signed");
-            MessageDigest md = null;
+            /*MessageDigest md = null;
             try {
                 md = MessageDigest.getInstance("SHA");
             } catch (java.security.NoSuchAlgorithmException ex) {
@@ -239,7 +239,8 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
             } catch (Exception ex) {
                 java.util.logging.Logger.getLogger(ClusterManagerAdministrationTools.class.getName()).log(Level.SEVERE, null, ex);
             }
-            String digest = new String(Base64.encode(md.digest()));
+            String digest = new String(Base64.encode(md.digest()));*/
+            String digest = utils.signToString(msg.toXML());
             signedExtension.setData(digest);
             message.addExtension(signedExtension);
             Date date = new Date();
@@ -520,7 +521,7 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
                 dstBaseName = dst;
             }
 
-            X509Utils utils = new X509Utils("./keystore/" + dstBaseName + ".p12", dstBaseName, dstBaseName.toCharArray());
+            X509Utils utils = new X509Utils();
 
             final SecureExtension encryptedExtension = (SecureExtension) message.getExtension("x", "jabber:x:encrypted");
             final SecureExtension sessionKeyExtension = (SecureExtension) message.getExtension("x", "jabber:x:sessionkey");
