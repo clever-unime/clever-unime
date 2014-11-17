@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-	<HyperVisor>org.clever.HostManager.HyperVisorPlugins.VirtualBox.HvVirtualBox</HyperVisor>
+	<writeOnCfgFolder>yes</writeOnCfgFolder>
+	<ClassPlugin>org.clever.HostManager.HyperVisorPlugins.VirtualBox.HvVirtualBox</ClassPlugin>
 	<moduleName>HyperVisorAgent</moduleName>
         
         <pluginParams>
