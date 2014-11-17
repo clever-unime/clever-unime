@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -19,7 +19,6 @@
  *  Copyright (c) 2010 Massimo Villari
  *  Copyright (c) 2010 Antonio Celesti
  *  Copyright (c) 2010 Antonio Nastasi
- *  Copyright (c) 2013 Antonio Galletta
  *
  *  Permission is hereby granted, free of charge, to any person
  *  obtaining a copy of this software and associated documentation
@@ -44,14 +43,6 @@
  */
 package org.clever.Common.XMLTools;
 
-/**
- * 
- * 
- * @author Antonio Galletta (2013)
- * 
- * 
- */
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -62,13 +53,13 @@ import java.io.StringReader;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.Namespace;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 public class ParserXML
 {
@@ -145,7 +136,6 @@ public class ParserXML
     {
       document = builder.build( new StringReader( XMLString ) );
       rootElement = document.getRootElement();
-      
     }
     catch ( JDOMException ex )
     {
@@ -242,7 +232,6 @@ public class ParserXML
   public Document getDocument(){
       return this.document;
   }
-
     //OVERLOADS
     public String getElementContent(String element, String defaultValue) {
         String returnV = "";
@@ -287,6 +276,7 @@ public class ParserXML
         return returnV;
     }
     
+    
     public void printElementContentText(){
         for(int i =0;i<this.rootElement.getChildren().size();i++)
         {
@@ -294,8 +284,9 @@ public class ParserXML
             logger.debug("text "+((Element)this.rootElement.getChildren().get(i)).getText());
         }
     }
-
-    public static Element getElementByAttribute(Document document, String attributeId,String attributeValue){
+    
+    
+      public static Element getElementByAttribute(Document document, String attributeId,String attributeValue){
    Element root, elemento;
    List listaElementi;
   
@@ -667,5 +658,4 @@ public class ParserXML
   }
 
 
-  
 }

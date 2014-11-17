@@ -45,9 +45,9 @@
 package org.clever.Common.XMPPCommunicator;
 
 import java.util.List;
-import org.jdom.*;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.*;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 public class RequestInformation extends ExecOperation {
     

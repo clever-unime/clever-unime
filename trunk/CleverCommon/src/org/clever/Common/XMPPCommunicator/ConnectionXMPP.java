@@ -48,6 +48,7 @@ package org.clever.Common.XMPPCommunicator;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -119,7 +120,8 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
   public enum ROOM
   {
     CLEVER_MAIN,
-    SHELL
+    SHELL,
+    FEDERATION
   };
 
   /**
@@ -131,7 +133,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
   private String servername = "";
   private String username = "";
   private String password = "";
-  private HashMap<ROOM, MultiUserChat> mucs = new HashMap<ROOM, MultiUserChat>( 0 );
+  private HashMap<ROOM, Object> mucs = new HashMap<ROOM, Object>( 0 );
   private Integer port;
   private Logger logger;
   private CleverChatManagerListener cleverChatManagerListener = null;
@@ -144,6 +146,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
   {
     logger = Logger.getLogger( "XMPPCommunicator" );
     resource = new Integer(new Random().nextInt()).toString();
+    //mucs.put(ROOM.FEDERATION, null);
   }
 
 
@@ -164,7 +167,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
     }
     catch( XMPPException ex )
     {
-      logger.error( "Error during XMPP connection: " + ex.toString() );
+      logger.error( "Error occurred in XMPP connection: " + ex.toString() );
       throw new CleverException(ex, "Error during XMPP connection");
     }
   }
@@ -249,7 +252,9 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
    */
   public void joinInRoom( final String roomName, final ROOM roomType, final String nickName )
   {
-     this.joinInRoom(roomName, roomType, nickName,  "");
+      
+          this.joinInRoom(roomName, roomType, nickName,  "");
+      
   }
  
   /**
@@ -271,7 +276,7 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
       mucTemp.join( nickName, "", history, 5000 );
       mucTemp.changeAvailabilityStatus(status, Presence.Mode.chat); 
       logger.info( "Created room: " + roomName + " with nickname: " + nickName );
-      mucs.put( roomType, mucTemp );
+      this.putMUCinMAP( roomType, mucTemp,roomName );
     }
     catch( XMPPException ex )
     {
@@ -421,17 +426,39 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
 
   public MultiUserChat getMultiUserChat( ROOM roomType )
   {
-    return mucs.get( roomType );
+    return (MultiUserChat)mucs.get( roomType );
   }
-
-
+  /**
+   * this function retrieve the correct MultiuserChat connected for the federation indicate from FedName 
+   * @param roomType
+   * @param FedName
+   * @return 
+   */
+  public MultiUserChat getMultiUserChat( ROOM roomType,String FedName )
+  {
+      MultiUserChat r=(MultiUserChat)((HashMap)mucs.get(roomType)).get(FedName);
+      return r;
+  }
 
   public MultiUserChat getMultiUserChat()
   {
     return getMultiUserChat( ROOM.CLEVER_MAIN );
   }
 
-
+  private void putMUCinMAP(ROOM roomType,MultiUserChat muc,String FedName){
+      if(roomType==ROOM.FEDERATION){
+          //logger.debug("connXMPP%%putMUCinMAP1"+mucs.size());
+          HashMap<String,MultiUserChat> tmpmap=(HashMap)this.mucs.get(roomType);
+          if(tmpmap==null){
+              tmpmap=new HashMap(0);
+          }
+          tmpmap.put(FedName,muc);
+          mucs.put(roomType,tmpmap);
+      }
+      else
+          mucs.put(roomType, muc);
+      logger.debug("connXMPP%%"+mucs.size());
+  }
 
   public void closeConnection()
   {
@@ -816,6 +843,49 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
       return false;
   }
 
+  
+  /**
+   * Returns an ArrayList containing nicknames for all the active CMs in Federation room
+   * (excluding this CM).
+   * @return 
+   */
+  public ArrayList<String> getFederatedCMs(String fedName) {
+    logger.debug("getFederatedCMs: lauched getFederatedCMs");
+    MultiUserChat mucTemp = getMultiUserChat(ROOM.FEDERATION,fedName);
+    logger.debug ("getFederatedCMs:mucTemp: "+mucTemp);
+    ArrayList<String> array = new ArrayList<String>();
+          
+    Iterator<String> it = mucTemp.getOccupants(); 
+    //logger.debug("it: "+it);
+    Presence presence = null; 
+    String occupantJid = ""; 
+    String tmp = "";
+    String nick = "";
+
+    while( it.hasNext() )
+    {
+      //logger.debug("it.next");
+      occupantJid = it.next();
+      logger.debug("getFederatedCMs:occupantJid: "+occupantJid);
+      presence = mucTemp.getOccupantPresence(occupantJid);
+      logger.debug("getFederatedCMs:presence: "+presence);
+      nick = mucTemp.getOccupant(occupantJid).getNick();
+      logger.debug("getFederatedCMs:nick: "+ nick);
+      if (nick.compareTo(this.getUsername())==0)
+          continue; //skip THIS host
+      tmp = presence.getStatus();
+      logger.debug("getFederatedCMs:tmp: "+tmp);
+      
+      if((tmp!=null && (tmp.equals("CM_ACTIVE")))) { //it's important to control if tmp!=null
+          array.add(nick);
+          logger.debug ("getFederatedCMs:Occupant added in CM List"+nick);
+      }
+    }
+    //array.add("END");
+    //logger.debug("getFederatedCMs:array: "+array);
+    
+    return array;
+  }
 
 
   public Collection<Occupant> getUsersInRoom( final ROOM roomType )
@@ -938,5 +1008,37 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
       
       return myUser;
   }
-  
+    //<editor-fold defaultstate="collapsed" desc="Function used for connection with SELEX Policy-Engine">
+  /**
+   * This function retrieve the active Policy-Engine Logged on Clever-Main room
+   * @param roomType
+   * @return 
+   */  
+  public String getActivePE(final ROOM roomType) {
+        MultiUserChat mucTemp = getMultiUserChat(roomType);
+        Iterator<String> it = mucTemp.getOccupants(); //ho tutti i Jid degli utenti di roomType
+
+        Occupant occupant = null;
+        Presence presence = null;
+        String occupantJid = "";
+        String tmp = "";
+        String nick = null;
+
+        while (it.hasNext()) {
+            occupantJid = it.next();
+            presence = mucTemp.getOccupantPresence(occupantJid);
+            occupant = mucTemp.getOccupant(occupantJid);
+            tmp = presence.getStatus();
+
+            if (tmp == null) {
+                continue;
+            }
+            if ((!tmp.isEmpty()) && (tmp.equals("PE_ACTIVE"))) 
+            {
+                nick = occupant.getNick();
+            }
+        }
+        return nick;
+    }
+//</editor-fold>
 }

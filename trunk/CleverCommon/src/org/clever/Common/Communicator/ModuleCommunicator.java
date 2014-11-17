@@ -81,6 +81,7 @@ public class ModuleCommunicator implements MessageHandler {
     {
          try {
             FileStreamer fs = new FileStreamer();
+            //TODO:verificare questa parte per fare in modo che venga preso il file presente nella cartella cfg
             InputStream inxml = getClass().getResourceAsStream("/org/clever/Common/Communicator/configuration_communicator.xml");
             ParserXML pXML = new ParserXML(fs.xmlToString(inxml));
             //Class c = Class.forName(pXML.getElementContent("communicationPlugin")+"."+pXML.getElementContent("communicationPlugin"));

@@ -66,7 +66,7 @@ public class Notification {
     }
 
     /**
-     * @param notificationId
+     * @param notifyId the notifyId to set
      */
     public void setId(String notificationId) {
         this.id = notificationId;

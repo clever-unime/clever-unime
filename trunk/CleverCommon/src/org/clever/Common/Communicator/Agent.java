@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -92,6 +92,7 @@ public abstract class Agent implements MethodInvokerHandler {
     public void setPluginState(boolean pluginState) {
        
         this.pluginState = pluginState;
+        //this.notify();
     }
     
     public Agent() throws CleverException {
@@ -159,7 +160,7 @@ public abstract class Agent implements MethodInvokerHandler {
         {
             ParserXML pXML = getconfiguration(cfgFile,classpath);
             this.pluginInstantiation=this.startPlugin(pXML);
-            this.setPluginState(true);
+            //this.setPluginState(true);
         }
         catch( Exception e )
         {
@@ -174,19 +175,19 @@ public abstract class Agent implements MethodInvokerHandler {
         {
             pXML.printElementContentText();
             
-            
+            logger.debug("agent1");
             String al= pXML.getElementContent( "ClassPlugin" );
             if(al==null)
                 logger.debug(pXML.getDocument().getContentSize());
-           
+            logger.debug("agent2");
             cl = Class.forName(al);
             
             this.pluginInstantiation= ( RunnerPlugin ) cl.newInstance();
            
             this.pluginInstantiation.setOwner(this);
-           
+           logger.debug("agent3");
             this.pluginInstantiation.init( pXML.getRootElement().getChild( "pluginParams" ),this );
-            
+            logger.debug("agent4");
             setAgentName(pXML.getElementContent("moduleName"));
         }
         catch( java.lang.NullPointerException e )
@@ -194,7 +195,7 @@ public abstract class Agent implements MethodInvokerHandler {
              logger.error(" error4:"+e.getMessage(),e);
             this.setPluginState(false);
             this.errorStr=e.getLocalizedMessage();
-            throw new CleverException( e, "Missing logger.properties or bad configuration " );       
+            throw new CleverException( e, "Missing logger.properties or bad configuration retrieved from configuration files" );       
             
         }
         catch( ClassNotFoundException e )      
@@ -322,11 +323,11 @@ public abstract class Agent implements MethodInvokerHandler {
             logger.debug("\nistanzio ModuleCommunicator(agentName), dove agentName: " + this.getAgentName());
            
             mc.setMethodInvokerHandler(this);
-            logger.debug("agentstart1");
+            logger.debug("agentstart1 "+agentName+" "+ this.group);
             mc.init(agentName, this.group);
-           logger.debug("agentstart2");
+            logger.debug("agentstart2");
             r = new ShutdownThread(this);
-            logger.debug("agentstart3");
+            //logger.debug("agentstart3");
         } catch (java.lang.NullPointerException e) {
             logger.debug("agentstart3.1");
             throw CleverException.newCleverException(e, "Missing logger.properties or configuration not found");
@@ -392,7 +393,7 @@ public abstract class Agent implements MethodInvokerHandler {
             throw new CleverException(ex.getTargetException(), "Error on plugin method invocation: " + ex.getTargetException().getMessage());
         } catch (NoSuchMethodException ex) {
             try {
-                //logger.debug("%%%&handleinvocationNoMethod:"+method.getMethodName()+ " "+this.isPluginState()+this.pluginState);
+                logger.debug("%%%&handleinvocationNoMethod:"+method.getMethodName()+ " "+this.isPluginState()+this.pluginState);
                 //plugin method
                 if(this.isPluginState()){
                     
@@ -502,6 +503,7 @@ public abstract class Agent implements MethodInvokerHandler {
     public Object invoke(String agentTarget, String methodTarget, boolean hasReply, List params) throws CleverException {
 
         MethodInvoker targetMethod = new MethodInvoker(agentTarget, methodTarget, hasReply, params);
+        logger.debug(this.agentName+" invoke "+agentTarget+" on ");
         return mc.invoke(targetMethod);
 
 

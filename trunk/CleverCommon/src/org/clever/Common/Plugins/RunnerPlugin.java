@@ -44,7 +44,7 @@
 package org.clever.Common.Plugins;
 
 import org.clever.Common.Communicator.Agent;
-import org.jdom.Element;
+import org.jdom2.Element;
 import org.clever.Common.Exceptions.CleverException;
 
 

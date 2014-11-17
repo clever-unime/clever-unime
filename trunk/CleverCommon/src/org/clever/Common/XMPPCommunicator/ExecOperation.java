@@ -47,10 +47,10 @@ import org.clever.Common.XMLTools.MessageFormatter;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 
 

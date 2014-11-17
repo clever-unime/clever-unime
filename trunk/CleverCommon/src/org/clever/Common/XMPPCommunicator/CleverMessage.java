@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -62,14 +62,14 @@ import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.XMLTools.MessageFormatter;
-import org.jdom.CDATA;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.CDATA;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.Namespace;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 import org.xml.sax.SAXException;
 
@@ -138,13 +138,15 @@ public class CleverMessage
         addAttachment( pars.getElementContent( "attachement", j ) );
       }
     }
-    catch( JDOMException ex )
-    {
+   /* catch( org.jdom2.JDOMException ex ){
       logger.error( ex.toString() );
-    }
+    }*/
     catch( IOException ex )
     {
       logger.error( ex.toString() );
+    }
+    catch(Exception ex){
+        logger.error( ex.toString(),ex );
     }
 
     if( pars.getElementAttributeContent( "message", "type" ).equalsIgnoreCase( "Request" ) )

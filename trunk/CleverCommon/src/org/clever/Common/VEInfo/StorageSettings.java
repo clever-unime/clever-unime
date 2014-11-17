@@ -1,5 +1,5 @@
 /*
- * Copyright [2014] [Università di Messina]
+ * Copyright 2014 Università di Messina
  *Licensed under the Apache License, Version 2.0 (the "License");
  *you may not use this file except in compliance with the License.
  *You may obtain a copy of the License at
@@ -82,7 +82,6 @@ public class StorageSettings {
         this.name = name;
         this.type = type;       
     }
-       
 
     public long getCapacity(){
         return capacity;
@@ -90,7 +89,6 @@ public class StorageSettings {
 
     public void setCapacity(long value){
         this.capacity = value;
-
     }
 
     public long getFree(){
@@ -120,7 +118,6 @@ public class StorageSettings {
     public void setDiskPath(String value){
         this.diskPath = value;
     }
-    
     
     //Per VMWare
     public void setDatacenterName(String datacenterName){
