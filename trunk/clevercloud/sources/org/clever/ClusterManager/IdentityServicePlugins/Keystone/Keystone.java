@@ -500,7 +500,7 @@ private String extractFieldToJsonNode(String jsonNode, String field, String json
             
             //effettuo un test sul servizio richiedendo un token
 
-            token = this.authenticationUserPassTen(this.getUser(), this.getPass(), this.getTenant());
+            token = this.authenticationUserPassTen(this.getTenant(),this.getUser(), this.getPass() );
             
         } catch (JSONException ex) {
             logger.error("Errore in authenticationUserPassTen()" + ex);
