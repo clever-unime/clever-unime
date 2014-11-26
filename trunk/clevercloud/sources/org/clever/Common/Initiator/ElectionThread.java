@@ -77,14 +77,24 @@ public class ElectionThread implements Runnable
       
       try 
       {
+        while(true)
+        {
           long milliseconds = Math.abs( ( new Random( System.currentTimeMillis() ) ).nextLong() % 10000 );
           Thread.sleep( milliseconds );
           
           Boolean cmActiveNotPresent =false;
-          if(connection.getActiveCC(ROOM.CLEVER_MAIN)==null)
-              cmActiveNotPresent =true;//Verify if there is a CM active after the sleep of thread
-                
-          clusterCoordinator.setAsActiveCC(cmActiveNotPresent, clusterCoordinator.getActiveAgents()); //if there isn't a cm active this entry set it active!
+          String activeCC=connection.getActiveCC(ROOM.CLEVER_MAIN);
+          if(activeCC==null)
+          {
+                cmActiveNotPresent =true;//Verify if there is a CM active after the sleep of thread
+                clusterCoordinator.setAsActiveCC(cmActiveNotPresent, clusterCoordinator.getActiveAgents()); //if there isn't a cm active this entry set it active!
+            }
+            else if(!(activeCC.equals(connection.getUsername()))||first_iteration){
+                clusterCoordinator.setAsActiveCC(cmActiveNotPresent, clusterCoordinator.getActiveAgents()); //if there isn't a cm active this entry set it active!
+            }
+            first_iteration=false;
+
+          }
       }
       catch (InterruptedException ex) 
       {
