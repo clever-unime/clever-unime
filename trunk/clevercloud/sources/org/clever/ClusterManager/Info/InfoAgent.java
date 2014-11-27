@@ -165,6 +165,13 @@ public class InfoAgent extends CmAgent
         
     }
 
+    public boolean IsActiveCC(){
+        if(connectionXMPP.getUsername().equals(connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN)))
+            return true;
+        else
+            return false;
+    }  
+
     public void createAgent(String className){
         mf.createAgent(className);
             
