@@ -114,7 +114,7 @@ class NotificationThread extends Thread implements PacketListener
                 }
             }
             target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
-            logger.debug("dispatcherHM  "+target);
+            //logger.debug("dispatcherHM  "+target);
             //no active cc
             if (target == null) {
                 try {
