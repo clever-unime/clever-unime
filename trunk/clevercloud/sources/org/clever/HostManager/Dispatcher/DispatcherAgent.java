@@ -99,14 +99,14 @@ class NotificationThread extends Thread implements PacketListener
         String target = null;
         while (true) {
             //no messages
-            logger.info("Start NotificationThread run!1");
+            //logger.info("Start NotificationThread run!1");
             if (queue.isEmpty()) {
                 try {
-                    logger.info("Start NotificationThread run!2");
+                    //logger.info("Start NotificationThread run!2");
                     queueNotEmpty = false;
-                    logger.info("Start NotificationThread run!3");
+                    //logger.info("Start NotificationThread run!3");
                     while (!queueNotEmpty) {
-                        logger.info("Start NotificationThread run!4");
+                        //logger.info("Start NotificationThread run!4");
                         this.wait();
                     }
                 } catch (InterruptedException ex) {
@@ -124,14 +124,14 @@ class NotificationThread extends Thread implements PacketListener
                         this.processPacket(null);
                     }
                     target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
-                    logger.debug("dispatcherHM  "+target);
+                    //logger.debug("dispatcherHM  "+target);
                 } catch (InterruptedException ex) {
                     logger.error("InterruptedException: "+ex);
                 }
             }
             CleverMessage msg = queue.poll();
             msg.setDst(target);
-            logger.debug("Send notification:"+msg.getNotificationFromMessage());
+            //logger.debug("Send notification:"+msg.getNotificationFromMessage());
             connectionXMPP.sendMessage(target, msg);
 
         }
@@ -181,7 +181,7 @@ public void initialization() throws CleverException
     Notification notification=new Notification();
     notification.setId("PRESENCE");
     notification.setType("HM");
-    logger.debug("?=)** hostId= "+hostid+" "+notification.getType());
+    //logger.debug("?=)** hostId= "+hostid+" "+notification.getType());
     notification.setHostId(hostid);
     this.sendNotification(notification);
 }
@@ -246,7 +246,7 @@ public void initialization() throws CleverException
          
         CleverMessage cleverMsg = new CleverMessage();
         String cc=this.connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.CLEVER_MAIN);
-        logger.debug("clustercoordinator for sendMeasure is "+cc);
+        //logger.debug("clustercoordinator for sendMeasure is "+cc);
         cleverMsg.setDst(cc);
         cleverMsg.setSrc(this.connectionXMPP.getUsername());
         cleverMsg.setHasReply(false);
@@ -265,7 +265,7 @@ public void initialization() throws CleverException
 
         cleverMsg.addAttachment( measure );
 
-        logger.debug("ZZZ " + cleverMsg.getDst() +" "+cleverMsg.getSrc()+"\n");
+        //logger.debug("ZZZ " + cleverMsg.getDst() +" "+cleverMsg.getSrc()+"\n");
 
         //cleverMsg.setReplyToMsg(message.getId());
         notificationThread.sendCleverMsg(cleverMsg);
