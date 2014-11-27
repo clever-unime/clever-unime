@@ -107,8 +107,10 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         while(!this.owner.isPluginState())
         {
             //If the data struct, for matching between VM and HM, isen't into DB then init it.
-            this.owner.setPluginState(true);
+            this.owner.setPluginState(false);
             try {
+                if((boolean)this.owner.invoke("InfoAgent", "IsActiveCC", true, new ArrayList()))
+                {
             //If the data struct, for matching between VM and HM, isen't into DB then init it.
                 if (this.checkDBAgent()){
                     if (!this.checkMatchingVmHMNode()) {
@@ -123,7 +125,7 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
                     this.owner.setPluginState(true);
                     
                 }
-                    
+                }    
                 }
             catch (Exception e) {
                 logger.error(e.getMessage(),e);
@@ -694,21 +696,40 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
 
         if(HMTarget==null)
             throw new LogicalCatalogException("VM name not exist");
-        params = new ArrayList();
-        params.add(id);
-        params.add(true);
-        boolean result = (Boolean) ((CmAgent) this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","shutDownVm", true, params);
-        if(result){
+        if(!this.checkVMisMigrated(id))
+        {
+
             params = new ArrayList();
-        params.add("VirtualizationManagerAgent");
-        params.add("/VMs_Running/VM[@name='"+id+"']");
-  
-        this.owner.invoke("DatabaseManagerAgent", "deleteNode", true, params);
+            params.add(id);
+            params.add(true);
+            boolean result = (Boolean) ((CmAgent) this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","shutDownVm", true, params);
+            if(result){
+                params = new ArrayList();
+            params.add("VirtualizationManagerAgent");
+            params.add("/VMs_Running/VM[@name='"+id+"']");
+      
+            this.owner.invoke("DatabaseManagerAgent", "deleteNode", true, params);
+            }
+    
+            return result;
         }
-
-        return result;
+        else{
+            params.clear();
+            params.add(id);
+            ArrayList info_params=new ArrayList();
+            info_params.add("VirtualizzationManagerAgent");
+            info_params.add("stopVM");
+            params.add(info_params);
+            ArrayList method_params=new ArrayList();
+            method_params.add(id);
+            params.add(method_params);
+            if((Boolean)this.owner.invoke("FederationManagerAgent", "forwardCommand4VMM", true, params))
+                return true;
+            else 
+                return false;
+        }
     }
-
+    
     @Override
     public boolean suspendVm(String id) throws CleverException {
         List params = new ArrayList();
@@ -1105,7 +1126,8 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
         params.add("/"+this.nodoMatchingVmHM+"/VM[@name=\""+id+"\"]/host/text()");
         String hostowner="";
         try{
-            hostowner=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+            hostowner=(String)this.owner.invoke("DatabaseManagerAgent", "queryWithSeparator", true, params);
+            hostowner=hostowner.split("@@@")[0];
             return hostowner;
         }catch(Exception e){
             logger.error("error in retreive host owner of VM:"+id, e);
