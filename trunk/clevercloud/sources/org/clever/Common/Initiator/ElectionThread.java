@@ -74,7 +74,7 @@ public class ElectionThread implements Runnable
   public void run()
   {
       logger.info("Switching a cluster manager active");
-      
+      boolean first_iteration = true;
       try 
       {
         while(true)
