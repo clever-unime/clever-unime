@@ -234,7 +234,7 @@ public class FederationManagerAgent extends CmAgent implements CleverMessageHand
 
     @Override
     public Object getPlugin() {
-        return this;
+        return this.pluginInstantiation;
     }
 
     @Override
