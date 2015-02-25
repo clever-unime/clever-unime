@@ -7,6 +7,7 @@ package org.clever.administration.api;
 import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
+import org.clever.administration.openam.OpenAmSessionClient;
 
 /**
  *
@@ -16,7 +17,10 @@ class SimpleCleverCommandClientProvider extends CleverCommandClientProviderImpl 
   
     
      private CleverCommandClient client = null;
-    
+     /***
+      * Added for OpenAM
+      */
+     private OpenAmSessionClient mOpenAmClient = null;
     
     
    
@@ -50,7 +54,13 @@ class SimpleCleverCommandClientProvider extends CleverCommandClientProviderImpl 
     @Override
     public synchronized CleverCommandClient getClient() {
         
-        
+        /***
+         * Added for OpenAM
+        */
+        if(mOpenAmClient == null){
+            mOpenAmClient = OpenAmSessionClient.getInstance();
+            mOpenAmClient.authenticate(username, password);
+        }
         
         if(client==null)
         {

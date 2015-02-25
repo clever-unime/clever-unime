@@ -17,6 +17,7 @@ import org.clever.Common.Exceptions.CleverException;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Hex;
 import org.bouncycastle.util.encoders.Base64;
+import org.clever.Common.OpenAm.TokenExtension;
 import org.clever.Common.XMPPCommunicator.CleverMessage.MessageType;
 import org.clever.Common.XMPPCommunicator.CleverMessage;
 import org.clever.Common.XMPPCommunicator.CleverMessageHandler;
@@ -26,6 +27,7 @@ import org.clever.Common.SecureXMPPCommunicator.LDAPClient;
 import org.clever.Common.SecureXMPPCommunicator.SecureExtension;
 import org.clever.Common.SecureXMPPCommunicator.X509Utils;
 import org.clever.administration.commands.CleverCommand;
+import org.clever.administration.openam.OpenAmSessionClient;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smackx.packet.DelayInformation;
@@ -107,7 +109,18 @@ public class ClusterManagerAdministrationTools implements CleverMessageHandler {
 
     private void sendRequest(final CleverMessage msg) throws CleverException {
         try {
-            conn.getMultiUserChat(ConnectionXMPP.ROOM.SHELL).sendMessage(msg.toXML());
+            /*** OpenAM send authentication token ***/
+            Message message = new Message();
+            message.setType(Message.Type.groupchat);
+            message.setTo(room);
+            message.setBody(msg.toXML());
+            TokenExtension ext = new TokenExtension();
+            ext.setData(OpenAmSessionClient.getInstance().getToken());
+            message.addExtension(ext);
+            logger.debug("CleverMessage to XML: " + msg.toXML());
+            logger.debug("Message to XML: " + message.toXML());
+            conn.getMultiUserChat(ConnectionXMPP.ROOM.SHELL).sendMessage(message);
+            
         } catch (XMPPException ex) {
             System.out.println("Error in sending Clever Message. " + ex);
         }

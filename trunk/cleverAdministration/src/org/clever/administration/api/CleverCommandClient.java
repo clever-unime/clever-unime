@@ -26,6 +26,7 @@ import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Communicator.RequestsManager;
 import org.clever.Common.Communicator.ThreadMessageDispatcher;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.OpenAm.TokenExtension;
 import org.clever.Common.SecureXMPPCommunicator.LDAPClient;
 import org.clever.Common.SecureXMPPCommunicator.SecureExtension;
 import org.clever.Common.SecureXMPPCommunicator.X509Utils;
@@ -37,6 +38,7 @@ import org.clever.Common.XMPPCommunicator.ConnectionXMPP;
 import org.clever.Common.XMPPCommunicator.ExecOperation;
 import org.clever.Common.XMPPCommunicator.RoomListener;
 import org.clever.administration.ClusterManagerAdministrationTools;
+import org.clever.administration.openam.OpenAmSessionClient;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
 
@@ -123,7 +125,7 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
             connectionXMPP.connect(XMPPServer, port, mode);
             connectionXMPP.authenticate(username, passwd);
 
-            MultiUserChat chat = connectionXMPP.joinInRoom(room, ConnectionXMPP.ROOM.SHELL, nickname);            
+            MultiUserChat chat = connectionXMPP.joinInRoom(room, ConnectionXMPP.ROOM.SHELL, nickname);
             connectionXMPP.addChatManagerListener(this);
             return true;
         } catch (CleverException e) {
@@ -151,7 +153,10 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
             String target = connectionXMPP.getActiveCC(ConnectionXMPP.ROOM.SHELL);
 
             String dst = msg.getDst();
-
+            /**
+             * * OpenAM add authentication token **
+             */
+            addToken(msg);
             if (!target.equals(dst)) {
                 dst = target;
             }
@@ -198,7 +203,7 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
             SecureExtension encryptedExtension = new SecureExtension();
             encryptedBytes = utils.sEncrypt(true, msg.toXML().getBytes(), key);
             encryptedMsg = new String(Hex.encode(encryptedBytes));
-            
+
             if (encryptedMsg != null) {
                 encryptedExtension.setData(encryptedMsg);
                 message.addExtension(encryptedExtension);
@@ -223,6 +228,10 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
             Message message = new Message();
             message.setType(Message.Type.groupchat);
             message.setTo(room);
+            /**
+             * * OpenAM add authentication token **
+             */
+            addToken(msg);
             message.setBody(msg.toXML());
 
             SecureExtension signedExtension = new SecureExtension("signed");
@@ -245,7 +254,7 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
             Date date = new Date();
             DelayInformation delayInformation = new DelayInformation(date);
             message.addExtension(delayInformation);
-
+            
             String endMessage = message.toXML();
             //String endMessage = utils.signXML(msg.toXML());
             log.debug("CleverMessage to XML:\n " + msg.toXML());
@@ -268,10 +277,20 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
      */
     private synchronized void sendRequest(final CleverMessage msg) throws CleverException {
         try {
+            /**
+             * * OpenAM send authentication token **
+             */
+            msg.setAuthToken(OpenAmSessionClient.getInstance().getToken());
+            log.debug("CleverMessage to XML: " + msg.toXML());
+
             connectionXMPP.getMultiUserChat(ConnectionXMPP.ROOM.SHELL).sendMessage(msg.toXML());
         } catch (XMPPException ex) {
             log.error("Error in sending Clever Message. " + ex);
         }
+    }
+
+    private void addToken(CleverMessage message) {
+        message.setAuthToken(OpenAmSessionClient.getInstance().getToken());
     }
 
     /**

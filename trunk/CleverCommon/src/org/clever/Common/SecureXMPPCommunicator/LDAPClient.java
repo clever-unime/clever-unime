@@ -112,6 +112,7 @@ public class LDAPClient {
         } catch (NamingException ex) {
             logger.error(ex);
         }
+        logger.debug("Connected to LDAP");
     }
     
     public void disconnect(){
@@ -188,6 +189,7 @@ public class LDAPClient {
             if(certBytes == null){
                 System.out.println("Certificate not found");
             }else{
+                logger.debug("Certificate founded");
                 CertificateFactory certFactory = null;
                 try {
                     certFactory = CertificateFactory.getInstance("X.509", "BC");

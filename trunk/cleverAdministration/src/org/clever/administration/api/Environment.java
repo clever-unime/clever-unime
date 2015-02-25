@@ -36,7 +36,10 @@ public class Environment {
     public static String XMPP_PORT = "xmpp_port"; //porta tcp da utilizzare per la connessione XMPP
     public static String XMPP_ROOM = "xmpp_room"; //xmpp room per i client di Clever (CM + clients)
     public static String XMPP_NICKNAME = "xmpp_nickname"; //nickname con cui entrera' il client nella room
-    public static String MESSAGE_MODE = "message_mode"; //nickname con cui entrera' il client nella room
+    public static String MESSAGE_MODE = "message_mode"; //modalità di trasmissione messaggi
+    public static String OPEN_AM_HOST = "openAmHost"; //modalità di trasmissione messaggi
+    public static String OPEN_AM_PORT = "openAmPort"; //modalità di trasmissione messaggi
+    public static String OPEN_AM_DEPLOY_URL = "deployUrl"; //modalità di trasmissione messaggi
     
     public static final String MSG_MODE_PLAIN = "plain";
     public static final String MSG_MODE_ENCRYPTED = "encrypted";
@@ -83,6 +86,10 @@ public class Environment {
         properties.setProperty(XMPP_ROOM,pXML.getElementContent( "room"));
         properties.setProperty(XMPP_NICKNAME,pXML.getElementContent( "nickname"));
         properties.setProperty(MESSAGE_MODE, pXML.getElementContent( "mode"));
+        /** Added to support OpenAm authentication **/
+        properties.setProperty(OPEN_AM_HOST, pXML.getElementContent( "openAmHost"));
+        properties.setProperty(OPEN_AM_PORT, pXML.getElementContent( "openAmPort"));
+        properties.setProperty(OPEN_AM_DEPLOY_URL, pXML.getElementContent( "openAmDeployUrl"));
         
         String clientProvider = pXML.getElementContent( "CleverClientCommandProviderClass");
         if(clientProvider!=null)

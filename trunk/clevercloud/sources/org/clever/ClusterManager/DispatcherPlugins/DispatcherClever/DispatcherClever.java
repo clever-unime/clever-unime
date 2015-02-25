@@ -73,13 +73,12 @@ import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.safehaus.uuid.UUIDGenerator;
 
-
 import org.clever.ClusterManager.Dispatcher.DispatcherAgent;
 import org.clever.Common.Utils.BigDataParameterContainer;
 import org.clever.Common.Utils.TypeOfElement;
 
+public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketListener {
 
-public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketListener {
     private Agent owner;
     private String version = "0.0.1";
     private String description = "Clever Dispatcher";
@@ -90,8 +89,8 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
     private Logger logger = null;
     private Map<String, List<String>> notificationDelivery = new HashMap<String, List<String>>();
     private org.clever.ClusterManager.Brain.BrainInterface brain;
-    private Map<String, MultiUserChat> agentMucs=new HashMap<String, MultiUserChat>();
-   private UUIDGenerator uuidGenerator = UUIDGenerator.getInstance();
+    private Map<String, MultiUserChat> agentMucs = new HashMap<String, MultiUserChat>();
+    private UUIDGenerator uuidGenerator = UUIDGenerator.getInstance();
 
     @Override
     public String getName() {
@@ -109,23 +108,58 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
     }
 
     @Override
-    public void init(Element params,Agent owner) throws CleverException {
+    public void init(Element params, Agent owner) throws CleverException {
         logger = Logger.getLogger("DispatcherClever");
         requestsManager = new RequestsManager();
-        if(this.connectionXMPP==null)
-            this.connectionXMPP=((DispatcherAgent)this.owner).connectionXMPP;
+        if (this.connectionXMPP == null) {
+            this.connectionXMPP = ((DispatcherAgent) this.owner).connectionXMPP;
+        }
         this.connectionXMPP.addPresenceListener(ConnectionXMPP.ROOM.CLEVER_MAIN, this);
 
-        this.brain= new org.clever.ClusterManager.Brain.SensorBrain(this);
+        this.brain = new org.clever.ClusterManager.Brain.SensorBrain(this);
         this.owner.setPluginState(true);
     }
 
-   
     /**
-     * This method will handle CleverMessage whose body is of 'exec' type
-     * For other types of CleverMessage's body we plain to use other methods
-     * such as RequestInformationDispatcher, etc...
-     * MethodDispatcher must be called ONLY with 'exec' body
+     * Check authorization token using OpenAM
+     * @param token 
+     * @return 
+     */
+    private boolean isUserAuthorized(String token, String moduleName, String methodName, List params) {
+        logger.debug("Start authorization using token " + token);
+
+        if (token != null && !token.isEmpty()) {
+            ArrayList<Object> parameters = new ArrayList<Object>();
+            parameters.add(token);
+            parameters.add(moduleName);
+            parameters.add(methodName);
+            parameters.add(params);
+            try{
+            MethodInvoker mi = new MethodInvoker(
+                    "SecurityWebPlugin",
+                    "authorize",
+                    true,
+                    parameters);
+            Object obj = this.owner.invoke(mi);
+            logger.debug(obj.toString());
+            logger.debug("Authorization succeeded.");
+            return true;
+            }
+            catch(CleverException ex)
+            {
+                logger.error("Authorization failed.\n" + ex.getMessage());
+                return false;
+            }
+        }
+        logger.debug("Authroization failed. User doesn't have permission to execute action");
+        return false;
+    }
+
+    /**
+     * This method will handle CleverMessage whose body is of 'exec' type For
+     * other types of CleverMessage's body we plain to use other methods such as
+     * RequestInformationDispatcher, etc... MethodDispatcher must be called ONLY
+     * with 'exec' body
      *
      * @param message
      */
@@ -133,55 +167,63 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
         // Check if the message is for the current coordinator
         if (message.getDst().equals(connectionXMPP.getUsername())) {
             // Ok is for me. invoke locally and return
-             MethodConfiguration methodConf = new MethodConfiguration(message.getBody(), message.getAttachments());
+            MethodConfiguration methodConf = new MethodConfiguration(message.getBody(), message.getAttachments());
 
-             MethodInvoker mi = new MethodInvoker(methodConf.getModuleName(),
+            logger.debug("Authentication token received: " + message.getAuthToken());
+
+            MethodInvoker mi = new MethodInvoker(methodConf.getModuleName(),
                     methodConf.getMethodName(),
                     message.needsForReply(),
                     methodConf.getParams());
-                CleverMessage cleverMsg = new CleverMessage();
-                cleverMsg.setDst(message.getSrc());
-                cleverMsg.setSrc(message.getDst());
-                cleverMsg.setHasReply(false);
-                cleverMsg.setReplyToMsg(message.getId());
-                try {
+            CleverMessage cleverMsg = new CleverMessage();
+            cleverMsg.setDst(message.getSrc());
+            cleverMsg.setSrc(message.getDst());
+            cleverMsg.setHasReply(false);
+            cleverMsg.setReplyToMsg(message.getId());
+            try {
+                
+                /*** OpenAM Authorization ***/
+                if (!isUserAuthorized(message.getAuthToken(), 
+                        methodConf.getModuleName(),
+                        methodConf.getMethodName(),
+                        methodConf.getParams())) {
+                    throw new CleverException();
+                }
                     //Object obj = mc.invoke(mi);
-                    
-                    Object obj = this.owner.invoke(mi);
-                    if (message.needsForReply()) {
-                        cleverMsg.setType( CleverMessage.MessageType.REPLY );
-                        cleverMsg.setBody( new OperationResult( Result.ResultType.OBJECT,
-                                                    obj,
-                                                    methodConf.getModuleName(),
-                                                    methodConf.getMethodName() ) );
-                        cleverMsg.addAttachment( MessageFormatter.messageFromObject( obj ) );
 
-                    } else {
-
-                        return;
-                    }
-
-                } catch (CleverException ex) {
-                    //TODO: use specialized CleverException for non such method
-
-                    cleverMsg.setType(CleverMessage.MessageType.ERROR);
-                    cleverMsg.setBody(new ErrorResult(Result.ResultType.ERROR,
-                            (new CleverException(ex)).toString(),
+                Object obj = this.owner.invoke(mi);
+                if (message.needsForReply()) {
+                    cleverMsg.setType(CleverMessage.MessageType.REPLY);
+                    cleverMsg.setBody(new OperationResult(Result.ResultType.OBJECT,
+                            obj,
                             methodConf.getModuleName(),
                             methodConf.getMethodName()));
-                    cleverMsg.addAttachment(MessageFormatter.messageFromObject(ex));
+                    cleverMsg.addAttachment(MessageFormatter.messageFromObject(obj));
 
+                } else {
 
-                } finally {
-                    connectionXMPP.sendMessage(message.getSrc(), cleverMsg);
+                    return;
                 }
-            
+
+            } catch (CleverException ex) {
+                //TODO: use specialized CleverException for non such method
+
+                cleverMsg.setType(CleverMessage.MessageType.ERROR);
+                cleverMsg.setBody(new ErrorResult(Result.ResultType.ERROR,
+                        (new CleverException(ex)).toString(),
+                        methodConf.getModuleName(),
+                        methodConf.getMethodName()));
+                cleverMsg.addAttachment(MessageFormatter.messageFromObject(ex));
+
+            } finally {
+                connectionXMPP.sendMessage(message.getSrc(), cleverMsg);
+            }
 
         } else {
             if (message.needsForReply()) {
                 //TODO: timeout as parameter : now is 0 (infinity)
-                
-                int idPendingRequest = requestsManager.addSyncRequestPending(message, Request.Type.EXTERNAL, 0); 
+
+                int idPendingRequest = requestsManager.addSyncRequestPending(message, Request.Type.EXTERNAL, 0);
                 message.setId(idPendingRequest);
             }
 
@@ -200,12 +242,9 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
         try {
             logger.debug("Dispatcher handle message: " + msg.toXML());
         } catch (CleverException ex) {
-            logger.error("Message " + msg.getId() + " with errors !!"); 
+            logger.error("Message " + msg.getId() + " with errors !!");
         }
         logger.debug("Module name: " + msg.getBodyModule() + " and operation: " + msg.getBodyOperation());
-
-       
-
 
         int idToReply = msg.getReplyToMsg();
         Request result = requestsManager.getRequest(idToReply);
@@ -231,9 +270,7 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
                 otherMsg.setSrc(connectionXMPP.getMultiUserChat(ROOM.SHELL).getNickname());
                 connectionXMPP.sendMessage(otherMsg.getDst(), otherMsg);
                 break;
-         }
-
-
+        }
 
         requestsManager.deleteRequestPending(idToReply);
     }
@@ -243,13 +280,12 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
         this.connectionXMPP = connectionXMPP;
     }
 
-   
     @Override
-    public Object dispatchToExtern(MethodInvoker method, String to) throws CleverException{
+    public Object dispatchToExtern(MethodInvoker method, String to) throws CleverException {
         CleverMessage cleverMessage = new CleverMessage();
         cleverMessage.fillMessageFields(MessageType.REQUEST, connectionXMPP.getUsername(),
                 to, true, method.getParams(), new ExecOperation(method.getMethodName(),
-                method.getParams(), method.getModule()), 0);
+                        method.getParams(), method.getModule()), 0);
 
         //TODO: timeout as parameter : now is 0 (infinity)
         int id = requestsManager.addSyncRequestPending(cleverMessage, Request.Type.INTERNAL, 0);
@@ -261,7 +297,7 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
     /*
      * Test method for Cluster Manager
      */
-    public String testMethod(String value){
+    public String testMethod(String value) {
         return "This is the value: " + value;
     }
 
@@ -276,82 +312,72 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
         this.notificationDelivery.put(notificationId, agents);
     }
 
-
-
     /*@Override
-    public void handleNotification(CleverMessage msg) {
-         //Send notification to corresponding agents using notificationId
+     public void handleNotification(CleverMessage msg) {
+     //Send notification to corresponding agents using notificationId
 
-      Notification notification=msg.getNotificationFromMessage();
-      logger.debug("Received notification from "+msg.getSrc()+ "type "+notification.getId());
-      List<String> agentsNameList=notificationDelivery.get(notification.getId());
+     Notification notification=msg.getNotificationFromMessage();
+     logger.debug("Received notification from "+msg.getSrc()+ "type "+notification.getId());
+     List<String> agentsNameList=notificationDelivery.get(notification.getId());
 
-        if (agentsNameList == null) {
-            logger.info("No agents associated to notificationId " + notification.getId());
-        } else {
-            for (Object agent : agentsNameList) {
-                try {
-                    List params = new ArrayList();
-                    params.add(notification);
-                    MethodInvoker mi = new MethodInvoker((String) agent,
-                            "handleNotification",
-                            true,
-                            params);
+     if (agentsNameList == null) {
+     logger.info("No agents associated to notificationId " + notification.getId());
+     } else {
+     for (Object agent : agentsNameList) {
+     try {
+     List params = new ArrayList();
+     params.add(notification);
+     MethodInvoker mi = new MethodInvoker((String) agent,
+     "handleNotification",
+     true,
+     params);
 
-                    mc.invoke(mi);
-                } catch (CleverException ex) {
-                    logger.error("Error invoking agent handleNotification method " + ex);
-                }
-            }
-        }
+     mc.invoke(mi);
+     } catch (CleverException ex) {
+     logger.error("Error invoking agent handleNotification method " + ex);
+     }
+     }
+     }
 
 
-    }*/
-    
-    
+     }*/
     //NEWMONITOR
     /**
-    * Manage the arrive of the new CleverMessage type: MEASURE
-    * @param message CleverMessage type MEASURE
-    */  
+     * Manage the arrive of the new CleverMessage type: MEASURE
+     *
+     * @param message CleverMessage type MEASURE
+     */
     @Override
     public void handleMeasure(final CleverMessage message) {
-        
+
         String result = message.getAttachment(0);
-        String src=message.getSrc();
-       result= "<sourceHM name=\""+src+"\" type=\""+message.getTypeSrc()+"\">\n"+result+"\n</sourceHM>";
-        
-        
-        logger.debug("Measure Received: "+ result);
-        
+        String src = message.getSrc();
+        result = "<sourceHM name=\"" + src + "\" type=\"" + message.getTypeSrc() + "\">\n" + result + "\n</sourceHM>";
+
+        logger.debug("Measure Received: " + result);
+
         List params1 = new ArrayList();
-        BigDataParameterContainer container=new BigDataParameterContainer();
+        BigDataParameterContainer container = new BigDataParameterContainer();
         container.setElemToInsert(result);
         container.setType(TypeOfElement.STRINGXML);
         params1.add(container);
-      /*codice per sedna  
-        try {
-            owner.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
-        } catch (CleverException ex) {
-            logger.error("Send Measure to DatabaseManagerAgent failed: "+ ex);
-        }
-        */
-        
+        /*codice per sedna  
+         try {
+         owner.invoke("DatabaseManagerAgent", "insertMeasure", true, params1);
+         } catch (CleverException ex) {
+         logger.error("Send Measure to DatabaseManagerAgent failed: "+ ex);
+         }
+         */
+
         //params1.add(TypeOfElement.STRINGXML);
         try {
             owner.invoke("BigDataAgent", "insertHostState", true, params1);
         } catch (CleverException ex) {
-            logger.error("Send Measure to DatabaseManagerAgent failed: "+ ex);
+            logger.error("Send Measure to DatabaseManagerAgent failed: " + ex);
         }
-        
+
     }
-    
-    
-    
-    
 
-
-    
     @Override
     public void handleNotification(Notification notification) {
         //Send notification to corresponding agents using notificationId
@@ -385,12 +411,10 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
 
     //Possibile soluzione? aggiungere una inner class che genera un thread che prova a reinviare le notifiche che si non avevano trovato agenti 
     //registrati a quella notifica... mettere in coda e riprovarli almeno una volta dopo 30 secondi 
-
-
     //Likely used only by SensorBrain 
     @Override
     public Object dispatchToIntern(MethodInvoker method) throws CleverException {
-        
+
         //return mc.invoke(method);
         return this.owner.invoke(method);
     }
@@ -398,55 +422,53 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin,PacketLi
     @Override
     public void processPacket(Packet packet) {
     }
-    
-    public String receiveFile(String path){
+
+    public String receiveFile(String path) {
         return connectionXMPP.receiveFile(path);
     }
-    public void setOwner(Agent owner){
-        this.owner=owner;
+
+    public void setOwner(Agent owner) {
+        this.owner = owner;
     }
 
  // METODI AGGIUNTI PER SOS E SAS///////////////////////////////////////////////
-    
-    public String joinAgentRoom(String agentName,String roomName,String roomPassword){
-       // String nickName="SAS"+Math.abs(uuidGenerator.generateTimeBasedUUID().hashCode());
-        MultiUserChat muc=connectionXMPP.joinInRoom(roomName, roomPassword, agentName);
+    public String joinAgentRoom(String agentName, String roomName, String roomPassword) {
+        // String nickName="SAS"+Math.abs(uuidGenerator.generateTimeBasedUUID().hashCode());
+        MultiUserChat muc = connectionXMPP.joinInRoom(roomName, roomPassword, agentName);
         this.agentMucs.put(roomName, muc);
-        logger.debug("JoinAgentRoom  roomName= "+roomName);
+        logger.debug("JoinAgentRoom  roomName= " + roomName);
         return roomName;
     }
-    
+
     //@Override
-    public String joinAgentRoom(String agentName,String roomPassword){
-        String roomName=agentName+"-"+Math.abs(uuidGenerator.generateTimeBasedUUID().hashCode())+"@conference."+connectionXMPP.getServer();
+    public String joinAgentRoom(String agentName, String roomPassword) {
+        String roomName = agentName + "-" + Math.abs(uuidGenerator.generateTimeBasedUUID().hashCode()) + "@conference." + connectionXMPP.getServer();
         //String nickName="SAS"+Math.abs(uuidGenerator.generateTimeBasedUUID().hashCode());
-        MultiUserChat muc=connectionXMPP.joinInRoom(roomName, roomPassword, agentName);// agentName);
+        MultiUserChat muc = connectionXMPP.joinInRoom(roomName, roomPassword, agentName);// agentName);
         this.agentMucs.put(roomName, muc);
-        logger.debug("JoinAgentRoom  roomName= "+roomName);
+        logger.debug("JoinAgentRoom  roomName= " + roomName);
         return roomName;
     }
 
     //@Override
     public void sendMessageAgentRoom(String roomName, String message) {
-        MultiUserChat muc=this.agentMucs.get(roomName);
+        MultiUserChat muc = this.agentMucs.get(roomName);
         try {
             muc.sendMessage(message);
         } catch (XMPPException ex) {
-            logger.error("Error sending message "+ex);
+            logger.error("Error sending message " + ex);
         }
     }
 
     //@Override
     public void leaveAgentRoom(String roomName) {
-        MultiUserChat muc=this.agentMucs.get(roomName);
+        MultiUserChat muc = this.agentMucs.get(roomName);
         muc.leave();
         this.agentMucs.remove(roomName);
     }
-    
-    
 
-    public void shutdownPluginInstance(){
-        
+    public void shutdownPluginInstance() {
+
     }
 
 }
