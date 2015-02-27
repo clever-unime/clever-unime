@@ -87,9 +87,6 @@
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/DatabaseManager/DatabaseManagerPlugin.java</file>
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/SOS/SOSModuleCore/GetObservation.java</file>
         </group>
-        <group>
-            <file>file:/home/clever/clever-new/clever-unime/trunk/clevercloud/sources/org/clever/ClusterManager/SecurityWeb/configuration_securityWeb.xml</file>
-            <file>file:/home/clever/clever-new/clever-unime/trunk/clevercloud/sources/org/clever/ClusterManager/SecurityWeb/SecurityWebPlugin/SecurityWebPlugin.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

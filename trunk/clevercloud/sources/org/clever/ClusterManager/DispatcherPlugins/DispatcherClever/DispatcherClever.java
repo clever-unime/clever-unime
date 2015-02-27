@@ -133,10 +133,10 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
             parameters.add(token);
             parameters.add(moduleName);
             parameters.add(methodName);
-            parameters.add(params);
+            //parameters.add(params);
             try{
             MethodInvoker mi = new MethodInvoker(
-                    "SecurityWebPlugin",
+                    "SecurityWebAgent",
                     "authorize",
                     true,
                     parameters);
