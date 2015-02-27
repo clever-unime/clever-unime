@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    
+    <writeOnCfgFolder>yes</writeOnCfgFolder>
+    <ClassPlugin>org.clever.ClusterManager.SecurityWebPlugins.Openam.Openam</ClassPlugin>
+    <moduleName>SecurityWebAgent</moduleName>
+    
+    <pluginParams>
+        <openamHost>openam.sigma.com</openamHost>
+        <port>8080</port>
+        <deployUrl>OpenAM-12.0.0</deployUrl> 
+        
+    <user>amadmin</user>
+    <password>riccardo</password>
+   
+           
+    </pluginParams>
+
+</configuration>
