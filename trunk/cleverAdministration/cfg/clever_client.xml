@@ -9,7 +9,7 @@
   <password>clever_admin</password>
   <nickname>clever_admin</nickname>
   <room>SHELL-room@conference.localhost</room>
-  <mode>plain</mode>
+  <mode>signed</mode>
   <openAmHost>openam.unime.it</openAmHost>
   <openAmPort>8080</openAmPort>
   <openAmDeployUrl>OpenAM-11.0.0</openAmDeployUrl> 
