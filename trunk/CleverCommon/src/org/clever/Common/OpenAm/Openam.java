@@ -812,7 +812,7 @@ public class Openam {
             String item = cmdAutho.get(i);
 
             if (item == null ? commandName == null : item.equals(commandName)) {
-                logger.debug("Command needs to be authorized!" + commandName);
+                logger.debug("Command needs to be authorized: " + moduleName + "/" + commandName);
                 //istanzio il client e gli setto il token
                 Openam client = new Openam(getOpenamHost(), getPort(), getDeployUrl());
                 

@@ -28,7 +28,10 @@
       <class>org.clever.HostManager.HyperVisor.HyperVisorAgent</class>
       <name>HyperVisorAgent</name>
     </agent>
- 
+        <agent>
+            <class>org.clever.HostManager.HostSecurityWeb.HostSecurityWebAgent</class>
+            <name />
+	</agent>
     
         <agent>
             <class>org.clever.HostManager.ImageManager.ImageManagerAgent</class>

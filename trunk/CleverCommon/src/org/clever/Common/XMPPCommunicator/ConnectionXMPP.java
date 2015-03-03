@@ -420,6 +420,14 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
         return (username);
     }
 
+    /***
+     * Aggiunto per ricavare i parametri di accesso per OpenAM.
+     * @return 
+     */
+    public String getPassword() {
+        return (password);
+    }
+        
     //alessandro dicembre 2012
     public String getUser() {
         String userId = this.connection.getUser();

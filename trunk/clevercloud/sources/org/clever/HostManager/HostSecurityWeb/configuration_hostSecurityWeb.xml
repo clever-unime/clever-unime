@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    
+    <writeOnCfgFolder>yes</writeOnCfgFolder>
+    <ClassPlugin>org.clever.HostManager.HostSecurityWeb.SecurityWebPlugin.HostSecurityWebPlugin</ClassPlugin>
+    <moduleName>HostSecurityWebAgent</moduleName>
+    
+    <pluginParams>
+        <openamHost>openam.unime.it</openamHost>
+        <port>8080</port>
+        <deployUrl>OpenAM-11.0.0</deployUrl> 
+        
+    <user>amadmin</user>
+    <password>riccardo</password>
+   
+	<listCmds>
+		<cmd>listClusterManager</cmd>
+		<cmd>listHostManager</cmd>
+	   
+	</listCmds>
+   
+           
+    </pluginParams>
+
+</configuration>

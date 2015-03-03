@@ -143,13 +143,12 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
                         true,
                         parameters);
                 Object obj = this.owner.invoke(mi);
-                
-                if(Boolean.parseBoolean(obj.toString())){
+
+                if (Boolean.parseBoolean(obj.toString())) {
                     logger.debug(obj.toString());
                     logger.debug("Authorization succeeded.");
                     return true;
-                }
-                else {
+                } else {
                     logger.debug("Authorization failed.");
                     return false;
                 }
@@ -160,6 +159,39 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
         }
         logger.debug("Authroization failed. User doesn't have permission to execute action");
         return false;
+    }
+
+    /***
+     * get OpenAM token to send inside clever message.
+     * @return 
+     */
+    private String getToken() {
+        String username = connectionXMPP.getUsername();
+        String password = connectionXMPP.getPassword();
+
+        ArrayList<String> parameters = new ArrayList<String>();
+        parameters.add(username);
+        parameters.add(password);
+
+        try {
+            MethodInvoker mi = new MethodInvoker(
+                    "SecurityWebAgent",
+                    "authenticate",
+                    true,
+                    parameters);
+            Object obj = this.owner.invoke(mi);
+
+            if (obj != null && !obj.toString().isEmpty()) {
+                logger.debug("Cluster Coordinator authentication token: " + obj.toString());
+                return obj.toString();
+            } else {
+                logger.debug("Cluster Coordinator authentication failed.");
+                return null;
+            }
+        } catch (CleverException ex) {
+            logger.error("Cluster Coordinator authentication failed.\n" + ex.getMessage());
+        }
+        return null;
     }
 
     /**
@@ -196,8 +228,8 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
                         methodConf.getModuleName(),
                         methodConf.getMethodName(),
                         methodConf.getParams())) {
-                    throw new AuthorizationException("User is not authorized to call " + 
-                            methodConf.getModuleName() + "/" + methodConf.getMethodName());
+                    throw new AuthorizationException("User is not authorized to call "
+                            + methodConf.getModuleName() + "/" + methodConf.getMethodName());
                 }
                 //Object obj = mc.invoke(mi);
 
@@ -224,7 +256,8 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
                         methodConf.getModuleName(),
                         methodConf.getMethodName()));
                 cleverMsg.addAttachment(MessageFormatter.messageFromObject(ex));
-
+                /*** add OpenAM token to response message ***/
+                cleverMsg.setAuthToken(getToken());
             } finally {
                 connectionXMPP.sendMessage(message.getSrc(), cleverMsg);
             }
@@ -239,6 +272,8 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
 
             message.setSrc(connectionXMPP.getUsername());
             message.setDst(message.getDst());
+            /*** add OpenAM token to response message ***/
+            message.setAuthToken(getToken());
             connectionXMPP.sendMessage(message.getDst(), message);
         }
     }
@@ -278,6 +313,8 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
                 otherMsg.setAttachments(msg.getAttachments());
                 otherMsg.setReplyToMsg(requestsManager.getRequestPendingId(idToReply));
                 otherMsg.setSrc(connectionXMPP.getMultiUserChat(ROOM.SHELL).getNickname());
+                /*** add OpenAM token to response message ***/
+                otherMsg.setAuthToken(getToken());
                 connectionXMPP.sendMessage(otherMsg.getDst(), otherMsg);
                 break;
         }
@@ -300,6 +337,8 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
         //TODO: timeout as parameter : now is 0 (infinity)
         int id = requestsManager.addSyncRequestPending(cleverMessage, Request.Type.INTERNAL, 0);
         cleverMessage.setId(id);
+        /*** add OpenAM token to response message ***/
+        cleverMessage.setAuthToken(getToken());
         connectionXMPP.sendMessage(cleverMessage.getDst(), cleverMessage);
         return requestsManager.getRequest(id).getReturnValue();
     }

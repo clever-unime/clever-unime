@@ -21,27 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.clever.ClusterManager.SecurityWeb.SecurityWebPlugin;
+package org.clever.HostManager.HostSecurityWeb.SecurityWebPlugin;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
-import org.clever.ClusterManager.SecurityWeb.ISecurityWebPlugin;
 import org.clever.Common.Communicator.Agent;
-import org.clever.Common.Communicator.CmAgent;
-import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
+import org.clever.Common.OpenAm.httpResp;
 import org.jdom.Element;
+import org.clever.HostManager.HostSecurityWeb.IHostSecurityWebPlugin;
+import org.json.JSONException;
 
 /**
  *
  * @author clever
  */
-public class SecurityWebPlugin implements ISecurityWebPlugin {
+public class HostSecurityWebPlugin implements IHostSecurityWebPlugin {
 
     private Agent owner;
-    private Logger logger = Logger.getLogger("SecurityWebPlugin");
+    private Logger logger = Logger.getLogger("HostSecurityWebPlugin");
     private org.clever.Common.OpenAm.Openam mOpenAmClient;
     
     @Override
@@ -109,25 +110,20 @@ public class SecurityWebPlugin implements ISecurityWebPlugin {
         logger.debug("Ho una lista di comandi con n°: " + mOpenAmClient.getCmdAutho().size());
 
         //###############################
-        /*
-         //istanzio il client
-         Openam client = new Openam(this.getOpenamHost(),this.getPort(),this.getDeployUrl());
-        
-         httpResp risp = null;
-      
-
+       /*
+        httpResp risp=null;
          try {
             
          //effettuo un test sul servizio di autenticazione di Openam
             
-         risp= client.simpleAuthentication(username, password);
+         risp= mOpenAmClient.simpleAuthentication(mOpenAmClient.getUsername(), mOpenAmClient.getPassword());
             
                  
          } catch (JSONException ex) {
          logger.error("Errore in simpleAuthentication()" + ex);
          } catch (IOException ex) {
-         logger.error("Errore in simpleAuthentication()" + ex);
-         }
+            logger.error("Errore in simpleAuthentication()" + ex);
+        }
 
          if (risp.getTokenId() != "") {
          //se ho ricevuto un token
@@ -141,7 +137,7 @@ public class SecurityWebPlugin implements ISecurityWebPlugin {
          }
 
          //setto il token nell'oggetto client
-         client.setTokenID(risp.getTokenId());
+         mOpenAmClient.setTokenID(risp.getTokenId());
     
         
          //#####
@@ -213,16 +209,10 @@ public class SecurityWebPlugin implements ISecurityWebPlugin {
 
     }//init()
 
-    public String authenticate(String username, String password) throws CleverException, IOException {
-        
-        logger.debug("call to OpenAM client authenticate");
-        return mOpenAmClient.authenticate(username, password);
-    }
-        
     public boolean authorize(String token, String moduleName, String methodName) throws CleverException {
 
         if (token == null || moduleName == null || methodName == null) {
-            logger.error("One or more parameters in SecurityWebPlugin.authorize are null.\n" +
+            logger.error("One or more parameters in HostSecurityWebPlugin.authorize are null.\n" +
                     "token: " + token +
                     "\nmoduleName: " + moduleName + 
                     "\nmethodName: " + methodName);

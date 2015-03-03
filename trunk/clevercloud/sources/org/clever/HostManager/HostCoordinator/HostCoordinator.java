@@ -49,6 +49,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import org.apache.log4j.Logger;
@@ -57,6 +58,7 @@ import org.clever.Common.Communicator.ModuleCommunicator;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.Initiator.ModuleFactory.ModuleFactory;
 import org.clever.Common.Initiator.ModuleFactory.ShutdownThread;
+import org.clever.Common.OpenAm.AuthorizationException;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.MessageFormatter;
 import org.clever.Common.XMLTools.ParserXML;
@@ -101,7 +103,7 @@ public class HostCoordinator implements CleverMessageHandler {
         this.timeReload = 0;
     }
 
-    public void init()  {
+    public void init() {
         try {
             logger.debug("CLASSPATH= " + System.getProperty("java.class.path", null));
             inxml = new FileInputStream(cfgPath);
@@ -116,12 +118,12 @@ public class HostCoordinator implements CleverMessageHandler {
         //such path is read from the configuration file of the initiator within the node <librariespath>
         System.setProperty("java.library.path", pXML.getElementContent("librariespath") + ":" + System.getProperty("java.library.path"));
         logger.debug("CLASSPATH= " + System.getProperty("java.class.path", null));
-            
+
         Field fieldSysPath = null;
         try {
             fieldSysPath = ClassLoader.class.getDeclaredField("sys_paths");
         } catch (NoSuchFieldException ex) {
-           logger.error(ex);
+            logger.error(ex);
         } catch (SecurityException ex) {
             logger.error(ex);
         }
@@ -133,8 +135,6 @@ public class HostCoordinator implements CleverMessageHandler {
         } catch (IllegalAccessException ex) {
             logger.error(ex);
         }
-
-
 
         System.setProperty("java.library.path", System.getProperty("java.library.path") + ":" + pXML.getElementContent("librariespath"));
         logger.debug(System.getProperty("java.library.path"));
@@ -178,9 +178,6 @@ public class HostCoordinator implements CleverMessageHandler {
             //setto i valori x il monitor sul rilancio!
             moduleFactory.setReplacementVariable(this.timeReload, this.numReload);
 
-
-
-
             Element agents = pXML.getRootElement().getChild("agents");
 
             if (agents == null) {
@@ -213,9 +210,7 @@ public class HostCoordinator implements CleverMessageHandler {
             }
 
             //ThreadGroup tg = moduleFactory.getReplaceAgent();
-
             // logger.info("\n\n?0ì876yhhjkk======= Il thread Group contiene: " +tg.activeCount() +" elemneti");
-
             if (!moduleFactory.getProcessList().isEmpty()) {
                 Runnable r = new ShutdownThread(moduleFactory.getProcessList(), moduleFactory.getReplaceAgent());
                 // logger.info("*****///////66%%%%$$££ERfg  La lista di processi agenti attivi x hm contine elementi: " +moduleFactory.getProcessList().size());
@@ -223,11 +218,9 @@ public class HostCoordinator implements CleverMessageHandler {
                 Runtime.getRuntime().addShutdownHook(hook);
             }
 
-
-
             mc = new ModuleCommunicator();
-            mc.init("HostCoordinator","HM");
-           
+            mc.init("HostCoordinator", "HM");
+
             logger.info("HostCoordinator created");
         } catch (Exception e) {
             logger.error("Error on HostCoordinator creation: " + e);
@@ -241,7 +234,7 @@ public class HostCoordinator implements CleverMessageHandler {
 
     public void start() throws CleverException {
         this.init();
-       
+
         this.changeStatus();
         this.launchAgents();
     }
@@ -252,9 +245,49 @@ public class HostCoordinator implements CleverMessageHandler {
             //TODO add check for messages: REQUEST, etc..
             logger.debug("Message: " + message.toXML());
         } catch (CleverException ex) {
-             logger.error("Message " + message.getId() + " with errors !!"); 
+            logger.error("Message " + message.getId() + " with errors !!");
         }
         methodDispatcher(message);
+    }
+
+    /**
+     * Check authorization token using OpenAM
+     *
+     * @param token
+     * @return
+     */
+    private boolean isUserAuthorized(String token, String moduleName, String methodName, List params) {
+        logger.debug("HostSecurityWebAgent - Start authorization using token " + token);
+        
+        if (token != null && !token.isEmpty()) {
+            ArrayList<Object> parameters = new ArrayList<Object>();
+            parameters.add(token);
+            parameters.add(moduleName);
+            parameters.add(methodName);
+            //parameters.add(params);
+            try {
+                MethodInvoker mi = new MethodInvoker(
+                        "HostSecurityWebAgent",
+                        "authorize",
+                        true,
+                        parameters);
+                Object obj = mc.invoke(mi);
+
+                if (Boolean.parseBoolean(obj.toString())) {
+                    logger.debug(obj.toString());
+                    logger.debug("HostSecurityWebAgent - Authorization succeeded.");
+                    return true;
+                } else {
+                    logger.debug("HostSecurityWebAgent - Authorization failed.");
+                    return false;
+                }
+            } catch (CleverException ex) {
+                logger.error("HostSecurityWebAgent - Authorization failed.\n" + ex.getMessage());
+                return false;
+            }
+        }
+        logger.debug("HostSecurityWebAgent - Authroization failed. User doesn't have permission to execute action");
+        return false;        
     }
 
     /**
@@ -281,6 +314,16 @@ public class HostCoordinator implements CleverMessageHandler {
         cleverMsg.setHasReply(false);
 
         try {
+            /**
+             * * OpenAM Authorization **
+             */
+            if (!isUserAuthorized(message.getAuthToken(),
+                    methodConf.getModuleName(),
+                    methodConf.getMethodName(),
+                    methodConf.getParams())) {
+                throw new AuthorizationException("User is not authorized to call "
+                        + methodConf.getModuleName() + "/" + methodConf.getMethodName());
+            }
             Object obj = mc.invoke(mi);
 
             if (message.needsForReply()) {

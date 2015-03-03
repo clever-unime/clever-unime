@@ -24,6 +24,10 @@
     <librariespath>./libraries</librariespath>
   <agents>
     <agent>
+	<class>org.clever.ClusterManager.SecurityWeb.SecurityWebAgent</class>
+	<name />
+    </agent>
+    <agent>
           <class>org.clever.ClusterManager.StorageManager.StorageManagerAgent</class>
           <name></name> 
     </agent>
