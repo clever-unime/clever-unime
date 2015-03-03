@@ -67,6 +67,12 @@ public class Openam {
 
     //lista a cui è applicata l'authorization
     ArrayList<String> cmdAutho = new ArrayList<String>();
+    /**
+     * *
+     * La richiesta di default per il momento è sempre di tipo GET questa è
+     * settata sull'interfaccia web.
+     */
+    private final String DEFAULT_VERB = "GET";
 
 //########################
 //  Costruttori
@@ -502,13 +508,13 @@ public class Openam {
     public httpResp simpleAuthorization(String uri, String verb) throws IOException {
 
         httpResp risp = new httpResp();
-
+        
         this.setService("identity/authorize?uri=" + uri + "&action=" + verb + "&subjectid=" + this.getTokenID());
 
         String url = "http://" + this.getOpenamHost() + ":" + this.getPort() + "/" + this.getDeployUrl() + "/" + this.getService();
 
         //debug
-        System.out.println(url);
+        logger.debug("simpleAutorization URL: " + url);
 
         risp = httpGetAutho(url);
 
@@ -783,7 +789,20 @@ public class Openam {
     }
 
 //#############################################################################
-    public Boolean authorizeUser(String token, String commandName, String moduleName, List params) {
+    public Boolean authorizeUser(String token, String moduleName, String commandName, List params) {
+
+        if (token == null || moduleName == null || commandName == null) {
+            logger.error("One or more parameters are null.\n"
+                    + "token: " + token
+                    + "\nmoduleName: " + moduleName
+                    + "\ncommandName: " + commandName);
+            return false;
+        }
+
+        logger.debug("Starting autorizeUser using.\n"
+                + "token: " + token
+                + "\nmoduleName: " + moduleName
+                + "\ncommandName: " + commandName);
 
         Boolean risposta = true;
 
@@ -792,34 +811,26 @@ public class Openam {
 
             String item = cmdAutho.get(i);
 
-            if (item == commandName) {
+            if (item == null ? commandName == null : item.equals(commandName)) {
+                logger.debug("Command needs to be authorized!" + commandName);
                 //istanzio il client e gli setto il token
-                Openam client = new Openam();
+                Openam client = new Openam(getOpenamHost(), getPort(), getDeployUrl());
+                
                 client.setTokenID(token);
-                //la richiesta di default per il momento è sempre di tipo GET
-                //questa è settata sull'interfaccia web
-                String richiestaDefault = "GET";
 
                 try {
-                    httpResp risp = client.simpleAuthorization(commandName, richiestaDefault);
-                    logger.debug("XXX Http code request: " + risp.getHttpCode());
-                    logger.debug("XXX authorization request: " + risp.getUriAutho());
-                    if (risp.getUriAutho() == true) {
-                        risposta = true;
-                    } else {
-                        risposta = false;
-                    }
-
+                    httpResp risp = client.simpleAuthorization(commandName, DEFAULT_VERB);
+                    risposta = risp.getUriAutho();
+                    logger.debug("authorizeUser Http code response: " + risp.getHttpCode());
+                    logger.debug("authorizeUser authorization response: " + risp.getUriAutho());
                 } catch (IOException ex) {
-                    logger.error("Error in simpleAuthorization () " + ex);
+                    logger.error("Error in authorizeUser() " + ex);
                     risposta = false;
-
                 }
-
                 break;
             }
         }
-
+        logger.debug("authorizeUser response: " + risposta);
         return risposta;
     }
 }//class
