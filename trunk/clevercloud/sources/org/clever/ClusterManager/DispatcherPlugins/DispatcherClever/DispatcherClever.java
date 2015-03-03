@@ -74,6 +74,7 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.safehaus.uuid.UUIDGenerator;
 
 import org.clever.ClusterManager.Dispatcher.DispatcherAgent;
+import org.clever.Common.OpenAm.AuthorizationException;
 import org.clever.Common.Utils.BigDataParameterContainer;
 import org.clever.Common.Utils.TypeOfElement;
 
@@ -122,8 +123,9 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
 
     /**
      * Check authorization token using OpenAM
-     * @param token 
-     * @return 
+     *
+     * @param token
+     * @return
      */
     private boolean isUserAuthorized(String token, String moduleName, String methodName, List params) {
         logger.debug("Start authorization using token " + token);
@@ -134,19 +136,24 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
             parameters.add(moduleName);
             parameters.add(methodName);
             //parameters.add(params);
-            try{
-            MethodInvoker mi = new MethodInvoker(
-                    "SecurityWebAgent",
-                    "authorize",
-                    true,
-                    parameters);
-            Object obj = this.owner.invoke(mi);
-            logger.debug(obj.toString());
-            logger.debug("Authorization succeeded.");
-            return true;
-            }
-            catch(CleverException ex)
-            {
+            try {
+                MethodInvoker mi = new MethodInvoker(
+                        "SecurityWebAgent",
+                        "authorize",
+                        true,
+                        parameters);
+                Object obj = this.owner.invoke(mi);
+                
+                if(Boolean.parseBoolean(obj.toString())){
+                    logger.debug(obj.toString());
+                    logger.debug("Authorization succeeded.");
+                    return true;
+                }
+                else {
+                    logger.debug("Authorization failed.");
+                    return false;
+                }
+            } catch (CleverException ex) {
                 logger.error("Authorization failed.\n" + ex.getMessage());
                 return false;
             }
@@ -181,15 +188,18 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
             cleverMsg.setHasReply(false);
             cleverMsg.setReplyToMsg(message.getId());
             try {
-                
-                /*** OpenAM Authorization ***/
-                if (!isUserAuthorized(message.getAuthToken(), 
+
+                /**
+                 * * OpenAM Authorization **
+                 */
+                if (!isUserAuthorized(message.getAuthToken(),
                         methodConf.getModuleName(),
                         methodConf.getMethodName(),
                         methodConf.getParams())) {
-                    throw new CleverException();
+                    throw new AuthorizationException("User is not authorized to call " + 
+                            methodConf.getModuleName() + "/" + methodConf.getMethodName());
                 }
-                    //Object obj = mc.invoke(mi);
+                //Object obj = mc.invoke(mi);
 
                 Object obj = this.owner.invoke(mi);
                 if (message.needsForReply()) {
@@ -431,7 +441,7 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
         this.owner = owner;
     }
 
- // METODI AGGIUNTI PER SOS E SAS///////////////////////////////////////////////
+    // METODI AGGIUNTI PER SOS E SAS///////////////////////////////////////////////
     public String joinAgentRoom(String agentName, String roomName, String roomPassword) {
         // String nickName="SAS"+Math.abs(uuidGenerator.generateTimeBasedUUID().hashCode());
         MultiUserChat muc = connectionXMPP.joinInRoom(roomName, roomPassword, agentName);
