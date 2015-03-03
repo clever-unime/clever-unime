@@ -31,7 +31,6 @@ import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.OpenAm.TokenExtension;
 import org.jdom.Element;
 
 /**
@@ -43,7 +42,7 @@ public class SecurityWebPlugin implements ISecurityWebPlugin {
     private Agent owner;
     private Logger logger = Logger.getLogger("SecurityWebPlugin");
     private org.clever.Common.OpenAm.Openam mOpenAmClient;
-    TokenExtension ss;
+    
     @Override
     public void setOwner(Agent owner) {
         this.owner = owner;
@@ -57,10 +56,10 @@ public class SecurityWebPlugin implements ISecurityWebPlugin {
         try{
         
             mOpenAmClient = new org.clever.Common.OpenAm.Openam("","","");
-            logger.debug("istanzio client openam");
+            logger.debug("istanziato client openam");
         }
         catch(Exception ex){
-            logger.error("$$$$$$$$$$$$$$$$$$$$$$$$$$$", ex);
+            logger.error(ex);
         }
 
         //ricavo queste variabili dal file configuration_secutiryWeb.xml 
@@ -215,18 +214,15 @@ public class SecurityWebPlugin implements ISecurityWebPlugin {
 
     public boolean authorize(String token, String moduleName, String methodName) throws CleverException {
 
-        if (token != null) {
-            logger.debug("Received params token: " + token);
+        if (token == null || moduleName == null || methodName == null) {
+            logger.error("One or more parameters in SecurityWebPlugin.authorize are null.\n" +
+                    "token: " + token +
+                    "\nmoduleName: " + moduleName + 
+                    "\nmethodName: " + methodName);
+            return false;
         }
-        if (moduleName != null) {
-            logger.debug("Received params moduleName: " + moduleName);
-        }
-        if (methodName != null) {
-            logger.debug("Received params methodName: " + methodName);
-        }
-        
-
-        return true;
+        logger.debug("call to OpenAM client authorize");
+        return mOpenAmClient.authorizeUser(token, moduleName, methodName, null);
     }
 
     @Override
