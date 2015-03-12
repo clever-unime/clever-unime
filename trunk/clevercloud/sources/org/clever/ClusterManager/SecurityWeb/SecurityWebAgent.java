@@ -81,8 +81,5 @@ public class SecurityWebAgent extends CmAgent {
     @Override
     public void handleNotification(Notification notification) throws CleverException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    
-  
+    } 
 }

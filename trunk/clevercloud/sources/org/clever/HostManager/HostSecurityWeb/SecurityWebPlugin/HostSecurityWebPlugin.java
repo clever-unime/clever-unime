@@ -25,15 +25,15 @@ package org.clever.HostManager.HostSecurityWeb.SecurityWebPlugin;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.Agent;
 import org.clever.Common.Exceptions.CleverException;
-import org.clever.Common.OpenAm.httpResp;
+import org.clever.Common.OpenAm.Openam;
 import org.jdom.Element;
 import org.clever.HostManager.HostSecurityWeb.IHostSecurityWebPlugin;
-import org.json.JSONException;
 
 /**
  *
@@ -43,7 +43,10 @@ public class HostSecurityWebPlugin implements IHostSecurityWebPlugin {
 
     private Agent owner;
     private Logger logger = Logger.getLogger("HostSecurityWebPlugin");
-    private org.clever.Common.OpenAm.Openam mOpenAmClient;
+    private Openam mOpenAmClient;
+    private Calendar mLastRelease;
+    private String mCurrentToken;
+    private final static int TOKEN_TIMEOUT = 30 * 60 * 1000; //30 min
     
     @Override
     public void setOwner(Agent owner) {
@@ -108,100 +111,7 @@ public class HostSecurityWebPlugin implements IHostSecurityWebPlugin {
         }
 
         logger.debug("Ho una lista di comandi con n°: " + mOpenAmClient.getCmdAutho().size());
-
-        //###############################
-       /*
-        httpResp risp=null;
-         try {
-            
-         //effettuo un test sul servizio di autenticazione di Openam
-            
-         risp= mOpenAmClient.simpleAuthentication(mOpenAmClient.getUsername(), mOpenAmClient.getPassword());
-            
-                 
-         } catch (JSONException ex) {
-         logger.error("Errore in simpleAuthentication()" + ex);
-         } catch (IOException ex) {
-            logger.error("Errore in simpleAuthentication()" + ex);
-        }
-
-         if (risp.getTokenId() != "") {
-         //se ho ricevuto un token
-         this.owner.setPluginState(true);
-         logger.debug("Openam Service is OK !!!");
-         logger.debug("Token is: "+risp.getTokenId());
-         } else {
-         //se non ho ricevuto un token
-         this.owner.setPluginState(false);
-         logger.error("Openam Service is KO !!!");
-         }
-
-         //setto il token nell'oggetto client
-         mOpenAmClient.setTokenID(risp.getTokenId());
-    
         
-         //#####
-         //esperimento
-        
-         List paramss = null;
-         String moduleName = null;
-        
-         Boolean prova = mOpenAmClient.authorizeUser(risp.getTokenId(), "listhm", moduleName, paramss);
-         logger.debug("cazzo "+prova);
-        
-         /*
-         //###################################################################
-         // faccio un test sulla validazione del token appena ricevuto
-        
-         httpResp risp2= new httpResp();
-        
-         try {
-         risp2 = client.tokenValidation(client.getTokenID());
-         } catch (IOException ex) {
-         logger.error("Errore in tokenValidation() "+ex);
-         }
-        
-         logger.debug("tokenValidation: " + risp2.getTokenValidity());
-        
-         //###################################################################
-         // disabilito il token appena ricevuto 
-       
-         httpResp risp3= new httpResp();
-         try {
-         risp3=client.tokenLogout(client.getTokenID());
-         } catch (IOException ex) {
-         logger.error("Errore in tokenLogout() "+ex);
-         }
-        
-         //###################################################################
-         // ri faccio un test sulla validazione del token appena disabilitato
-         httpResp risp4= new httpResp();
-        
-         try {
-         risp4 = client.tokenValidation(client.getTokenID() );
-         } catch (IOException ex) {
-         logger.error("Errore in tokenValidation() "+ex);
-         }
-        
-         logger.debug("tokenValidation: " + risp4.getTokenValidity());
-       
-         //###################################################################
-           
-         //faccio un test sulla simple Authorization
-         httpResp risp5= new httpResp();
-         String uri = "listhm";
-         String verb[] ={"POST","GET"};
-        
-         try {
-             
-         risp5 = client.simpleAuthorization(uri, verb[1]);
-         } catch (IOException ex) {
-         logger.error("Errore in simpleAuthorization() "+ex);
-         }
-        
-         logger.debug("simpleAuthorization: " + risp5.getUriAutho());
-        
-         */
      //##################################    
         //this.owner.setPluginState(true);
         logger.debug("FINE init() di Openam");
@@ -209,6 +119,21 @@ public class HostSecurityWebPlugin implements IHostSecurityWebPlugin {
 
     }//init()
 
+    public String authenticate(String username, String password) throws CleverException, IOException {
+
+        logger.debug("call to OpenAM client authenticate");
+        Calendar now = GregorianCalendar.getInstance();
+        if (mLastRelease == null || (now.getTimeInMillis() - mLastRelease.getTimeInMillis()) >= TOKEN_TIMEOUT) {
+            String token = mOpenAmClient.authenticate(username, password);
+            if (token != null && !token.isEmpty()) {
+                mLastRelease = GregorianCalendar.getInstance();
+                mCurrentToken = token;
+                logger.debug("Token updated!");
+            }
+        }
+        return mCurrentToken;
+    }
+    
     public boolean authorize(String token, String moduleName, String methodName) throws CleverException {
 
         if (token == null || moduleName == null || methodName == null) {
