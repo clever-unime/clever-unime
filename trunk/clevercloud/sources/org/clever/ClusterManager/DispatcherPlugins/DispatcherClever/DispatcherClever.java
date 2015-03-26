@@ -161,9 +161,11 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
         return false;
     }
 
-    /***
+    /**
+     * *
      * get OpenAM token to send inside clever message.
-     * @return 
+     *
+     * @return
      */
     private String getToken() {
         String username = connectionXMPP.getUsername();
@@ -194,6 +196,25 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
         return null;
     }
 
+    private void audit(MethodConfiguration method, CleverMessage msg) {
+        try {
+            ArrayList<String> parameters = new ArrayList<String>();
+            parameters.add(method.getMethodName());
+            parameters.add(msg.toXML());
+
+            logger.debug("Send message for auditing");
+            MethodInvoker mi = new MethodInvoker(
+                    "SecurityWebAgent",
+                    "audit",
+                    false,
+                    parameters);
+            this.owner.invoke(mi);
+
+        } catch (CleverException ex) {
+            logger.error("Cluster Coordinator authentication failed.\n" + ex.getMessage());
+        }
+    }
+
     /**
      * This method will handle CleverMessage whose body is of 'exec' type For
      * other types of CleverMessage's body we plain to use other methods such as
@@ -220,7 +241,10 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
             cleverMsg.setHasReply(false);
             cleverMsg.setReplyToMsg(message.getId());
             try {
-
+                /**
+                 * Auditing
+                 */
+                audit(methodConf, message);
                 /**
                  * * OpenAM Authorization **
                  */
@@ -256,7 +280,9 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
                         methodConf.getModuleName(),
                         methodConf.getMethodName()));
                 cleverMsg.addAttachment(MessageFormatter.messageFromObject(ex));
-                /*** add OpenAM token to response message ***/
+                /**
+                 * * add OpenAM token to response message **
+                 */
                 cleverMsg.setAuthToken(getToken());
             } finally {
                 connectionXMPP.sendMessage(message.getSrc(), cleverMsg);
@@ -272,7 +298,9 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
 
             message.setSrc(connectionXMPP.getUsername());
             message.setDst(message.getDst());
-            /*** add OpenAM token to response message ***/
+            /**
+             * * add OpenAM token to response message **
+             */
             message.setAuthToken(getToken());
             connectionXMPP.sendMessage(message.getDst(), message);
         }
@@ -313,7 +341,9 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
                 otherMsg.setAttachments(msg.getAttachments());
                 otherMsg.setReplyToMsg(requestsManager.getRequestPendingId(idToReply));
                 otherMsg.setSrc(connectionXMPP.getMultiUserChat(ROOM.SHELL).getNickname());
-                /*** add OpenAM token to response message ***/
+                /**
+                 * * add OpenAM token to response message **
+                 */
                 otherMsg.setAuthToken(getToken());
                 connectionXMPP.sendMessage(otherMsg.getDst(), otherMsg);
                 break;
@@ -337,7 +367,9 @@ public class DispatcherClever implements CLusterManagerDispatcherPlugin, PacketL
         //TODO: timeout as parameter : now is 0 (infinity)
         int id = requestsManager.addSyncRequestPending(cleverMessage, Request.Type.INTERNAL, 0);
         cleverMessage.setId(id);
-        /*** add OpenAM token to response message ***/
+        /**
+         * * add OpenAM token to response message **
+         */
         cleverMessage.setAuthToken(getToken());
         connectionXMPP.sendMessage(cleverMessage.getDst(), cleverMessage);
         return requestsManager.getRequest(id).getReturnValue();

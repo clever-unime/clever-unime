@@ -9,9 +9,8 @@
         <openamHost>openam.sigma.com</openamHost>
         <port>8080</port>
         <deployUrl>OpenAM-12.0.0</deployUrl> 
-        
-    <user>amadmin</user>
-    <password>riccardo</password>
+        <user>amadmin</user>
+        <password>riccardo</password>
    
            
     </pluginParams>

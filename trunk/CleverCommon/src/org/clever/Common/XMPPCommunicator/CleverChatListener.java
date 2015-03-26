@@ -163,8 +163,9 @@ public class CleverChatListener implements MessageListener {
                 boolean isVerified = false;
                 isSigned = true;
                 PublicKey pubKey = null;
-
+                cleverMessage = new CleverMessage(message.getBody());
                 X509Certificate cert;
+                logger.debug("\nSearch certificate for public key uid=" + src);
                 cert = ldapClient.searchCert("", "uid=" + src);
 
                 if (cert == null) {
@@ -172,33 +173,10 @@ public class CleverChatListener implements MessageListener {
                 } else {
                     pubKey = cert.getPublicKey();
                 }
-                //Calcolo il digest del corpo del messaggio ricevuto
-                MessageDigest md = null;
-                try {
-
-                    md = MessageDigest.getInstance("SHA");
-
-                } catch (NoSuchAlgorithmException ex) {
-                    java.util.logging.Logger.getLogger(CleverChatListener.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                md.reset();
-                cleverMessage = new CleverMessage(message.getBody());
-                try {
-                    md.update(cleverMessage.toXML().getBytes("UTF-8"), 0, cleverMessage.toXML().length());
-                } catch (UnsupportedEncodingException ex) {
-                    java.util.logging.Logger.getLogger(CleverChatListener.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (CleverException ex) {
-                    logger.error("Outputting message:\n", ex);
-                }
-
-                String digest = new String(Base64.encode(md.digest()));
-
-                if (digest.equals(signedExtension.getData())) {
-                    isVerified = true;
-                } else {
-                    isVerified = false;
-                }
-
+                X509Utils x = new X509Utils();
+                logger.debug("\n\nCheck signature");
+                
+                isVerified = x.verify(cleverMessage.toXML(), signedExtension.getData(), pubKey);
                 if (isVerified) {
                     logger.debug("[This message is signed]");
                 } else {

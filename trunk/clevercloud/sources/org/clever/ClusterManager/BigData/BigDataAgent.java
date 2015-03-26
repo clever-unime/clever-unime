@@ -79,6 +79,7 @@ public class BigDataAgent extends CmAgent {
            //TO DO: modificare la notifica
             params.add("VMSTATE/NOTIFICATION");
             this.invoke("DispatcherAgent", "subscribeNotification", true, params);
+           
         }
         catch( java.lang.NullPointerException e )
         { 
@@ -137,7 +138,7 @@ public class BigDataAgent extends CmAgent {
             this.bigDataPlugin = ( BigDataPlugin )super.startPlugin("./cfg/configuration_bigDataPlugin.xml","/org/clever/ClusterManager/BigData/configuration_bigDataPlugin.xml");
              this.bigDataPlugin.setOwner(this);
             logger.info( "BigDataPlugin created " );
-            
+             this.setPluginState(true);
         }
         catch( java.lang.NullPointerException e )
         { 
@@ -155,5 +156,5 @@ public class BigDataAgent extends CmAgent {
     {
        
     }
-    
+   
 }

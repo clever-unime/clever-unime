@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package org.clever.Common.SecureXMPPCommunicator;
 
 import java.io.ByteArrayInputStream;
@@ -75,6 +74,7 @@ import org.bouncycastle.crypto.paddings.PKCS7Padding;
 import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
 import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
 import org.clever.Common.XMLTools.FileStreamer;
 import org.clever.Common.XMLTools.ParserXML;
@@ -85,138 +85,159 @@ import org.jcp.xml.dsig.internal.dom.XMLDSigRI;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-        
-
-/** This class implements encryption/decryption/signing/verifying of String data
- * using X509 format key.
- * Funziona con la libreria bcprov-jkd14-147.jar
+/**
+ * This class implements encryption/decryption/signing/verifying of String data
+ * using X509 format key. Funziona con la libreria bcprov-jkd14-147.jar
+ *
  * @author Alessandro La Bella
  */
 public class X509Utils {
-    
+
     private String keystorePath;
     private String alias;
     private char[] keystorePassword;
     private org.apache.log4j.Logger logger;
     final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
-       
+
     private String cfgTemplatePath;
     private InputStream inxml;
     private ParserXML pXML;
-    
-    private void init(){
+
+    private void init() {
         try {
-            cfgTemplatePath = "sources/org/clever/Common/SecureXMPPCommunicator/configuration_template_keystore.xml";
+            cfgTemplatePath = "cfg/configuration_keystore.xml";
             inxml = new FileInputStream(cfgTemplatePath);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(LDAPClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        FileStreamer fs = new FileStreamer();        	
-        try {       
-            pXML = new ParserXML( fs.xmlToString( inxml ) );
+
+        FileStreamer fs = new FileStreamer();
+        try {
+            pXML = new ParserXML(fs.xmlToString(inxml));
         } catch (IOException ex) {
             Logger.getLogger(LDAPClient.class.getName()).log(Level.SEVERE, null, ex);
         }
         keystorePath = pXML.getElementContent("keystorePath");
         alias = pXML.getElementContent("alias");
         keystorePassword = pXML.getElementContent("keystorePassword").toCharArray();
-        
+
         try {
             inxml.close();
         } catch (IOException ex) {
             Logger.getLogger(LDAPClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }
-    
-    public X509Utils(){
+
+    public X509Utils() {
         init();
-        
+
     }
-    
-    public X509Utils(String keystorePath, String alias, char[] keystorePassword){
-        
+
+    public X509Utils(String keystorePath, String alias, char[] keystorePassword) {
+
         this.keystorePath = keystorePath;
-        
+
         this.alias = alias;
-        
+
         this.keystorePassword = keystorePassword;
-        
-        logger = org.apache.log4j.Logger.getLogger( "X509Utils" );
+
+        logger = org.apache.log4j.Logger.getLogger("X509Utils");
     }
-    
-    public String getKeystorePath(){
+
+    public String getKeystorePath() {
         return this.keystorePath;
     }
-    
-    private static PrivateKey getPrivateKey(String KSPath, char[] KSPassword, String alias, char[] password) throws KeyStoreException, NoSuchProviderException, FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException{
+
+    private static PrivateKey getPrivateKey(String KSPath, char[] KSPassword, String alias, char[] password) throws KeyStoreException, NoSuchProviderException, FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException {
         InputStream inputStream = null;
-       
+
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
 
-        KeyStore ks = KeyStore.getInstance("pkcs12","BC");
+        KeyStore ks = KeyStore.getInstance("pkcs12", "BC");
         inputStream = new FileInputStream(KSPath);
         ks.load(inputStream, KSPassword);
 
         Key key = ks.getKey(alias, password);
-        return (PrivateKey)key;
-            
+        return (PrivateKey) key;
+
     }
-    
-    private static PublicKey getPublicKey(String KSPath, char[] KSPassword, String alias) throws KeyStoreException, NoSuchProviderException, FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException{
+
+    private static PublicKey getPublicKey(String KSPath, char[] KSPassword, String alias) throws KeyStoreException, NoSuchProviderException, FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException {
         InputStream inputStream = null;
-       
+
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
 
-        KeyStore ks = KeyStore.getInstance("pkcs12","BC");
+        KeyStore ks = KeyStore.getInstance("pkcs12", "BC");
         inputStream = new FileInputStream(KSPath);
         ks.load(inputStream, KSPassword);
 
         Certificate cert = ks.getCertificate(alias);
         PublicKey pubKey = cert.getPublicKey();
-        
+
         return pubKey;
-            
+
     }
-    
-    public PublicKey extractPublicKey() throws KeyStoreException, NoSuchProviderException, FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException{
+
+    public PublicKey extractPublicKey() throws KeyStoreException, NoSuchProviderException, FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException, UnrecoverableKeyException {
         InputStream inputStream = null;
-       
+
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
 
-        KeyStore ks = KeyStore.getInstance("pkcs12","BC");
+        KeyStore ks = KeyStore.getInstance("pkcs12", "BC");
         inputStream = new FileInputStream(this.keystorePath);
         ks.load(inputStream, this.keystorePassword);
 
         Certificate cert = ks.getCertificate(this.alias);
         PublicKey pubKey = cert.getPublicKey();
-        
+
         return pubKey;
-            
+
     }
-    
-    public String encryptToString(String inpstr, RSAPublicKey pubbKey){
-        
+
+    public String encryptToString(String inpstr) {
+        try {
+
+            PrivateKey privKey = getPrivateKey(keystorePath, keystorePassword, alias, this.keystorePassword);
+            return encryptToString(inpstr, privKey);
+        } catch (KeyStoreException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchProviderException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (CertificateException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnrecoverableKeyException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "";
+    }
+
+    public String encryptToString(String inpstr, Key key) {
+
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
         byte[] encodedBytes = null;
         String encoded = null;
-        
+
         try {
-            
+
             Cipher encryptCipher = Cipher.getInstance("RSA", provider);
-            
-            encryptCipher.init(Cipher.ENCRYPT_MODE, pubbKey);
-            
+
+            encryptCipher.init(Cipher.ENCRYPT_MODE, key);
+
             encodedBytes = encryptCipher.doFinal(inpstr.getBytes());
-            
-            encoded = new String(Hex.encode(encodedBytes));
-                    
-          
+
+            encoded = new String(Base64.encode(encodedBytes));
+
         } catch (IllegalBlockSizeException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         } catch (BadPaddingException ex) {
@@ -226,13 +247,45 @@ public class X509Utils {
         } catch (NoSuchPaddingException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidKeyException ex) {
-                Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return encoded;
     }
-    
-    public String simmetricEncrypt(String inpstr, String cipherTrasformation, Key key){
+
+    public String encryptToString(String inpstr, RSAPublicKey pubbKey) {
+
+        BouncyCastleProvider provider = new BouncyCastleProvider();
+        Security.addProvider(provider);
+        byte[] encodedBytes = null;
+        String encoded = null;
+
+        try {
+
+            Cipher encryptCipher = Cipher.getInstance("RSA", provider);
+
+            encryptCipher.init(Cipher.ENCRYPT_MODE, pubbKey);
+
+            encodedBytes = encryptCipher.doFinal(inpstr.getBytes());
+
+            encoded = new String(Hex.encode(encodedBytes));
+
+        } catch (IllegalBlockSizeException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadPaddingException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchPaddingException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidKeyException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return encoded;
+    }
+
+    public String simmetricEncrypt(String inpstr, String cipherTrasformation, Key key) {
         String encoded = null;
         byte[] encodedBytes = null;
         Cipher cipher = null;
@@ -260,9 +313,9 @@ public class X509Utils {
         encoded = new String(Hex.encode(encodedBytes));
         return encoded;
     }
-    
-    public byte[] sEncrypt(boolean encrypt, byte[] inpstr, byte[] keyBytes){
-        SecretKeySpec sskey = new SecretKeySpec(keyBytes,"AES");
+
+    public byte[] sEncrypt(boolean encrypt, byte[] inpstr, byte[] keyBytes) {
+        SecretKeySpec sskey = new SecretKeySpec(keyBytes, "AES");
         byte[] outputBytes = null;
         Cipher cipher = null;
         try {
@@ -273,9 +326,9 @@ public class X509Utils {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            if(encrypt){
+            if (encrypt) {
                 cipher.init(Cipher.ENCRYPT_MODE, sskey);
-            }else{
+            } else {
                 cipher.init(Cipher.DECRYPT_MODE, sskey);
             }
         } catch (InvalidKeyException ex) {
@@ -288,11 +341,11 @@ public class X509Utils {
         } catch (BadPaddingException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return outputBytes;
     }
-    
-    public byte[] generateSecretKey(){
+
+    public byte[] generateSecretKey() {
         byte[] rawKey = null;
         KeyGenerator kg = null;
         try {
@@ -303,11 +356,11 @@ public class X509Utils {
         kg.init(128);
         SecretKey key = kg.generateKey();
         rawKey = key.getEncoded();
-        
+
         return rawKey;
     }
-    
-       public static String bytesToHex(byte[] bytes) {
+
+    public static String bytesToHex(byte[] bytes) {
 
         char[] hexChars = new char[bytes.length * 2];
         for (int j = 0; j < bytes.length; j++) {
@@ -317,10 +370,10 @@ public class X509Utils {
         }
         return new String(hexChars);
     }
-    
-    public String simmetricDecrypt(String encryptedMessage, String cipherTrasformation, Key key){
+
+    public String simmetricDecrypt(String encryptedMessage, String cipherTrasformation, Key key) {
         byte[] encryptedBytes = Hex.decode(encryptedMessage);
-        
+
         String decrypted = null;
         byte[] decryptedBytes = null;
         Cipher cipher = null;
@@ -348,26 +401,26 @@ public class X509Utils {
         decrypted = new String(decryptedBytes);
         return decrypted;
     }
-    
-    public String decryptToString(String encryptedMessage, char[] password){
+
+    public String decryptToString(String encryptedMessage, char[] password) {
         byte[] decryptedMessage = null;
         String decrypted = null;
         RSAPrivateKey privKey = null;
-        
+
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
-        
+
         byte[] encryptedBytes = Hex.decode(encryptedMessage);
-        
+
         try {
-            
-            privKey = (RSAPrivateKey)getPrivateKey(keystorePath,keystorePassword,alias,password);
-            
+
+            privKey = (RSAPrivateKey) getPrivateKey(keystorePath, keystorePassword, alias, password);
+
             Cipher decryptCipher = Cipher.getInstance("RSA", provider);
             decryptCipher.init(Cipher.DECRYPT_MODE, privKey);
-            
+
             decryptedMessage = decryptCipher.doFinal(encryptedBytes);
-            
+
         } catch (IllegalBlockSizeException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         } catch (BadPaddingException ex) {
@@ -391,30 +444,62 @@ public class X509Utils {
         } catch (UnrecoverableKeyException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         decrypted = new String(decryptedMessage);
-        
+
         return decrypted;
     }
-    
-    public String decryptToString(String encryptedMessage){
+
+    public String decryptToString(String encryptedMessage, Key pubKey) {
         byte[] decryptedMessage = null;
-        RSAPrivateKey privKey = null;
-        
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
-        
-        byte[] encryptedBytes = Hex.decode(encryptedMessage);
-        
+
+        byte[] encryptedBytes = Base64.decode(encryptedMessage);
+
         try {
-            
-            privKey = (RSAPrivateKey)getPrivateKey(keystorePath,keystorePassword,alias,this.keystorePassword);
-            
+            Cipher decryptCipher = Cipher.getInstance("RSA", provider);
+            decryptCipher.init(Cipher.DECRYPT_MODE, pubKey);
+
+            decryptedMessage = decryptCipher.doFinal(encryptedBytes);
+
+        } catch (IllegalBlockSizeException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (BadPaddingException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InvalidKeyException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchPaddingException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NoSuchAlgorithmException ex) {
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        if (decryptedMessage != null) {
+            return new String(decryptedMessage);
+        } else {
+            return new String();
+        }
+    }
+
+    public String decryptToString(String encryptedMessage) {
+        byte[] decryptedMessage = null;
+        RSAPrivateKey privKey = null;
+
+        BouncyCastleProvider provider = new BouncyCastleProvider();
+        Security.addProvider(provider);
+
+        byte[] encryptedBytes = Hex.decode(encryptedMessage);
+
+        try {
+
+            privKey = (RSAPrivateKey) getPrivateKey(keystorePath, keystorePassword, alias, this.keystorePassword);
+
             Cipher decryptCipher = Cipher.getInstance("RSA", provider);
             decryptCipher.init(Cipher.DECRYPT_MODE, privKey);
-            
+
             decryptedMessage = decryptCipher.doFinal(encryptedBytes);
-            
+
         } catch (IllegalBlockSizeException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         } catch (BadPaddingException ex) {
@@ -438,33 +523,36 @@ public class X509Utils {
         } catch (UnrecoverableKeyException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        if(decryptedMessage != null)
+
+        if (decryptedMessage != null) {
             return new String(decryptedMessage);
-        else return new String();
+        } else {
+            return new String();
+        }
     }
-    
+
     /**
      * TODO: introdurre la password per le chiavi private
+     *
      * @param inpstr
      * @param passwordKey
-     * @return 
+     * @return
      */
-    public String signToString(String inpstr){
+    public String signToString(String inpstr) {
         String signed = null;
         byte[] signatureBytes = null;
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
-        
+
         try {
-            
-            PrivateKey privKey = getPrivateKey(keystorePath,keystorePassword,alias,this.keystorePassword);
-            
+
+            PrivateKey privKey = getPrivateKey(keystorePath, keystorePassword, alias, this.keystorePassword);
+
             Signature signature = Signature.getInstance("SHA1withRSA");
             signature.initSign(privKey);
             signature.update(inpstr.getBytes());
             signatureBytes = signature.sign();
-            
+
         } catch (SignatureException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidKeyException ex) {
@@ -484,28 +572,28 @@ public class X509Utils {
         } catch (UnrecoverableKeyException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        signed = new String(Hex.encode(signatureBytes));
+        signed = new String(Base64.encode(signatureBytes));
         return signed;
     }
-    
-    public boolean verify(String inpstr, String signature, PublicKey pubKey){
+
+    public boolean verify(String inpstr, String signature, PublicKey pubKey) {
         boolean verified = false;
-        byte[] signedBytes = Hex.decode(signature);
-        byte[] inpstrBytes = Hex.decode(inpstr);
+        byte[] signedBytes = Base64.decode(signature);
+        byte[] inpstrBytes = Base64.decode(inpstr);
         try {
-            
+
             BouncyCastleProvider provider = new BouncyCastleProvider();
             Security.addProvider(provider);
-            
+
             Signature verifier = Signature.getInstance("SHA1withRSA");
             verifier.initVerify(pubKey);
             verifier.update(inpstr.getBytes());
-            if(verifier.verify(signedBytes)){
+            if (verifier.verify(signedBytes)) {
                 verified = true;
-            }else{
+            } else {
                 verified = false;
             }
-            
+
         } catch (InvalidKeyException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SignatureException ex) {
@@ -514,23 +602,22 @@ public class X509Utils {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
         return verified;
-    }    
-    
-    
-    public String signXML(String toXML){
-        
-        System.setProperty("javax.xml.parsers.DocumentBuilderFactory","com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
-        System.setProperty("javax.xml.parsers.SAXParserFactory","com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");
-        System.setProperty("javax.xml.transform.TransformerFactory","com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
-        
+    }
+
+    public String signXML(String toXML) {
+
+        System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
+        System.setProperty("javax.xml.parsers.SAXParserFactory", "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");
+        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
-        
-        String providerName = System.getProperty("jsr105Provider","org.jcp.xml.dsig.internal.dom.XMLDSigRI");
+
+        String providerName = System.getProperty("jsr105Provider", "org.jcp.xml.dsig.internal.dom.XMLDSigRI");
         XMLSignatureFactory fac = null;
         try {
             fac = XMLSignatureFactory.getInstance("DOM",
-                    (Provider)Class.forName(providerName).newInstance());            
+                    (Provider) Class.forName(providerName).newInstance());
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -540,7 +627,7 @@ public class X509Utils {
         }
         Reference ref = null;
         try {
-             ref = fac.newReference("#message", fac.newDigestMethod(DigestMethod.SHA1, null));
+            ref = fac.newReference("#message", fac.newDigestMethod(DigestMethod.SHA1, null));
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidAlgorithmParameterException ex) {
@@ -548,7 +635,7 @@ public class X509Utils {
         }
         Document document = null;
         try {
-            document = dbf.newDocumentBuilder().parse(new ByteArrayInputStream(toXML.getBytes("UTF-8")));   
+            document = dbf.newDocumentBuilder().parse(new ByteArrayInputStream(toXML.getBytes("UTF-8")));
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SAXException ex) {
@@ -556,23 +643,22 @@ public class X509Utils {
         } catch (IOException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
-            
-        
+
         Node message = document.getDocumentElement();
         XMLStructure content = new DOMStructure(message);
         XMLObject obj = fac.newXMLObject(Collections.singletonList(content), "message", null, null);
         SignedInfo si = null;
         try {
-            si = fac.newSignedInfo(fac.newCanonicalizationMethod(CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS, (C14NMethodParameterSpec)null), fac.newSignatureMethod(SignatureMethod.RSA_SHA1, null), Collections.singletonList(ref));
+            si = fac.newSignedInfo(fac.newCanonicalizationMethod(CanonicalizationMethod.INCLUSIVE_WITH_COMMENTS, (C14NMethodParameterSpec) null), fac.newSignatureMethod(SignatureMethod.RSA_SHA1, null), Collections.singletonList(ref));
         } catch (NoSuchAlgorithmException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InvalidAlgorithmParameterException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         PrivateKey privKey = null;
         try {
-            privKey = getPrivateKey(keystorePath,keystorePassword,alias,this.keystorePassword);
+            privKey = getPrivateKey(keystorePath, keystorePassword, alias, this.keystorePassword);
         } catch (KeyStoreException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchProviderException ex) {
@@ -588,7 +674,7 @@ public class X509Utils {
         } catch (UnrecoverableKeyException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         XMLSignature signature = fac.newXMLSignature(si, null, Collections.singletonList(obj), null, null);
         Document doc = null;
         try {
@@ -596,7 +682,7 @@ public class X509Utils {
         } catch (ParserConfigurationException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         DOMSignContext dsc = new DOMSignContext(privKey, doc);
         try {
             signature.sign(dsc);
@@ -619,24 +705,24 @@ public class X509Utils {
         } catch (TransformerException ex) {
             Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
-                
+
         return new String(os.toByteArray());
-        
+
     }
-    
-    public String validateXML(String toXML, PublicKey pubKey){
+
+    public String validateXML(String toXML, PublicKey pubKey) {
         String message = null;
         boolean isVerified = false;
-        System.setProperty("javax.xml.parsers.DocumentBuilderFactory","com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
-        System.setProperty("javax.xml.parsers.SAXParserFactory","com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");
-        System.setProperty("javax.xml.transform.TransformerFactory","com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
-        
-        String providerName = System.getProperty("jsr105Provider","org.jcp.xml.dsig.internal.dom.XMLDSigRI");
-        
+        System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
+        System.setProperty("javax.xml.parsers.SAXParserFactory", "com.sun.org.apache.xerces.internal.jaxp.SAXParserFactoryImpl");
+        System.setProperty("javax.xml.transform.TransformerFactory", "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+
+        String providerName = System.getProperty("jsr105Provider", "org.jcp.xml.dsig.internal.dom.XMLDSigRI");
+
         XMLSignatureFactory fac = null;
         try {
             fac = XMLSignatureFactory.getInstance("DOM",
-                    (Provider)Class.forName(providerName).newInstance());            
+                    (Provider) Class.forName(providerName).newInstance());
         } catch (ClassNotFoundException ex) {
             logger.debug(ex);
         } catch (InstantiationException ex) {
@@ -644,12 +730,12 @@ public class X509Utils {
         } catch (IllegalAccessException ex) {
             logger.debug(ex);
         }
-        
+
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         Document document = null;
         try {
-            document = dbf.newDocumentBuilder().parse(new ByteArrayInputStream(toXML.getBytes("UTF-8")));   
+            document = dbf.newDocumentBuilder().parse(new ByteArrayInputStream(toXML.getBytes("UTF-8")));
         } catch (ParserConfigurationException ex) {
             logger.debug(ex);
         } catch (SAXException ex) {
@@ -657,13 +743,13 @@ public class X509Utils {
         } catch (IOException ex) {
             logger.debug(ex);
         }
-        
+
         NodeList nl = document.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
-        if (nl.getLength() == 0){
+        if (nl.getLength() == 0) {
             logger.debug("Cannot find Signature Element");
             return "";
         }
-        
+
         DOMValidateContext valContext = new DOMValidateContext(pubKey, nl.item(0));
         XMLSignature signature = null;
         try {
@@ -676,26 +762,26 @@ public class X509Utils {
         } catch (XMLSignatureException ex) {
             logger.debug(ex);
         }
-        if ( isVerified == false ){
+        if (isVerified == false) {
             logger.debug("Signature failed validation");
-        }
-        else{
+        } else {
             logger.debug("Signature validation passed!");
         }
-        
-        for (int i=0; i<nl.getLength(); i++){
+
+        for (int i = 0; i < nl.getLength(); i++) {
             Node node = nl.item(i);
-            
-            if (node instanceof Element){
+
+            if (node instanceof Element) {
                 Node object = node.getLastChild();
                 Node messageNode = object.getFirstChild();
-                
+
                 String type = null;
-                Element e = (Element)messageNode;
-                if(e.getAttribute("type") != null)
+                Element e = (Element) messageNode;
+                if (e.getAttribute("type") != null) {
                     type = e.getAttribute("type");
-                
-                if(type.equals("REPLY") || type.equals("REQUEST") || type.equals("ERROR")){
+                }
+
+                if (type.equals("REPLY") || type.equals("REQUEST") || type.equals("ERROR")) {
                     StringWriter sw = new StringWriter();
                     Transformer t = null;
                     try {
@@ -707,23 +793,21 @@ public class X509Utils {
                         } catch (TransformerException ex) {
                             logger.debug(ex);
                         }
-                        
+
                         message = sw.toString();
                     } catch (TransformerConfigurationException ex) {
                         logger.debug(ex);
                     }
-                    
-                }
-                else{
+
+                } else {
                     Node bodyNode = messageNode.getFirstChild();
                     message = bodyNode.getTextContent();
                 }
 
             }
         }
-        
-        
+
         return message;
     }
-    
+
 }

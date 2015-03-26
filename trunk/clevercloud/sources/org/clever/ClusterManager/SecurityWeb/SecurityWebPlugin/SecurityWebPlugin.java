@@ -28,9 +28,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.ClusterManager.SecurityWeb.ISecurityWebPlugin;
 import org.clever.Common.Communicator.Agent;
+import org.clever.Common.Communicator.MethodInvoker;
 import org.clever.Common.Exceptions.CleverException;
 import org.clever.Common.OpenAm.Openam;
 import org.jdom.Element;
@@ -46,6 +48,7 @@ public class SecurityWebPlugin implements ISecurityWebPlugin {
     private Openam mOpenAmClient;
     private Calendar mLastRelease;
     private String mCurrentToken;
+    private ArrayList<String> commands;
     private final static int TOKEN_TIMEOUT = 30 * 60 * 1000; //30 min
 
     @Override
@@ -59,7 +62,7 @@ public class SecurityWebPlugin implements ISecurityWebPlugin {
         this.setOwner(owner);
         logger.debug("INIZIO init() di Openam");
         mCurrentToken = "";
-        try {            
+        try {
             mOpenAmClient = new org.clever.Common.OpenAm.Openam("", "", "");
             logger.debug("istanziato client openam");
         } catch (Exception ex) {
@@ -91,7 +94,7 @@ public class SecurityWebPlugin implements ISecurityWebPlugin {
             logger.error("listCmds element not found in config");
         } else {
             List commandsList = listCmds.getChildren("cmd");
-            ArrayList<String> commands = new ArrayList<String>();
+            commands = new ArrayList<String>();
 
             for (Object commandO : commandsList) {
                 Element command = (Element) commandO;
@@ -132,6 +135,34 @@ public class SecurityWebPlugin implements ISecurityWebPlugin {
         return mCurrentToken;
     }
 
+    /**
+     * *
+     * Log message to MongoDB
+     *
+     * @param msg The message XML formatted
+     * @param methodName The method name.
+     */
+    public void audit(String methodName, String msg) {
+        logger.debug("Auditing message: " + msg);
+        if (commands != null && commands.contains(methodName)) {
+            ArrayList<String> parameters = new ArrayList<String>();
+            parameters.add(methodName);
+            parameters.add(msg);
+            
+            MethodInvoker mi = new MethodInvoker(
+                    "BigDataAgent",
+                    "insertActionLog",
+                    false,
+                    parameters);
+            try {
+                logger.debug("Calling method to log message to mongo.");
+                this.owner.invoke(mi);
+            } catch (CleverException ex) {
+                logger.error(ex);
+            }
+        }
+    }
+
     public boolean authorize(String token, String moduleName, String methodName) throws CleverException {
 
         if (token == null || moduleName == null || methodName == null) {
@@ -141,6 +172,7 @@ public class SecurityWebPlugin implements ISecurityWebPlugin {
                     + "\nmethodName: " + methodName);
             return false;
         }
+
         logger.debug("call to OpenAM client authorize");
         return mOpenAmClient.authorizeUser(token, moduleName, methodName, null);
     }

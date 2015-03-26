@@ -420,14 +420,16 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
         return (username);
     }
 
-    /***
+    /**
+     * *
      * Aggiunto per ricavare i parametri di accesso per OpenAM.
-     * @return 
+     *
+     * @return
      */
     public String getPassword() {
         return (password);
     }
-        
+
     //alessandro dicembre 2012
     public String getUser() {
         String userId = this.connection.getUser();
@@ -649,6 +651,32 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
         }
     }
 
+    /**
+     * *
+     * Calculate clever message signauture.
+     *
+     * @return The signature.
+     */
+    private String signCleverMessage(CleverMessage msg) {
+        MessageDigest md = null;
+        try {
+            md = MessageDigest.getInstance("SHA");
+        } catch (NoSuchAlgorithmException ex) {
+            java.util.logging.Logger.getLogger(ConnectionXMPP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        md.reset();
+        try {
+            md.update(msg.toXML().getBytes("UTF-8"), 0, msg.toXML().length());
+        } catch (CleverException ex) {
+            logger.error("An exception has trown: " + ex.getMessage());
+        } catch (UnsupportedEncodingException ex) {
+            logger.error(ex);
+        }
+
+        String digest = new String(Base64.encode(md.digest()));
+        return digest;
+    }
+
     public void sendSignedMessage(String jid, final CleverMessage message) {
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
@@ -656,39 +684,23 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
             Message packet = new Message();
             packet.setType(Message.Type.normal);
             packet.setTo(message.getDst() + "@" + servername);
+            message.setSignature(signCleverMessage(message));
             packet.setBody(message.toXML());
 
             byte[] digestBytes = null;
             String signedDigest = null;
-
-            MessageDigest md = null;
+            SecureExtension signedExtension = new SecureExtension("signed");
+            X509Utils x = new X509Utils();
             try {
+                String signature = x.signToString(message.toXML());
+                signedExtension.setData(signature);
+                packet.addExtension(signedExtension);
+            } catch (CleverException ex) {
+                logger.error("Error while signing message: " + ex.getMessage());
 
-                md = MessageDigest.getInstance("SHA");
-
-            } catch (NoSuchAlgorithmException ex) {
-                java.util.logging.Logger.getLogger(ConnectionXMPP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
             }
-            md.reset();
-            try {
-                md.update(message.toXML().getBytes("UTF-8"), 0, message.toXML().length());
-            } catch (UnsupportedEncodingException ex) {
-                java.util.logging.Logger.getLogger(ConnectionXMPP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            }
-
-            //String digest = new String(Hex.encode(md.digest()));
-            String digest = new String(Base64.encode(md.digest()));
-
             Date date = new Date();
             DelayInformation delayInformation = new DelayInformation(date);
-
-            SecureExtension signedExtension = new SecureExtension("signed");
-
-            //signedDigest = utils.signToString(digest);
-            if (digest != null) {
-                signedExtension.setData(digest);
-                packet.addExtension(signedExtension);
-            }
             packet.addExtension(delayInformation);
 
             jid += "@" + this.getServer();

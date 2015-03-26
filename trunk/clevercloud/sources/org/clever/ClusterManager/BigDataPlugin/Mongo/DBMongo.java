@@ -46,6 +46,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
@@ -78,6 +79,7 @@ public class DBMongo implements BigDataPlugin {
     private final Logger logger;
     private boolean connection;
     private Agent owner;
+    private Element serverList;
     
     public DBMongo(){
     
@@ -106,9 +108,15 @@ public class DBMongo implements BigDataPlugin {
         dbName=params.getChildText("dbName");
         user=params.getChildText("user");
         password=params.getChildText("password");
+          serverList=params.getChild("serversList");
+        if(serverList!=null){
+            this.connectReplication();
+        }
+        else{
         serverURL= params.getChildText("serverUrl");
         port=Integer.valueOf(params.getChildText("port"));
-        init();
+        this.connect();
+        } //init();
         }
     
     catch(Exception ex){
@@ -121,24 +129,27 @@ public class DBMongo implements BigDataPlugin {
      * 
      * this method is used to connect to DB 
      */
-    private void connect() {
+      private void connect() {
      ServerAddress server;
      MongoCredential credential;
-     logger.debug("dentro connect");
+     logger.debug("dentro connect no replica");
       try {
           server = new ServerAddress(this.serverURL,this.port);
+        logger.debug("dentro connect 1");
           credential= MongoCredential.createMongoCRCredential(user, dbName, password.toCharArray());
+      logger.debug("dentro connect 2");
           mongoClient=new MongoClient(server,Arrays.asList(credential));
+      logger.debug("dentro connect 3");
           connection=true;
         } catch (UnknownHostException ex) {
-            ex.printStackTrace();
+       logger.error("Error in mongo connect: ", ex);
         }
         catch (Exception ex) {
-            ex.printStackTrace();
+          logger.error("Error in mongo connect: ", ex);
         }
         
     }
-    
+ 
     private void close(){
          
         try{
@@ -172,7 +183,7 @@ public class DBMongo implements BigDataPlugin {
     * @return listCollection contenente tutti i db presenti su questo client 
     */
    public List getListDB(){
-       
+    
     return mongoClient.getDatabaseNames();
    
    }
@@ -231,13 +242,13 @@ public class DBMongo implements BigDataPlugin {
                 }
             
             }else{
-                collection.insert(objNew);
+                collection.save(objNew);
                 }
             
             }
             else{
                 logger.debug("not present"+objNew.toString());
-            collection.insert(objNew);
+            collection.save(objNew);
             }
         }
         catch(MongoException ex){
@@ -258,36 +269,15 @@ public class DBMongo implements BigDataPlugin {
    private void insertXMLString(DB dataBase, Object elemToInsert) {
    
        String stringXML=(String)elemToInsert;
-       DBCollection collection;
        ParserXML parser=new ParserXML(stringXML);
        String collName=null;
-       ArrayList<BasicDBObject> list=new ArrayList();
        Element root=parser.getRootElement();
        logger.debug("name root element: "+root.getName());
        collName=parser.getElementAttributeContent(root.getName(), "name");
        if(collName==null){
            collName=parser.getElementContentInStructure("publicationId");
         }
-       
-       logger.debug(" nome collezione: "+collName);
-    //   long inizio, fine;
-    //   String str;
-    //   FileOutputStream fos= new FileOutputStream("inserimento.csv", true);
-        try {
-            list=new UtilityJson().XMLMultiLevelToJSON2(stringXML);
-        } catch (IOException ex) {
-            logger.error("Error in operation: ", ex);
-        }
-       
-         collection=this.getCollection(dataBase, collName);
-     //  collection=dataBase.getCollection(collName);
-     //  inizio=System.currentTimeMillis();
-      for(int numElem=0;numElem<list.size();numElem++){
-       this.inserisci(collection, list.get(numElem));
-       }
-     //  fine=System.currentTimeMillis();
-     //  str="tempo inserimento: "+(fine-inizio)+"\n";
-     //  fos.write(str.getBytes());
+       this.insertXMLString(dataBase, collName, stringXML);
        
        }
    
@@ -308,6 +298,7 @@ public class DBMongo implements BigDataPlugin {
         collection=this.getCollection(dataBase, collName);
      //  collection=dataBase.getCollection(collName);
      //  inizio=System.currentTimeMillis();
+        obj.append("insertTimestamp", System.currentTimeMillis());
        this.inserisci(collection, obj);
       
      //  fine=System.currentTimeMillis();
@@ -328,9 +319,40 @@ public class DBMongo implements BigDataPlugin {
     
    private void insertSensing(Object elementToInsert, TypeOfElement type){
        
-       String dbName="sensing";
+       String nomeDB="sensing";
        logger.debug("dentro metodo insertSensing, nome del db della sensoristica: "+dbName);
-       DB dataBase=mongoClient.getDB(dbName);
+       DB dataBase=mongoClient.getDB(nomeDB);
+       
+       
+       switch(type){
+       
+           case STRINGXML:
+       
+           this.insertXMLString(dataBase, elementToInsert);
+               break;
+           case DOCJSON:
+       
+           this.insertDocJSON(dataBase, elementToInsert);
+               break;    
+           
+    //       case OBJSWIFT:
+       
+  //         this.insertInSwift( elementToInsert);
+//               break;
+               
+           default: 
+               logger.error("errore caso non riconosciuto");
+       
+       }
+       
+   }   
+   
+   // @Override
+   private void insertOnDB(String nomeDB,Object elementToInsert, TypeOfElement type){
+       
+      
+       logger.debug("dentro metodo insertinDB, nome del db: "+nomeDB);
+       DB dataBase=mongoClient.getDB(nomeDB);
        
        
        switch(type){
@@ -344,31 +366,10 @@ public class DBMongo implements BigDataPlugin {
            this.insertDocJSON(dataBase, elementToInsert);
                break;    
                
-           default: 
-               logger.error("errore caso non riconosciuto");
+    //       case OBJSWIFT:
        
-       }
-       
-   }   
-   
-   // @Override
-   private void insertOnDB(String dbName,Object elementToInsert, TypeOfElement type){
-       
-      
-       logger.debug("dentro metodo insertinDB, nome del db: "+dbName);
-       DB dataBase=mongoClient.getDB(dbName);
-       
-       
-       switch(type){
-       
-           case STRINGXML:
-       
-           this.insertXMLString(dataBase, elementToInsert);
-               break;
-           case DOCJSON:
-       
-           this.insertDocJSON(dataBase, elementToInsert);
-               break;    
+  //         this.insertInSwift(elementToInsert);
+//               break;
                
            default: 
                logger.error("errore caso non riconosciuto");
@@ -410,6 +411,11 @@ public class DBMongo implements BigDataPlugin {
        
            this.insertDocJSON(dataBase, elementToInsert);
                break;  
+           
+    //       case OBJSWIFT:
+       
+  //         this.insertInSwift(elementToInsert);
+//               break;
                
            default: 
                logger.error("errore caso non riconosciuto");
@@ -444,7 +450,11 @@ public class DBMongo implements BigDataPlugin {
        
            this.insertDocJSON(dataBase, elementToInsert);
                break;
-               
+          
+         //  case OBJSWIFT:
+       
+       //    this.insertInSwift(elementToInsert);
+       //        break;    
            default: 
                logger.error("errore caso non riconosciuto");
        
@@ -2279,5 +2289,485 @@ private BasicDBList getListField(String nameDB, String nomeField,String collecti
        return nameDB.getCollection(nameCollection);
         
         }
+  /**
+   public void insertInSwift(Object elementToInsert){
+   
+       ObjectSwift obj=(ObjectSwift) elementToInsert;
+       logger.debug("insert in swift object");
+       this.insertInSwift(obj);
+   
+   }
   
+public void insertInSwift(ObjectSwift elementToInsert){
+  
+      String userSwift,tenant,originalName,md5Name,nameContainer, pathObject,hostTarget,docJSON;
+      SwiftParameterOutput swiftParamOut;
+      ArrayList params=new ArrayList();
+      InsertContainer swiftInsertContainer= new InsertContainer();
+      SwiftParameterInput swiftParameterIn= new SwiftParameterInput();
+      InsertObject swiftInsertObj= new InsertObject();
+      BasicDBObject oggInfoUser=new BasicDBObject();
+      HashMap metadata;
+      int statusCode,index;
+      
+      logger.debug("insert in swift object swift");
+      //inizializzo il nome del container ed il path dell'ogetto
+      pathObject=elementToInsert.getPathObject();
+      tenant=elementToInsert.getTenant();
+      userSwift=elementToInsert.getUser();
+      nameContainer=userSwift+"_-_"+tenant;
+      metadata=elementToInsert.getMetadata();
+      
+      try { 
+      swiftParameterIn.type=tipoObjectInput.InsertContainer;
+      swiftInsertContainer.setContainer(nameContainer);
+      logger.debug("richiesta token");
+      //controlo se il token è null
+      if (token==null){
+      token=(Token) this.owner.invoke("IdentityServiceAgent","getInfo4interactonSWIFT",true,new ArrayList());
+     //controllare se il token tornato è null
+          }
+      if (token==null){
+       logger.error("impossibile ottenere il token");
+       throw new CleverException(" impossibile ottenere il token ");
+      }
+      logger.debug("token ricevuto");
+      swiftInsertContainer.setTokenId(token.getId());
+
+      swiftInsertContainer.setUrlSwiftPresoDalToken(token.getPublicUrlSwift());
+      swiftInsertContainer.elaboraInfo();
+      //accountName=swiftInsertContainer.getAccount();
+      logger.debug("struttura dati InsertContainer riempita");
+      
+      logger.debug("creo elem info tenant-uuid in mongo");
+      oggInfoUser.append("_id", nameContainer);
+      oggInfoUser.append("user",userSwift);
+      oggInfoUser.append("tenant",tenant);
+
+      logger.debug("inserisco info associazione in mongo");
+      this.updateInCollection("obsDB","informazioniUtente" ,oggInfoUser.toString());
+      
+      
+      swiftParameterIn.setOgg(swiftInsertContainer);
+      params.add("ObjectStorageAgent");
+     
+      //infoagent chiedi nome host con l'object storage attivo
+      hostTarget=(String) this.owner.invoke("InfoAgent", "getHostActive", true, params);
+      logger.debug("prima dell'invocazione remota, nome host su cui invocare il metodo: "+hostTarget);
+      if(hostTarget==null){
+          throw new CleverException("error, non ci sono host con l'agente di switf attivo ");
+      }
+      params.clear();
+      params.add(swiftParameterIn);
+      swiftParamOut= (SwiftParameterOutput) ((CmAgent) this.owner).remoteInvocation(hostTarget, "ObjectStorageAgent", "createContainer", true, params);
+      logger.debug("container creato con successo?"+swiftParamOut.toString());
+           statusCode=Integer.valueOf(((InfoContainerForMongoDb) swiftParamOut).getStatusCode());
+      logger.debug("stato: "+statusCode);
+      //procedo con le operazioni di inserimento oggetto, riempio le strutture dati
+      if (statusCode>299){
+      
+          if(statusCode==401){
+              logger.debug("token non valido");
+              token=(Token) this.owner.invoke("IdentityServiceAgent","getInfo4interactonSWIFT",true,new ArrayList());
+               swiftInsertContainer.setTokenId(token.getId());
+               swiftInsertContainer.setUrlSwiftPresoDalToken(token.getPublicUrlSwift());
+               swiftInsertContainer.elaboraInfo();
+               swiftParameterIn.setOgg(swiftInsertContainer);
+               params.clear();
+               params.add(swiftParameterIn);
+               swiftParamOut= (SwiftParameterOutput) ((CmAgent) this.owner).remoteInvocation(hostTarget, "ObjectStorageAgent", "createContainer", true, params);
+               logger.debug("container creato con successo?"+swiftParamOut.toString());
+               statusCode=Integer.valueOf(((InfoContainerForMongoDb) swiftParamOut).getStatusCode());
+               logger.debug("stato: "+statusCode);
+      
+               if(statusCode>299){
+                  throw new CleverException("error, nella creazioen container, statusCode: "+statusCode);
+               }
+
+          }
+          else{
+         throw new CleverException("error, nella creazioen container, statusCode: "+statusCode);
+          }
+      }
+      params.clear();
+      logger.debug("pathfile::"+pathObject+"::");
+      md5Name=Digest.getMD5Checksum(pathObject);
+      index=pathObject.lastIndexOf("/");
+      originalName=pathObject.substring(index+1);
+      logger.debug("nome file originale: "+originalName);
+      metadata.put("originalName", originalName);
+      
+      String estensione;
+      int indice;
+      
+      indice=originalName.indexOf('.');
+      estensione=originalName.substring(indice);
+      
+      
+      swiftInsertObj.setContainer(nameContainer);
+      swiftInsertObj.setTokenId(token.getId());
+      swiftInsertObj.setUrlSwiftPresoDalToken(token.getPublicUrlSwift());
+  //qui md5Name
+      swiftInsertObj.setPathObject(pathObject);
+      logger.debug("metadati:"+metadata.toString());
+      swiftInsertObj.setMetadati(metadata);
+      swiftInsertObj.elaboraInfo();
+      swiftInsertObj.setObject(md5Name+estensione);
+      swiftParameterIn.type=tipoObjectInput.InsertObject;
+      swiftParameterIn.setOgg(swiftInsertObj);
+      params.add(swiftParameterIn);
+      
+      logger.debug("richiamo il metodo remoto per l'inserimento dell'oggetto");
+      swiftParamOut=(SwiftParameterOutput) ((CmAgent) this.owner).remoteInvocation(hostTarget, "ObjectStorageAgent", "createObjectMetadataMONGO", true, params);
+     statusCode=Integer.valueOf(((InfoCreateObjectMetadataForMongoDb) swiftParamOut).getStatusCode());
+      
+      logger.debug("codice risposta:"+statusCode);
+      
+      
+      
+       if (statusCode>299){
+      
+          if(statusCode==401){
+              logger.debug("token non valido");
+              token=(Token) this.owner.invoke("IdentityServiceAgent","getInfo4interactonSWIFT",true,new ArrayList());
+               swiftInsertObj.setTokenId(token.getId());
+               swiftInsertObj.setUrlSwiftPresoDalToken(token.getPublicUrlSwift());
+               swiftInsertObj.elaboraInfo();
+               swiftInsertObj.setObject(md5Name);
+               params.clear();
+               swiftParameterIn.setOgg(swiftInsertObj);
+               params.add(swiftParameterIn);
+               logger.debug("richiamo il metodo remoto per l'inserimento dell'oggetto");
+               swiftParamOut=(SwiftParameterOutput) ((CmAgent) this.owner).remoteInvocation(hostTarget, "ObjectStorageAgent", "createObjectMetadataMONGO", true, params);
+               statusCode=Integer.valueOf(((InfoCreateObjectMetadataForMongoDb) swiftParamOut).getStatusCode());
+               logger.debug("codice risposta:"+statusCode);
+      
+               if(statusCode>299){
+                  throw new CleverException("error, nella create object, statusCode: "+statusCode);
+               }
+
+          }
+          else{
+         throw new CleverException("error, nella create object, statusCode: "+statusCode);
+          }
+      }
+     // accountName=((InfoCreateObjectForMongoDb)swiftParamOut).getAccount();
+      else{ 
+//devo inserire in mogno pure se l'inserimento non è andato a buon fine?
+      docJSON=((InfoCreateObjectMetadataForMongoDb)swiftParamOut).infoToJsonMONGO();
+    
+      //controlla codice risposta
+      
+      logger.debug("oggetto json da inserire: "+docJSON);
+      logger.debug("richiamo inserimento sul db nella collezione: "+nameContainer);
+      this.insertInCollection("obsDB",nameContainer ,docJSON);
+      logger.debug("inserimento terminato");
+       }
+      }
+       
+       catch(Exception e){
+           logger.error("error in insert In SWift",e);
+           //inserisci nel logging quello che è successo
+          // todo: fai restituire un'eccezione da gestire x far ripartire il processo
+       }
+      
+      
+      
+  }
+ **/  
+  
+  
+public void insertInCollection(String dbName, String collectionName, String docJSON){
+
+    DB dataBase=this.getDB(dbName);
+    DBCollection collezione=this.getCollection(dataBase, collectionName);
+    BasicDBObject obj=(BasicDBObject) JSON.parse(docJSON);
+    obj.append("insertTimestamp", System.currentTimeMillis());
+    
+    collezione.insert(obj);
+}
+
+public void updateInCollection(String dbName, String collectionName, String docJSON){
+
+    DB dataBase=this.getDB(dbName);
+    DBCollection collezione=this.getCollection(dataBase, collectionName);
+    BasicDBObject obj=(BasicDBObject) JSON.parse(docJSON);
+    
+    collezione.save(obj);
+}
+
+public List<DBObject> findOnCollection(String nameDB,String collectionName,HashMap parameters){
+    
+          
+    DB database=this.getDB(nameDB);
+    DBCollection collezione;
+    DBCursor cursor;
+    List listElem=new ArrayList();
+    BasicDBObject query= new BasicDBObject();
+    Set params;
+    Iterator itParams;
+    Entry elem;
+    
+    params=parameters.entrySet();
+    itParams=params.iterator();
+    while(itParams.hasNext()){
+       elem=(Entry) itParams.next();
+        query.append((String) elem.getKey(),elem.getValue());
+    }
+    
+    logger.debug("dentro findOnCollection params generic chiamato su: "+nameDB+"  query "+query.toString());
+    collectionName=collectionName.replaceAll("-", "__");
+    collezione=this.getCollection(database, collectionName);
+       // collezione=database.getCollection(collectionName);
+        cursor=collezione.find(query);
+        listElem.addAll(cursor.toArray());
+        
+        return listElem;
+      
+      
+      }
+
+public List<DBObject> findOnCollection(String nameDB,String collectionName,HashMap parameters,HashMap fieldsRet){
+    
+          
+    DB database=this.getDB(nameDB);
+    DBCollection collezione;
+    DBCursor cursor;
+    List listElem=new ArrayList();
+    BasicDBObject query= new BasicDBObject();
+    BasicDBObject fields= new BasicDBObject();
+    Set params;
+    Iterator itParams;
+    Entry elem;
+    
+    params=parameters.entrySet();
+    itParams=params.iterator();
+    while(itParams.hasNext()){
+       elem=(Entry) itParams.next();
+        query.append((String) elem.getKey(),elem.getValue());
+    }
+    
+    params=fieldsRet.entrySet();
+    itParams=params.iterator();
+    while(itParams.hasNext()){
+       elem=(Entry) itParams.next();
+        fields.append((String) elem.getKey(),elem.getValue());
+    }
+    
+    
+    logger.debug("dentro findOnCollection params generic chiamato su: "+nameDB+"  query "+query.toString()+"  fileds "+fields);
+    collectionName=collectionName.replaceAll("-", "__");
+    collezione=this.getCollection(database, collectionName);
+       // collezione=database.getCollection(collectionName);
+        cursor=collezione.find(query,fields);
+        listElem.addAll(cursor.toArray());
+        
+        return listElem;
+      
+      
+      }
+
+
+public List getUrlFile(String fileName,String user,String tenant,String all){
+
+    String nameContainer=user+"_-_"+tenant,url=null;
+    List<DBObject> lista=null;
+    HashMap parameters=new HashMap();
+    HashMap fileds=new HashMap();
+    
+     parameters.put("/notification/org<_>clever<_>HostManager<_>SAS<_>SensorAlertMessage/publicationId", nameContainer);
+     parameters.put("/notification/org<_>clever<_>HostManager<_>SAS<_>SensorAlertMessage/value/provenance", fileName);
+       
+    if(all.equalsIgnoreCase("true")){
+        lista=this.findOnCollection("obsDB", nameContainer, parameters);
+    }
+    else{
+        fileds.put("_id",0);
+        fileds.put("/notification/org<_>clever<_>HostManager<_>SAS<_>SensorAlertMessage/value/identifier", 1);
+        lista=this.findOnCollection("obsDB", nameContainer, parameters,fileds);
+    }
+
+    return lista;
+}
+
+private List getUUIDs(String key,String value){
+
+    List <DBObject> lista;
+    List <String> listUUID=new ArrayList();
+    BasicDBObject oggetto=new BasicDBObject();
+    oggetto.append(key, value);
+    lista=this.findOnCollection("obsDB","informazioniUtente", oggetto);
+    for(int i=0;i<lista.size();i++){
+    
+        listUUID.add((String) lista.get(i).get("_id"));
+    
+    }
+    
+    return listUUID;
+
+}
+
+public List getUUIDsByUser(String userName){
+
+    return this.getUUIDs("user", userName);
+}
+
+public List getUUIDsByTenant(String tenant){
+
+    return this.getUUIDs("tenant",tenant);
+}
+
+public List getUrlAllFiles(String user,String tenant){
+
+    String nameContainer=user+"_-_"+tenant,url=null;
+  //  String nameCollection=user+"____"+tenant;
+    List<DBObject> lista=null;
+    HashMap parameters=new HashMap();
+    
+        parameters.put("container", nameContainer);
+        lista=this.findOnCollection("obsDB", nameContainer, parameters);
+   
+
+    return lista;
+}
+
+private void connectReplication() {
+     
+     MongoCredential credential;
+     ArrayList<ServerAddress> lista= new ArrayList();
+     List<Element> servers=serverList.getChildren();
+        logger.debug("dentro connect");
+        String ip;
+        int porta;
+      try {
+        for(int s=0;s<servers.size();s++){
+            ip=servers.get(s).getChildText("serverUrl");
+            porta=Integer.decode(servers.get(s).getChildText("port"));
+        //    lista.add(new ServerAddress(servers.get(s).getChildText("serverUrl"),Integer.decode(servers.get(s).getChildText("port"))));
+              lista.add(new ServerAddress(ip, porta));
+        }          
+
+
+        logger.debug("dentro connect 1");
+          credential= MongoCredential.createMongoCRCredential(user, dbName, password.toCharArray());
+        logger.debug("dentro connect 2");
+          mongoClient=new MongoClient(lista,Arrays.asList(credential));
+        logger.debug("dentro connect 3"+"lista size"+lista.size());
+          connection=true;
+        } catch (UnknownHostException ex) {
+            logger.error("error in connect with replication",ex);
+        }
+        catch (Exception ex) {
+          logger.error("error in connect with replication",ex);
+        }
+        
+    }
+public void insertXMLString(String dbName,String collName, String stringXML){
+    DB database= this.getDB(dbName);
+    this.insertXMLString(database, collName, stringXML);
+}
+
+public void insertActionLog(String collName, String stringXML){
+    DB database= this.getDB("logging");
+    this.insertXMLString(database, collName, stringXML);
+}
+
+public void insertXMLString(DB dataBase,String collName, String stringXML) {
+   
+       DBCollection collection;
+       ParserXML parser=new ParserXML(stringXML);
+       ArrayList<BasicDBObject> list=new ArrayList();
+       Element root=parser.getRootElement();
+       logger.debug("name root element: "+root.getName());
+       
+       
+       logger.debug(" nome collezione: "+collName);
+    //   long inizio, fine;
+    //   String str;
+    //   FileOutputStream fos= new FileOutputStream("inserimento.csv", true);
+        try {
+            list=new UtilityJson().XMLMultiLevelToJSON2(stringXML);
+        } catch (IOException ex) {
+            logger.error("Error in operation: ", ex);
+        }
+       
+         collection=this.getCollection(dataBase, collName);
+     //  collection=dataBase.getCollection(collName);
+     //  inizio=System.currentTimeMillis();
+      for(int numElem=0;numElem<list.size();numElem++){
+         // logger.debug("aaaaaelemento:"+numElem+" "+list.get(numElem));
+       this.inserisci(collection, list.get(numElem));
+       }
+     //  fine=System.currentTimeMillis();
+     //  str="tempo inserimento: "+(fine-inizio)+"\n";
+     //  fos.write(str.getBytes());
+       
+       }
+
+
+public void insertJSONString(String dbName,String collName, String docJSON) {
+   
+       DB dataBase=this.getDB(dbName);
+       DBCollection collection;
+       BasicDBObject obj=(BasicDBObject) JSON.parse(docJSON);
+            
+       logger.debug(" dentro insertDocJSON");
+    //   long inizio, fine;
+    //   String str;
+    //   FileOutputStream fos= new FileOutputStream("inserimento.csv", true);
+        collection=this.getCollection(dataBase, collName);
+     //  collection=dataBase.getCollection(collName);
+     //  inizio=System.currentTimeMillis();
+        obj.append("insertTimestamp", System.currentTimeMillis());
+       // obj.append("timezone", map)
+       this.inserisci(collection, obj);
+      
+     //  fine=System.currentTimeMillis();
+     //  str="tempo inserimento: "+(fine-inizio)+"\n";
+     //  fos.write(str.getBytes());
+       
+       }
+
+public void insertXMLString(String dbName,String collName, String stringXML, String id){
+    DB database= this.getDB(dbName);
+    this.insertXMLString(database, collName, stringXML, id);
+
+
+}
+public void insertXMLString(DB dataBase,String collName, String stringXML, String id) {
+   
+       DBCollection collection;
+       ParserXML parser=new ParserXML(stringXML);
+       ArrayList<BasicDBObject> list=new ArrayList();
+       Element root=parser.getRootElement();
+       logger.debug("name root element: "+root.getName());
+       
+       
+       logger.debug(" nome collezione: "+collName);
+    //   long inizio, fine;
+    //   String str;
+    //   FileOutputStream fos= new FileOutputStream("inserimento.csv", true);
+        try {
+            list=new UtilityJson().XMLMultiLevelToJSON2(stringXML);
+        } catch (IOException ex) {
+            logger.error("Error in operation: ", ex);
+        }
+       
+         collection=this.getCollection(dataBase, collName);
+     //  collection=dataBase.getCollection(collName);
+     //  inizio=System.currentTimeMillis();
+         list.get(2).append("_id", id);
+         
+      for(int numElem=0;numElem<list.size();numElem++){
+         // logger.debug("aaaaaelemento:"+numElem+" "+list.get(numElem));
+       this.inserisci(collection, list.get(numElem));
+       }
+     //  fine=System.currentTimeMillis();
+     //  str="tempo inserimento: "+(fine-inizio)+"\n";
+     //  fos.write(str.getBytes());
+       
+       }
+
+  
+
 }

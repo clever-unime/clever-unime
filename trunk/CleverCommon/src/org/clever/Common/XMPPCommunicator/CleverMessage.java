@@ -95,6 +95,7 @@ public class CleverMessage {
     private MessageType type = MessageType.UNKNOWN;
     private String typeSrc = "";
     private String mAuthToken = "";
+    private String mMessageSign = "";
 
     // TODO remove it and use attachements.size()
     private int attachCounter = 0;
@@ -120,6 +121,7 @@ public class CleverMessage {
         replyToMsg = Integer.parseInt(pars.getElementContent("replyToMsg"));
         hasReply = (pars.getElementContent("hasReply").equalsIgnoreCase("true") ? true : false);
         mAuthToken = pars.getElementContent("authToken");
+        mMessageSign = pars.getElementContent("signature");
         this.typeSrc = pars.getElementContent("Typesrc");
 
         int i = 0;
@@ -269,6 +271,14 @@ public class CleverMessage {
         this.mAuthToken = token;
     }
 
+    public String getSignature() {
+        return this.mMessageSign;
+    }
+
+    public void setSignature(String signature) {
+        this.mMessageSign = signature;
+    }
+    
     public void setSchema(final Schema xsd) {
         this.xsd = xsd;
     }
@@ -322,7 +332,7 @@ public class CleverMessage {
         timestamp.addContent(new Date().toString());
         root.addContent(timestamp);
         Element authToken = new Element("authToken");
-        authToken.addContent(mAuthToken);
+        authToken.addContent(mAuthToken);                
         root.addContent(authToken);
         Element reply = new Element("replyToMsg");
         reply.addContent(String.valueOf(replyToMsg));
@@ -374,6 +384,13 @@ public class CleverMessage {
             root.addContent(elem);
         }
 
+        /***
+         * Add signature in clever message.
+         */
+        Element signature = new Element("signature");
+        signature.addContent(mMessageSign);
+        root.addContent(signature);
+        
         XMLOutputter xout = new XMLOutputter();
         Format f = Format.getPrettyFormat();
         xout.setFormat(f);

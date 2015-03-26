@@ -4,11 +4,19 @@
   <ClassPlugin>org.clever.ClusterManager.BigDataPlugin.Mongo.DBMongo</ClassPlugin>
   <moduleName>BigDataAgent</moduleName>
   <pluginParams>
-    <dbName>admin</dbName>
-    <user>SYSTEM</user>
-    <password>manager</password>
-    <serverUrl>localhost</serverUrl>
-    <port>27017</port>
+    <dbName>nameDB</dbName>
+    <user>user</user>
+    <password>psw</password>
+    <serversList>
+	<server>
+           <serverUrl>ip</serverUrl>
+           <port>port</port>
+	</server>
+	<server>
+           <serverUrl>ip</serverUrl>
+           <port>port</port>
+	</server>
+    </serversList>
     <!-- <serverURL>ing-clever-master.me.trigrid.it</serverURL> -->  
   </pluginParams>
 </root>
