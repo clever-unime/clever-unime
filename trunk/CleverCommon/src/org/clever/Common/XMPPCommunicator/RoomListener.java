@@ -123,7 +123,7 @@ public class RoomListener implements PacketListener, Runnable {
         } else {
             dstBaseName = dst;
         }
-        X509Utils utils = new X509Utils("./keystore/" + dstBaseName + ".p12", dstBaseName, dstBaseName.toCharArray());
+        X509Utils decryptUtils = new X509Utils("./keystore/" + dstBaseName + ".p12", dstBaseName, dstBaseName.toCharArray());
 
         try {
             final SecureExtension encryptedExtension = (SecureExtension) message.getExtension("x", "jabber:x:encrypted");
@@ -137,7 +137,7 @@ public class RoomListener implements PacketListener, Runnable {
             if (sessionKeyExtension != null) {
                 isSessionKey = true;
                 logger.debug("There is a session key");
-                sessionKey = utils.decryptToString(sessionKeyExtension.getData());
+                sessionKey = decryptUtils.decryptToString(sessionKeyExtension.getData());
                 sessionKeyBytes = Hex.decode(sessionKey);
                 this.conn.getSessionKey().put(src, sessionKeyBytes);
                 //writeKey(sessionKeyBytes);
@@ -152,7 +152,7 @@ public class RoomListener implements PacketListener, Runnable {
                     sessionKeyBytes = this.conn.getSessionKey().get(src);
                 }
                 byte[] rawInput = Hex.decode(encryptedExtension.getData());
-                decryptedBytes = utils.sEncrypt(false, rawInput, sessionKeyBytes);
+                decryptedBytes = decryptUtils.sEncrypt(false, rawInput, sessionKeyBytes);
                 decrypted = new String(decryptedBytes);
             }
             logger.debug("signed Ext: " + signedExtension);
@@ -181,13 +181,12 @@ public class RoomListener implements PacketListener, Runnable {
                 } else {
                     pubKey = cert.getPublicKey();
                 }
-                X509Utils x = new X509Utils();
                 logger.debug("\n\nCheck signature");
-                isVerified = x.verify(cleverMessage.toXML(), signedExtension.getData(), pubKey);
+                isVerified = X509Utils.verify(cleverMessage.toXML(), signedExtension.getData(), pubKey);
                 if (isVerified) {
-                    logger.debug("[This message is signed]");
+                    logger.debug("[This message is signed]\n");
                 } else {
-                    logger.debug("[The signature in not verified]");
+                    logger.debug("[This message is signed but the signature in not verified]\n");
                 }
 
             }

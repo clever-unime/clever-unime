@@ -173,14 +173,12 @@ public class CleverChatListener implements MessageListener {
                 } else {
                     pubKey = cert.getPublicKey();
                 }
-                X509Utils x = new X509Utils();
                 logger.debug("\n\nCheck signature");
-                
-                isVerified = x.verify(cleverMessage.toXML(), signedExtension.getData(), pubKey);
+                isVerified = X509Utils.verify(cleverMessage.toXML(), signedExtension.getData(), pubKey);
                 if (isVerified) {
-                    logger.debug("[This message is signed]");
+                    logger.debug("[This message is signed]\n");
                 } else {
-                    logger.debug("[The signature in not verified]");
+                    logger.debug("[This message is signed but the signature in not verified]\n");
                 }
                 msgHandler.handleCleverMessage(cleverMessage);
                 return;

@@ -74,12 +74,8 @@ import java.util.Map;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.X509Certificate;
-import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
 import java.security.interfaces.RSAPublicKey;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.io.UnsupportedEncodingException;
 //import static org.clever.Common.Communicator.Agent.logger;
 import org.clever.Common.Exceptions.CleverException;
 import org.jivesoftware.smack.AccountManager;
@@ -658,23 +654,16 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
      * @return The signature.
      */
     private String signCleverMessage(CleverMessage msg) {
-        MessageDigest md = null;
         try {
-            md = MessageDigest.getInstance("SHA");
-        } catch (NoSuchAlgorithmException ex) {
-            java.util.logging.Logger.getLogger(ConnectionXMPP.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        md.reset();
-        try {
-            md.update(msg.toXML().getBytes("UTF-8"), 0, msg.toXML().length());
+            String activeCC = getActiveCC(ROOM.CLEVER_MAIN);
+            logger.debug("\n\nMy username: " + username);
+            logger.debug("\nIs CC: " + username.equals(activeCC));
+            X509Utils x = new X509Utils(username.equals(activeCC));
+            return x.signToString(msg.toXML());
         } catch (CleverException ex) {
-            logger.error("An exception has trown: " + ex.getMessage());
-        } catch (UnsupportedEncodingException ex) {
             logger.error(ex);
         }
-
-        String digest = new String(Base64.encode(md.digest()));
-        return digest;
+        return "";
     }
 
     public void sendSignedMessage(String jid, final CleverMessage message) {
@@ -686,11 +675,15 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
             packet.setTo(message.getDst() + "@" + servername);
             message.setSignature(signCleverMessage(message));
             packet.setBody(message.toXML());
-
             byte[] digestBytes = null;
-            String signedDigest = null;
             SecureExtension signedExtension = new SecureExtension("signed");
-            X509Utils x = new X509Utils();
+            String src = message.getSrc();
+
+            String activeCC = getActiveCC(ROOM.CLEVER_MAIN);
+            boolean b = username.equals(activeCC);
+            logger.debug("\n\nMy username: " + username);
+            X509Utils x = new X509Utils(b);
+            logger.debug("\nKeyStorePath: " + x.getKeystorePath());
             try {
                 String signature = x.signToString(message.toXML());
                 signedExtension.setData(signature);

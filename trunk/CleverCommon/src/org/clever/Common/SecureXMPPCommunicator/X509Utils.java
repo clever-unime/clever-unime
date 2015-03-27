@@ -8,11 +8,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -58,21 +56,12 @@ import javax.xml.crypto.dsig.dom.DOMValidateContext;
 import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.bouncycastle.crypto.BlockCipher;
-import org.bouncycastle.crypto.DataLengthException;
-import org.bouncycastle.crypto.InvalidCipherTextException;
-import org.bouncycastle.crypto.engines.AESEngine;
-import org.bouncycastle.crypto.paddings.PKCS7Padding;
-import org.bouncycastle.crypto.paddings.PaddedBufferedBlockCipher;
-import org.bouncycastle.crypto.params.KeyParameter;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
@@ -81,7 +70,6 @@ import org.clever.Common.XMLTools.ParserXML;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-import org.jcp.xml.dsig.internal.dom.XMLDSigRI;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -103,7 +91,7 @@ public class X509Utils {
     private InputStream inxml;
     private ParserXML pXML;
 
-    private void init() {
+    private void init(boolean isCm) {
         try {
             cfgTemplatePath = "cfg/configuration_keystore.xml";
             inxml = new FileInputStream(cfgTemplatePath);
@@ -117,21 +105,22 @@ public class X509Utils {
         } catch (IOException ex) {
             Logger.getLogger(LDAPClient.class.getName()).log(Level.SEVERE, null, ex);
         }
-        keystorePath = pXML.getElementContent("keystorePath");
-        alias = pXML.getElementContent("alias");
-        keystorePassword = pXML.getElementContent("keystorePassword").toCharArray();
-
+        String root = isCm ? "cm" : "user";
+        
+        keystorePath = pXML.getElementInStructure(root).getChildText("keystorePath");
+        alias = pXML.getElementInStructure(root).getChildText("alias");
+        keystorePassword = pXML.getElementInStructure(root).getChildText("keystorePassword").toCharArray();
+        
         try {
             inxml.close();
         } catch (IOException ex) {
-            Logger.getLogger(LDAPClient.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(X509Utils.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }
 
-    public X509Utils() {
-        init();
-
+    public X509Utils(boolean isCm) {
+        init(isCm);
     }
 
     public X509Utils(String keystorePath, String alias, char[] keystorePassword) {
@@ -576,7 +565,7 @@ public class X509Utils {
         return signed;
     }
 
-    public boolean verify(String inpstr, String signature, PublicKey pubKey) {
+    public static boolean verify(String inpstr, String signature, PublicKey pubKey) {
         boolean verified = false;
         byte[] signedBytes = Base64.decode(signature);
         byte[] inpstrBytes = Base64.decode(inpstr);
