@@ -680,12 +680,12 @@ public class ConnectionXMPP implements javax.security.auth.callback.CallbackHand
             String src = message.getSrc();
 
             String activeCC = getActiveCC(ROOM.CLEVER_MAIN);
-            boolean b = username.equals(activeCC);
-            logger.debug("\n\nMy username: " + username);
-            X509Utils x = new X509Utils(b);
+            X509Utils x = new X509Utils(username.equals(activeCC));
             logger.debug("\nKeyStorePath: " + x.getKeystorePath());
             try {
+                logger.debug("\n\nSigning message: '" + message.toXML()+ "'");
                 String signature = x.signToString(message.toXML());
+                logger.debug("\nSignature: " + signature);
                 signedExtension.setData(signature);
                 packet.addExtension(signedExtension);
             } catch (CleverException ex) {

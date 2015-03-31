@@ -49,6 +49,7 @@ import org.clever.Common.XMLTools.ParserXML;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -96,7 +97,8 @@ public class CleverMessage {
     private String typeSrc = "";
     private String mAuthToken = "";
     private String mMessageSign = "";
-
+    private String mTimestamp = "";
+    
     // TODO remove it and use attachements.size()
     private int attachCounter = 0;
     // Message Id, must be a unique integer
@@ -122,6 +124,7 @@ public class CleverMessage {
         hasReply = (pars.getElementContent("hasReply").equalsIgnoreCase("true") ? true : false);
         mAuthToken = pars.getElementContent("authToken");
         mMessageSign = pars.getElementContent("signature");
+        mTimestamp = pars.getElementContent("timestamp");
         this.typeSrc = pars.getElementContent("Typesrc");
 
         int i = 0;
@@ -209,6 +212,10 @@ public class CleverMessage {
         this.type = type;
     }
 
+    public String getTimestamp(){
+        return mTimestamp;
+    }
+    
     public String getBody() {
         return (body);
     }
@@ -329,7 +336,9 @@ public class CleverMessage {
 
         root.addContent(destination);
         Element timestamp = new Element("timestamp");
-        timestamp.addContent(new Date().toString());
+        if(mTimestamp.isEmpty())
+            timestamp.addContent(new Date().toString());
+        else timestamp.addContent(mTimestamp);
         root.addContent(timestamp);
         Element authToken = new Element("authToken");
         authToken.addContent(mAuthToken);                
