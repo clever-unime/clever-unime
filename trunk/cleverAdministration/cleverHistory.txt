@@ -1,4 +1,3 @@
-ls
 listhostmanager 
 registervm -tn
 registervm -d
@@ -498,3 +497,4 @@ HAM.lcms()
 HAM.lhms()
 HAM.lcms()
 HAM.lhms()
+exit

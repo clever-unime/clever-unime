@@ -219,6 +219,24 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
         }
     }
 
+    /**
+     * *
+     * Calculate clever message signauture.
+     *
+     * @return The signature.
+     */
+    private String signCleverMessage(CleverMessage msg) {
+        String digest = "";
+        try {
+            X509Utils x = new X509Utils(false);
+            digest = x.signToString(msg.toXML());
+        } catch (CleverException ex) {
+            log.error(ex);
+        }
+        log.debug("Clever message digest: " + digest);
+        return digest;
+    }
+
     public void sendSignedRequest(final CleverMessage msg) {
         BouncyCastleProvider provider = new BouncyCastleProvider();
         Security.addProvider(provider);
@@ -230,30 +248,27 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
              * * OpenAM add authentication token **
              */
             addToken(msg);
+            msg.setSignature(signCleverMessage(msg));
             message.setBody(msg.toXML());
 
             SecureExtension signedExtension = new SecureExtension("signed");
-            MessageDigest md = null;
-            try {
-                md = MessageDigest.getInstance("SHA");
-            } catch (java.security.NoSuchAlgorithmException ex) {
-                java.util.logging.Logger.getLogger(ClusterManagerAdministrationTools.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            md.reset();
-            try {
-                md.update(msg.toXML().getBytes("UTF-8"), 0, msg.toXML().length());
-            } catch (Exception ex) {
-                java.util.logging.Logger.getLogger(ClusterManagerAdministrationTools.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            String digest = new String(Base64.encode(md.digest()));
-            signedExtension.setData(digest);
+            X509Utils x = new X509Utils(false);
+            String signature = x.signToString(msg.toXML());
+            signedExtension.setData(signature);
             message.addExtension(signedExtension);
             Date date = new Date();
             DelayInformation delayInformation = new DelayInformation(date);
             message.addExtension(delayInformation);
-            
+
             String endMessage = message.toXML();
+            try {
+                log.debug("\nSignature: " + signature);
+                boolean result = x.verify(msg.toXML(), signature, x.extractPublicKey());
+                log.debug("\nSignature verified?: " + result);
+            } catch (Exception ex) {
+                log.error(ex);
+
+            }
             //String endMessage = utils.signXML(msg.toXML());
             log.debug("CleverMessage to XML:\n " + msg.toXML());
             log.debug("Message to XML:\n " + endMessage);
@@ -617,9 +632,9 @@ public class CleverCommandClient implements MessageListener, CleverMessageHandle
                 }
 
                 if (isVerified) {
-                    log.debug("[This message is signed]");
+                    log.debug("[This message is signed]\n");
                 } else {
-                    log.debug("[The signature in not verified]");
+                    log.debug("[This message is signed but the signature in not verified]\n");
                 }
                 handleCleverMessage(cleverMessage);
                 return;
