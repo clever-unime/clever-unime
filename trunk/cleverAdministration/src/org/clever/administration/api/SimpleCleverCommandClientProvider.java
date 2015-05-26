@@ -21,7 +21,7 @@ class SimpleCleverCommandClientProvider extends CleverCommandClientProviderImpl 
       * Added for OpenAM
       */
      private OpenAmSessionClient mOpenAmClient = null;
-    
+     //private Properties mProperties;
     
    
     
@@ -36,7 +36,7 @@ class SimpleCleverCommandClientProvider extends CleverCommandClientProviderImpl 
     //costruttore a cui si passano delle properties con i parametri di configurazione (servername, password,ecc.)
     public SimpleCleverCommandClientProvider(Properties properties) {
        super(properties);
-        
+       // mProperties = properties;
         
         
     }
@@ -58,7 +58,7 @@ class SimpleCleverCommandClientProvider extends CleverCommandClientProviderImpl 
          * Added for OpenAM
         */
         if(mOpenAmClient == null){
-            mOpenAmClient = OpenAmSessionClient.getInstance();
+            mOpenAmClient = OpenAmSessionClient.getInstance();//mProperties);
             mOpenAmClient.authenticate(username, password);
         }
         

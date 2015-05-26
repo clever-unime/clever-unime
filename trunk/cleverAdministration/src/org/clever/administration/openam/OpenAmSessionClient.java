@@ -30,13 +30,23 @@ public class OpenAmSessionClient {
     private static OpenAmSessionClient sInstance;
     private Calendar mLastRelease;
     private final static int TOKEN_TIMEOUT = 30 * 60 * 1000; //30 min
-    private OpenAmSessionClient() {
+    private Properties mProperties;
 
+    private OpenAmSessionClient(Properties p) {
+        if(p != null)
+            mProperties = p;
+    }
+
+    public static OpenAmSessionClient getInstance(Properties p) {
+        if (sInstance == null) {
+            sInstance = new OpenAmSessionClient(p);
+        }
+        return sInstance;
     }
 
     public static OpenAmSessionClient getInstance() {
         if (sInstance == null) {
-            sInstance = new OpenAmSessionClient();
+            sInstance = new OpenAmSessionClient(null);
         }
         return sInstance;
     }
@@ -45,8 +55,13 @@ public class OpenAmSessionClient {
         Configuration cfg = new Configuration();
         SessionFactory session;
         try {
-            session = cfg.buildSessionFactory();
-            Properties p = session.getSession().getSettings().getProperties();
+            Properties p = null;
+            if (mProperties != null) {
+                p = mProperties;
+            } else {
+                session = cfg.buildSessionFactory();
+                p = session.getSession().getSettings().getProperties();
+            }
             String host = p.getProperty(Environment.OPEN_AM_HOST);
             String port = p.getProperty(Environment.OPEN_AM_PORT);
             String deployUrl = p.getProperty(Environment.OPEN_AM_DEPLOY_URL);

@@ -46,7 +46,7 @@ import org.clever.administration.clitools.MethodInfo;
 import org.clever.administration.clitools.ModulesSet;
 import org.clever.administration.clitools.ModuleInfo;
 import org.clever.administration.exceptions.CleverClientException;
-
+import org.clever.administration.openam.OpenAmSessionClient;
 
 
 
@@ -280,7 +280,7 @@ public class Shell {
 //                                             toString();
           
           prompt=" > ";
-          
+          OpenAmSessionClient oam=OpenAmSessionClient.getInstance(conf.getSettings().getProperties());
           sfs = Maps.newHashMap();
           
           

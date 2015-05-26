@@ -2,7 +2,7 @@
 <configuration>
     
     <writeOnCfgFolder>yes</writeOnCfgFolder>
-    <ClassPlugin>org.clever.ClusterManager.SecurityWebPlugins.Openam.Openam</ClassPlugin>
+    <ClassPlugin>org.clever.ClusterManager.SecurityWeb.SecurityWebPlugin.SecurityWebPlugin</ClassPlugin>
     <moduleName>SecurityWebAgent</moduleName>
     
     <pluginParams>

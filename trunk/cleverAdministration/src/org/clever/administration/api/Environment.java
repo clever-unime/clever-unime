@@ -88,6 +88,7 @@ public class Environment {
         properties.setProperty(MESSAGE_MODE, pXML.getElementContent( "mode"));
         /** Added to support OpenAm authentication **/
         properties.setProperty(OPEN_AM_HOST, pXML.getElementContent( "openAmHost"));
+        //System.out.println(pXML.getElementContent( "openAmHost"));
         properties.setProperty(OPEN_AM_PORT, pXML.getElementContent( "openAmPort"));
         properties.setProperty(OPEN_AM_DEPLOY_URL, pXML.getElementContent( "openAmDeployUrl"));
         
