@@ -1,0 +1,60 @@
+ getOMM()
+ {
+    return sf.getSession().getOMMAdministrationModule();
+ }
+
+iis(pathFile,user,tenant){
+        getOMM().insertOnSwift(pathFile,user,tenant);
+}
+
+ios(pathFile,user,tenant){
+        getOMM().insertOnSwift(pathFile,user,tenant);
+}
+
+ois(){
+        getOMM().insertOnSwift();
+}
+
+pis(){
+        getOMM().provaInsertOnSwift();
+}
+
+gobn(fileName,user,tenant,destPath){
+
+        getOMM().getByName(fileName,user,tenant,destPath);
+        
+}
+
+gobu(fileName,user,tenant,destPath){
+
+        getOMM().getByUrl(fileName,user,tenant,destPath);
+        
+}
+
+mis(){
+
+        getOMM().misure();
+        
+}
+
+mislam(){
+
+        getOMM().misureLama();
+        
+}
+
+misbyname(fileName,user,tenant,destPath,iter){
+
+        getOMM().misGetByName(fileName,user,tenant,destPath,iter);
+        
+}
+
+misbyurl(fileName,user,tenant,destPath,iter){
+
+        getOMM().misGetByUrl(fileName,user,tenant,destPath,iter);
+        
+}
+
+misinsert(pathFile,user,tenant,iter){
+        getOMM().misureInsertOnSwift(pathFile,user,tenant,iter);
+}
