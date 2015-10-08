@@ -42,10 +42,12 @@
  */
 package org.clever.ClusterManager.Info;
 
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.clever.Common.Communicator.CmAgent;
 import org.clever.Common.Communicator.Notification;
@@ -63,6 +65,7 @@ public class InfoAgent extends CmAgent
     private String description = "Information about Cluster Manager";
     private ConnectionXMPP connectionXMPP = null;
     private  ArrayList <CmAgent> Agents = new ArrayList(3);
+    private  ArrayList <String> objectStorageActive = new ArrayList();
     private ModuleFactory mf;
     
     public InfoAgent( ConnectionXMPP connectionXMPP ) throws CleverException
@@ -72,10 +75,14 @@ public class InfoAgent extends CmAgent
     
     @Override
     public void initialization()throws CleverException
-    {        
+    {     
+        ArrayList params=new ArrayList();
         super.setAgentName("InfoAgent");
         super.start();
         mf = ModuleFactory.getInstance();
+        params.add("InfoAgent");
+        params.add("OBS/Presence");
+        this.invoke("DispatcherAgent", "subscribeNotification", true, params);
     }
   
   @Override
@@ -181,6 +188,9 @@ public class InfoAgent extends CmAgent
     @Override
     public void handleNotification(Notification notification) throws CleverException {
         logger.debug("Received notification type: "+notification.getId());
+        if(notification.getId().equals("OBS/Presence")){
+            this.managePresence(notification);
+        }
     }
 
     
@@ -189,5 +199,127 @@ public class InfoAgent extends CmAgent
     {
         
     }
-    
+   
+   /**
+    * this method is used to find host name which have a specific Agent active
+    * @param agentName name of agent which you want found
+    * @return host name if agent is active, null otherwise
+    */
+   public String getHostActive(String agentName){
+   
+       boolean isActive=false;
+       String hostName= null;
+       List<HostEntityInfo> listHostManager;
+       int count;
+       ArrayList params= new ArrayList();
+       ArrayList<String> listUsed= new ArrayList();
+       ArrayList<String> listAll= new ArrayList();
+       HostEntityInfo host = null;
+       
+       //fai la ricerca e restituisci null se nessun host soddisfa i requisiti
+   //richiedo la lista degli hostmanager attivi
+       listHostManager=this.listHostManager();
+       logger.debug("lista host manager ottenuta");
+       params.add(agentName);
+   //ad ogni hostmanager attivo richiedo se ha l'agente attivo
+       for(count=0;count<listHostManager.size();count++){
+           try {
+               host=(HostEntityInfo) listHostManager.get(count);
+               logger.debug("remote invocation verso: "+host.getNick());
+               isActive=(boolean) this.remoteInvocation(host.getNick(), "InfoAgent" , "isActiveAgent" , true, params);
+           } catch (CleverException ex) {
+               logger.error("errore nella remote invocation",ex);
+           }
+           //se attivo lo aggiungo in lista
+           if(isActive){
+               listAll.add(host.getNick());
+           }
+       }
+       logger.debug("lista degli host con l'agente"+ agentName +" attivo ricevuta");
+/*controllo la dimensione della lista:
+       se è zero allora non ci sono host con al'agente attivo
+       se è 1 allora posso restituire l'unico attivo ed aggiungerlo nella lista used 
+       nei restanti casi devo fare il polling
+  */
+       if(listAll.isEmpty()){
+           return null;
+       }
+       else
+           if(listAll.size()==1){
+               hostName =listAll.get(0);
+               listUsed.add(0,hostName);
+           return hostName;
+           }
+           else{
+           return this.getHostName(listAll,listUsed);
+           }
+   
+   }
+   
+   /**
+    * questo metodo restituisce la prima occorrenza che in listAll è presente ed il listUsed no
+    * se tutte le occorrenze di listAll sono presenti il listUsed allora viene svuotata listUsed e viene
+    * restituito il primo valore di listAll
+    * @param listAll lista con tutte le occorrenze
+    * @param listUsed lista con le occorrenze già utilizzate
+    * @return ocvcorrenza presente in listAll e non il listUsed
+    */
+   private String getHostName(ArrayList listAll,ArrayList listUsed){
+       String hostName;
+       int countAll;
+       boolean isPresent;
+       
+    //se la lista Used è vuota vuol dire che siamo alla prima iterazione quindi va bene che io inserisca uno qualsiasi
+    //degli elementi della lista All
+       
+       if(listUsed.isEmpty()){
+           hostName=(String) listAll.get(0);
+           listUsed.add(hostName);
+           return hostName;
+       }
+       else{
+           /*
+           mi faccio restituire gli elementi di lista All e li scorro fino a trovare la
+           prima occorrenza non presente in Used
+           */
+           for(countAll=0;countAll<listAll.size();countAll++){
+               hostName=(String) listAll.get(countAll);
+               isPresent=listUsed.contains(hostName);
+                    if(!isPresent){
+                        listUsed.add(hostName);
+                        return hostName;
+                    }
+           }
+           /*
+           se tutti gli elementi di listAll sono presenti in listUsed allora svuoto listUsed 
+           estraggo il primo elemento di listAll lo inserisco in listUsed e ritorno il valore
+           */
+           listUsed.clear();
+           hostName=(String) listAll.get(0);
+           listUsed.add(hostName);
+           return hostName;
+           
+       
+       
+       }
+   }
+   /**
+    * arriva una notifica estrapolo nome host, e lo inserisco nella mia lista locale
+    * ed invio il nome a Sedna 
+    * @param notification 
+    */
+   public void managePresence(Notification notification){
+       
+       List<String> params = new ArrayList();
+       String nomeHost=notification.getHostId();
+       objectStorageActive.add(nomeHost);
+       
+   
+   
+   }
+    /*
+   dopo inizializzazione controllo sedna se ricevo elemento vuoto allora devo fare 
+   il polling e richiedere il reinvio della obs/presence altrimenti me ne frego
+   c'è la possibilità di perdere qualcosa ma la probabilità è bassa
+   */
 }

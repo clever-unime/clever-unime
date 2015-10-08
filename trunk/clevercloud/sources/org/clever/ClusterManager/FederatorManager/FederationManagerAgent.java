@@ -213,6 +213,10 @@ public class FederationManagerAgent extends CmAgent implements CleverMessageHand
             federationManagerPlugin=(FederationManagerPlugin)super.startPlugin(cfgPath, "/org/clever/ClusterManager/FederatorManager/configuration_federator.xml");
                 this.federationManagerPlugin.setOwner(this);
             
+            //If the data struct, for matching between VM and HM, isen't into DB then init it.
+                /*this.pXML=this.getconfiguration(cfgPath, "/org/clever/ClusterManager/FederatorManager/configuration_federator.xml");
+                this.prepareConnParameter();*/
+                //this.connectionEstablished();
                 this.federationMessagePoolThread = new FederationMessagePoolThread (this);
                 this.federationMessagePoolThread.setLogger(logger);
                 this.federationMessagePoolThread.start();
@@ -234,7 +238,7 @@ public class FederationManagerAgent extends CmAgent implements CleverMessageHand
 
     @Override
     public Object getPlugin() {
-        return this.pluginInstantiation;
+        return this;
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.clever.administration.api;
 import org.clever.administration.annotations.GetShellModule;
 import org.clever.administration.api.modules.AdministrationModule;
 import org.clever.administration.api.modules.BigDataModule;
+import org.clever.administration.api.modules.ObjectManagerModule;
 import org.clever.administration.api.modules.HostAdministrationModule;
 import org.clever.administration.api.modules.MonitoringAdministrationModule;
 import org.clever.administration.api.modules.StrorageAdministrationModule;
@@ -28,6 +29,7 @@ final public class Session {
     final BigDataModule bigDataModule;
     final ObjectStorageSwiftModule  swiftAdministrationModule;
     final Settings settings;
+    final ObjectManagerModule objectManagerModule;
 
     public Settings getSettings() {
         return settings;
@@ -46,6 +48,7 @@ final public class Session {
         monitoringAdministrationModule = new MonitoringAdministrationModule(this);
         sensingAdministrationModule= new SensingAdministrationModule(this);
         swiftAdministrationModule= new ObjectStorageSwiftModule(this);
+        objectManagerModule=new ObjectManagerModule(this);
         bigDataModule=new BigDataModule(this);
     }
     
@@ -119,6 +122,16 @@ final public class Session {
     @GetShellModule(name="bdm", comment="Low level module for clever host administration")
     public BigDataModule getBIGAdministrationModule() {
         return bigDataModule;
+    }
+    
+    /**
+     * Ritorna un BIGAdministrationModule per gestire le entita' clever a livello di host
+     * per es.: getActiveCM, listHostManagers,ecc.
+     * @return 
+     */ 
+    @GetShellModule(name="omm", comment="Low level module for clever host administration")
+    public ObjectManagerModule getOMMAdministrationModule() {
+        return objectManagerModule;
     }
     
     

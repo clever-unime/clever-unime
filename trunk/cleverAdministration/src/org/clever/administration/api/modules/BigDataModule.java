@@ -1,44 +1,14 @@
 /*
- * Copyright 2014 Università di Messina
- *Licensed under the Apache License, Version 2.0 (the "License");
- *you may not use this file except in compliance with the License.
- *You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- *Unless required by applicable law or agreed to in writing, software
- *distributed under the License is distributed on an "AS IS" BASIS,
- *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *See the License for the specific language governing permissions and
- *limitations under the License.
- */
-/*
- * The MIT License
- *
- * Copyright 2014 agalletta.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
 
 package org.clever.administration.api.modules;
 
+import com.mongodb.DBObject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
@@ -53,6 +23,7 @@ import org.clever.administration.api.Session;
 import org.clever.Common.Utils.BigDataMethodName;
 import org.clever.Common.Utils.BigDataParameterContainer;
 import org.clever.Common.Utils.CalculateOnFieldParameterContainer;
+import org.clever.Common.Utils.ObjectSwift;
 import org.clever.Common.Utils.OperationName;
 
 /**
@@ -218,4 +189,191 @@ public class BigDataModule extends AdministrationModule{
              catch(Exception ex){
                      throw new CleverException(ex);}
 }
+   @ShellCommand
+    public void insertOnSwift(@ShellParameter(name="pathFile", comment="path of file") String pathFile,
+                               @ShellParameter(name="user", comment="Name of the user") String user,
+                               @ShellParameter(name="tenant", comment="Name of the tenant") String tenant,
+                               @ShellParameter(name="password", comment="Name of the password") String password) throws CleverException{
+               
+                ObjectSwift obj=new ObjectSwift(pathFile,user,tenant);
+                 ArrayList params = new ArrayList();
+                 params.add(obj);
+               try{
+               this.execSyncCommand(this.session.getHostAdministrationModule().getActiveCM(),"BigDataAgent","insertInSwift", params,false);
+              }
+             catch(Exception ex){
+                 logger.error(ex);
+                     throw new CleverException(ex);
+                     
+             }
+        
+            }
+    @ShellCommand
+     public void insertOnSwift() throws CleverException{
+        
+                ObjectSwift obj=new ObjectSwift("/home/agalletta/Scrivania/prova/Incantesimo.mp3.rar","admin","admin");
+                 ArrayList params = new ArrayList();
+                 HashMap hm=new HashMap();
+                 //hm.put("manipulation", "cutted");
+                 //hm.put("originEtag", "qwertyuiih");
+                 //hm.put("altroMetadatoGenerico", 1234);
+                 obj.addMetadata("manipulation", "cutted");
+                 obj.addMetadata("originEtag", "qwertyuiih");
+                 obj.addMetadata("altroMetadatoGenerico", "1234");
+                 
+                 params.add(obj);
+               try{
+               this.execSyncCommand(this.session.getHostAdministrationModule().getActiveCM(),"BigDataAgent","insertInSwift", params,false);
+              }
+             catch(Exception ex){
+                 logger.error(ex);
+                     throw new CleverException(ex);
+                     
+             }
+        
+            }
+     
+  @ShellCommand
+    public List getUrlFiles(@ShellParameter(name="fileName", comment="fileName") String fileName,
+                               @ShellParameter(name="user", comment="Name of the user") String user,
+                               @ShellParameter(name="tenant", comment="Name of the tenant") String tenant,
+                               @ShellParameter(name="all", comment="complete document") String all) throws CleverException{
+               
+                 ArrayList params = new ArrayList();
+                 params.add(fileName);
+                 params.add(user);
+                 params.add(tenant);
+                 params.add(all);
+
+               try{
+             return (List) this.execSyncCommand(this.session.getHostAdministrationModule().getActiveCM(),"BigDataAgent","getUrlFile", params,true);
+              }
+             catch(Exception ex){
+                 logger.error(ex);
+                     throw new CleverException(ex);
+                     
+             }
+        
+            }
+  
+    @ShellCommand
+    public List getAllUrlFiles(@ShellParameter(name="user", comment="Name of the user") String user,
+                               @ShellParameter(name="tenant", comment="Name of the tenant") String tenant,
+                               @ShellParameter(name="all", comment="complete document") String all) throws CleverException{
+               
+
+               try{
+                   return this.getUrlFiles("",user, tenant, all);
+              }
+             catch(Exception ex){
+                 logger.error(ex);
+                     throw new CleverException(ex);
+                     
+             }
+        
+            }
+
+    @ShellCommand
+    public void listaUrl() throws CleverException{
+        
+        List lista=this.getUrlFiles("Incantesimo.mp3.rar", "admin", "admin","true");
+        
+        for(int i=0;i<lista.size();i++){
+            System.out.println(((DBObject)lista.get(i)).toString());
+        
+        }
+    
+    
+    }
+    
+    @ShellCommand
+    public List getUUIDsByUser(@ShellParameter(name="user", comment="Name of the user") String user) throws CleverException{
+               
+                 ArrayList params = new ArrayList();
+                 params.add(user);
+
+               try{
+             return (List) this.execSyncCommand(this.session.getHostAdministrationModule().getActiveCM(),"BigDataAgent","getUUIDsByUser", params,true);
+              }
+             catch(Exception ex){
+                 logger.error(ex);
+                     throw new CleverException(ex);
+                     
+             }
+        
+            }
+    @ShellCommand
+        public void listaUuidByUser() throws CleverException{
+        
+        List lista=this.getUUIDsByUser("admin");
+        
+        for(int i=0;i<lista.size();i++){
+             System.out.println((lista.get(i)));
+        
+        }
+    
+    
+    }
+    
+    @ShellCommand
+    public List getUUIDsByTenant(@ShellParameter(name="tenant", comment="Name of the tenant") String tenant) throws CleverException{
+               
+                 ArrayList params = new ArrayList();
+                 params.add(tenant);
+
+               try{
+             return (List) this.execSyncCommand(this.session.getHostAdministrationModule().getActiveCM(),"BigDataAgent","getUUIDsByTenant", params,true);
+              }
+             catch(Exception ex){
+                 logger.error(ex);
+                     throw new CleverException(ex);
+                     
+             }
+        
+            }
+@ShellCommand    
+public void listaUuidByTenant() throws CleverException{
+        
+        List lista=this.getUUIDsByTenant("admin");
+        
+        for(int i=0;i<lista.size();i++){
+            System.out.println((lista.get(i)));
+        
+        }
+    
+    
+    }
+    
+    @ShellCommand
+    public List getUrlAllFiles(@ShellParameter(name="user", comment="Name of the user") String user,
+                               @ShellParameter(name="tenant", comment="Name of the tenant") String tenant,
+                               @ShellParameter(name="all", comment="complete document") String all) throws CleverException{
+               
+                 ArrayList params = new ArrayList();
+                 params.add(user);
+                 params.add(tenant);
+                 params.add(all);
+
+               try{
+             return (List) this.execSyncCommand(this.session.getHostAdministrationModule().getActiveCM(),"BigDataAgent","getUrlAllFiles", params,true);
+              }
+             catch(Exception ex){
+                 logger.error(ex);
+                     throw new CleverException(ex);
+                     
+             }
+        
+            }
+    @ShellCommand
+public void listaAllUrl() throws CleverException{
+        List lista=this.getUrlAllFiles("admin", "admin", "false");
+        
+        for(int i=0;i<lista.size();i++){
+             System.out.println(((DBObject)lista.get(i)).toString());
+        
+        }
+    
+    
+    }
+    
 }

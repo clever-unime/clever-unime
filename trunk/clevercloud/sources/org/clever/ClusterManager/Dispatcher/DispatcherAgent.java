@@ -139,7 +139,7 @@ public class DispatcherAgent extends CmAgent  implements CleverMessageHandler
 
     @Override
     public void handleCleverMessage(CleverMessage message) {
-        logger.debug("received: "+message);
+        logger.debug("receivedddd: "+message.getBody());
         this.threadMessageDispatcher.pushMessage(message);
     }
 

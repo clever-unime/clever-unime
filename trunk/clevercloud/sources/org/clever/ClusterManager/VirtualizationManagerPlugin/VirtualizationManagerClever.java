@@ -17,7 +17,6 @@
  *
  * Copyright 2011 giovalenti.
  * Copyright 2012 giancarloalteri
- * Copyright 2013-14 Giuseppe Tricomi
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -68,6 +67,7 @@ import org.jdom2.Element;
 import org.clever.Common.Communicator.Utils.IstantiationParams;
 
 public class VirtualizationManagerClever implements VirtualizationManagerPlugin {
+//    private ModuleCommunicator mc;
     private Agent owner;
     private String version = "0.0.1";
     private String description = "Plugin per HTML5 remote desktop";
@@ -335,11 +335,11 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         this.owner.invoke("StorageManagerAgent", "registerVeNew", true, params);   
         params.clear(); 
         
-        // the name of the template virtual machine is required
+        // the name of the virtual machine is required
         if(veD.getName().isEmpty()){
                             throw new LogicalCatalogException("VM name is required");
         }
-        // check if there is a template for virtual machine with the same name
+        // check if there is a virtual machine with the same name
         params.add("VirtualizationManagerAgent");
         params.add(("/org.clever.Common.VEInfo.VEDescription[./name/text()='"+veD.getName()+"']/name/text()"));
         boolean r = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);     
@@ -356,31 +356,6 @@ public class VirtualizationManagerClever implements VirtualizationManagerPlugin 
         this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
     }
  
- public void registerVEDWithoutDisk(String info, VEDescription veD) throws CleverException{
-         
-        List params = new ArrayList();
-        // the name of the template virtual machine is required
-        if(veD.getName().isEmpty()){
-                            throw new LogicalCatalogException("VM name is required");
-        }
-        // check if there is a template for virtual machine with the same name
-        params.add("VirtualizationManagerAgent");
-        params.add(("/org.clever.Common.VEInfo.VEDescription[./name/text()='"+veD.getName()+"']/name/text()"));
-        boolean r = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);     
-        if(r==true){  
-                throw new LogicalCatalogException("VM name already exist");
-                }
-        params.clear();
-        ArrayList<StorageSettings> a_ss=new ArrayList<StorageSettings>();
-        a_ss.add(new StorageSettings(0,"","",""));
-        veD.setStorage(a_ss);
-        String prova=MessageFormatter.messageFromObject(veD);
-        params.add("VirtualizationManagerAgent");
-        params.add(prova);
-        params.add("into");
-        params.add("");           
-        this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
-    }
  
 public HashMap createVM(String id,String targetHM,String lock) throws CleverException{
      IstantiationParams param=new IstantiationParams(org.clever.HostManager.ImageManagerPlugins.ImageManagerClever.LockFile.lockMode.EX);
@@ -408,86 +383,90 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
   * @throws CleverException
   */
     @Override
-    public HashMap createVM(String id, String targetHM, IstantiationParams param) throws CleverException {
-        boolean result = false;
-        //TODO: incapsulate this phase in a cicle to have a better management of the choose VM name 
-        String vmname = java.util.UUID.randomUUID().toString();
-        vmname = vmname.replace("-", "");//this replacement is necessary because if we don't eliminate the "-" the VirtuaslBox "findmachine" function don't work finely 
-        if ((param.getLock().equals(LockFile.lockMode.PR)) && ((CmAgent) this.owner).remoteInvocation(targetHM, "HyperVisorAgent", "getHYPVRName", true, new ArrayList()).equals("LibVirt")) {
-            this.TakeEasySnapshot(id, vmname, "Snapshot created by CLEVER for a clonable image.", targetHM);
-            result = true;
-        } else {
-
-            MethodInvoker mi = null;
-            // check if into db Sedna exist name of the VM
-            List params = new ArrayList();
-            params.add("VirtualizationManagerAgent");
-            params.add(("/org.clever.Common.VEInfo.VEDescription[./name/text()='" + id + "']/name/text()"));
-            boolean r = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);
-            //this exception is very difficult to appears
-            if (r == false) {
+    public HashMap createVM(String id,String targetHM,IstantiationParams param) throws CleverException{
+        boolean result=false;
+       String vmname=java.util.UUID.randomUUID().toString();
+         vmname=vmname.replace("-", "");//this replacement is necessary because if we don't eliminate the "-" the VirtuaslBox "findmachine" function don't work finely 
+         if((param.getLock().equals(LockFile.lockMode.PR))&&((CmAgent)this.owner).remoteInvocation(targetHM,"HyperVisorAgent", "getHYPVRName", true, new ArrayList()).equals("LibVirt")){
+             this.TakeEasySnapshot(id, vmname, "Snapshot created by CLEVER for a clonable image.", targetHM);
+             result=true;
+         }
+         else{
+         
+         MethodInvoker mi=null;
+         // check if into db Sedna exist name of the VM
+         List params = new ArrayList();
+         params.add("VirtualizationManagerAgent");
+         params.add(("/org.clever.Common.VEInfo.VEDescription[./name/text()='"+id+"']/name/text()"));
+         boolean r = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);     
+            if(r==false){  
                 throw new LogicalCatalogException("Template name not valid");
             }
-            params.clear();
-            params.add("VirtualizationManagerAgent");
-            String location = "/Matching_VM_HM/VM[@name='" + vmname + "']";
-            params.add(location);
-            r = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);
-            //Insert into DB: mappigetAttributeNodeng VM - HM
-            if (r == true) {
+         params.clear();
+         params.add("VirtualizationManagerAgent");
+         String location="/Matching_VM_HM/VM[@name='"+vmname+"']";
+         params.add(location);
+         r = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);
+         //Insert into DB: mappigetAttributeNodeng VM - HM
+         if(r==true){  
                 throw new LogicalCatalogException("VM already exist");
-            }
-            params.clear();
-            //Insert into DB: mapping VM - HM
-            this.InsertItemIntoMatchingVmHM(vmname, targetHM);
-
-            List params1 = new ArrayList();
-            params1.add("VirtualizationManagerAgent");
-            location = "/org.clever.Common.VEInfo.VEDescription[./name/text()='" + id + "']";
-            params1.add(location);
-            String pathxml = (String) this.owner.invoke("DatabaseManagerAgent", "query", true, params1);
-            VEDescription veD = (VEDescription) MessageFormatter.objectFromMessage(pathxml);
-            String diskPath = ((StorageSettings) veD.getStorage().get(0)).getDiskPath();
-            params.add(diskPath);
-            params.add(targetHM);
-            params.add(param.getLock());
-            // physical path
-            String res = (String) this.owner.invoke("StorageManagerAgent", "lockManager", true, params);
-
-            List params2 = new ArrayList();
-            params2.add(diskPath);
-            Boolean check = (Boolean) this.owner.invoke("StorageManagerAgent", "check", true, params2);
-
-            ((StorageSettings) veD.getStorage().get(0)).setDiskPath(res);
-
-            params2 = new ArrayList();
-            params2.add(vmname);
-            params2.add(veD);
-            if (param.getLock().ordinal() <= 4) {
-                params2.add(true);
-            } else {
-                params2.add(false);
-            }
-
-            if (!check) {
-                result = (Boolean) ((CmAgent) this.owner).remoteInvocation(targetHM, "HyperVisorAgent", "registerVm", true, params2);
-            } else {
-                result = (Boolean) ((CmAgent) this.owner).remoteInvocation(targetHM, "HyperVisorAgent", "createVm", true, params2);
-            }
-            this.InsertItemIntoMatchingVEDVm(id, vmname, param.getLock(), res, diskPath);
-        }
-        if (!result) {
-            HashMap res = new HashMap();
-            res.put("result", new Boolean(false));
-            res.put("name", vmname);
-            return res;
-        } else {
-            HashMap res = new HashMap();
-            res.put("result", new Boolean(true));
-            res.put("name", vmname);
-            return res;
-        }
-    }
+         }
+         params.clear();
+         //Insert into DB: mapping VM - HM
+         this.InsertItemIntoMatchingVmHM(vmname, targetHM);
+         
+         List params1 = new ArrayList();
+         params1.add("VirtualizationManagerAgent");
+         location="/org.clever.Common.VEInfo.VEDescription[./name/text()='"+id+"']";
+         params1.add(location);
+         String pathxml=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, params1); 
+         VEDescription veD =(VEDescription) MessageFormatter.objectFromMessage(pathxml);
+         String diskPath=((StorageSettings)veD.getStorage().get(0)).getDiskPath();
+         params.add(diskPath);
+         params.add(targetHM);
+         params.add(param.getLock());
+         // physical path
+         String res=(String) this.owner.invoke("StorageManagerAgent", "lockManager", true, params); 
+         
+         List params2 = new ArrayList();
+         params2.add(diskPath);
+         Boolean check=(Boolean) this.owner.invoke("StorageManagerAgent", "check", true, params2);
+        
+         ((StorageSettings)veD.getStorage().get(0)).setDiskPath(res);
+         
+         params2 = new ArrayList();
+         params2.add(vmname);
+         params2.add( veD );
+         if(param.getLock().ordinal()<=4)
+            params2.add(true);
+         else
+            params2.add(false);
+         
+         if(!check){
+             result=(Boolean)((CmAgent)this.owner).remoteInvocation(targetHM,"HyperVisorAgent", "registerVm", true, params2);
+         }
+         else{
+              result=(Boolean)((CmAgent)this.owner).remoteInvocation(targetHM,"HyperVisorAgent", "createVm", true, params2);
+         }
+         this.InsertItemIntoMatchingVEDVm(id,vmname,param.getLock(),res,diskPath);
+         }
+         /*
+         String a="";
+           a = (String) ((CmAgent) this.owner).remoteInvocation(targetHM,"TestAgentHm","fittizioHM", true, params2);
+          */
+         if(!result){
+             HashMap res=new HashMap();
+             res.put("result", new Boolean(false));
+             res.put("name", vmname);
+             return res;
+         }
+         else{
+             HashMap res=new HashMap();
+             res.put("result", new Boolean(true));
+             res.put("name", vmname);
+             return res;
+         }
+     }
 
     /**
      * Starting VM
@@ -497,10 +476,14 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
      */
     @Override
     public boolean startVm(String id) throws CleverException{
-        if(!this.checkVMisMigrated(id))
+        if(this.checkVMisMigrated(id))
         {
             List params = new ArrayList();
-            String HMTarget=this.getVMHostOWNER(id);
+            /*params.add("VirtualizationManagerAgent");
+            String location="/"+this.nodoMatchingVmHM+"/VM[@name='"+id+"']/host/text()";
+            params.add(location);
+            */
+            String HMTarget=this.getVMHostOWNER(id);//=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
             if(HMTarget==null)
                 throw new LogicalCatalogException("VM name not exist");
 
@@ -547,7 +530,10 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
     @Override
     public boolean stopVm(String id) throws CleverException{
         List params = new ArrayList();
-        String HMTarget=this.getVMHostOWNER(id);
+        /*params.add("VirtualizationManagerAgent");
+        String location="/"+this.nodoMatchingVmHM+"/VM[@name='"+id+"']/host/text()";
+        params.add(location);*/
+        String HMTarget=this.getVMHostOWNER(id);//String HMTarget=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
         if(HMTarget==null)
             throw new LogicalCatalogException("VM name not exist");
            
@@ -654,12 +640,20 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
         params.clear();
      
         return true;
+        
+        
+        
+        
+        
     }
 
     @Override
     public boolean resumeVm(String id) throws CleverException {
         List params = new ArrayList();
-        String HMTarget=this.getVMHostOWNER(id);
+        /*params.add("VirtualizationManagerAgent");
+        String location="/"+this.nodoMatchingVmHM+"/VM[@name='"+id+"']/host/text()";
+        params.add(location);*/
+        String HMTarget=this.getVMHostOWNER(id);//String HMTarget=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
         if(HMTarget==null)
             throw new LogicalCatalogException("VM name not exist");
         params.clear();
@@ -690,7 +684,11 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
     @Override
     public boolean stopVm(String id, Boolean poweroff) throws CleverException {
         List params = new ArrayList();
-        String HMTarget=this.getVMHostOWNER(id);
+        /*params.add("VirtualizationManagerAgent");
+        String location="/"+this.nodoMatchingVmHM+"/VM[@name='"+id+"']/host/text()";
+        params.add(location);
+        */
+        String HMTarget=this.getVMHostOWNER(id);//String HMTarget=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
 
         if(HMTarget==null)
             throw new LogicalCatalogException("VM name not exist");
@@ -711,198 +709,211 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
 
     @Override
     public boolean suspendVm(String id) throws CleverException {
-        List params = new ArrayList();
-        String HMTarget = this.getVMHostOWNER(id);
+          List params = new ArrayList();
+        /*params.add("VirtualizationManagerAgent");
+        String location="/"+this.nodoMatchingVmHM+"/VM[@name='"+id+"']/host/text()";
+        params.add(location);
+        */
+        String HMTarget=this.getVMHostOWNER(id);//String HMTarget=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
 
-        if (HMTarget == null) {
+        if(HMTarget==null)
             throw new LogicalCatalogException("VM name not exist");
-        }
         params = new ArrayList();
         params.add(id);
-        boolean result = (Boolean) ((CmAgent) this.owner).remoteInvocation(HMTarget, "HyperVisorAgent", "suspend", true, params);
-
-        if (result) {
+        boolean result = (Boolean) ((CmAgent) this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","suspend", true, params);
+        
+        if(result){
             params = new ArrayList();
-            params.add("VirtualizationManagerAgent");
-            params.add("/VMs_Running/VM[@name='" + id + "']");
-
-            this.owner.invoke("DatabaseManagerAgent", "deleteNode", true, params);
+        params.add("VirtualizationManagerAgent");
+        params.add("/VMs_Running/VM[@name='"+id+"']");
+  
+        this.owner.invoke("DatabaseManagerAgent", "deleteNode", true, params);
         }
 
         return result;
     }
-    
-    
     @Override
-    public boolean TakeEasySnapshot(String id, String nameS, String description, String targetHM) throws CleverException {
-        boolean result = false;
-        MethodInvoker mi = null;
-        // check if into db Sedna exist name of the template
-        List params = new ArrayList();
-        params.add("VirtualizationManagerAgent");
-        params.add(("/org.clever.Common.VEInfo.VEDescription[./name/text()='" + id + "']/name/text()"));
-        boolean r = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);
-        if (r == false) {
-            throw new LogicalCatalogException("Template name not valid");
-        }
-        params.clear();
-        params.add("VirtualizationManagerAgent");
-        String location = "/Matching_VM_HM/VM[@name='" + nameS + "']";
-        params.add(location);
-        r = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);
-        //Insert into DB: mappigetAttributeNodeng VM - HM
-        if (r == true) {
-            throw new LogicalCatalogException("SN already exist");
-        }
-        this.InsertItemIntoMatchingSnHM(id, nameS, targetHM);
-        LockFile.lockMode lock = LockFile.lockMode.CR;
-        List params1 = new ArrayList();
-        params1.add("VirtualizationManagerAgent");
-        location = "/org.clever.Common.VEInfo.VEDescription[./name/text()='" + id + "']";
-        params1.add(location);
-        String pathxml = (String) this.owner.invoke("DatabaseManagerAgent", "query", true, params1);
-        VEDescription veD = (VEDescription) MessageFormatter.objectFromMessage(pathxml);
-        params.clear();
-        params.add(((StorageSettings) veD.getStorage().get(0)).getDiskPath());
-        params.add(targetHM);
-        params.add(lock);
-        // physical path
-        String localpath = (String) this.owner.invoke("StorageManagerAgent", "lockManager", true, params);
-        params.clear();
-        params.add(localpath);
-        params.add(((StorageSettings) veD.getStorage().get(0)).getDiskPath());
-        params.add(targetHM);
-        params.add(lock);
-        String snapshotLocalPath = (String) this.owner.invoke("StorageManagerAgent", "SnapshotImageCreate", true, params);
-        this.InsertItemIntoMatchingVEDVm(id, nameS, lock, snapshotLocalPath, localpath);
-
-        ((StorageSettings) veD.getStorage().get(0)).setDiskPath(snapshotLocalPath);
-        veD.setName(nameS);
-        params.clear();
-        params.add(nameS);
-        params.add(veD);
-        params.add(true);
-
-        result = (Boolean) ((CmAgent) this.owner).remoteInvocation(targetHM, "HyperVisorAgent", "createVm", true, params);
-
-        if (!result) {
-            throw new CleverException("creating SN " + nameS + " failed!");
-        }
-        return true;
-    }
-    
-    
-    @Override
-    public boolean deleteVm(String id) throws CleverException {
-        List params = new ArrayList();
-        String nomeVED = "";
-        String HMTarget = this.getVMHostOWNER(id);
-
-        if (HMTarget == null) {
-            throw new LogicalCatalogException("VM name not exist");
-        }
-
-        if (!this.checkVMisMigrated(id)) {
-            params.clear();
-            params.add("VirtualizationManagerAgent");
-            params.add("/Matching_VED_VM/VED[@VM_name='" + id + "']/locklevel/text()");
-            String lock = (String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
-            params.clear();
-            /*
-             params.add("VirtualizationManagerAgent");
-             params.add("/Matching_VM_HM/VM[@name='"+id+"'][@snapshot='"+true+"']");
-             Boolean r=(Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);
-             params.clear();
-         
-             if(r){
-             params.add("VirtualizationManagerAgent");
-             params.add("/Matching_VM_HM/VM[@name='"+id+"']");
-             params.add("parent");
-             String parent=(String)this.owner.invoke("DatabaseManagerAgent", "getAttributeNode", true, params);
-            
-             params.clear();
-           
-             params.add("VirtualizationManagerAgent");
-             String location="/org.clever.Common.VEInfo.VEDescription[./name/text()='"+parent+"']";
-             params.add(location);
-             }*/
-            //VM INFORMATION MANAGEMENT BLOCK
-            params.add("VirtualizationManagerAgent");
-            String location = "/Matching_VED_VM/VED[@VM_name='" + id + "']";
-            params.add(location);
-            String tipo = "name";
-            params.add(tipo);
-            nomeVED = (String) this.owner.invoke("DatabaseManagerAgent", "getAttributeNode", true, params);
-            params.clear();
-            params.add("VirtualizationManagerAgent");
-            params.add("/Matching_VED_VM/VED[@VM_name='" + id + "']/ParentHDD/text()");
-            String pathHDD = (String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
-            params.clear();
-            params.add("VirtualizationManagerAgent");
-            params.add("/Matching_VED_VM/VED[@VM_name='" + id + "']/HDD/text()");
-            String HDD = (String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
-            params.clear();
-            //inserire un controllo del tipo di lock realizzato sul disco della macchina
-            //se  lock di tipo ex richiamre la funzione attuale altrimenti richiamare la funzione corretta
-            //questa funzione deve essere modificata per eliminare il file corretto correlato alla vm
-            //attualmente cancella la golden image
-            if (lock.equals("Null Lock")) {
-                //temporarily Nothing to do, in this case the type of lock indicates that the VM's Disk must not be deleted
-            } else if ((lock.equals("Concurrent Read")) || (lock.equals("Protected Read"))) {
-                params.add("VirtualizationManagerAgent");
-                params.add("/Matching_VED_VM/VED/HDD/text()");
-                String pathsHDDs = (String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
-                boolean testValue = testUsageHDD(pathsHDDs, HDD);
-                params.clear();
-                if (testValue) {
-                    params.add(HDD);
-                    params.add(id);
-                    params.add(HMTarget);
-                    this.owner.invoke("StorageManagerAgent", "deleteFile", true, params);
-                    params.clear();
+public boolean TakeEasySnapshot(String id,String nameS,String description,String targetHM) throws CleverException{
+         boolean result=false;
+         MethodInvoker mi=null;
+         // check if into db Sedna exist name of the template
+         List params = new ArrayList();
+         params.add("VirtualizationManagerAgent");
+         params.add(("/org.clever.Common.VEInfo.VEDescription[./name/text()='"+id+"']/name/text()"));
+         boolean r = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);     
+            if(r==false){  
+                throw new LogicalCatalogException("Template name not valid");
                 }
-            } else if (lock.equals("Concurrent Write")) {
-                //Nothing to do, in this case the type of lock indicates that the VM's Disk must not be deleted
-            } else if (lock.equals("Protected Write")) {
-                //qui è necessario verificare se ci sono altre vm che usano quel disco se non ce ne sono allora si può eliminare,
-                //anche se momentaneamente questa modalità non viene usata
-            } else if (lock.equals("Exclusive")) {
-
-                params.add("VirtualizationManagerAgent");
-                /*//essenzialmente questa parte andrà rivista per bene non appena deciderò come trattare gli altri lock per adesso copmmento questa parte
-                 String location="/org.clever.Common.VEInfo.VEDescription[./name/text()='"+nomeVED+"']";
-                 params.add(location);        
-                 String pathxml=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
-                 VEDescription veD =(VEDescription) MessageFormatter.objectFromMessage(pathxml);
-                 params.clear();
-                 params.add(((StorageSettings)veD.getStorage().get(0)).getDiskPath());*/
-
-                params.clear();
+         params.clear();
+         params.add("VirtualizationManagerAgent");
+         String location="/Matching_VM_HM/VM[@name='"+nameS+"']";
+         params.add(location);
+         r = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);
+         //Insert into DB: mappigetAttributeNodeng VM - HM
+         if(r==true){  
+                throw new LogicalCatalogException("SN already exist");
+                }
+         this.InsertItemIntoMatchingSnHM(id,nameS,targetHM);
+         LockFile.lockMode lock=LockFile.lockMode.CR;
+         List params1 = new ArrayList();
+         params1.add("VirtualizationManagerAgent");
+         location="/org.clever.Common.VEInfo.VEDescription[./name/text()='"+id+"']";
+         params1.add(location);
+         String pathxml=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, params1); 
+         VEDescription veD =(VEDescription) MessageFormatter.objectFromMessage(pathxml);
+         params.clear();
+         params.add(((StorageSettings)veD.getStorage().get(0)).getDiskPath());
+         params.add(targetHM);
+         params.add(lock);
+         // physical path
+         String localpath=(String)this.owner.invoke("StorageManagerAgent","lockManager", true, params);
+         params.clear();
+         params.add(localpath);
+         params.add(((StorageSettings)veD.getStorage().get(0)).getDiskPath());
+         params.add(targetHM);
+         params.add(lock);
+         String snapshotLocalPath=(String)this.owner.invoke("StorageManagerAgent","SnapshotImageCreate", true, params);
+         this.InsertItemIntoMatchingVEDVm(id,nameS,lock,snapshotLocalPath,localpath);
+        
+        
+         
+         ((StorageSettings)veD.getStorage().get(0)).setDiskPath(snapshotLocalPath);
+         veD.setName(nameS);
+         params.clear();
+         params.add(nameS);
+         params.add( veD );
+         params.add(true);
+         
+        result=(Boolean)((CmAgent)this.owner).remoteInvocation(targetHM,"HyperVisorAgent", "createVm", true, params);
+            
+       
+         if(!result){
+             throw new CleverException("creating SN "+nameS+" failed!");
+         }
+         return true;
+     }
+    @Override
+    public boolean deleteVm(String id) throws CleverException{
+        List params = new ArrayList();
+        String nomeVED="";
+        /*params.add("VirtualizationManagerAgent");
+        params.add("/"+this.nodoMatchingVmHM+"/VM[@name='"+id+"']/host/text()");*/
+        String HMTarget=this.getVMHostOWNER(id);//String HMTarget=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+        
+        if(HMTarget==null)
+            throw new LogicalCatalogException("VM name not exist");
+        
+        if(!this.checkVMisMigrated(id))
+        {
+        params.clear(); 
+        params.add("VirtualizationManagerAgent");
+        params.add("/Matching_VED_VM/VED[@VM_name='"+id+"']/locklevel/text()");
+        String lock=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+        params.clear();
+        /*
+        params.add("VirtualizationManagerAgent");
+        params.add("/Matching_VM_HM/VM[@name='"+id+"'][@snapshot='"+true+"']");
+        Boolean r=(Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);
+        params.clear();
+         
+         if(r){
+            params.add("VirtualizationManagerAgent");
+            params.add("/Matching_VM_HM/VM[@name='"+id+"']");
+            params.add("parent");
+            String parent=(String)this.owner.invoke("DatabaseManagerAgent", "getAttributeNode", true, params);
+            
+            params.clear();
+           
+            params.add("VirtualizationManagerAgent");
+            String location="/org.clever.Common.VEInfo.VEDescription[./name/text()='"+parent+"']";
+            params.add(location);
+         }*/
+         params.add("VirtualizationManagerAgent");
+         String location="/Matching_VED_VM/VED[@VM_name='"+id+"']";
+         params.add(location);
+         String tipo="name";
+         params.add(tipo);
+         nomeVED=(String) this.owner.invoke("DatabaseManagerAgent", "getAttributeNode", true, params); 
+         params.clear();
+       
+         params.add("VirtualizationManagerAgent");
+         params.add("/Matching_VED_VM/VED[@VM_name='"+id+"']/ParentHDD/text()");
+         String pathHDD=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+         //this.logger.debug("path:"+pathHDD);
+         params.clear();
+         params.add("VirtualizationManagerAgent");
+         params.add("/Matching_VED_VM/VED[@VM_name='"+id+"']/HDD/text()");
+         String HDD=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+         //this.logger.debug("path:"+pathHDD);
+         params.clear();
+         //inserire un controllo del tipo di lock realizzato sul disco della macchina
+         //se  lock di tipo ex richiamre la funzione attuale altrimenti richiamare la funzione corretta
+         //questa funzione deve essere modificata per eliminare il file corretto correlato alla vm
+         //attualmente cancella la golden image
+         if(lock.equals("Null Lock")){
+             //si deve decidere cosa fare in questo caso, 
+             //temporarily Nothing to do, the VM's Disk must not be deleted
+         }
+         else if((lock.equals("Concurrent Read"))||(lock.equals("Protected Read"))){
+             params.add("VirtualizationManagerAgent");
+             params.add("/Matching_VED_VM/VED/HDD/text()");
+             String pathsHDDs=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+             boolean testValue=testUsageHDD(pathsHDDs,HDD);
+             params.clear();
+             if(testValue)
+             {
                 params.add(HDD);
                 params.add(id);
                 params.add(HMTarget);
-                this.owner.invoke("StorageManagerAgent", "deleteFile", true, params);
+                this.owner.invoke("StorageManagerAgent","deleteFile", true, params);
                 params.clear();
-            }
-            params.add("VirtualizationManagerAgent");
-            params.add(("/Matching_VED_VM/VED[@VM_name='" + id + "']"));
-            this.owner.invoke("DatabaseManagerAgent", "deleteNode", true, params);
-            params.clear();
-            params.add("VirtualizationManagerAgent");
-            params.add(("/Matching_VM_HM/VM[@name='" + id + "']"));
-            this.owner.invoke("DatabaseManagerAgent", "deleteNode", true, params);
+             }
+         }
+         else if(lock.equals("Concurrent Write")){
+             //Nothing to do, the VM's Disk must not be deleted
+         }
+         else if(lock.equals("Protected Write")){
+             //qui è necessario verificare se ci sono altre vm che usano quel disco se non ce ne sono allora si può eliminare,
+             //anche se momentaneamente questa modalità non viene usata
+         }
+         else if(lock.equals("Exclusive")){
+             
+             params.add("VirtualizationManagerAgent");
+             /*//essenzialmente questa parte andrà rivista per bene non appena deciderò come trattare gli altri lock per adesso copmmento questa parte
+             String location="/org.clever.Common.VEInfo.VEDescription[./name/text()='"+nomeVED+"']";
+             params.add(location);        
+             String pathxml=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+             VEDescription veD =(VEDescription) MessageFormatter.objectFromMessage(pathxml);
+             params.clear();
+             params.add(((StorageSettings)veD.getStorage().get(0)).getDiskPath());*/
+             
+             params.clear();
+             params.add(HDD);
+             params.add(id);
+             params.add(HMTarget);
+             this.owner.invoke("StorageManagerAgent","deleteFile", true, params);
+             params.clear();
+         }
+         params.add("VirtualizationManagerAgent");
+         params.add(("/Matching_VED_VM/VED[@VM_name='"+id+"']"));
+         this.owner.invoke("DatabaseManagerAgent", "deleteNode", true, params);
+         params.clear();
+         params.add("VirtualizationManagerAgent");
+         params.add(("/Matching_VM_HM/VM[@name='"+id+"']"));
+         this.owner.invoke("DatabaseManagerAgent", "deleteNode", true, params);
+         params.clear();
+         params.add(id);
+         ((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent", "unregisterVm", true, params);
+         return true;
+        }
+         else{
             params.clear();
             params.add(id);
-            ((CmAgent) this.owner).remoteInvocation(HMTarget, "HyperVisorAgent", "unregisterVm", true, params);
-            return true;
-        } else {
-            params.clear();
-            params.add(id);
-            ArrayList info_params = new ArrayList();
+            ArrayList info_params=new ArrayList();
             info_params.add("VirtualizzationManagerAgent");
             info_params.add("deleteVM");
             params.add(info_params);
-            ArrayList method_params = new ArrayList();
+            ArrayList method_params=new ArrayList();
             method_params.add(id);
             params.add(method_params);
             if ((Boolean) this.owner.invoke("FederationManagerAgent", "forwardCommand4VMM", true, params)) {
@@ -916,93 +927,69 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
                 params.add(("/Matching_VM_HM/VM[@name='" + id + "']"));
                 this.owner.invoke("DatabaseManagerAgent", "deleteNode", true, params);
                 return true;
-            } else {
+            }
+            else 
                 return false;
-            }
-        }
+       }
     }
-    
-    
-    private boolean testUsageHDD(String pathHDD, String element2verfiy) {
-        int counter = 0;
-        String[] alp = pathHDD.split(".vdi");
-        for (int i = 0; i < alp.length; i++) {
-            //String[] alp2=alp[i].split("/");
-            if (element2verfiy.equals(alp[i] + ".vdi")) {
-                counter++;
-                logger.debug("$$confronto: " + element2verfiy + " " + alp[i] + ".vdi" + " " + counter);
-                if (counter > 1) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    /**
-     * Method used to add an interface to Virtual environment.
-     * This method is optimized to work with VirtualBox.
-     * @param id
-     * @param inf
-     * @param mac
-     * @param type
-     * @return
-     * @throws CleverException 
-     */
-    public boolean attachInterface(String id, String inf, String mac, String type) throws CleverException {
-        List params = new ArrayList();
-        String HMTarget = this.getVMHostOWNER(id);
-        if (HMTarget == null) {
+ private boolean testUsageHDD(String pathHDD,String element2verfiy){
+     int counter=0;
+     String[] alp=pathHDD.split(".vdi");
+             for(int i =0;i<alp.length;i++){
+                 //String[] alp2=alp[i].split("/");
+                 if(element2verfiy.equals(alp[i]+".vdi")){
+                     counter++;
+                     logger.debug("$$confronto: "+element2verfiy+" "+alp[i]+".vdi"+" "+counter);
+                     if(counter>1)
+                         return false;
+                 }
+             }
+     return true;
+ }
+ 
+public boolean attachInterface(String id,String inf,String mac,String type) throws CleverException{
+  List params = new ArrayList();
+        /*params.add("VirtualizationManagerAgent");
+        String location="/"+this.nodoMatchingVmHM+"/VM[@name='"+id+"']/host/text()";
+        params.add(location);*/
+        String HMTarget=this.getVMHostOWNER(id);//String HMTarget=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+        if(HMTarget==null)
             throw new LogicalCatalogException("VM name not exist");
-        }
         params.clear();
         params.add(id);
         params.add(inf);
         params.add(mac);
         params.add(type);
-        ((CmAgent) this.owner).remoteInvocation(HMTarget, "HyperVisorAgent", "attachInterface", true, params);
-        boolean result = insertNetInterfaceIntoDb(id, inf, mac, type);
+        ((CmAgent)this.owner).remoteInvocation(HMTarget,"HyperVisorAgent","attachInterface", true, params); 
+        boolean result=insertNetInterfaceIntoDb(id,inf,mac,type);
         return result;
-    }
+ }
       
  
-    /**
-     * Method used to register new VM network interface in the database 
-     * @param id
-     * @param inf
-     * @param mac
-     * @param type
-     * @return
-     * @throws CleverException 
-     */
-    public boolean insertNetInterfaceIntoDb(String id, String inf, String mac, String type) throws CleverException {
-        String iface = "<interface>"
-                + "<name>" + inf + "</name>"
-                + "<type>" + type + "</type>"
-                + "<mac_address>" + mac + "</mac_address>"
-                + "</interface>";
-        List params = new ArrayList();
+ public boolean insertNetInterfaceIntoDb(String id,String inf,String mac,String type) throws CleverException{
+           String iface="<interface>"
+                             + "<name>"+inf+"</name>"
+                             + "<type>"+type+"</type>"
+                             + "<mac_address>"+mac+"</mac_address>"
+                       + "</interface>";
+           List params=new ArrayList();
+           params.add("VirtualizationManagerAgent");
+           params.add(iface);
+           params.add("into");
+           params.add("/Matching_VM_HM/VM[@name='"+id+"']");
+           this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
+        return  true;
+           
+       }
+public String listMac_address(String id) throws CleverException{
+        List params=new ArrayList();
+        
         params.add("VirtualizationManagerAgent");
-        params.add(iface);
-        params.add("into");
-        params.add("/Matching_VM_HM/VM[@name='" + id + "']");
-        this.owner.invoke("DatabaseManagerAgent", "insertNode", true, params);
-        return true;
-    }
-    
-    /**
-     * This function is called to get a list of all MacAddress 
-     * @param id
-     * @return
-     * @throws CleverException 
-     */
-    public String listMac_address(String id) throws CleverException {
-        List params = new ArrayList();
-        params.add("VirtualizationManagerAgent");
-        params.add("/Matching_VM_HM/VM[@name='" + id + "']/interface/mac_address/text()");
-        String result = (String) this.owner.invoke("DatabaseManagerAgent", "querytab", true, params);
+        params.add("/Matching_VM_HM/VM[@name='"+id+"']/interface/mac_address/text()");
+        String result=(String)this.owner.invoke("DatabaseManagerAgent", "querytab", true, params);
         return result;
-
-    }
+        
+    } 
 
     /**
      * List VM.This function take the list of Virtual Machine.
@@ -1105,7 +1092,7 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
         params.add("/"+this.nodoMatchingVmHM+"/VM[@name=\""+id+"\"]/host/text()");
         String hostowner="";
         try{
-            hostowner=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+            String HMTarget=this.getVMHostOWNER(id);//hostowner=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
             return hostowner;
         }catch(Exception e){
             logger.error("error in retreive host owner of VM:"+id, e);
@@ -1135,7 +1122,7 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
         
     }
     /**
-     * Method used to mark a VM as inconsistent
+     * 
      * @param id
      * @param run 
      */
@@ -1286,61 +1273,63 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
      * @return
      * @throws CleverException 
      */
-    public boolean migration(String VMName, String idfedOp) throws CleverException {
-        org.clever.ClusterManager.FederatorManager.FederatorDataContainer fdc = new org.clever.ClusterManager.FederatorManager.FederatorDataContainer();
+    public boolean migration(String VMName,String idfedOp) throws CleverException{
+        org.clever.ClusterManager.FederatorManager.FederatorDataContainer fdc =new org.clever.ClusterManager.FederatorManager.FederatorDataContainer();
         //retrieve VED phase
-        String vedName, pathxml;
-        vedName = "";
-        pathxml = "";
-        ArrayList params = new ArrayList();
+        String vedName,pathxml;
+        vedName="";
+        pathxml="";
+        ArrayList params=new ArrayList();
         params.add("VirtualizationManagerAgent");
         params.add("/Matching_VED_VM/VED");
-        params.add("VM_name=\"" + VMName + "\"");
+        params.add("VM_name=\""+VMName+"\"");
         params.add("@name");
-        try {
-            vedName = (String) this.owner.invoke("DatabaseManagerAgent", "getAttributeNode", true, params);
-        } catch (Exception e) {
+        try{
+            vedName=(String)this.owner.invoke("DatabaseManagerAgent", "getAttributeNode", true, params);
+        }catch(Exception e){
             logger.error("error migration", e);
             return false;
         }
         params.clear();
         params.add("VirtualizationManagerAgent");
-        String locationVED = "/org.clever.Common.VEInfo.VEDescription[./name/text()='" + vedName + "']";
+        String locationVED="/org.clever.Common.VEInfo.VEDescription[./name/text()='"+vedName+"']";
         params.add(locationVED);
-        try {
-            pathxml = (String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
-        } catch (Exception e) {
+        try{
+            pathxml=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, params); 
+        }catch(Exception e){
             logger.error("error migration", e);
             return false;
         }
-        VEDescription veD = (VEDescription) MessageFormatter.objectFromMessage(pathxml);
+        VEDescription veD =(VEDescription) MessageFormatter.objectFromMessage(pathxml);
+        //String diskPath=((StorageSettings)veD.getStorage().get(0)).getDiskPath();
         fdc.setVED(veD);
         fdc.init_resource();
-        fdc.addElementToResource("VMName", VMName);
+        fdc.addElementToResource("VMName",VMName);
         fdc.addElementToResource("vedName", vedName);
-        //GOLDENIMAGE name
+        //nome della GOLDENIMAGE
         fdc.addElementToResource("DiskName", veD.getStorage().get(0).getDiskPath());
         //TODO: future works : Modify to make possibile the management of multiple disk
         fdc.setOperationId(idfedOp);
         //TODO: future works(actually we transfert all disk) : add name/url for disk/goldenImage on VFS shared/SWIFT
         ////find host where is hosted VM ready for migration.
-        String hostowner = "";
-        try {
-            hostowner = this.getVMHostOWNER(VMName);
-        } catch (Exception e) {
-            logger.error("error in retreive host owner phase of migration VM:" + VMName, e);
+        String hostowner="";
+        try{
+            hostowner=this.getVMHostOWNER(VMName);
+        }catch(Exception e){
+            logger.error("error in retreive host owner phase of migration VM:"+VMName, e);
             return false;
         }
+//---> REMOVE THE LINE BELOW        
+        hostowner="portatileA";
 ////stop vm
-        try {
+        try{
             params.clear();
             params.add(VMName);
-            if ((Boolean) ((CmAgent) this.owner).remoteInvocation(hostowner, "HyperVisorAgent", "isRunning", true, params)) {
+            if((Boolean)((CmAgent) this.owner).remoteInvocation(hostowner,"HyperVisorAgent","isRunning", true, params))
                 this.stopVm(VMName);
-            }
-        } catch (Exception e) {
-
-            logger.error("error in stopping VM phaseof migration VM:" + VMName, e);
+        }catch(Exception e){
+            
+            logger.error("error in stopping VM phaseof migration VM:"+VMName, e);
         }
 ////take disk name
 //////the name can be taken from fdc.addElementToResource("DiskName" if you want retrieve the golden image name
@@ -1348,8 +1337,10 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
         try {
             params.clear();
             params.add("VirtualizationManagerAgent");
-            params.add("/" + this.nodoVEDescriptorVm + "/VED[@VM_name=\"" + VMName + "\"]/HDD/text()");
+            params.add("/"+this.nodoVEDescriptorVm+"/VED[@VM_name=\""+VMName+"\"]/HDD/text()");
             pathHDD = (String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+//---> REMOVE THE LINE BELOW             
+            pathHDD="/home/giuseppe/NetBeansProjects/intergrazioneconRIc/clevercloud/repository/test.vdi";
 ////start store disk name
 //////check if we take image from SWIFT OR FROM VFS
             if (this.shareTecnologyAdopted.equalsIgnoreCase("SWIFT")) {
@@ -1360,22 +1351,24 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
                     params.clear();
 ////////////create object parameter for swift method
                     org.clever.HostManager.ObjectStoragePlugins.Swift.InsertContainer spi = new org.clever.HostManager.ObjectStoragePlugins.Swift.InsertContainer();
-                    org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterInput spiC = new org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterInput();
+                    org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterInput spiC= new org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterInput();
                     spiC.type = org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterInput.tipoObjectInput.InsertContainer;
-                    String nomeContainer = VMName + hostowner;
-                    spi.setContainer(nomeContainer);
+        ///----->Verificare se va bene questa generazione del nome container            
+                    String nomeContainer=VMName+hostowner;
+                    (spi).setContainer(nomeContainer);
 ////////////create token parameter for all interaction on Swift here and on foreing cloud
-                    org.clever.ClusterManager.IdentityServicePlugins.Keystone.Token token = new org.clever.ClusterManager.IdentityServicePlugins.Keystone.Token();
-                    try {
-                        token = (org.clever.ClusterManager.IdentityServicePlugins.Keystone.Token) this.owner.invoke("IdentityServiceAgent", "getInfo4interactonSWIFT", true, new ArrayList());
-                    } catch (Exception e) {
+                    org.clever.ClusterManager.IdentityServicePlugins.Keystone.Token token=new org.clever.ClusterManager.IdentityServicePlugins.Keystone.Token();
+                    try{
+                        token=(org.clever.ClusterManager.IdentityServicePlugins.Keystone.Token)this.owner.invoke("IdentityServiceAgent","getInfo4interactonSWIFT",true,new ArrayList());
+                    }catch(Exception e){
                         throw new CleverException(e.getMessage());
                     }
 ////////////end token creation phase
-                    spi.setTokenId(token.getId());
-                    spi.setUrlSwiftPresoDalToken(token.getPublicUrlSwift());
-                    spi.elaboraInfo();
-                    spiC.ogg = spi;
+                    (spi).setTokenId(token.getId());
+                    (spi).setUrlSwiftPresoDalToken(token.getPublicUrlSwift());
+                    (spi).elaboraInfo();
+          //          spiC.ogg=spi;
+                    spiC.setOgg(spi);
                     params.add(spiC);
                     spo = (org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterOutput) ((CmAgent) this.owner).remoteInvocation(hostowner, "ObjectStorageAgent", "createContainer", true, params);
 ////////////end creation container phase                    
@@ -1390,10 +1383,11 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
                         spi2.setUrlSwiftPresoDalToken(token.getPublicUrlSwift());
                         spi2.setPathObject(pathHDD);
                         spi2.elaboraInfo();
-                        spiC.ogg = spi2;
+                       // spiC.ogg=spi2;
+                        spiC.setOgg(spi2);
                         params.add(spiC);
                         spo = (org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterOutput) ((CmAgent) this.owner).remoteInvocation(hostowner, "ObjectStorageAgent", "createObject", true, params);
-                        fdc.setCdi4Swift("SWIFT", ((org.clever.HostManager.ObjectStoragePlugins.Swift.InfoCreateObjectForMongoDb) spo).getUrl(), token.getId());
+                        fdc.setCdi4Swift( "SWIFT",  ((org.clever.HostManager.ObjectStoragePlugins.Swift.InfoCreateObjectForMongoDb)spo).getUrl(),token.getId());
                     } catch (Exception e) {
                         logger.error("Error occurred in copy Object phase.", e);
                         return false;
@@ -1403,25 +1397,27 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
                     logger.error("Error occurred in creation Container phase.", e);
                     return false;
                 }
-            } else {
+            }
+            else {
 ////////VFS
 //////////1°: Identificate VFS node used for migration  
-                //TODO: improve this system to implement a choose algoritm related to
                 //Viene usato il primo nodo recuperato dal DB di Sistema
-                String dst = this.nodeVFSShared;
-
-                if (dst.equals("")) {
+                String dst=this.nodeVFSShared;
+                
+                if(dst.equals("")){
                     params.add("StorageManagerAgent");
                     params.add("/node");
                     params.add("name");
-                    try {
-                        dst = (String) this.owner.invoke("DatabaseManagerAgent", "getAttributeNode", true, params);
-                    } catch (Exception e) {
+                    try{
+                        dst=(String)this.owner.invoke("DatabaseManagerAgent", "getAttributeNode", true, params);
+                    }catch(Exception e){
                         logger.error("Error in identification VFS NODE phase, is impossibile insert disk image in VFS node.", e);
                         return false;
                     }
                 }
-
+                
+            
+                    
                 //dst deve essere inserito come nuovo nodo per il VFS di CLEVER, si prende il primo nodo disponibile ed inserire una nuova cartella nel quale mettere il nodo logico
                 //nodo che verrà eliminato al termine dell'operazione oppure
                 //inserirlo semplicemente in un nodo e poi eliminare il disco dal nodo VFS momentaneamente viene fatto così
@@ -1430,79 +1426,80 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
                 params.add(dst);
                 params.add("");
                 VFSDescription res;
-                try {
-                    res = (VFSDescription) this.owner.invoke("StorageManagerAgent", "discoveryNode", true, params);
+                try{
+                    res=(VFSDescription)this.owner.invoke("StorageManagerAgent","discoveryNode", true, params);
 //////////Now we invoke ImageManager for upload the disk on VFS Node with function uploadDiskonVFS
 //////////this function need VFS NODE container and the path of the src disk as parameter
-                    try {
+                    try{
                         params.clear();
                         params.add(res);
                         params.add(pathHDD);
-                        if (!(Boolean) ((CmAgent) this.owner).remoteInvocation(hostowner, "ImageManagerAgent", "uploadDiskonVFS", true, params)) {
+                        if(!(Boolean)((CmAgent)this.owner).remoteInvocation(hostowner,"ImageManagerAgent","uploadDiskonVFS", true, params))
                             return false;
-                        }
 
-                    } catch (CleverException e) {
-                        logger.error(e.getMessage(), e);
+                    }catch(CleverException e){
+                        logger.error(e.getMessage(),e);
                         return false;
                     }
 //////////end copy of the disk on node
 //////////Insert info into federatorDataContainer to make able foreing cloud to access at shared node                     
                     params.clear();
                     params.add("StorageManagerAgent");
-                    params.add("/node[@name=\"" + this.nodeVFSShared + "\"]/org.clever.Common.Storage.VFSDescription");
-                    String VFSNODE = "";
-                    try {
-                        VFSNODE = (String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
-                    } catch (Exception e) {
-                        logger.error("error in retrieve VFSSHARED NODE", e);
+                    params.add("/node[@name=\""+this.nodeVFSShared+"\"]/org.clever.Common.Storage.VFSDescription");
+                    String VFSNODE="";
+                    try{
+                        VFSNODE=(String)this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+                    }catch(Exception e){
+                        logger.error("error in retrieve VFSSHARED NODE",e);
                         return false;
                     }
-                    ParserXML pxml = new ParserXML(VFSNODE);
-                    Element e = pxml.getRootElement();
-                    Element authpar = e.getChild("auth");
-                    String type = e.getChildText("typevfs");
-                    String host = e.getChildText("hostname");
-                    String port = e.getChildText("port");
-                    String path = e.getChildText("path");
-                    String[] aRR = pathHDD.split("/");
-                    path = path + aRR[aRR.length - 1];
-                    fdc.setCdi((String) authpar.getChildText("username"), (String) authpar.getChildText("password"), "VFS", host, Integer.parseInt(port), path, type);
-
-                } catch (Exception e) {
-                    logger.error(e.getMessage(), e);
+                    ParserXML pxml=new ParserXML(VFSNODE);
+                    Element e=pxml.getRootElement();
+                    Element authpar=e.getChild("auth");
+                    String type=e.getChildText("typevfs");
+                    String host=e.getChildText("hostname");
+                    String port=e.getChildText("port");
+                    String path=e.getChildText("path");
+                    String[] aRR=pathHDD.split("/");
+                    path=path+aRR[aRR.length-1];
+                    fdc.setCdi((String)authpar.getChildText("username"), (String)authpar.getChildText("password"), "VFS", host, Integer.parseInt(port), path,type);
+                    
+                }catch(Exception e){
+                    logger.error(e.getMessage(),e);
                     return false;
                 }
-
+                
             }
         } catch (Exception e) {
             logger.error("Error in acquisition of phisical path of " + VMName + " hd", e);
         }
 //////////end federatorDataContainer preparation phase        
 //////////this forward the migration operation to Federator: the federator say at foreing cloud how it have to create VM
-        try {
+        try{
             params.clear();
             params.add(fdc);
-            if ((Boolean) this.owner.invoke("FederationManagerAgent", "called4Migration", true, params)) {
+            if((Boolean)this.owner.invoke("FederationManagerAgent", "called4Migration", true, params))
+            {
                 this.markAsMigratedVM(VMName);
             }
-        } catch (Exception e) {
-            logger.error("error occurred in starting phase of migration process", e);
+        }catch(Exception e){
+            logger.error("error occurred in starting phase of migration process",e);
             throw new CleverException("error occurred in starting phase of migration process");
         }
 
+        
 //////////End
         return true;
     }
     
     /**
-     * Method used to verify if the VM is migrated. 
-     * This function is called when an operation on VM is performed
+     * Funzione da invocare prima di ogni tipo di operazione sulla VM per verificare se la VM è stata
+     * migrata e in quel caso girare il comando al federator per il trasferimento del comando.
      * @param VMName
      * @return 
      */     
     private boolean checkVMisMigrated(String VMName){
-        //TODO: verificare se è compliant contutti i casi        
+//TODO: verificare se è compliant contutti i casi        
         try{
         ArrayList params=new ArrayList();
         params.add("VirtualizationManagerAgent");
@@ -1538,9 +1535,24 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
         List params = new ArrayList();
         do{
             vmname=java.util.UUID.randomUUID().toString();
-            vmname=vmname.replace("-", "");
+            vmname=vmname.replace("-", "");//this replacement is necessary because if we don't eliminate the "-" the VirtuaslBox "findmachine" function don't work finely 
+//TODO: LIBVIRT-MANAGEMENT Improved with next Release    
+        /*if((param.getLock().equals(LockFile.lockMode.PR))&&((CmAgent)this.owner).remoteInvocation(targetHM,"HyperVisorAgent", "getHYPVRName", true, new ArrayList()).equals("LibVirt")){
+            this.TakeEasySnapshot(id, vmname, "Snapshot created by CLEVER for a clonable image.", targetHM);
+            result=true;
+        }*/
+        //else{
+         
             MethodInvoker mi = null;
             // check if into db Sedna exist name of the VM
+            
+          /*  params.add("VirtualizationManagerAgent");
+            params.add(("/org.clever.Common.VEInfo.VEDescription[./name/text()='" + id + "']/name/text()"));
+            boolean r = (Boolean) this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);
+            if (r == false) {
+                throw new LogicalCatalogException("Template name not valid");
+            }
+            params.clear();*/
             params.add("VirtualizationManagerAgent");
             String location = "/Matching_VM_HM/VM[@name='" + vmname + "']";
             params.add(location);
@@ -1570,15 +1582,16 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
 //TODO: aggiungere funzione che crei il percorso sul quale salvare il file scaricato
 //momentaneamente li salva nello stesso path dei dischi gestiti dal sistema, ovvero nella cartella repository                   
                     spi.setPathObject(System.getProperty("user.dir")+"/repository/");
-                    spiC.ogg=spi;
+                //    spiC.ogg=spi;
+                    spiC.setOgg(spi);
                     params.add(spiC);
                     spo = (org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterOutput) ((CmAgent) this.owner).remoteInvocation(targetHM, "ObjectStorageAgent", "downloadObject", true, params);
                     res=((org.clever.HostManager.ObjectStoragePlugins.Swift.InfoGetObjectForMongoDb)spo).getPathObjec()+((org.clever.HostManager.ObjectStoragePlugins.Swift.InfoGetObjectForMongoDb)spo).getObject();
                     diskPath=res;
                     params.clear();
                     params.add(res);
-                    //check= (Boolean) this.owner.invoke("StorageManagerAgent", "check", true, params);
-                    check=true;
+                    check= (Boolean) this.owner.invoke("StorageManagerAgent", "check", true, params);
+                    //check=true;
                 }catch(Exception e){
                     logger.error("Problem occurred in download disk phase. Migration operation can't continue!");
                     throw new CleverException(e.getMessage());
@@ -1586,16 +1599,12 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
                 
                 
                 
-////register VED for this VM
-                try{
-                    this.registerVEDWithoutDisk("", ved);//the first parameter is not used
-                }
-                catch(Exception le){
-                    logger.error("The operation: VED register for Migration operation indicated by: "+fdc.getOperationId()+" can't be completed. The VEDescriptor is already registered!",le);
-                }
+//??? si potrebbe saltare un'assegnazione qui. res serve?
+                
             }
             else{
- //VFS Management
+                //List params1 = new ArrayList();
+//VFS Management
 ////creation of VFS NODE for retrieving disk passed from home cloud                
                 try
                 {
@@ -1626,18 +1635,17 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
                 List<StorageSettings> ss=ved.getStorage();
                 ss.get(0).setDiskPath(disk);
                 ved.setStorage(ss);
-////register VED for this VM
-                try{
-                     this.register("", ved);//the first parameter is not used
-                }
-                catch(LogicalCatalogException le){
-                    logger.error("The operation: VED register for Migration operation indicated by: "+fdc.getOperationId()+" can't be completed. The VEDescriptor is already registered!",le);
-                }
             }
 
-            
 ////end preparation of disk
-
+////register VED for this VM
+            try{
+            this.register("", ved);//the first parameter is not used
+            }
+            catch(LogicalCatalogException le){
+                logger.error("The operation: VED register for Migration operation indicated by: "+fdc.getOperationId()+" can't be completed. The VEDescriptor is already registered!",le);
+                logger.debug("The operation: VED register for Migration operation indicated by: "+fdc.getOperationId()+" will be skipped. Migration continue!");
+            }
 ////Insert into DB: mapping VM - HM
             //TODO: pensare a come gestire il rientro della VM: nuova funzione o usare qst con un parametro per la corretta gestione delle info?
             this.InsertItemIntoMatchingVmHM(vmname, targetHM,"consistent","migrated_here");
@@ -1709,13 +1717,7 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
             throw e;
         }
     }
-/**
- * This function is called to return VM to its owner cloud. 
- * @param idfedOp
- * @param VMName
- * @return FederatorDataContainer which contains the information for recreate VM in remote cloud.
- * @throws CleverException 
- */    
+    
     public org.clever.ClusterManager.FederatorManager.FederatorDataContainer retFromMigration(String idfedOp,String VMName)throws CleverException{
         org.clever.ClusterManager.FederatorManager.FederatorDataContainer fdc =new org.clever.ClusterManager.FederatorManager.FederatorDataContainer();
 //retrieve VED phase
@@ -1745,17 +1747,18 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
         }
         VEDescription veD =(VEDescription) MessageFormatter.objectFromMessage(pathxml);
 //end retrieve VED phase         
+        //String diskPath=((StorageSettings)veD.getStorage().get(0)).getDiskPath();
         fdc.setVED(veD);
         fdc.init_resource();
         fdc.addElementToResource("VMName",VMName);
         fdc.addElementToResource("vedName", vedName);
 //--->probabilmente questa parte non deve essere inserita         
         //nome della GOLDENIMAGE
-        //fdc.addElementToResource("Origin_DiskName", veD.getStorage().get(0).getDiskPath());
+        fdc.addElementToResource("Origin_DiskName", veD.getStorage().get(0).getDiskPath());
         //TODO: future works : Modify to make possibile the management of multiple disk
         fdc.setOperationId(idfedOp);
         //TODO: future works(actually we transfert all disk) : add name/url for disk/goldenImage on VFS shared/SWIFT
-////find host where is hosted VM ready for migration.
+        ////find host where is hosted VM ready for migration.
         params.clear();
         
         String hostowner="";
@@ -1765,6 +1768,8 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
             logger.error("error in retreive host owner phase of migration VM:"+VMName, e);
             return null;//----> creare un eccezione apposita per il mancato ritrovamento del VED nel foreign cloud
         }
+//----> REMOVE THIS LINE BELOW        
+        hostowner="portatileA";
 ////stop vm
         try{
             params.clear();
@@ -1783,6 +1788,8 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
             params.add("VirtualizationManagerAgent");
             params.add("/"+this.nodoVEDescriptorVm+"/VED[@VM_name=\""+VMName+"\"]/HDD/text()");
             pathHDD = (String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+//----> REMOVE THIS LINE BELOW            
+            pathHDD="/home/giuseppe/NetBeansProjects/intergrazioneconRIc/clevercloud/repository/test.vdi";
 ////start store disk name
 //////check if we take image from SWIFT OR FROM VFS
             if (this.shareTecnologyAdopted.equalsIgnoreCase("SWIFT")) {
@@ -1795,7 +1802,7 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
                     org.clever.HostManager.ObjectStoragePlugins.Swift.InsertContainer spi = new org.clever.HostManager.ObjectStoragePlugins.Swift.InsertContainer();
                     org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterInput spiC= new org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterInput();
                     spiC.type = org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterInput.tipoObjectInput.InsertContainer;
-                  
+        ///----->Verificare se va bene questa generazione del nome container            
                     String nomeContainer=VMName+hostowner;
                     (spi).setContainer(nomeContainer);
 ////////////create token parameter for all interaction on Swift here and on foreing cloud
@@ -1809,7 +1816,9 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
                     (spi).setTokenId(token.getId());
                     (spi).setUrlSwiftPresoDalToken(token.getPublicUrlSwift());
                     (spi).elaboraInfo();
-                    spiC.ogg=spi;
+                   // spiC.ogg=spi;
+                  spiC.setOgg(spi);
+
                     params.add(spiC);
                     spo = (org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterOutput) ((CmAgent) this.owner).remoteInvocation(hostowner, "ObjectStorageAgent", "createContainer", true, params);
 ////////////end creation container phase                    
@@ -1824,7 +1833,8 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
                         spi2.setUrlSwiftPresoDalToken(token.getPublicUrlSwift());
                         spi2.setPathObject(pathHDD);
                         spi2.elaboraInfo();
-                        spiC.ogg=spi2;
+                   //     spiC.ogg=spi2;
+                        spiC.setOgg(spi);
                         params.add(spiC);
                         spo = (org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterOutput) ((CmAgent) this.owner).remoteInvocation(hostowner, "ObjectStorageAgent", "createObject", true, params);
                         fdc.setCdi4Swift( "SWIFT",  ((org.clever.HostManager.ObjectStoragePlugins.Swift.InfoCreateObjectForMongoDb)spo).getUrl(),token.getId());
@@ -1913,14 +1923,7 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
 //////////this forward the migration operation to Federator: the federator say at foreing cloud how it have to create VM
         return fdc;
     }
-    /**
-     * Method used to create the VM recovered from the migration site to VM home cloud.  
-     * @param fdc, Federation Data Container object
-     * @param VMName, original UUID of the VM for CLEVER 
-     * @param targetHM, Host Manager Entity that will be instantiate the VM
-     * @return
-     * @throws CleverException 
-     */
+    
     public Boolean reCreateMigratedVM(org.clever.ClusterManager.FederatorManager.FederatorDataContainer fdc,String VMName,String targetHM )throws CleverException{
         boolean result=false;
         boolean check=false;
@@ -1960,7 +1963,8 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
 //TODO: aggiungere funzione che crei il percorso sul quale salvare il file scaricato
 //momentaneamente li salva nello stesso path dei dischi gestiti dal sistema, ovvero nella cartella repository                   
                     spi.setPathObject(System.getProperty("user.dir")+"/repository/");
-                    spiC.ogg=spi;
+//                    spiC.ogg=spi;
+                    spiC.setOgg(spi);
                     params.add(spiC);
                     spo = (org.clever.HostManager.ObjectStoragePlugins.Swift.SwiftParameterOutput) ((CmAgent) this.owner).remoteInvocation(targetHM, "ObjectStorageAgent", "downloadObject", true, params);
                     res=((org.clever.HostManager.ObjectStoragePlugins.Swift.InfoGetObjectForMongoDb)spo).getPathObjec()+((org.clever.HostManager.ObjectStoragePlugins.Swift.InfoGetObjectForMongoDb)spo).getObject();
@@ -1971,7 +1975,6 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
                 }catch(Exception e){
                     logger.error("Problem occurred in associateHddToVM function. the new hdd can't be associated correctly to VM:"+VMName);
                     //throw new CleverException(e.getMessage());
-                    //TODO: prepare a specific Exception for this.
                 }
            }
             else{
@@ -1979,7 +1982,7 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
 ////creation of VFS NODE for retrieving disk passed from home cloud                
                 try
                 {
-                    this.createVFSNODE(fdc);
+                this.createVFSNODE(fdc);
                 }
                 catch(Exception e){
                     logger.error("It's impossible create a VFS node! Function 'reCreateMigratedVM' can be continue!");
@@ -2004,6 +2007,7 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
                     List params2 = new ArrayList();
                     params2.add(disk);
                     check= (Boolean) this.owner.invoke("StorageManagerAgent", "check", true, params2);
+                    
                     List<StorageSettings> ss=ved.getStorage();
                     ss.get(0).setDiskPath(disk);
                     ved.setStorage(ss);
@@ -2017,7 +2021,7 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
 ////creation VM phase
 //////here we set where is the new VM disk for vm migrated           
             List<StorageSettings> ss=ved.getStorage();
-            ss.get(0).setDiskPath(res);
+            ss.get(0).setDiskPath(res);//res=$PATHFORNEWDISKMIGRATED$
             ved.setStorage(ss);
 //////end setting
             List params2 = new ArrayList();
@@ -2048,6 +2052,14 @@ public HashMap createVM(String id,String targetHM,String lock) throws CleverExce
     
     
     
+    /*private synchronized void addormenta(){
+        try{
+                    logger.debug("INIZIO WAIT ");
+                    wait(10000);
+                    logger.debug("FINE WAIT ");
+            }
+            catch(Exception e){logger.error(e.getMessage(),e);}
+    } */
     
     
     

@@ -67,6 +67,7 @@ public class CleverChatListener implements MessageListener
   public void processMessage( Chat chat, Message msg )
   {
     CleverMessage message = new CleverMessage( msg.getBody() );
+    logger.debug("stampa messaggiop : "+msg.getBody() );
     msgHandler.handleCleverMessage( message );
 
 

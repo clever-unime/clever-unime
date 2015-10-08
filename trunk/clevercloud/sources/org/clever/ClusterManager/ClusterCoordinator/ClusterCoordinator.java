@@ -65,6 +65,7 @@ import org.clever.ClusterManager.Dispatcher.DispatcherAgent;
 import org.clever.ClusterManager.Dispatcher.CLusterManagerDispatcherPlugin;
 import org.clever.ClusterManager.Info.InfoAgent;
 import org.clever.ClusterManager.Brain.BrainInterface;
+import org.clever.ClusterManager.ObjectManager.ObjectManager;
 import org.clever.Common.Initiator.ElectionThread;
 import org.clever.Common.Initiator.Listener;
 import org.clever.Common.Initiator.ModuleFactory.*;
@@ -92,7 +93,7 @@ public class ClusterCoordinator implements CleverMessageHandler
   private CLusterManagerDispatcherPlugin dispatcherPlugin;
   private InfoAgent infoAgent;
   private BrainInterface brainInterface;
-  
+  private ObjectManager objectManager;
   private File cfgFile;
   
   InputStream inxml;
@@ -133,6 +134,7 @@ public class ClusterCoordinator implements CleverMessageHandler
       dispatcherAgent = null;
       dispatcherPlugin = null;
       infoAgent = null;
+      objectManager=null;
       brainInterface = null;      
       cfgFile = null;      
       inxml = null;      
@@ -307,7 +309,11 @@ public class ClusterCoordinator implements CleverMessageHandler
     
     infoAgent = new InfoAgent(conn);
     infoAgent.initialization();
-    logger.info("InfoAgent for CM created");   
+    logger.info("InfoAgent for CM created");
+    
+    objectManager = new ObjectManager(dispatcherAgent);
+    objectManager.initialization();
+    logger.info("objectManager for CM created");
   } 
   
   /**This function try to set this Cluster Coordinator active, if the election was win

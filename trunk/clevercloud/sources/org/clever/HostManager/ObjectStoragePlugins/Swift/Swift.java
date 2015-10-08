@@ -1,18 +1,41 @@
+package org.clever.HostManager.ObjectStoragePlugins.Swift;
 
-/*
- * Copyright 2014 Università di Messina
- *Licensed under the Apache License, Version 2.0 (the "License");
- *you may not use this file except in compliance with the License.
- *You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- *Unless required by applicable law or agreed to in writing, software
- *distributed under the License is distributed on an "AS IS" BASIS,
- *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *See the License for the specific language governing permissions and
- *limitations under the License.
- */
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
+import org.clever.Common.Communicator.Agent;
+import org.clever.Common.Exceptions.CleverException;
+import org.clever.HostManager.ObjectStorage.ObjectStoragePlugin;
+import org.jdom2.Element;
+
+
+
 /**
  * The MIT License
  * 
@@ -38,41 +61,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.clever.HostManager.ObjectStoragePlugins.Swift;
-
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpHead;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.FileEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
-import org.clever.Common.Communicator.Agent;
-import org.clever.Common.Exceptions.CleverException;
-import org.clever.HostManager.ObjectStorage.ObjectStoragePlugin;
-import org.jdom2.Element;
-
-
-
-
 public class Swift implements ObjectStoragePlugin{
     
 
@@ -171,8 +159,8 @@ public SwiftParameterOutput createAccountMetadata(SwiftParameterInput swiftParam
     InsertAccount insertAccount = new InsertAccount();
 
     //eseguo il dowcasting
-    insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
-    
+ //   insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
+    insertAccount = (InsertAccount)swiftParameterInput.getOgg();
         
     insertAccount.setOperazione("create metadata");
     
@@ -221,7 +209,7 @@ public SwiftParameterOutput createAccountMetadata(SwiftParameterInput swiftParam
  */
 private InfoOperationAccountForMongoDb httpPostAccountMetadata( String url, String X_Auth_Token, String X_Account_Meta, String name) throws UnsupportedEncodingException, IOException{
          
-       DefaultHttpClient httpclient = new DefaultHttpClient();
+       CloseableHttpClient httpclient = HttpClients.createDefault();
       
        HttpPost http = new HttpPost(url);
       
@@ -230,7 +218,7 @@ private InfoOperationAccountForMongoDb httpPostAccountMetadata( String url, Stri
        http.setHeader("X-Auth-Token", X_Auth_Token);
        http.setHeader("X-Account-Meta-"+X_Account_Meta, name);
                
-   HttpResponse response = httpclient.execute(http);
+   CloseableHttpResponse response = httpclient.execute(http);
        
    //System.out.println(response);
       
@@ -306,8 +294,9 @@ public SwiftParameterOutput updateAccountMetadata(SwiftParameterInput swiftParam
     //creo questo oggetto di comodo
     InsertAccount insertAccount = new InsertAccount();
     //eseguo il dowcasting
-    insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
-    
+//    insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
+  insertAccount = (InsertAccount)swiftParameterInput.getOgg();
+  
     insertAccount.setOperazione("update metadata");
     
     //######################
@@ -356,8 +345,9 @@ public SwiftParameterOutput deleteAccountMetadata( SwiftParameterInput swiftPara
     InsertAccount insertAccount = new InsertAccount();
 
     //eseguo il dowcasting
-    insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
-    
+//    insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
+  insertAccount = (InsertAccount)swiftParameterInput.getOgg();
+  
     insertAccount.setOperazione("delete metadata");
     
     //######################
@@ -405,7 +395,7 @@ public SwiftParameterOutput deleteAccountMetadata( SwiftParameterInput swiftPara
  */
 private InfoOperationAccountForMongoDb httpPostDeleteAccountMetadata( String url, String X_Auth_Token, String X_Account_Meta, String name) throws UnsupportedEncodingException, IOException{
          
-       DefaultHttpClient httpclient = new DefaultHttpClient();
+       CloseableHttpClient httpclient = HttpClients.createDefault();
       
        HttpPost http = new HttpPost(url);
       
@@ -414,7 +404,7 @@ private InfoOperationAccountForMongoDb httpPostDeleteAccountMetadata( String url
        http.setHeader("X-Auth-Token", X_Auth_Token);
        http.setHeader("X-Remove-Account-Meta-"+X_Account_Meta, name);
       
-       HttpResponse response = httpclient.execute(http);
+       CloseableHttpResponse response = httpclient.execute(http);
        
        //System.out.println(response);
        //System.out.println("Response Code : "+response.getStatusLine().getStatusCode());
@@ -489,8 +479,8 @@ public SwiftParameterOutput showAccountDetailsAndListContainers(SwiftParameterIn
     InsertAccount insertAccount = new InsertAccount();
 
     //eseguo il dowcasting
-    insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
-    
+//    insertAccount = (InsertAccount) swiftParameterInput.ogg; // <----######
+  insertAccount = (InsertAccount)swiftParameterInput.getOgg();  
     insertAccount.setOperazione("list container information");
     
     //######################
@@ -538,7 +528,7 @@ public SwiftParameterOutput showAccountDetailsAndListContainers(SwiftParameterIn
 private InfoListAccountDetailsForMongoDb httpGet(String url, String X_Auth_Token) throws IOException{
     
        
-       DefaultHttpClient httpclient = new DefaultHttpClient();
+       CloseableHttpClient httpclient = HttpClients.createDefault();
      
       
        HttpGet http = new  HttpGet(url);
@@ -547,7 +537,7 @@ private InfoListAccountDetailsForMongoDb httpGet(String url, String X_Auth_Token
        http.setHeader("Accept", "application/json");//*
        http.setHeader("X-Auth-Token", X_Auth_Token);
      
-       HttpResponse response = httpclient.execute(http);
+       CloseableHttpResponse response = httpclient.execute(http);
        
        System.out.println(response);
        
@@ -694,8 +684,8 @@ public SwiftParameterOutput createContainer(SwiftParameterInput swiftParameterIn
     InsertContainer insertContainer = new InsertContainer();
 
     //eseguo il dowcasting
-    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
-   
+  //  insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+   insertContainer = (InsertContainer)swiftParameterInput.getOgg();
     
     
     //######################
@@ -750,7 +740,7 @@ public SwiftParameterOutput createContainer(SwiftParameterInput swiftParameterIn
  */
 private InfoContainerForMongoDb httpPut( String url, String X_Auth_Token) throws UnsupportedEncodingException, IOException{
          
-       DefaultHttpClient httpclient = new DefaultHttpClient();
+       CloseableHttpClient httpclient = HttpClients.createDefault();
       
        HttpPut http = new HttpPut(url);
       
@@ -760,7 +750,7 @@ private InfoContainerForMongoDb httpPut( String url, String X_Auth_Token) throws
        
        
       
-       HttpResponse response = httpclient.execute(http);
+       CloseableHttpResponse response = httpclient.execute(http);
        
      //  System.out.println(response);
      //  System.out.println("Response Code : "+response.getStatusLine().getStatusCode());
@@ -849,7 +839,8 @@ public SwiftParameterOutput deleteContainer(SwiftParameterInput swiftParameterIn
     InsertContainer insertContainer = new InsertContainer();
 
     //eseguo il dowcasting
-    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+//    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+   insertContainer = (InsertContainer)swiftParameterInput.getOgg();
     
     //######################
     String url=insertContainer.getBase()+insertContainer.getAccount()+"/"+insertContainer.getContainer();
@@ -891,7 +882,7 @@ public SwiftParameterOutput deleteContainer(SwiftParameterInput swiftParameterIn
  */
 private InfoContainerForMongoDb httpDeleteContainer( String url, String X_Auth_Token) throws UnsupportedEncodingException, IOException{
          
-    DefaultHttpClient httpclient = new DefaultHttpClient();
+    CloseableHttpClient httpclient = HttpClients.createDefault();
       
     HttpDelete http = new HttpDelete(url);
       
@@ -900,7 +891,7 @@ private InfoContainerForMongoDb httpDeleteContainer( String url, String X_Auth_T
     http.setHeader("X-Auth-Token", X_Auth_Token);
  
        
-    HttpResponse response = httpclient.execute(http);
+    CloseableHttpResponse response = httpclient.execute(http);
        
     // System.out.println(response);
      System.out.println("Response Code : "+response.getStatusLine().getStatusCode());
@@ -982,7 +973,8 @@ public SwiftParameterOutput createContainerMetadata(SwiftParameterInput swiftPar
     InsertContainer insertContainer = new InsertContainer();
 
     //eseguo il dowcasting
-    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+//    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+   insertContainer = (InsertContainer)swiftParameterInput.getOgg();
     
     insertContainer.setOperazione("create container metadata");
 
@@ -1125,8 +1117,8 @@ public SwiftParameterOutput updateContainerMetadata(SwiftParameterInput swiftPar
     InsertContainer insertContainer = new InsertContainer();
 
     //eseguo il dowcasting
-    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
-    
+//    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+   insertContainer = (InsertContainer)swiftParameterInput.getOgg();  
     insertContainer.setOperazione("update container metadata");
 
     //######################
@@ -1198,8 +1190,9 @@ public SwiftParameterOutput deleteContainerMetadata(SwiftParameterInput swiftPar
     InsertContainer insertContainer = new InsertContainer();
 
     //eseguo il dowcasting
-    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
-    
+//    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+   insertContainer = (InsertContainer)swiftParameterInput.getOgg();
+   
     insertContainer.setOperazione("delete container metadata");
 
     //######################
@@ -1258,7 +1251,7 @@ public SwiftParameterOutput deleteContainerMetadata(SwiftParameterInput swiftPar
  */
 private InfoOperationContainerMetadataForMongoDb httpPostDelete( String url, String X_Auth_Token,String X_Container_Meta, String name) throws UnsupportedEncodingException, IOException{
          
-       DefaultHttpClient httpclient = new DefaultHttpClient();
+       CloseableHttpClient httpclient = HttpClients.createDefault();
       
        HttpPost http = new HttpPost(url);
       
@@ -1269,7 +1262,7 @@ private InfoOperationContainerMetadataForMongoDb httpPostDelete( String url, Str
        http.setHeader("X-Remove-Container-Meta-"+X_Container_Meta, name);
        }
        
-       HttpResponse response = httpclient.execute(http);
+       CloseableHttpResponse response = httpclient.execute(http);
        
       // System.out.println(response);
       // System.out.println("Response Code : "+response.getStatusLine().getStatusCode());
@@ -1343,7 +1336,8 @@ public SwiftParameterOutput showContainerMetadata(SwiftParameterInput swiftParam
     InsertContainer insertContainer = new InsertContainer();
 
     //eseguo il dowcasting
-    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+//    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+   insertContainer = (InsertContainer)swiftParameterInput.getOgg();
     
     insertContainer.setOperazione("show container metadata");
     
@@ -1399,7 +1393,7 @@ public SwiftParameterOutput showContainerMetadata(SwiftParameterInput swiftParam
  */
 private InfoListContainerForMongoDb httpHeadContainer( String url, String X_Auth_Token ) throws UnsupportedEncodingException, IOException{
          
-       DefaultHttpClient httpclient = new DefaultHttpClient();
+       CloseableHttpClient httpclient = HttpClients.createDefault();
       
        HttpHead http = new HttpHead(url);
                        
@@ -1407,7 +1401,7 @@ private InfoListContainerForMongoDb httpHeadContainer( String url, String X_Auth
        http.setHeader("Accept", "application/json");
        http.setHeader("X-Auth-Token", X_Auth_Token);
 
-       HttpResponse response = httpclient.execute(http);
+       CloseableHttpResponse response = httpclient.execute(http);
        
        //System.out.println(response);
        //System.out.println("Response Code : "+response.getStatusLine().getStatusCode());
@@ -1538,8 +1532,9 @@ public SwiftParameterOutput createObject(SwiftParameterInput swiftParameterInput
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
-        
+  //  insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+     insertObject = (InsertObject)swiftParameterInput.getOgg();
+    
    insertObject.setOperazione("create object");
     
    String urlFinale=insertObject.getBase()+insertObject.getAccount()+"/"+insertObject.getContainer()+"/"+insertObject.getObject();
@@ -1599,10 +1594,12 @@ public SwiftParameterOutput createObject(SwiftParameterInput swiftParameterInput
 private  InfoCreateObjectForMongoDb httpPutCreateObject( String url, String X_Auth_Token,String pathObject) throws IOException{
   
  int responseCode= 0;
+ CloseableHttpResponse response = null;
     
   CloseableHttpClient httpclient = HttpClients.createDefault();
         try {
             HttpPut http = new HttpPut(url);
+            
             File file = new File(pathObject);
             FileEntity entity = new FileEntity(file,ContentType.create("text/plain", "UTF-8"));        
  
@@ -1611,8 +1608,8 @@ private  InfoCreateObjectForMongoDb httpPutCreateObject( String url, String X_Au
             
             
             
-            System.out.println("executing request " + http.getRequestLine());
-            CloseableHttpResponse response = httpclient.execute(http);
+            //System.out.println("executing request " + http.getRequestLine());
+            response = httpclient.execute(http);
             try {
                 //System.out.println("----------------------------------------");
                 //System.out.println(response.getStatusLine());
@@ -1643,38 +1640,27 @@ private  InfoCreateObjectForMongoDb httpPutCreateObject( String url, String X_Au
  //solo se la richiesta è andata a buon fine carico le altre informazioni
  // contenute nell'oggetto insertObject 
 
-/*  
-  
  if(risp.equals("201")){   
       //debug
       //System.out.println("La richiesta è andata a buon fine: "+risposta.getStatusCode()); 
       
       //carico l'oggetto di risposta di alcune unformazioni
+      String date =  response.getLastHeader("Date").toString().replace("Date:","").trim();
+      risposta.setDate(date);
+      
+      String etag =  response.getLastHeader("Etag").toString().replace("Etag:","").trim(); 
+      risposta.setEtag(etag);
   
-  String date = urlconnection.getHeaderField("Date");
-     //debug
-     //System.out.println("date: "+date);
-     risposta.setDate(date);
-     
-     String etag = urlconnection.getHeaderField("Etag");
-     //debug
-     //System.out.println("etag: "+etag);
-     risposta.setEtag(etag);
-  
-     String Last_Modified = urlconnection.getHeaderField("Last-Modified"); 
-     //debug
-     //System.out.println("Last-Modified: "+Last_Modified);
-     risposta.setLastModified(Last_Modified);
-     
-        
-  
- }//if 
-*/
+      
+      String Last_Modified =  response.getLastHeader("Last-Modified").toString().replace("Last-Modified:","").trim(); 
+      risposta.setLastModified(Last_Modified);
+      
+ }//if
  
   return risposta;   
     
     
-}//httpPost
+}//httpPut
 
 /**
  * 
@@ -1713,7 +1699,9 @@ public SwiftParameterOutput replaceObject(SwiftParameterInput swiftParameterInpu
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+//    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+       insertObject = (InsertObject)swiftParameterInput.getOgg();
+
     
    insertObject.setOperazione("replace object"); 
      
@@ -1812,7 +1800,9 @@ public SwiftParameterOutput copyObject(SwiftParameterInput swiftParameterInput) 
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----###### 
+//    insertObject = (InsertObject) swiftParameterInput.ogg; // <----###### 
+       insertObject = (InsertObject)swiftParameterInput.getOgg();
+
     
    insertObject.setOperazione("copy object"); 
      
@@ -1960,6 +1950,7 @@ private InfoCopyObjectForMongoDb httpPut(String url, String X_Auth_Token,String 
  
 }//httpPut
 
+
 public SwiftParameterOutput deleteObject(SwiftParameterInput swiftParameterInput) throws IOException{
    
    if(swiftParameterInput.type == SwiftParameterInput.tipoObjectInput.InsertObject){
@@ -1971,15 +1962,16 @@ public SwiftParameterOutput deleteObject(SwiftParameterInput swiftParameterInput
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
-    
+//    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+       insertObject = (InsertObject)swiftParameterInput.getOgg();
+  
    insertObject.setOperazione("delete object"); 
      
    String urlFinale=insertObject.getBase()+insertObject.getAccount()+"/"+insertObject.getContainer()+"/"+insertObject.getObject();
    
    //debug
    //System.out.println("url passato alla richiesta http: "+urlFinale); 
-    
+    logger.debug("aascsdxxxzz: "+urlFinale);
    
    InfoDeleteObjectForMongoDb risposta = httpDeleteObject(urlFinale,insertObject.getTokenId());
     
@@ -2008,7 +2000,7 @@ public SwiftParameterOutput deleteObject(SwiftParameterInput swiftParameterInput
     
    else{
       
-       System.out.println("Ho caricato un oggetto di input errato.");
+       logger.error("Ho caricato un oggetto di input errato.");
        return null;
    } 
    
@@ -2027,7 +2019,7 @@ public SwiftParameterOutput deleteObject(SwiftParameterInput swiftParameterInput
  */
 private InfoDeleteObjectForMongoDb httpDeleteObject( String url, String X_Auth_Token) throws UnsupportedEncodingException, IOException{
          
-    DefaultHttpClient httpclient = new DefaultHttpClient();
+    CloseableHttpClient httpclient = HttpClients.createDefault();
       
     HttpDelete http = new HttpDelete(url);
       
@@ -2036,7 +2028,7 @@ private InfoDeleteObjectForMongoDb httpDeleteObject( String url, String X_Auth_T
     http.setHeader("X-Auth-Token", X_Auth_Token);
  
        
-    HttpResponse response = httpclient.execute(http);
+    CloseableHttpResponse response = httpclient.execute(http);
        
     // System.out.println(response);
     // System.out.println("Response Code : "+response.getStatusLine().getStatusCode());
@@ -2101,7 +2093,9 @@ public SwiftParameterOutput downloadObject(SwiftParameterInput swiftParameterInp
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----###### 
+//    insertObject = (InsertObject) swiftParameterInput.ogg; // <----###### 
+       insertObject = (InsertObject)swiftParameterInput.getOgg();
+
     
    insertObject.setOperazione("download object"); 
      
@@ -2143,7 +2137,7 @@ public SwiftParameterOutput downloadObject(SwiftParameterInput swiftParameterInp
    
 }//downloadObject
 
-private InfoGetObjectForMongoDb httpGetdownloadObject(String url, String X_Auth_Token,String pathDestination, String fileName) throws IOException{
+public InfoGetObjectForMongoDb httpGetdownloadObject(String url, String X_Auth_Token,String pathDestination, String fileName) throws IOException{
  
 
         URL url1 = new URL(url);
@@ -2276,7 +2270,9 @@ public SwiftParameterOutput  showObjectMetadata(SwiftParameterInput swiftParamet
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+//    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+       insertObject = (InsertObject)swiftParameterInput.getOgg();
+
     
     insertObject.setOperazione("list object metadata");
     
@@ -2334,7 +2330,7 @@ public SwiftParameterOutput  showObjectMetadata(SwiftParameterInput swiftParamet
  */
 private InfoListObjectMetadataForMongoDb httpHeadObject( String url, String X_Auth_Token ) throws UnsupportedEncodingException, IOException{
          
-       DefaultHttpClient httpclient = new DefaultHttpClient();
+       CloseableHttpClient httpclient = HttpClients.createDefault();
       
        HttpHead http = new HttpHead(url);
                        
@@ -2342,7 +2338,7 @@ private InfoListObjectMetadataForMongoDb httpHeadObject( String url, String X_Au
        http.setHeader("Accept", "application/json");
        http.setHeader("X-Auth-Token", X_Auth_Token);
 
-       HttpResponse response = httpclient.execute(http);
+       CloseableHttpResponse response = httpclient.execute(http);
        
        //System.out.println(response);
        //System.out.println("Response Code : "+response.getStatusLine().getStatusCode());
@@ -2403,6 +2399,7 @@ private InfoListObjectMetadataForMongoDb httpHeadObject( String url, String X_Au
        
 }//httpHead
 
+
 /**
  * Method: POST
  * URI: /v1/{account}/{container}/{object}
@@ -2435,7 +2432,9 @@ public SwiftParameterOutput  createObjectMetadata(SwiftParameterInput swiftParam
     InsertObject insertObject = new InsertObject();
 
    //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----###### 
+//    insertObject = (InsertObject) swiftParameterInput.ogg; // <----###### 
+       insertObject = (InsertObject)swiftParameterInput.getOgg();
+
     
    insertObject.setOperazione("create object metadata");
     
@@ -2444,7 +2443,7 @@ public SwiftParameterOutput  createObjectMetadata(SwiftParameterInput swiftParam
    //debug
    //System.out.println("url passato alla richiesta http: "+urlFinale); 
     
-    InfoCreateObjectMetadataForMongoDb  risposta = httpPostObjectMetadata(urlFinale,insertObject.getTokenId(),insertObject.getX_Container_Meta(),insertObject.getName());
+    InfoCreateObjectMetadataForMongoDb  risposta = httpObjectMetadata(urlFinale,insertObject.getTokenId(),insertObject.getPathObject(),insertObject.getX_Object_Meta(),insertObject.getName());
     
     
     if(risposta.getStatusCode().equals("202")||risposta.getStatusCode().equals("201")){
@@ -2454,7 +2453,7 @@ public SwiftParameterOutput  createObjectMetadata(SwiftParameterInput swiftParam
     risposta.setAccount(insertObject.getAccount());
     risposta.setContainer(insertObject.getContainer());
     risposta.setObject(insertObject.getObject());
-    risposta.setX_Container_Meta(insertObject.getX_Container_Meta());
+    risposta.setX_Object_Meta(insertObject.getX_Object_Meta());
     risposta.setName(insertObject.getName());
     risposta.setOperazione(insertObject.getOperazione());
      
@@ -2490,54 +2489,74 @@ public SwiftParameterOutput  createObjectMetadata(SwiftParameterInput swiftParam
  * @throws UnsupportedEncodingException
  * @throws IOException 
  */
-private InfoCreateObjectMetadataForMongoDb httpPostObjectMetadata( String url, String X_Auth_Token,String X_Container_Meta, String name) throws UnsupportedEncodingException, IOException{
+private InfoCreateObjectMetadataForMongoDb httpObjectMetadata( String url, String X_Auth_Token,String pathObject,String X_Container_Meta, String name) throws UnsupportedEncodingException, IOException{
          
+ int responseCode= 0;
+ CloseableHttpResponse response = null;
     
-    DefaultHttpClient httpclient = new DefaultHttpClient();
-      
-    HttpPut http = new  HttpPut(url);
-     
-     http.setHeader("X-Auth-Token", X_Auth_Token);
-     http.setHeader("X-Object-Meta-"+X_Container_Meta, name);
-               
-     HttpResponse response = httpclient.execute(http);
-       
-     //System.out.println(response);
-      
-     //System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+ CloseableHttpClient httpclient = HttpClients.createDefault();
+        try {
+            HttpPut http = new HttpPut(url);
+            
+            File file = new File(pathObject);
+            FileEntity entity = new FileEntity(file,ContentType.create("text/plain", "UTF-8"));        
  
-	
-    //creo un oggetto risposta
+            http.setHeader("X-Auth-Token", X_Auth_Token);
+            http.setHeader("X-Object-Meta-"+X_Container_Meta, name);
+      
+            http.setEntity(entity);
+            
+            //System.out.println("executing request " + http.getRequestLine());
+            response = httpclient.execute(http);
+            try {
+                //System.out.println("----------------------------------------");
+                //System.out.println(response.getStatusLine());
+                HttpEntity resEntity = response.getEntity();
+                responseCode= response.getStatusLine().getStatusCode();
+                if (resEntity != null) {
+                 //   System.out.println("Response content length: " + resEntity.getContentLength());
+                }
+                EntityUtils.consume(resEntity);
+            } finally {
+                response.close();
+            }
+        } finally {
+            httpclient.close();
+        }
+
+    
+   //creo un oggetto risposta
    InfoCreateObjectMetadataForMongoDb risposta = new InfoCreateObjectMetadataForMongoDb();
    
    
   //carico l'url 
   risposta.setUrl(url);
   //carico lo status code
-  String risp =  Integer.toString(response.getStatusLine().getStatusCode());
+  String risp =  Integer.toString(responseCode);
   risposta.setStatusCode(risp);
   
  //solo se la richiesta è andata a buon fine carico le altre informazioni
  // contenute nell'oggetto insertObject 
- 
- if(risp.equals("202")||risp.equals("201")){   
+
+ if(risp.equals("201")){   
       //debug
       //System.out.println("La richiesta è andata a buon fine: "+risposta.getStatusCode()); 
       
       //carico l'oggetto di risposta di alcune unformazioni
+      String date =  response.getLastHeader("Date").toString().replace("Date:","").trim();
+      risposta.setDate(date);
+      
+      String etag =  response.getLastHeader("Etag").toString().replace("Etag:","").trim(); 
+      risposta.setEtag(etag);
   
-  
-   String date =response.getLastHeader("Date").toString().replace("Date:","").trim(); 
-   
-  if(date!=""){
-       //System.out.println("date: "+date);
-       risposta.setDate(date);
-   }
-  
-  
- }//if 
+      
+      String Last_Modified =  response.getLastHeader("Last-Modified").toString().replace("Last-Modified:","").trim(); 
+      risposta.setLastModified(Last_Modified);
+      
+ }//if
  
-  return risposta;
+  return risposta;      
+    
           
 }//httpPostObjectMetadata
 
@@ -2572,7 +2591,9 @@ public SwiftParameterOutput  updateObjectMetadata(SwiftParameterInput swiftParam
     InsertObject insertObject = new InsertObject();
 
     //eseguo il dowcasting
-    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+//    insertObject = (InsertObject) swiftParameterInput.ogg; // <----######
+       insertObject = (InsertObject)swiftParameterInput.getOgg();
+
     
     insertObject.setOperazione("update object metadata");
     
@@ -2581,7 +2602,7 @@ public SwiftParameterOutput  updateObjectMetadata(SwiftParameterInput swiftParam
    //debug
    //System.out.println("url passato alla richiesta http: "+urlFinale); 
    
-    InfoCreateObjectMetadataForMongoDb  risposta = httpPostObjectMetadata(urlFinale,insertObject.getTokenId(),insertObject.getX_Container_Meta(),insertObject.getName());
+    InfoCreateObjectMetadataForMongoDb  risposta = httpObjectMetadata(urlFinale,insertObject.getTokenId(),insertObject.getPathObject(),insertObject.getX_Object_Meta(),insertObject.getName());
     
     
     if(risposta.getStatusCode().equals("201")||risposta.getStatusCode().equals("202")){
@@ -2591,7 +2612,7 @@ public SwiftParameterOutput  updateObjectMetadata(SwiftParameterInput swiftParam
     risposta.setAccount(insertObject.getAccount());
     risposta.setContainer(insertObject.getContainer());
     risposta.setObject(insertObject.getObject());
-    risposta.setX_Container_Meta(insertObject.getX_Container_Meta());
+    risposta.setX_Object_Meta(insertObject.getX_Object_Meta());
     risposta.setName(insertObject.getName());
     risposta.setOperazione(insertObject.getOperazione());
    }
@@ -2615,6 +2636,188 @@ public SwiftParameterOutput  updateObjectMetadata(SwiftParameterInput swiftParam
    } 
     
 }//updateObjectMetadata
+
+
+//###########################################################################################################################################################
+
+/**
+ * Method: POST
+ * URI: /v1/{account}/{container}/{object}
+ * Description: Creates object metadata.
+ * 
+ * Create object metadata:
+ * curl -i $publicURL/marktwain/goodbye -X POST -H "X-Auth-Token: $token" 
+ *                                              -H "X-Object-Meta-Book: GoodbyeColumbus"
+ * 
+ * 
+ * HTTP/1.1 202 Accepted
+ * Content-Length: 76
+ * Content-Type: text/html; charset=UTF-8
+ * X-Trans-Id: txb5fb5c91ba1f4f37bb648-0052d84b3f
+ * Date: Thu, 16 Jan 2014 21:12:31 GMT
+ * <html><h1>Accepted</h1><p>The request is accepted for processing.</p></html>
+ * 
+ * @param swiftParameterInput
+ * @return 
+ * @throws java.io.IOException 
+  */
+public SwiftParameterOutput createObjectMetadataMONGO(SwiftParameterInput swiftParameterInput) throws IOException{
+    
+   if(swiftParameterInput.type == SwiftParameterInput.tipoObjectInput.InsertObject){
+       
+      //debug
+     //System.out.println("Ho caricato un giusto oggetto di input. "+SwiftParameterInput.tipoObjectInput.InsertObject);
+    
+    //creo questo oggetto di comodo
+    InsertObject insertObject = new InsertObject();
+
+    //eseguo il dowcasting
+    insertObject = (InsertObject) swiftParameterInput.getOgg(); 
+    
+   insertObject.setOperazione("create object metadata");
+    
+   String urlFinale=insertObject.getBase()+insertObject.getAccount()+"/"+insertObject.getContainer()+"/"+insertObject.getObject();
+   
+   //debug
+   //System.out.println("url passato alla richiesta http: "+urlFinale); 
+    
+    InfoCreateObjectMetadataForMongoDb  risposta = httpObjectMetadataMONGO(urlFinale,insertObject.getTokenId(),insertObject.getPathObject(),insertObject.getMetadati());
+    
+    
+    if(risposta.getStatusCode().equals("202")||risposta.getStatusCode().equals("201")){
+   
+    //carico l'oggetto di risposta di alcune informazioni presenti in insertObject
+      
+    risposta.setAccount(insertObject.getAccount());
+    risposta.setContainer(insertObject.getContainer());
+    risposta.setObject(insertObject.getObject());
+    risposta.setMetadati(insertObject.getMetadati());
+    risposta.setOperazione(insertObject.getOperazione());
+     
+   }
+   
+   return risposta;
+   
+    }//if
+    
+   else{
+      
+       System.out.println("Ho caricato un oggetto di input errato.");
+       return null;
+   } 
+  
+}//createObjectMetadata
+
+/**
+ * 
+ * @param url
+ * @param X_Auth_Token
+ * @param X_Container_Meta
+ * @param name
+ * @return
+ * @throws UnsupportedEncodingException
+ * @throws IOException 
+ */
+private InfoCreateObjectMetadataForMongoDb httpObjectMetadataMONGO( String url, String X_Auth_Token,String pathObject,HashMap metadati) throws UnsupportedEncodingException, IOException{
+         
+ int responseCode= 0;
+ CloseableHttpResponse response = null;
+    
+ CloseableHttpClient httpclient = HttpClients.createDefault();
+        try {
+            HttpPut http = new HttpPut(url);
+            
+            File file = new File(pathObject);
+            FileEntity entity = new FileEntity(file,ContentType.create("text/plain", "UTF-8"));        
+ 
+            http.setHeader("X-Auth-Token", X_Auth_Token);
+   
+//###########################################################################
+    
+            
+      // Get a set of the entries
+      Set set = metadati.entrySet();
+      // Get an iterator
+      Iterator i = set.iterator();
+      
+      while(i.hasNext()) {
+         Map.Entry me = (Map.Entry)i.next();
+         http.setHeader("X-Object-Meta-"+me.getKey(), (String) me.getValue());
+        
+      }
+ 
+//###########################################################################
+      
+      int index = url.lastIndexOf("/");
+      String comodo = url.substring(index + 1);
+      
+      int index2 =comodo.lastIndexOf("_");
+      String originalName=comodo.substring(index2 + 1);
+      
+      System.out.println("metadato con nome originale del file: "+originalName);
+      http.setHeader("X-Object-Meta-"+"Original-Name", originalName);
+  
+//###########################################################################
+            
+            http.setEntity(entity);
+            
+            //System.out.println("executing request " + http.getRequestLine());
+            response = httpclient.execute(http);
+            try {
+                //System.out.println("----------------------------------------");
+                //System.out.println(response.getStatusLine());
+                HttpEntity resEntity = response.getEntity();
+                responseCode= response.getStatusLine().getStatusCode();
+                if (resEntity != null) {
+                 //   System.out.println("Response content length: " + resEntity.getContentLength());
+                }
+                EntityUtils.consume(resEntity);
+            } finally {
+                response.close();
+            }
+        } finally {
+            httpclient.close();
+        }
+
+    
+   //creo un oggetto risposta
+   InfoCreateObjectMetadataForMongoDb risposta = new InfoCreateObjectMetadataForMongoDb();
+   
+   
+  //carico l'url 
+  risposta.setUrl(url);
+  //carico lo status code
+  String risp =  Integer.toString(responseCode);
+  risposta.setStatusCode(risp);
+  
+ //solo se la richiesta è andata a buon fine carico le altre informazioni
+ // contenute nell'oggetto insertObject 
+
+ if(risp.equals("201")){   
+      //debug
+      //System.out.println("La richiesta è andata a buon fine: "+risposta.getStatusCode()); 
+      
+      //carico l'oggetto di risposta di alcune unformazioni
+      String date =  response.getLastHeader("Date").toString().replace("Date:","").trim();
+      risposta.setDate(date);
+      
+      String etag =  response.getLastHeader("Etag").toString().replace("Etag:","").trim(); 
+      risposta.setEtag(etag);
+  
+      
+      String Last_Modified =  response.getLastHeader("Last-Modified").toString().replace("Last-Modified:","").trim(); 
+      risposta.setLastModified(Last_Modified);
+      
+ }//if
+ 
+  return risposta;      
+    
+    
+}//httpPostObjectMetadata
+
+//###########################################################################################################################################################
+
+
 
 
 //###########################################################################
@@ -2665,6 +2868,372 @@ public SwiftParameterOutput  updateObjectMetadata(SwiftParameterInput swiftParam
         
 
     }
+    
+    /**
+ * Normal response codes: 204
+ * 
+ * Create container metadata:
+ * curl -i $publicURL/contDest -X POST -H "X-Auth-Token: $token" 
+ *                              -H "X-Container-Write: TENANT-SRC:USER-SRC"
+ * 
+ * 
+ * @param url_servizio
+ * @param X_Auth_Token
+ * @param X_Container_Meta1    Author
+ * @param name1                MarkTwain  
+ * @param X_Container_Meta2    Century
+ * @param name2                Nineteenth
+ * @return
+ * @throws UnsupportedEncodingException
+ * @throws IOException 
+ */
+private InfoOperationContainerMetadataForMongoDb httpPostContainerWrite( String url, String X_Auth_Token, String tenantNameSrc, String userNameSrc) throws UnsupportedEncodingException, IOException{
+         
+       DefaultHttpClient httpclient = new DefaultHttpClient();
+      
+       String userSrc=tenantNameSrc+":"+userNameSrc;
+       
+       HttpPost http = new HttpPost(url);
+       http.setHeader("X-Auth-Token", X_Auth_Token);
+       http.setHeader("X-Container-Write",userSrc);
+       
+       HttpResponse response = httpclient.execute(http);
+       
+    ////System.out.println(response);
+    //System.out.println("Response Code : " + response.getStatusLine().getStatusCode());
+ 
+    // httpclient.close();
+       
+    //creo un oggetto risposta
+    InfoOperationContainerMetadataForMongoDb risposta = new InfoOperationContainerMetadataForMongoDb();
+   
+   
+  //carico l'url 
+  risposta.setUrl(url);
+  //carico lo status code
+  String risp =  Integer.toString(response.getStatusLine().getStatusCode());
+  risposta.setStatusCode(risp);
+  
+ //solo se la richiesta è andata a buon fine carico le altre informazioni
+ // contenute nell'oggetto insertObject 
+ 
+ if(risp.equals("204") ){   
+      //debug
+      // System.out.println("La richiesta è andata a buon fine: "+risposta.getStatusCode()); 
+      
+      //carico l'oggetto di risposta di alcune unformazioni
+  String date =  response.getLastHeader("Date").toString().replace("Date:","").trim(); 
+      
+  if(date!=""){
+       //System.out.println("date: "+date);
+       risposta.setDate(date);
+   }
+  
+  
+ 
+  
+ }//if 
+ 
+  return risposta;       
+    
+    
+}//httpPost
+
+
+/**
+ * Method: POST
+ * URI: /v1/{account}/{container}
+ * Description: allow write permission on container.
+ * 
+ * Create container metadata:
+ * curl -i $publicURL/contDest -X POST -H "X-Auth-Token: $token" 
+ *                              -H "X-Container-Write: TENANT-SRC:USER-SRC" * 
+ * 
+ * HTTP/1.1 204 No Content
+ * Content-Length: 0
+ * Content-Type: text/html; charset=UTF-8
+ * X-Trans-Id: tx05dbd434c651429193139-0052d82635
+ * Date: Thu, 16 Jan 2014 18:34:29 GMT
+ * 
+ * @param swiftParameterInput 
+ * @return  
+ * @throws java.io.IOException 
+ */
+public SwiftParameterOutput allowWriteOnContainer(SwiftParameterInput swiftParameterInput) throws IOException{
+
+    if(swiftParameterInput.type == SwiftParameterInput.tipoObjectInput.InsertContainer){
+       
+      //debug
+     //System.out.println("Ho caricato un giusto oggetto di input. "+SwiftParameterInput.tipoObjectInput.InsertContainer);
+    
+    //creo questo oggetto di comodo
+    InsertContainer insertContainer = new InsertContainer();
+
+    //eseguo il dowcasting
+//    insertContainer = (InsertContainer) swiftParameterInput.ogg; // <----######
+   insertContainer = (InsertContainer)swiftParameterInput.getOgg();
+    
+    insertContainer.setOperazione("create container metadata");
+
+    //######################
+    String url=insertContainer.getBase()+insertContainer.getAccount()+"/"+insertContainer.getContainer();
+    //######################
+    //debug
+    //System.out.println(url);
+   
+    InfoOperationContainerMetadataForMongoDb risposta =this.httpPostContainerWrite(url, insertContainer.getTokenId(), insertContainer.getTenantNameSrc(), insertContainer.getUserNameSrc());
+   // InfoOperationContainerMetadataForMongoDb risposta = httpPost(url,insertContainer.getTokenId(), insertContainer.getX_Container_Meta(), insertContainer.getName());
+    
+    if(risposta.getStatusCode().equals("204")){ 
+   
+    //carico l'oggetto di risposta di alcune informazioni presenti in insertContainer
+      
+    risposta.setAccount(insertContainer.getAccount());
+    risposta.setContainer(insertContainer.getContainer());
+    risposta.setOperazione(insertContainer.getOperazione());
+    risposta.setX_Container_Meta(insertContainer.getX_Container_Meta());
+    risposta.setName(insertContainer.getName());
+   }
+    
+   //dichiaro questo oggetto padre di comodo 
+   SwiftParameterOutput swiftParameterOutput = new SwiftParameterOutput();
+   
+   //effettuo l'upcasting
+   
+   swiftParameterOutput = (SwiftParameterOutput) risposta;
+   
+ return swiftParameterOutput;  
+ 
+ }//if
+    
+   else{
+      
+       System.out.println("Ho caricato un oggetto di input errato.");
+       return null;
+   } 
+    
+}//createContainerMetadata
+
+
+/**
+ * 
+ * Normal response codes: 201
+ *
+ * Alternatively, you can use PUT to copy the goodbye object from the marktwain 
+ * container to the janeausten container. This request requires a Content-Length 
+ * header even if it is set to zero (0).
+ * 
+ * curl -i $publicURL/janeausten/goodbye -X PUT -H "X-Auth-Token: $token" 
+ *                                              -H "X-Copy-From: /marktwain/goodbye" 
+ *                                              -H "X-Copy-From-Account: Source_User_Account"
+ *                                              -H "Content-Length: 0"
+ * 
+ * 
+ * @param url
+ * @param X_Auth_Token
+ * @param containerObjectSouce
+ * @param Source_User_Account
+ * @return
+ * @throws IOException 
+ */
+private InfoCopyObjectForMongoDb httpPutInterTenant(String url, String X_Auth_Token,String containerObjectSouce,String souceAccount) throws IOException{
+  
+    URL obj = new URL(url);
+    HttpURLConnection con = null;
+        
+    con=(HttpURLConnection) obj.openConnection();
+     
+    con.setRequestMethod("PUT");
+    con.setRequestProperty("X-Auth-Token",X_Auth_Token );//ok
+    con.setRequestProperty("X-Copy-From-Account", souceAccount);
+    con.setRequestProperty("X-Copy-From", containerObjectSouce);
+    con.setRequestProperty("Content-Length", "0");
+    con.setRequestProperty("Accept-Charset", "UTF-8");
+    con.setChunkedStreamingMode(0);
+    con.setDoOutput(true);
+    con.setDoInput(true);
+ 
+    //debug
+    //System.out.println("Content-Length : " + con.getContentLength());
+        logger.debug("token: "+X_Auth_Token);
+        logger.debug("ddddhttp: "+con.toString());
+        logger.debug(souceAccount);
+        logger.debug(containerObjectSouce);
+
+
+    int responseCode = con.getResponseCode();
+    //debug
+    //System.out.println("\nSending 'PUT' request to URL : " + url2);
+    //System.out.println("Response Code : " + responseCode);
+    //System.out.println("Response Message : " + con.getResponseMessage());
+    
+    //creo un oggetto risposta
+    InfoCopyObjectForMongoDb risposta = new InfoCopyObjectForMongoDb();
+      
+    //carico l'url 
+    risposta.setUrl(url);
+    //carico lo status code
+    String risp =  Integer.toString(responseCode);
+    risposta.setStatusCode(risp);
+  
+ //solo se la richiesta è andata a buon fine carico le altre informazioni
+ // contenute nell'oggetto insertObject 
+ 
+ if(risp.equals("201")){   
+     //debug
+     //System.out.println("La richiesta è andata a buon fine: "+risposta.getStatusCode()); 
+      
+      //carico l'oggetto di risposta di alcune unformazioni
+
+     String date = con.getHeaderField("Date");
+     //debug
+     //System.out.println("date: "+date);
+     risposta.setDate(date);
+     
+     String etag = con.getHeaderField("Etag");
+     //debug
+     //System.out.println("etag: "+etag);
+     risposta.setEtag(etag);
+     
+     String X_Copied_From_Last_Modified = con.getHeaderField("X-Copied-From-Last-Modified"); 
+     //debug
+     //System.out.println("X-Copied-From-Last-Modified: "+X_Copied_From_Last_Modified);
+     risposta.setX_Copied_From_Last_Modified(X_Copied_From_Last_Modified);
+     
+     String X_Copied_From = con.getHeaderField("X-Copied-From"); 
+     //debug
+     //System.out.println("X-Copied-From: "+X_Copied_From);
+     risposta.setX_Copied_From(X_Copied_From);
+     
+     String Last_Modified = con.getHeaderField("Last-Modified"); 
+     //debug
+     //System.out.println("Last-Modified: "+Last_Modified);
+     risposta.setLast_Modified(Last_Modified);
+     
+     //String X_Object_Meta_name; non gestito in questa versione
+     
+     
+ 
+ }//if 
+ 
+ 
+ //chiudo la connessione 
+ con.disconnect();
+  
+  return risposta;
+    
+    
+ 
+}//httpPut
+
+
+/**
+ * 
+ * Method: COPY
+ * URI:/v1/{account}/{container}/{object}
+ * Description: Account to account copy.
+ * 
+ * Copy the goodbye object from the marktwain container to the janeausten container: 
+ *
+ * curl -i $publicURL/marktwain/goodbye -X COPY -H "X-Auth-Token: $token" 
+ *                                              -H  "Destination-Account: Destination_User_Account"
+ *                                              -H "Destination: janeausten/goodbye"
+ * 
+ * 
+ * HTTP/1.1 201 Created
+ * Content-Length: 0
+ * X-Copied-From-Last-Modified: Thu, 16 Jan 2014 21:19:45 GMT
+ * X-Copied-From: marktwain/goodbye
+ * Last-Modified: Fri, 17 Jan 2014 18:22:57 GMT
+ * Etag: 451e372e48e0f6b1114fa0724aa79fa1
+ * Content-Type: text/html; charset=UTF-8
+ * X-Object-Meta-Movie: AmericanPie
+ * X-Trans-Id: txdcb481ad49d24e9a81107-0052d97501
+ * Date: Fri, 17 Jan 2014 18:22:57 GMT
+ * 
+ * Alternatively, you can use PUT to copy the goodbye object from the marktwain 
+ * container to the janeausten container. This request requires a Content-Length 
+ * header even if it is set to zero (0).
+ * 
+ * curl -i $publicURL/janeausten/goodbye -X PUT -H "X-Auth-Token: $token" 
+ *                                              -H "X-Copy-From-Account: Source_User_Account"
+ *                                              -H "X-Copy-From: /marktwain/goodbye" 
+ *                                              -H "Content-Length: 0"
+ * 
+ * HTTP/1.1 201 Created
+ * Content-Length: 0
+ * X-Copied-From-Last-Modified: Thu, 16 Jan 2014 21:19:45 GMT
+ * X-Copied-From: marktwain/goodbye
+ * Last-Modified: Fri, 17 Jan 2014 18:22:57 GMT
+ * Etag: 451e372e48e0f6b1114fa0724aa79fa1
+ * Content-Type: text/html; charset=UTF-8
+ * X-Object-Meta-Movie: AmericanPie
+ * X-Trans-Id: txdcb481ad49d24e9a81107-0052d97501
+ * Date: Fri, 17 Jan 2014 18:22:57 GMT
+ * 
+ * @param swiftParameterInput
+ * @return 
+ * @throws java.io.IOException
+ */
+public SwiftParameterOutput copyObjectInterTenant(SwiftParameterInput swiftParameterInput) throws IOException{
+   
+   if(swiftParameterInput.type == SwiftParameterInput.tipoObjectInput.InsertObject){
+       
+      //debug
+     //System.out.println("Ho caricato un giusto oggetto di input. "+SwiftParameterInput.tipoObjectInput.InsertObject);
+    
+    //creo questo oggetto di comodo
+    InsertObject insertObject = new InsertObject();
+
+    //eseguo il dowcasting
+//    insertObject = (InsertObject) swiftParameterInput.ogg; // <----###### 
+       insertObject = (InsertObject)swiftParameterInput.getOgg();
+
+    
+   insertObject.setOperazione("copy object inter tenant"); 
+     
+   String urlFinale=insertObject.getBase()+insertObject.getAccount()+"/"+insertObject.getContainerDestination()+"/"+insertObject.getObjectDestination();
+   logger.debug("urlFinale: "+urlFinale);
+//debug
+   //System.out.println("url passato alla richiesta http: "+urlFinale);  
+     
+    
+    String containerObjectOrigin = "/"+insertObject.getContainerOrigin()+"/"+insertObject.getObjectOrigin();
+    //debug
+    //System.out.println(containerObjectOrigin);
+    
+     InfoCopyObjectForMongoDb risposta = this.httpPutInterTenant(urlFinale, insertObject.getTokenId(),containerObjectOrigin, insertObject.getSourceAccount());
+    
+    if(risposta.getStatusCode().equals("201")){
+   
+    //carico l'oggetto di risposta di alcune informazioni presenti in insertObject
+      
+    risposta.setAccount(insertObject.getAccount());
+    risposta.setContainerOrigin(insertObject.getContainerOrigin());
+    risposta.setObjectOrigin(insertObject.getObjectOrigin());
+    risposta.setContainerDestination(insertObject.getContainerDestination());
+    risposta.setObjectDestination(insertObject.getObjectDestination());
+    risposta.setOperazione(insertObject.getOperazione());
+   }
+   
+      //dichiaro questo oggetto padre di comodo 
+   SwiftParameterOutput swiftParameterOutput = new SwiftParameterOutput();
+   
+   //effettuo l'upcasting
+   
+   swiftParameterOutput = (SwiftParameterOutput) risposta;
+   
+ return swiftParameterOutput; 
+   
+    }//if
+    
+   else{
+      
+       System.out.println("Ho caricato un oggetto di input errato.");
+       return null;
+   } 
+    
+}//copyObject
     
     
     

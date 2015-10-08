@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <org.clever.Common.VEInfo.VEDescription>
     <os_guest_id>ubuntuGuest</os_guest_id>
-    <name>test</name> 
+    <name>UbuVirt2</name> 
     <storage>
         <org.clever.Common.VEInfo.StorageSettings>
-            <diskPath>/nodo2/HDDxHypvr/PuppyLinux4.vdi</diskPath>
+            <diskPath>/nodo/home/giuseppe/Scrivania/ubuVM.vdi</diskPath>
         </org.clever.Common.VEInfo.StorageSettings>
     </storage>
     <cpu>

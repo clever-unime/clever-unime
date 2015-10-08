@@ -1,4 +1,17 @@
-
+/*
+ * Copyright 2014 Università di Messina
+ *Licensed under the Apache License, Version 2.0 (the "License");
+ *you may not use this file except in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing, software
+ *distributed under the License is distributed on an "AS IS" BASIS,
+ *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *See the License for the specific language governing permissions and
+ *limitations under the License.
+ */
 /*
  * The MIT License
  *
@@ -67,9 +80,9 @@ public class FederationRequestExecutor extends Thread {
         replyMsg.setId(this.msg.getId()); //important to retrieve the request message
         replyMsg.setHasReply(false);
          try {
-            /*this.logger.debug("Launching federated method on CM..."+msg.getBodyOperation());
+            this.logger.debug("Launching federated method on CM..."+msg.getBodyOperation());
              this.logger.debug("Launching federated method on CM..."+agent);
-             this.logger.debug("Launching federated method on CM..."+method);*/
+             this.logger.debug("Launching federated method on CM..."+method);
             Object replyObject;
             switch(msg.getBodyOperation()){
                 case "addAsActiveCMandReply":{
@@ -94,11 +107,22 @@ public class FederationRequestExecutor extends Thread {
                     break;
                 }
             }
-          //this.logger.debug("object returned: "+replyObject);
+            /*if(msg.getBodyOperation().equals("addAsActiveCMandReply"))
+                replyObject= this.federationListenerAgent.getFederationManagerPlugin().addAsActiveCMandReply((String)params.get(0),(String)params.get(1));
+            else
+                if(msg.getBodyOperation().equals("createVM4Migration"))
+                    replyObject=(Boolean)this.federationListenerAgent.getFederationManagerPlugin().createVM4Migration((org.clever.ClusterManager.FederatorManager.FederatorDataContainer)params.get(0));
+                else
+                {
+                    replyObject = this.federationListenerAgent.invoke(agent, method,hasReply, params);
+                }*/
+            this.logger.debug("object returned: "+replyObject);
             replyMsg.setType(CleverMessage.MessageType.REPLY);
             if (hasReply) {
+                //this.logger.debug("Sto riempendo i campi relativi a body e attachment");
                 replyMsg.setBody (new OperationResult (Result.ResultType.OBJECT, replyObject, methodConf.getModuleName(), methodConf.getMethodName()));
                 replyMsg.addAttachment (MessageFormatter.messageFromObject (replyObject));
+                //this.logger.debug("Sto riempendo i campi relativi a body e attachment:"+replyMsg.getBody());
             }
             //src e dst will be setted when the reply will be retrieved from stack
         } catch (CleverException ex) {

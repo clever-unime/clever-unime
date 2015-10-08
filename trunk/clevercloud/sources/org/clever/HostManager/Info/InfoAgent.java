@@ -142,4 +142,21 @@ public class InfoAgent extends Agent
     {
         
     }
+   
+   /**
+    * this method is used to check if an agent is active in this host
+    * @param agentName name of agent which you want to check
+    * @return true if agent is active, false otherwise 
+   */
+   public boolean isActiveAgent(String agentName){
+       ArrayList listAgent=new ArrayList();
+   
+       //mi faccio restituire la lista di tutti gli agenti attivi e ritorno true se l'agente che ceco è presente false altrimenti 
+      listAgent=(ArrayList) this.listActiveAgents();
+      logger.debug("lista agenti attivi ricevuta");
+       return listAgent.contains(agentName);
+   
+   }
+   
+   
 }

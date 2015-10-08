@@ -62,6 +62,7 @@ public class FederationMessagePoolThread extends Thread {
     
     @Override
     public void run() {
+        //super.run();
         while (true) {
             if (this.replyStack.isEmpty())
                 try {

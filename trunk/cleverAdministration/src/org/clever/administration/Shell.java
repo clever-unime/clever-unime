@@ -479,7 +479,7 @@ public class Shell {
     }
     
     private String parseCommand(String command, List<String> target) {
-         Pattern p = Pattern.compile(" *:([^ ]+)(?: +(.*))?$");
+         Pattern p = Pattern.compile("^ *:([^ ]+)(?: +(.*))?$");
          Matcher m = p.matcher(command);
          if(m.find())
          {

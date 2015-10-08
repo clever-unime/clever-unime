@@ -668,37 +668,6 @@ public class DbSedna implements DatabaseManagerPlugin {
             logger.debug("Executing query xpath=" + this.xpath + "/cm/agent[@name='" + agentId + "']" + location);
             while (results.hasMoreResources()) {
                 XMLResource resource = (XMLResource) results.nextResource();
-                result.append(resource.toString());
-                //result.append('\n');
-            }
-
-        } catch (XMLDBException ex) {
-            logger.error("Execute query failed: " + ex);
-            throw new CleverException("Error executing query: " + ex);
-        } finally {
-            try {
-                if (collect != null) {
-                    collect.close();
-                }
-            } catch (XMLDBException ex) {
-                logger.error("Error closing connection: " + ex.getMessage());
-            }
-        }
-        return result.substring(0);
-    }
-    
-    synchronized public String queryWithSeparator(String agentId, String location) throws CleverException {
-        StringBuffer result = new StringBuffer();
-        Collection collect = null;
-        try {
-            collect = this.connect();
-            logger.debug("Executing query xpath=" + this.xpath + "/cm/agent[@name='" + agentId + "']" + location);
-            XQueryService serviceXQuery = (XQueryService) collect.getService("XQueryService", "1.0");
-            ResourceSet resultSet = serviceXQuery.queryResource(document, xpath + "/cm/agent[@name='" + agentId + "']" + location);
-            ResourceIterator results = resultSet.getIterator();
-            logger.debug("Executing query xpath=" + this.xpath + "/cm/agent[@name='" + agentId + "']" + location);
-            while (results.hasMoreResources()) {
-                XMLResource resource = (XMLResource) results.nextResource();
                 result.append(resource.toString()+"@@@");
                 //result.append('\n');
             }
@@ -717,7 +686,6 @@ public class DbSedna implements DatabaseManagerPlugin {
         }
         return result.substring(0);
     }
-    
      @Override
     synchronized public String querytab(String agentId, String location) throws CleverException {
         StringBuffer result = new StringBuffer();

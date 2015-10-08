@@ -44,3 +44,62 @@ osf(dbname,collectionName,fieldName, opName,step, unitStep, initialDate, initial
  {
     return sf.getSession().getBIGAdministrationModule();
  }
+
+iis(pathFile,user,tenant,password){
+        getBDM().insertOnSwift(pathFile,user,tenant,password);
+}
+
+ois(){
+        getBDM().insertOnSwift();
+}
+
+guf( fileName, user, tenant,all){
+        for (vm : getBDM().getUrlFiles( fileName, user, tenant,all))
+        {
+            print(vm);
+        }
+}
+
+gauf(user, tenant,all){
+        for (vm : getBDM().getUrlAllFiles(user, tenant,all))
+        {
+            print(vm);
+        }
+}
+
+testguf(){
+        getBDM().listaUrl();
+}
+
+
+guu( userName){
+       for (vm :  getBDM().getUUIDsByUser( userName)){
+            print(vm);
+        }
+}
+
+testguu(){
+        getBDM().listaUuidByUser();
+}
+
+gut( tenant){
+       for (vm :  getBDM().getUUIDsByTenant( tenant)){
+            print(vm);
+        }
+}
+
+testgut(){
+        getBDM().listaUuidByTenant();
+}
+
+gal( user, tenant){
+    
+       for (vm :  getBDM().getUrlAllFiles( user, tenant)){
+            print(vm);
+        }
+}
+
+testgal(){
+    
+        getBDM().listaAllUrl();
+}

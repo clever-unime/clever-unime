@@ -29,7 +29,7 @@ package org.clever.Common.Utils;
  * @author Antonio Galletta 2014
  */
 public enum TypeOfElement {
-        STRINGXML(1),DOCJSON(2);
+        STRINGXML(1),DOCJSON(2),OBJSWIFT(3);
         private final int value;
 
         private TypeOfElement(int value) {

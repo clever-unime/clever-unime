@@ -76,6 +76,7 @@ public class FederationManagerSimple implements FederationManagerPlugin{
     private Hashtable operation_destination;
     private Hashtable domain_cm;
     private Hashtable cm_domain;
+    //private Hashtable diskCopiedOnCommonVFS;
     private Agent owner;
     private Logger logger;
     private String domain;
@@ -89,6 +90,14 @@ public class FederationManagerSimple implements FederationManagerPlugin{
     private String nodefederatedCM="CM_Name";
     private String nodefederatedOperation="Migration_Operation";
     private RequestsManager requestsManager=null;
+    /*private String room = "";
+    private String username = "";
+    private String password = "";
+    private String nickname = "";
+    private String server = "";
+    private int port = 0;
+    private ParserXML pXML;
+    private String fedName="";*/
         
     @Override
     public void setOwner(Agent owner) {
@@ -114,11 +123,9 @@ public class FederationManagerSimple implements FederationManagerPlugin{
     public void init(Element params, Agent owner) throws CleverException {
         this.owner=owner;
         logger=Logger.getLogger("FederationManagerPlugin");
-        //logger.debug("initfedplugin");
+        logger.debug("initfedplugin");
         if(params!=null){
-            String domtmp=params.getChildText("domain");
-            this.setDomain(domtmp);
-            ((FederationManagerAgent)this.owner).setDomain(domtmp);
+            ((FederationManagerAgent)this.owner).setDomain(params.getChildText("domain"));
             ((FederationManagerAgent)this.owner).setServer(params.getChildText("server"));
             ((FederationManagerAgent)this.owner).setPort(Integer.parseInt(params.getChildText("port")));
             ((FederationManagerAgent)this.owner).setRoom(params.getChildText("room"));
@@ -135,7 +142,7 @@ public class FederationManagerSimple implements FederationManagerPlugin{
         this.domain_cm=new Hashtable<String,String>();
         this.cm_domain=new Hashtable<String,String>();
         this.operation_destination=new Hashtable<String,String>();
-        
+       // this.forwardCommand4VMM("7ffbfedf21884c07a2020d0573277fe2", null);
     }
     
     
@@ -185,6 +192,7 @@ public class FederationManagerSimple implements FederationManagerPlugin{
                     this.insertFederationOnDBHigh(((FederationManagerAgent)this.owner).getFedName(), ((FederationManagerAgent)this.owner).getDomain(),((FederationManagerAgent)this.owner).getConn().getUsername());
                
                 }
+                //todo: in questa parte manca la parte di algoritmo che gestisce correttamente l'aggiornamento dei domini
                 ArrayList<String> federatedCMs =(ArrayList<String>)((FederationManagerAgent)this.owner).getConn().getFederatedCMs(((FederationManagerAgent)this.owner).getRoom());
                 ArrayList<Object> params = new ArrayList<Object>();
                 params.add(((FederationManagerAgent)this.owner).getDomain());
@@ -205,7 +213,7 @@ public class FederationManagerSimple implements FederationManagerPlugin{
                 
                 
             }
-            
+            this.testmigrate();
         }
         catch(CleverException Ce){
             logger.error("A CleverException is throwed in initAsActive function",Ce);
@@ -213,9 +221,6 @@ public class FederationManagerSimple implements FederationManagerPlugin{
         catch(Exception e){
             logger.error("An Exception is generated in initAsActive function",e);
         }
-        
-        
-        
     }
 
     
@@ -400,6 +405,9 @@ public class FederationManagerSimple implements FederationManagerPlugin{
      */
     private void insertFederationOnDBHigh(String fedid,String domainname,String cmname) throws CleverException{
         List params = new ArrayList();
+        //TODO:NOTA RELATIVA ALLO SVILUPPO FUTURO CHE PREVEDE LA GESTIONE DELLA MULTIFEDERAZIONE
+        // verificare il funzionamento in alternativa si faranno due chiamate prima questa params.add("cm/agent[@name=\""+this.agentName+"\"]/"+this.nodoFederatedHm+"/"+this.nodeFederateDomain+"[@name=\""+domainname+"\"]
+        //e dopo quella ripotata sotto
         logger.debug("insertFederationOnDBHigh");
         params.add("/cm/agent[@name=\""+this.owner.getAgentName()+"\"]/"+this.nodoFederatedpartner+"/"+this.nodeFederateDomain+"[@name=\""+domainname+"\"]/"+this.nodefederatedCM+"/text()");
         String r = (String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);     
@@ -427,7 +435,11 @@ public class FederationManagerSimple implements FederationManagerPlugin{
      */
     private void insertFederationOnDBLow(String fedid,String domainname,String cmname)throws CleverException{
         List params = new ArrayList();
+        //TODO:NOTA RELATIVA ALLO SVILUPPO FUTURO CHE PREVEDE LA GESTIONE DELLA MULTIFEDERAZIONE
+        // inserire la gestione per la multi federazione 
+        //String node="<"+this.nodoFederatedpartner+" name=\""+fedid+"\" > "+
         String node="<"+this.nodeFederateDomain+" name=\""+domainname+"\"><"+this.nodefederatedCM+">"+cmname+"</"+this.nodefederatedCM+"></"+this.nodeFederateDomain+">";
+        //</"+this.nodoFederatedpartner+">";
         params = new ArrayList();
         params.add(this.owner.getAgentName());
         params.add(node);
@@ -444,6 +456,9 @@ public class FederationManagerSimple implements FederationManagerPlugin{
     private boolean existsDomain (String domainname) throws CleverException{
         List params = new ArrayList();
         boolean result=false;
+        //TODO: NOTA RELATIVA ALLO SVILUPPO FUTURO CHE PREVEDE LA GESTIONE DELLA MULTIFEDERAZIONE
+        //verificare il funzionamento in alternativa si faranno due chiamate prima questa params.add("cm/agent[@name=\""+this.agentName+"\"]/"+this.nodoFederatedHm+"/"+this.nodeFederateDomain+"[@name=\""+domainname+"\"]
+        //e dopo quella ripotata sotto
         params.add(this.owner.getAgentName());
         params.add("/"+this.nodoFederatedpartner+"/"+this.nodeFederateDomain+"[@name=\""+domainname+"\"]");
         result = (Boolean)this.owner.invoke("DatabaseManagerAgent", "existNode", true, params);     
@@ -481,6 +496,7 @@ public class FederationManagerSimple implements FederationManagerPlugin{
             this.cm_domain.remove(nick);
             this.cm_domain.put(nick, domain);
         }
+        //logger.info("Actual Federation:\n"+this.scanFederation().toString());
         String[] reply = new String[2];
         reply[0] = ((FederationManagerAgent)this.owner).getDomain();
         reply[1] = ((FederationManagerAgent)this.owner).getConn().getUsername();
@@ -526,6 +542,7 @@ public class FederationManagerSimple implements FederationManagerPlugin{
         logger.debug("Timeout = "+timeout);
         CleverMessage msg = new CleverMessage ();
         String src = ((FederationManagerAgent)this.owner).getConn().getUsername();
+        //int id =org.clever.Common.UUIDProvider.UUIDProvider.getPositiveInteger();// new Integer(id);
         msg.fillMessageFields(CleverMessage.MessageType.REQUEST, src, cm, hasReply, params, new ExecOperation(command, params, agent), 0);
         
          int id=this.requestsManager.addSyncRequestPending(msg, Request.Type.EXTERNAL,0); //= new Request (msg.getId(), timeout);
@@ -698,23 +715,20 @@ public class FederationManagerSimple implements FederationManagerPlugin{
         catch(Exception e){
             return false;
         }
-        if(response){
-            try{
-                //il terzo parametro è stato modificato per far inserire in SEDNA il dominio che richiede l'operazione
-                //this.operationEXT_operationINT.put(fdc.getOperationId(),this.generateUUID());
-                par.clear();
-                par.add((String)resp.get(1));
-                par.add(fdc.getFederatedEntityTenant());
-                if(!this.storeinfoOnSystemDb(fdc.getOperationId(),par,"FED_operation"))
-                {
-                    logger.error("Local ID generated for operation is not found in hashTable! ");
-                }
-                return response;
-            }catch(Exception e){
-                logger.error("Error in storing information related to federated operation"+fdc.getOperationId(),e);
+        try{
+            //il terzo parametro è stato modificato per far inserire in SEDNA il dominio che richiede l'operazione
+            //this.operationEXT_operationINT.put(fdc.getOperationId(),this.generateUUID());
+            par.clear();
+            par.add((String)resp.get(1));
+            par.add(fdc.getFederatedEntityTenant());
+            if(!this.storeinfoOnSystemDb(fdc.getOperationId(),par,"FED_operation"))
+            {
+                logger.error("Local ID generated for operation is not found in hashTable! ");
             }
+        }catch(Exception e){
+            logger.error("Error in storing information related to federated operation"+fdc.getOperationId(),e);
         }
-        return false;
+        return true;
     }
     /**
      * This fuction have to forward the command for managing Migrated VM.
@@ -726,27 +740,27 @@ public class FederationManagerSimple implements FederationManagerPlugin{
      */
     public Boolean forwardCommand4VMM(String VMName,ArrayList method_info,ArrayList method_params)throws CleverException{
         try{
-            //TODO: improve managing response returned
-            ArrayList params=new ArrayList();
-            params.add("FederationManagerAgent");
-            params.add(this.nodoMigratedVm+"/VM[@name=\""+VMName+"\"]/domain/text()");
-            String result=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
-            Boolean response=(Boolean)this.forwardCommandToDomain(result, (String)method_info.get(0) , (String)method_info.get(1), Boolean.TRUE, method_params);
-            return response;
+        ArrayList params=new ArrayList();
+        params.add("FederationManagerAgent");
+        params.add(this.nodoMigratedVm+"/VM[@name=\""+VMName+"\"]/domain/text()");
+        String result=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
+        Object response=this.forwardCommandToDomain(result, (String)method_info.get(0) , (String)method_info.get(1), Boolean.TRUE, method_params);
         }
         catch(Exception e){
             logger.error("error in forwarding command to remote VM",e);
             return false;
         }
+        return true;
     }
     /***
-     * this is used to create a vm in this cloud to permit migration operation.
+     * this is used to create a vm in this cloud for permit migration operation.
      * @param fdc
      * @return 
      */
     @Override
     public Boolean createVM4Migration(FederatorDataContainer fdc) throws CleverException
     {
+        logger.debug("createVM4Migration1");
         HashMap hMresult;
         org.clever.Common.VEInfo.VEDescription ved=fdc.getVED();
         ved.setName(ved.getName()+"_migrated_"+fdc.getOperationId());
@@ -756,21 +770,25 @@ public class FederationManagerSimple implements FederationManagerPlugin{
         params.add("FederationManagerAgent");
         params.add("/"+this.nodefederatedOperation+"/operation[@id=\""+fdc.getOperationId()+"\"]/hostchoosedAsExecutor/text()");
         String targetHM;
+        logger.debug("createVM4Migration2");
         try{
-           targetHM=(String) this.owner.invoke("DatabaseManagerAgent", "queryWithSeparator", true, params);
+           targetHM=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, params);
            if(targetHM.contains("@@@"))
                targetHM=targetHM.split("@@@")[0];
         }
         catch(Exception e){
             throw new CleverException("Impossible find information needed for VM creation");
         }
+        logger.debug("createVM4Migration3");
         params.clear();
         params.add(fdc);
         params.add(ved);
         params.add(targetHM);
         params.add(param);
         params.add(sharingType);
+        logger.debug("createVM4Migration4");
         hMresult=(HashMap)this.owner.invoke("VirtualizationManagerAgent","createVM4Migration",true,params);
+        logger.debug("createVM4Migration5");
         try{
             params.clear();
             params.add((String)hMresult.get("name"));
@@ -780,8 +798,9 @@ public class FederationManagerSimple implements FederationManagerPlugin{
         }
         catch(Exception e){
             logger.error("Exception occurred in insert information on DB for operation "+fdc.getOperationId(),e );
-            return new Boolean(false);
+            
         } 
+        logger.debug("createVM4Migration6");
         return new Boolean(true);
        
         
@@ -792,9 +811,9 @@ public class FederationManagerSimple implements FederationManagerPlugin{
         String node,son;
         String param1="",param2="",param3="";
         try{
-            param1=(String)param.get(0);
-            param2=(String)param.get(1);
-            param3=(String)param.get(2);
+            param1=(String)param.get(1);
+            param2=(String)param.get(2);
+            param3=(String)param.get(3);
         }
         catch(Exception e){
             //nothing to do here
@@ -812,7 +831,7 @@ public class FederationManagerSimple implements FederationManagerPlugin{
             if(param.size()<3)
                 logger.error("the number of parameter passed for FED_operation is less of needed, it will be inserted the default value[\"\"] for parameter missed");
             
-            node = "<VM name=\"" + param1 + "\"><domain>" + param2 + "</domain><VM_originalName>"+param3+"</VM_originalName><operation_ID>"+id+"</operation_ID></VM>";
+            node = "<VM name=\"" + param1 + "\"><domain>" + param2 + "</domain><VM_originalName>"+param3+"<operation_ID>"+id+"</operation_ID></VM>";
             son = "/" + this.nodoMigratedVm;
         } else {
             throw new CleverException("Unsupported call");
@@ -840,13 +859,14 @@ public class FederationManagerSimple implements FederationManagerPlugin{
     public Boolean called4Migration(FederatorDataContainer fdc)throws CleverException{
         Boolean result=false;
         fdc.setFederatedEntityTenant(this.domain);
+        //fdc.setOperationId(fdc.getOperationId()+this.domain);
         fdc.setNameofCont(fdc.getOperationId()+"SHAREDNODE");
         String domainTarget=(String)this.operation_destination.get(fdc.getOperationId());
         ArrayList params=new ArrayList();
         params.add(fdc);
         try{
             result=(Boolean)this.forwardCommandToDomain(domainTarget,"FederationManagerAgent", "createVM4Migration", Boolean.TRUE,params );
-            //logger.debug("Valore ricevuto:"+result);
+            logger.debug("Valore ricevuto:"+result);
         }
         catch(Exception e){
             throw new CleverException("Exception occurred in Starting Migration");
@@ -854,6 +874,52 @@ public class FederationManagerSimple implements FederationManagerPlugin{
         return result;
     }
     
+    private void testmigrate(){
+        FederatorDataContainer fdc=new FederatorDataContainer();
+        fdc.setCdi("giuseppe", "87487illidan", "VFS", "172.17.3.180", 21, "/","ftp");
+        fdc.setHostdesignated4VM_Migration("giusimon");
+        fdc.setOperationId("1dominioB");
+        String locationVED="/org.clever.Common.VEInfo.VEDescription[./name/text()='UbuVirt2']";
+        ArrayList params=new ArrayList();
+        
+        
+        params.add("VirtualizationManagerAgent");
+        params.add(locationVED);
+        String pathxml="";
+        try{
+            pathxml=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, params); 
+        }catch(Exception e){
+            logger.error("error migration", e);
+        
+        }
+        
+        VEDescription veD =(VEDescription) MessageFormatter.objectFromMessage(pathxml);
+        fdc.setVED(veD);
+        fdc.setNameofCont("domainBSHAREDNODE");
+        this.operation_destination.put("1dominioB", "dominioA");
+        try{
+            this.called4Migration(fdc);
+           /* ArrayList params=new ArrayList();
+            params.add("1cecf36486404a0099cda8daafe5a8f2");
+            params.add("1dominioB");
+            this.owner.invoke("VirtualizationManagerAgent","migration",true,params);*/
+        }
+        catch(Exception e){
+            logger.error(e.getMessage(),e);
+        }
+    }
+    //response
+    private void testanswer(){
+        try{
+            //this.operationEXT_operationINT.put(1, 1999367167);//this.generateUUID());
+            ArrayList param=new ArrayList();
+            param.add("giusimon");
+            param.add("dominioB");
+            this.storeinfoOnSystemDb("1dominioB",param,"FED_operation");
+        }catch(Exception e){
+            logger.error("Error in storing information related to federated operation____",e);
+        }
+    }
     /**
      * Utility used to generate UUID for localOperationID and to verify if this UUID is unique.
      * @return 
@@ -878,7 +944,7 @@ public class FederationManagerSimple implements FederationManagerPlugin{
         return null;
     }
     
-
+//TODO: ---->inserire funzione che richiamata dalla deletevm (se si tratta di macchina migrata) elimina l'id dell'operazione
     /**
      * function invoked in the home cloud to bring back the migrated virtual machine. 
      * @param VM, VM designed to retrieve
@@ -892,7 +958,7 @@ public class FederationManagerSimple implements FederationManagerPlugin{
         param.add("/"+this.nodoMigratedVm+"/VM/domain/text()");
         String domainTarget="";
         try{ 
-        domainTarget=(String) this.owner.invoke("DatabaseManagerAgent", "queryWithSeparator", true, param);
+        domainTarget=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, param);
         if(domainTarget.contains("@@@"))
             domainTarget=domainTarget.split("@@@")[0];
         }
@@ -912,7 +978,7 @@ public class FederationManagerSimple implements FederationManagerPlugin{
         
         try{
             result=(FederatorDataContainer)this.forwardCommandToDomain(domainTarget,"FederatorManagerAgent", "returnVM", Boolean.TRUE,params );
-            //logger.debug("Valore ricevuto:"+result);
+            logger.debug("Valore ricevuto:"+result);
             if(result==null)
                 throw new CleverException("Exception occurred in bring back vm phase, started for VM "+VM);
             else{
@@ -961,9 +1027,8 @@ public class FederationManagerSimple implements FederationManagerPlugin{
             throw new CleverException("error occurred in retrieving VM local name for the vm:"+VM);
         }
         ar.clear();
-        ar.add(fedid);
         ar.add(localVMName);
-        
+        ar.add(fedid);
         try{
             FederatorDataContainer result=(FederatorDataContainer)this.owner.invoke("VirtualizationManagerAgent","retFromMigration", true, ar);
             if(result==null)
@@ -977,13 +1042,15 @@ public class FederationManagerSimple implements FederationManagerPlugin{
         catch(Exception e){
             logger.error("A generic Exception occurred in returnVM function for VM:"+VM);
             throw new CleverException(e.getMessage());
-        }   
+        }
+//richiamare una funzione del Virtualization manager agent che faccia l'equivalente della migrazione 
+//ma per restituire la vm gestendo opportunamente le info registrate sul db
+//al termine di qst funzione viene marcata la vm come restituita ma il disco non viene eliminato
+//sarà eliminato con un'altra funzione che viene invocata dalla home cloud non appena viene terminata questa prima parte del processo 
+//di restituzione.   
         return null;
     }
-    /**
-     * Function called by the home cloud to delete, from this cloud, the VM returned in home cloud after migration.
-     * @param VMName 
-     */
+    
     @Override
     public void deleteMigratedVM(String VMName){
 //retrieve vm name in this cloud        
@@ -1004,7 +1071,7 @@ public class FederationManagerSimple implements FederationManagerPlugin{
 ////retrieve operation federation id
         ar.add("FederationManagerAgent");
         ar.add("/"+this.nodoMigratedVm+"/VM[@name=\""+localVMName+"\"]/operation_ID/text()");
-        String fedid_VFS=(String) this.owner.invoke("DatabaseManagerAgent", "queryWithSeparator", true, ar);
+        String fedid_VFS=(String) this.owner.invoke("DatabaseManagerAgent", "query", true, ar);
         if(fedid_VFS.contains("@@@"))
             fedid_VFS=fedid_VFS.split("@@@")[0];
         ar.clear();

@@ -75,7 +75,8 @@ public class RoomListener implements PacketListener,Runnable
   public void processPacket( Packet arg0 )
   {
     Message msg = ( Message ) arg0;
-    logger.debug("messaggio xmpp: "+msg);
+    logger.debug("messaggio xmpp: "+msg.getBody());
+  //  logger.debug("messaggio xmpp1: "+msg.toXML());
     this.cleverMessage=new CleverMessage(msg.getBody());
     //new Thread(this,"handleCleverMessage").start();
     receiver.handleCleverMessage(this.cleverMessage);

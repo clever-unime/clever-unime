@@ -1,17 +1,18 @@
+
 /*
- * Copyright 2014 Università di Messina
- *Licensed under the Apache License, Version 2.0 (the "License");
- *you may not use this file except in compliance with the License.
- *You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- *Unless required by applicable law or agreed to in writing, software
- *distributed under the License is distributed on an "AS IS" BASIS,
- *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *See the License for the specific language governing permissions and
- *limitations under the License.
+ * Questo metodo contiene tutte le informazioni che si ricavano nel processo di  
+ * inserimento di un oggetto su Swift. Tali informazioni verranno poi estrapolate
+ * in un formato Json all'interno di una String. Il passo successivo sarà caricarle
+ * si MongoDb.
  */
+
+package org.clever.HostManager.ObjectStoragePlugins.Swift;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * The MIT License
  * 
@@ -37,16 +38,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-/*
- * Questo metodo contiene tutte le informazioni che si ricavano nel processo di  
- * inserimento di un oggetto su Swift. Tali informazioni verranno poi estrapolate
- * in un formato Json all'interno di una String. Il passo successivo sarà caricarle
- * si MongoDb.
- */
-
-package org.clever.HostManager.ObjectStoragePlugins.Swift;
-
-
 public class InfoCreateObjectMetadataForMongoDb extends SwiftParameterOutput{
    
 //########################    
@@ -62,9 +53,12 @@ public class InfoCreateObjectMetadataForMongoDb extends SwiftParameterOutput{
    private String statusCode;
    
    private String date ; 
-
-   private String X_Container_Meta;
+   private String etag;
+   private String lastModified ;
+   
+   private String X_Object_Meta;
    private String name;
+   private HashMap metadati;
    
 //##############   
 //Costruttori   
@@ -81,9 +75,12 @@ public InfoCreateObjectMetadataForMongoDb() {
         this.url = "";
         this.statusCode = "";
         this.date = "";
+        this.etag = "";
         this.operazione = "";
-        this.X_Container_Meta = "";
+        this.X_Object_Meta = "";
         this.name = "";
+       this.lastModified="";
+        this.metadati= new HashMap(); //
         this.type = tipoObjectOutput.InfoCreateObjectMetadataForMongoDb;
 }
  
@@ -97,13 +94,53 @@ public void debug (){
     System.out.println("Account: "+this.getAccount());
     System.out.println("Container: "+this.getContainer());
     System.out.println("Object: "+this.getObject());
-    System.out.println("X_Container_Meta: "+this.getX_Container_Meta());
+    System.out.println("X_Object_Meta: "+this.getX_Object_Meta());
     System.out.println("name: "+this.getName());
     System.out.println("Url :"+this.getUrl());
     System.out.println("StatusCode: "+this.getStatusCode());
     System.out.println("Date : "+this.getDate());
     System.out.println("##############################");
 }
+
+
+
+/**
+ * Metodo utile in fase di debug.
+ */
+public void debugMONGO (){
+    System.out.println("\n\n##############################");
+    System.out.println("########   DEBUG   ###########");
+    System.out.println("Operazione: "+this.getOperazione());
+    System.out.println("Account: "+this.getAccount());
+    System.out.println("Container: "+this.getContainer());
+    System.out.println("Object: "+this.getObject());
+    System.out.println("Sono presenti metadati n°: "+this.getMetadati().size());
+   
+//#############################################################################
+    
+    // Get a set of the entries
+      Set set = this.getMetadati().entrySet();
+      // Get an iterator
+      Iterator i = set.iterator();
+      
+      while(i.hasNext()) {
+         Map.Entry me = (Map.Entry)i.next();
+         System.out.println("X-Object-Meta-"+me.getKey() + " : "+ (String) me.getValue());
+        
+      }
+ 
+//#############################################################################      
+      
+    System.out.println("Url :"+this.getUrl());
+    System.out.println("StatusCode: "+this.getStatusCode());
+    System.out.println("Etag : "+this.getEtag());
+    System.out.println("Date : "+this.getDate());
+    System.out.println("LastModified: "+this.getLastModified());
+    System.out.println("##############################");
+}
+
+
+
 
 
 /**
@@ -118,7 +155,7 @@ public String infoToJson(){
 "    \"account\": \""+this.getAccount()+"\",\n" +
 "    \"container\": \""+this.getContainer()+"\",\n" +
 "    \"object\": \""+this.getObject()+"\",\n" +
-"    \"X_Container_Meta\": \""+this.getX_Container_Meta()+"\",\n" +
+"    \"X_Object_Meta\": \""+this.getX_Object_Meta()+"\",\n" +
 "    \"name\": \""+this.getName()+"\",\n" +               
 "    \"url\": \""+this.getUrl()+"\",\n" +
 "    \"statusCode\": \""+this.getStatusCode()+"\",\n" +
@@ -127,6 +164,50 @@ public String infoToJson(){
     
    return json;
 }
+
+
+
+/**
+ * Metodo che crea una stringa formattata json con le informazioni che ricava 
+ * dall'operazione di inserimento di un oggetto su swift.
+ * @return 
+ */
+public String infoToJsonMONGO(){
+    
+   String json ="{\n" +
+"    \"Operazione\": \""+this.getOperazione()+"\",\n" +               
+"    \"account\": \""+this.getAccount()+"\",\n" +
+"    \"container\": \""+this.getContainer()+"\",\n" +
+"    \"object\": \""+this.getObject()+"\",\n" +
+"    \"url\": \""+this.getUrl()+"\",\n" +
+"    \"statusCode\": \""+this.getStatusCode()+"\",\n" +
+"    \"date\": \""+this.getDate()+"\",\n" +
+"    \"etag\": \""+this.getEtag()+"\",\n" ;
+   
+   String comodo = "";
+   String comodo2 ="X-Object-Meta";
+   String name="";
+   
+   // Get a set of the entries
+      Set set = this.getMetadati().entrySet();
+      // Get an iterator
+      Iterator i = set.iterator();
+      
+      while(i.hasNext()) {
+         Map.Entry me = (Map.Entry)i.next();
+         name=(String) me.getKey();
+        comodo = comodo+ "    \""+comodo2+" "+name+"\": \""+(String) me.getValue()+"\",\n";
+       name="";
+        
+         
+      }
+      
+   return json+comodo+"}";
+}
+
+
+
+
 
 
 //########################
@@ -191,13 +272,17 @@ public void setStatusCode(String statusCode) {
         this.operazione = operazione;
     }
 
-    public String getX_Container_Meta() {
-        return X_Container_Meta;
+    public String getX_Object_Meta() {
+        return X_Object_Meta;
     }
 
-    public void setX_Container_Meta(String X_Container_Meta) {
-        this.X_Container_Meta = X_Container_Meta;
+    public void setX_Object_Meta(String X_Object_Meta) {
+        this.X_Object_Meta = X_Object_Meta;
     }
+
+  
+
+    
 
     public String getName() {
         return name;
@@ -205,6 +290,38 @@ public void setStatusCode(String statusCode) {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public HashMap getMetadati() {
+        return metadati;
+    }
+
+    public void setMetadati(HashMap metadati) {
+        this.metadati = metadati;
+    }
+
+    public tipoObjectOutput getType() {
+        return type;
+    }
+
+    public void setType(tipoObjectOutput type) {
+        this.type = type;
+    }
+
+    public String getEtag() {
+        return etag;
+    }
+
+    public void setEtag(String etag) {
+        this.etag = etag;
+    }
+
+    public String getLastModified() {
+        return lastModified;
+    }
+
+    public void setLastModified(String lastModified) {
+        this.lastModified = lastModified;
     }
    
 

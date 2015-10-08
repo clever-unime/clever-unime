@@ -1,42 +1,4 @@
-/*
- * Copyright 2014 Università di Messina
- *Licensed under the Apache License, Version 2.0 (the "License");
- *you may not use this file except in compliance with the License.
- *You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- *Unless required by applicable law or agreed to in writing, software
- *distributed under the License is distributed on an "AS IS" BASIS,
- *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *See the License for the specific language governing permissions and
- *limitations under the License.
- */
-/**
- * The MIT License
- * 
- * @author dott. Riccardo Di Pietro - 2014
- * MDSLab Messina
- * dipcisco@hotmail.com
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+
 
 package org.clever.administration.api.modules;
 
@@ -64,7 +26,31 @@ import org.clever.administration.annotations.ShellCommand;
 import org.clever.administration.annotations.ShellParameter;
 import org.clever.administration.api.Session;
 
-
+/**
+ * The MIT License
+ * 
+ * @author dott. Riccardo Di Pietro - 2014 Progetto "Sigma".
+ * MDSLab Messina
+ * dipcisco@hotmail.com
+ * 
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 public class ObjectStorageSwiftModule extends AdministrationModule{ 
     
 Logger logger=Logger.getLogger("SwiftObjectStorageModule");
@@ -614,7 +600,7 @@ public String createContainer(@ShellParameter(name="riccardo", comment="hostMAna
     insertContainer.elaboraInfo();
     
 
-    //credo l'oggetto di inserimento padre
+    //creo l'oggetto di inserimento padre
     SwiftParameterInput swiftParameterInput = new SwiftParameterInput();
 
     //faccio l'upcasting da figlio a padre
@@ -1906,8 +1892,8 @@ public String showObjectMetadata(@ShellParameter(name="riccardo", comment="hostM
  * @param pass
  * @param tenant
  * @param container
- * @param object
- * @param X_Container_Meta
+ * @param pathObject
+ * @param X_Object_Meta
  * @param name
  * @return
  * @throws CleverException 
@@ -1919,8 +1905,8 @@ public String createObjectMetadata(@ShellParameter(name="riccardo", comment="hos
                                  @ShellParameter(name = "pass", comment = "pass") String pass,
                                  @ShellParameter(name = "tenant", comment = "tenant") String tenant,
                                  @ShellParameter(name="container", comment="container") String container,
-                                 @ShellParameter(name="object", comment="object") String object,
-                                 @ShellParameter(name="X_Container_Meta", comment="X_Container_Meta") String X_Container_Meta,
+                                 @ShellParameter(name="pathObject", comment="pathObject") String pathObject,
+                                 @ShellParameter(name="X_Object_Meta", comment="X_Object_Meta") String X_Object_Meta,
                                  @ShellParameter(name="name", comment="X_Container_Meta name")String  name
                                  )throws CleverException{
 
@@ -1951,22 +1937,22 @@ public String createObjectMetadata(@ShellParameter(name="riccardo", comment="hos
     //#####################################
     // createObjectMetadata
     //#####################################
-       
+  
     //creo un oggetto di inserimento figlio
     InsertObject insertObject = new InsertObject();
     //gli passo i parametri
     insertObject.setUrlSwiftPresoDalToken(token.getPublicUrlSwift());
     insertObject.setTokenId(token.getId());
     insertObject.setContainer(container);
-    insertObject.setObject(object);
-    insertObject.setX_Container_Meta(X_Container_Meta);
+    insertObject.setPathObject(pathObject);
+    
+    insertObject.setX_Object_Meta(X_Object_Meta);
     insertObject.setName(name);
     
     //ricavo altri parametri
     insertObject.elaboraInfo();
     
-
-    //credo l'oggetto di inserimento padre
+    //creo l'oggetto di inserimento padre
     SwiftParameterInput swiftParameterInput = new SwiftParameterInput();
 
     //faccio l'upcasting da figlio a padre
@@ -1976,6 +1962,8 @@ public String createObjectMetadata(@ShellParameter(name="riccardo", comment="hos
     //credo l'oggetto di risposta padre
     SwiftParameterOutput swiftParameterOutput = new SwiftParameterOutput();
 
+    //pulisco la lista di parametri
+    //params.clear();
     ArrayList params2 = new ArrayList();
         
     //inserisco come parametro l'oggetto di inserimento padre
@@ -1987,15 +1975,14 @@ public String createObjectMetadata(@ShellParameter(name="riccardo", comment="hos
     try {
         risposta = this.execSyncCommand(hostManager, "ObjectStorageAgent", "createObjectMetadata", params2, false);
     } catch (CleverException ex) {
-        System.out.println("Errore nel comando createObjectMetadata: " + ex);
-        logger.error("Errore nel comando createObjectMetadata: ",ex);
+        System.out.println("Errore nel comando createObject: " + ex);
+        logger.error("Errore nel comando createObject: ",ex);
         return null;
     }
     
     //conversione object 
     swiftParameterOutput = (SwiftParameterOutput) risposta;
-    
-    
+       
     //mi creo il particolare oggetto figlio di risposta
     InfoCreateObjectMetadataForMongoDb risp = new InfoCreateObjectMetadataForMongoDb();
    
@@ -2014,7 +2001,7 @@ public String createObjectMetadata(@ShellParameter(name="riccardo", comment="hos
     System.out.println(stringa);
              
     return stringa;
-     
+    
 }//createObjectMetadata
 
 
@@ -2029,9 +2016,9 @@ public String createObjectMetadata(@ShellParameter(name="riccardo", comment="hos
  * @param user
  * @param container
  * @param pass
- * @param object
+ * @param pathObject
  * @param tenant
- * @param X_Container_Meta
+ * @param X_Object_Meta
  * @param name
  * @return
  * @throws CleverException 
@@ -2043,9 +2030,9 @@ public String updateObjectMetadata(@ShellParameter(name="riccardo", comment="hos
                                    @ShellParameter(name = "pass", comment = "pass") String pass,
                                    @ShellParameter(name = "tenant", comment = "tenant") String tenant,
                                    @ShellParameter(name="container", comment="container") String container,
-                                   @ShellParameter(name="object", comment="object") String object,
-                                   @ShellParameter(name="X_Container_Meta", comment="X_Container_Meta") String X_Container_Meta,
-                                   @ShellParameter(name="name", comment="X_Container_Meta name")String  name
+                                   @ShellParameter(name="pathObject", comment="pathObject") String pathObject,
+                                   @ShellParameter(name="X_Object_Meta", comment="X_Object_Meta") String X_Object_Meta,
+                                   @ShellParameter(name="name", comment="name")String  name
                                    )throws CleverException{
 
 //#####################################
@@ -2082,8 +2069,8 @@ public String updateObjectMetadata(@ShellParameter(name="riccardo", comment="hos
     insertObject.setUrlSwiftPresoDalToken(token.getPublicUrlSwift());
     insertObject.setTokenId(token.getId());
     insertObject.setContainer(container);
-    insertObject.setObject(object);
-    insertObject.setX_Container_Meta(X_Container_Meta);
+    insertObject.setPathObject(pathObject);
+    insertObject.setX_Object_Meta(X_Object_Meta);
     insertObject.setName(name);
     
     //ricavo altri parametri

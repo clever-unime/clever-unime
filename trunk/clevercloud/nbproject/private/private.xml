@@ -94,5 +94,10 @@
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/ClusterManager/DatabaseManager/DatabaseManagerPlugin.java</file>
             <file>file:/home/agalletta/NetBeansProjects/clever-unime_prerelease/trunk/clevercloud/sources/org/clever/HostManager/SOS/SOSModuleCore/GetObservation.java</file>
         </group>
+        <group name="clever-prerelease2">
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime-sensing-and-object/trunk/clevercloud/sources/org/clever/ClusterManager/BigDataPlugin/Mongo/DBMongo.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime-sensing-and-object/trunk/clevercloud/sources/org/clever/ClusterManager/ObjectManager/ObjectManager.java</file>
+            <file>file:/home/agalletta/NetBeansProjects/clever-unime-sensing-and-object/trunk/clevercloud/sources/org/clever/HostManager/HyperVisorPlugins/Libvirt/HvlibVirt.java</file>
+        </group>
     </open-files>
 </project-private>

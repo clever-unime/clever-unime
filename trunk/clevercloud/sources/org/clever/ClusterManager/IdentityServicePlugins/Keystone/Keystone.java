@@ -1,17 +1,32 @@
 /*
- * Copyright 2014 Università di Messina
- *Licensed under the Apache License, Version 2.0 (the "License");
- *you may not use this file except in compliance with the License.
- *You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- *Unless required by applicable law or agreed to in writing, software
- *distributed under the License is distributed on an "AS IS" BASIS,
- *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *See the License for the specific language governing permissions and
- *limitations under the License.
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
+
+package org.clever.ClusterManager.IdentityServicePlugins.Keystone;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.log4j.Logger;
+import org.clever.ClusterManager.IdentityService.IdentityServicePlugin;
+import org.clever.Common.Communicator.Agent;
+import org.clever.Common.Exceptions.CleverException;
+import org.codehaus.jackson.JsonNode;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.jdom2.Element;
+import org.json.JSONException;
+
+
 /**
  * The MIT License
  * 
@@ -37,30 +52,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package org.clever.ClusterManager.IdentityServicePlugins.Keystone;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.log4j.Logger;
-import org.clever.ClusterManager.IdentityService.IdentityServicePlugin;
-import org.clever.Common.Communicator.Agent;
-import org.clever.Common.Exceptions.CleverException;
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.jdom2.Element;
-import org.json.JSONException;
-
-
-
 public class Keystone implements IdentityServicePlugin {
     
     private String AUTH_URL ; //url completo
@@ -500,7 +491,7 @@ private String extractFieldToJsonNode(String jsonNode, String field, String json
             
             //effettuo un test sul servizio richiedendo un token
 
-            token = this.authenticationUserPassTen(this.getTenant(),this.getUser(), this.getPass() );
+            token = this.authenticationUserPassTen(this.getTenant(),this.getUser(), this.getPass());
             
         } catch (JSONException ex) {
             logger.error("Errore in authenticationUserPassTen()" + ex);
@@ -558,7 +549,7 @@ private String extractFieldToJsonNode(String jsonNode, String field, String json
             return this.authenticationUserPassTen(this.getTenant(),this.getUser(), this.getPass());
         }
         catch(Exception e){
-            logger.error("ERRORE IDENTITY!",e);
+            logger.error("ERRORE IDENTITY!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",e);
             return null;
         }
         

@@ -1,17 +1,13 @@
 /*
- * Copyright 2014 Università di Messina
- *Licensed under the Apache License, Version 2.0 (the "License");
- *you may not use this file except in compliance with the License.
- *You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- *Unless required by applicable law or agreed to in writing, software
- *distributed under the License is distributed on an "AS IS" BASIS,
- *WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *See the License for the specific language governing permissions and
- *limitations under the License.
+ * Questo metodo serve a gestire le informazioni da passare al metodo
+ * createObject() della classe Swift.
  */
+
+package org.clever.HostManager.ObjectStoragePlugins.Swift;
+
+import java.io.File;
+import java.util.HashMap;
+
 /**
  * The MIT License
  * 
@@ -37,16 +33,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-/*
- * Questo metodo serve a gestire le informazioni da passare al metodo
- * createObject() della classe Swift.
- */
-
-package org.clever.HostManager.ObjectStoragePlugins.Swift;
-
-import java.io.File;
-
-
 public class InsertObject extends SwiftParameterInput{
     
 //########################    
@@ -73,9 +59,11 @@ private String containerOrigin;
 private String objectOrigin;
 //##################################
 
-private String X_Container_Meta;
+private String X_Object_Meta;
 private String name;
+private HashMap metadati;
 
+private String sourceAccount;
 
 //##############   
 //Costruttori   
@@ -94,7 +82,7 @@ public InsertObject() {
         this.pathObject = ""; 
         this.urlSwiftPresoDalToken = "";
         this.operazione = "";
-        this.X_Container_Meta = "";
+        this.X_Object_Meta = "";
         this.name = "";
         this.type = tipoObjectInput.InsertObject;
         this.tokenId = "";
@@ -175,7 +163,7 @@ public void debugMetadata(){
     System.out.println("Account: "+this.getAccount());
     System.out.println("Container : "+this.getContainer());
     System.out.println("Object : "+this.getObject());
-    System.out.println("X_Container_Meta : "+this.getX_Container_Meta());
+    System.out.println("X_Object_Meta_Meta : "+this.getX_Object_Meta());
     System.out.println("name : "+this.getName());
     System.out.println("Base : "+this.getBase());
     System.out.println("urlSwiftPresoDalToken : "+this.getUrlSwiftPresoDalToken());
@@ -253,6 +241,7 @@ public void elaboraInfoFromUrlComplete(){
   String objectName = this.getUrlMigration().substring(index + 1);
   this.setObject(objectName);
   //debug
+  System.out.println("objectName : "+objectName);
   //#fine 
   
   //#### Ricavo il container
@@ -262,6 +251,7 @@ public void elaboraInfoFromUrlComplete(){
   String containerName = tmp.substring(index + 1);
   this.setContainer(containerName);
   //debug
+  System.out.println("containerName : "+containerName);
   //#fine 
   
   //#### Ricavo l'account
@@ -271,6 +261,7 @@ public void elaboraInfoFromUrlComplete(){
   String accountName = tmp.substring(index + 1);
   this.setAccount(accountName);
   //debug
+  System.out.println("accountName : "+accountName);
   //#fine
   
    //#### Ricavo l'urlBase
@@ -278,6 +269,7 @@ public void elaboraInfoFromUrlComplete(){
   String urlBase = tmp.replace(accountName,"");
   this.setBase(urlBase);
   //debug
+  System.out.println("urlBase : "+urlBase);
   //#fine 
    }
   
@@ -302,6 +294,9 @@ public void elaboraInfoFromUrlComplete(){
   } 
     
 }//elaboraInfoDaUrlSwiftPresoDalToken
+
+
+
 
     
 //########################
@@ -405,13 +400,31 @@ public void elaboraInfoFromUrlComplete(){
         this.objectOrigin = objectOrigin;
     }
 
-    public String getX_Container_Meta() {
-        return X_Container_Meta;
+    public String getX_Object_Meta() {
+        return X_Object_Meta;
     }
 
-    public void setX_Container_Meta(String X_Container_Meta) {
-        this.X_Container_Meta = X_Container_Meta;
+    public void setX_Object_Meta(String X_Object_Meta) {
+        this.X_Object_Meta = X_Object_Meta;
     }
+
+    public HashMap getMetadati() {
+        return metadati;
+    }
+
+    public void setMetadati(HashMap metadati) {
+        this.metadati = metadati;
+    }
+
+    public Object getOgg() {
+        return ogg;
+    }
+
+    public void setOgg(Object ogg) {
+        this.ogg = ogg;
+    }
+
+   
 
     public String getName() {
         return name;
@@ -445,6 +458,15 @@ public void elaboraInfoFromUrlComplete(){
         this.urlMigration = urlMigration;
     }
 
+    public String getSourceAccount() {
+        return sourceAccount;
+    }
+
+    public void setSourceAccount(String SourceAccount) {
+        this.sourceAccount = SourceAccount;
+    }
+
+    
     
     
     

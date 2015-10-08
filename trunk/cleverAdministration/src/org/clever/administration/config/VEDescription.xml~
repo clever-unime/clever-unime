@@ -4,7 +4,7 @@
     <name>UbuVirt2</name> 
     <storage>
         <org.clever.Common.VEInfo.StorageSettings>
-            <diskPath>/nodo2/HDDxHypvr/PuppyLinux4.vdi</diskPath>
+            <diskPath>nodo/home/giuseppe/Scrivania/ubuVM.vdi</diskPath>
         </org.clever.Common.VEInfo.StorageSettings>
     </storage>
     <cpu>
